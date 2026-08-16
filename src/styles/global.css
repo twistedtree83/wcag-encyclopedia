@@ -1819,3 +1819,139 @@ a:hover {
   line-height: 1.5;
   color: var(--ink2);
 }
+
+/* --- 2.4 examples ------------------------------------------------------------------------------------ */
+
+.tabstops,
+.tabs,
+.linklist,
+.focusrow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin-bottom: 0.875rem;
+}
+.linklist {
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--ink);
+}
+.tabstops__item,
+.tabs__tab {
+  padding: 0.25rem 0.5rem;
+  background: var(--panel2);
+  border: 1px solid var(--rule);
+  font-size: 0.75rem;
+  color: var(--ink2);
+}
+.tabstops__item--goal {
+  border-color: var(--rule2);
+  color: var(--ink);
+  font-weight: 600;
+}
+.tabstops__item--skip {
+  background: var(--ink);
+  color: var(--panel);
+  border-color: var(--ink);
+  font-weight: 600;
+}
+.tabs__tab {
+  flex: 1;
+  min-width: 5rem;
+  color: var(--ink);
+}
+
+.stack {
+  position: relative;
+  display: grid;
+  gap: 0.375rem;
+  margin-bottom: 0.875rem;
+  padding: 0.625rem;
+  background: var(--panel2);
+  border: 1px solid var(--rule2);
+  font-size: 0.75rem;
+}
+.stack__page {
+  padding: 0.5rem;
+  background: var(--panel);
+  border: 2px solid var(--focus);
+  color: var(--ink);
+}
+.stack__page--inert {
+  border: 1px solid var(--rule);
+  color: var(--ink2);
+}
+.stack__modal {
+  padding: 0.5rem;
+  margin-left: 1.25rem;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  color: var(--ink2);
+}
+.stack__modal--on {
+  border: 2px solid var(--focus);
+  color: var(--ink);
+}
+
+.crumbs {
+  margin-bottom: 0.875rem;
+  padding: 0.375rem 0.5rem;
+  background: var(--panel2);
+  border: 1px solid var(--rule);
+  font-size: 0.75rem;
+  color: var(--ink2);
+}
+
+.focusdemo {
+  padding: 0.4375rem 0.625rem;
+  background: var(--panel2);
+  border: 1px solid var(--rule2);
+  font-size: 0.75rem;
+  color: var(--ink);
+}
+.focusdemo--on {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+.focusdemo--none {
+  /* The failure itself: focus is somewhere in this row and nothing shows where. */
+  outline: none;
+}
+
+.obscure {
+  position: relative;
+  display: grid;
+  gap: 0.375rem;
+  margin-bottom: 0.875rem;
+  padding: 0.625rem;
+  background: var(--panel2);
+  border: 1px solid var(--rule2);
+  font-size: 0.75rem;
+}
+.obscure__bar {
+  padding: 0.375rem 0.5rem;
+  background: var(--ink);
+  color: var(--panel);
+  font-weight: 600;
+}
+.obscure__field {
+  padding: 0.4375rem 0.5rem;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  color: var(--ink);
+}
+.obscure__field--on {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+/* Tucked up behind the bar — the criterion's failure, shown rather than described. */
+.obscure__field--under {
+  margin-top: -1.75rem;
+  position: relative;
+  z-index: -1;
+  color: var(--ink2);
+}
+.obscure__spacer {
+  height: 0.5rem;
+}
