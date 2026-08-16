@@ -87,3 +87,21 @@ test('the demo renders in both themes', async ({ page }) => {
     expect(bg).not.toBe('rgba(0, 0, 0, 0)');
   }
 });
+
+test('the library indexes all nine demos and links the authored ones', async ({ page }) => {
+  await page.goto('/');
+  const items = page.locator('.library__item');
+  await expect(items).toHaveCount(9);
+
+  // Authored entries link to their criterion card; unauthored ones are marked, not broken.
+  const links = page.locator('.library__desc a');
+  const count = await links.count();
+  expect(count).toBeGreaterThan(0);
+  for (let i = 0; i < count; i++) {
+    const href = await links.nth(i).getAttribute('href');
+    await expect(page.locator(`[id="${href!.slice(1)}"]`), `${href} has no target`).toHaveCount(1);
+  }
+
+  const pending = await page.locator('.library__thumb--pending').count();
+  expect(pending + count).toBe(9);
+});

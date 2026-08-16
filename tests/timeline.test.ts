@@ -9,6 +9,7 @@ import {
   type Timeline,
 } from '../src/demo/timeline';
 import { DEMOS } from '../src/demo/registry';
+import { DEMO_CATALOGUE } from '../src/demo/catalogue';
 import { reflowTimeline } from '../src/demo/demos/reflow';
 import { CORPUS } from '../src/criteria/corpus';
 
@@ -202,3 +203,42 @@ describe('the reflow demo', () => {
 function widthAt(t: number): number {
   return frameAt(reflowTimeline, t).state.width;
 }
+
+describe('the demo catalogue', () => {
+  it('plans nine demos', () => {
+    expect(DEMO_CATALOGUE).toHaveLength(9);
+  });
+
+  it('gives every planned demo a unique id', () => {
+    const ids = DEMO_CATALOGUE.map((d) => d.id);
+    expect(ids.length).toBe(new Set(ids).size);
+  });
+
+  it('points every planned demo at a criterion the corpus documents', () => {
+    for (const entry of DEMO_CATALOGUE) {
+      expect(
+        CORPUS.find((c) => c.num === entry.criterion),
+        `${entry.id} names criterion ${entry.criterion}`,
+      ).toBeDefined();
+    }
+  });
+
+  it('registers only demos that are in the catalogue', () => {
+    // The catalogue is what the site promises; the registry is what exists. A registered demo
+    // with no catalogue entry would never appear in the library index.
+    for (const registered of DEMOS) {
+      expect(
+        DEMO_CATALOGUE.find((d) => d.id === registered.id),
+        `registered demo "${registered.id}" is not in the catalogue`,
+      ).toBeDefined();
+    }
+  });
+
+  it('agrees with the registry on duration and criterion for anything authored', () => {
+    for (const registered of DEMOS) {
+      const planned = DEMO_CATALOGUE.find((d) => d.id === registered.id)!;
+      expect(registered.duration, `${registered.id} duration`).toBe(planned.duration);
+      expect(registered.criterion, `${registered.id} criterion`).toBe(planned.criterion);
+    }
+  });
+});

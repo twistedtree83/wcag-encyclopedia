@@ -2189,3 +2189,106 @@ a:hover {
   background: var(--panel);
   display: block;
 }
+
+/* --- Demo library -------------------------------------------------------------------------------------- */
+
+.library {
+  margin-top: 4rem;
+  padding-top: 4rem;
+  border-top: 1px solid var(--rule);
+}
+.library__head {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--ink);
+}
+.library__title {
+  margin: 0;
+  font-family: Newsreader, Georgia, serif;
+  font-size: clamp(1.4375rem, 3cqw, 2.25rem);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+.library__count {
+  margin-left: auto;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+.library__lede {
+  margin: 1.125rem 0 1.75rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--ink2);
+  max-width: 62ch;
+  text-wrap: pretty;
+}
+.library__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 1.25rem;
+}
+.library__item {
+  display: grid;
+  gap: 0.375rem;
+  padding: 0 0 0.75rem;
+  border: 1px solid var(--rule);
+  border-radius: 0.3125rem;
+  background: var(--panel);
+  overflow: hidden;
+}
+.library__thumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 16 / 9;
+  background: var(--panel2);
+  border-bottom: 1px solid var(--rule);
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.875rem;
+  color: var(--ink2);
+}
+.library__thumb--pending {
+  background: repeating-linear-gradient(
+    135deg,
+    var(--panel2),
+    var(--panel2) 8px,
+    var(--bg) 8px,
+    var(--bg) 16px
+  );
+  border-bottom-style: dashed;
+  font-size: 0.65625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+.library__num {
+  margin: 0.5rem 0.75rem 0;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--p2);
+}
+.library__desc {
+  margin: 0 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--ink);
+}
+.library__meta {
+  margin: 0 0.75rem;
+  padding-top: 0.375rem;
+  border-top: 1px solid var(--rule);
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.6875rem;
+  color: var(--ink3);
+}

@@ -25,6 +25,7 @@ import { useViewport, VIEWPORTS, type ViewportName } from './hooks/useViewport';
 import { EMPTY_QUERY, countMatches, summarise, type Query } from './catalog/filter';
 import { HowToRead } from './sections/HowToRead';
 import { ObeysItsOwnRules } from './sections/ObeysItsOwnRules';
+import { DemoLibrary } from './sections/DemoLibrary';
 
 export function App() {
   const current = useCurrentGuideline();
@@ -137,6 +138,8 @@ export function App() {
               ))}
             </div>
           ))}
+
+          <DemoLibrary />
 
           <ObeysItsOwnRules />
         </main>
