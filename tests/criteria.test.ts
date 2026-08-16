@@ -205,3 +205,19 @@ describe('corpus ordering', () => {
     expect(keys).toEqual([...keys].sort((x, y) => x - y));
   });
 });
+
+describe('2.3.1 is depicted, never reproduced', () => {
+  it('is documented', () => {
+    expect(criterion('2.3.1')).toBeDefined();
+  });
+
+  it('has no animation anywhere in the strobe example styles', async () => {
+    const { readFileSync } = await import('node:fs');
+    const css = readFileSync('src/styles/global.css', 'utf8');
+    const block = css.slice(css.indexOf('.strobe {'));
+    const strobeRules = block.slice(0, block.indexOf('/* ---'));
+    // Reproducing this particular failure could cause a seizure in the reader the criterion
+    // protects. The example is four still frames, and must stay that way.
+    expect(strobeRules).not.toMatch(/animation|@keyframes|transition/);
+  });
+});
