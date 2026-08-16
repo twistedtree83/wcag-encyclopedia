@@ -8,17 +8,21 @@
  */
 
 import { criteriaFor } from '../criteria/corpus';
+import { filterCriteria, isFiltering, type Query } from '../catalog/filter';
 import { EXPECTED } from '../criteria/manifest';
 import { guidelineFor, principleFor, PRINCIPLE_MARKS } from '../criteria/structure';
 import { CriterionCard } from './CriterionCard';
 
-export function GuidelineSection({ num }: { num: string }) {
+export function GuidelineSection({ num, query }: { num: string; query: Query }) {
   const guideline = guidelineFor(num);
   const principle = principleFor(num);
   if (!guideline || !principle) return null;
 
   const mark = PRINCIPLE_MARKS[principle.num];
-  const criteria = criteriaFor(num);
+  const authored = criteriaFor(num);
+  // Filtered-out criteria are not rendered at all, so they are absent from the accessibility
+  // tree as well as the screen — a screen reader user and a sighted user see the same set.
+  const criteria = filterCriteria(authored, query);
   const expected = EXPECTED.filter((e) => e.guideline === num);
   const headingId = `g${num}-heading`;
 
@@ -47,6 +51,10 @@ export function GuidelineSection({ num }: { num: string }) {
             <CriterionCard key={c.num} criterion={c} />
           ))}
         </div>
+      ) : authored.length > 0 && isFiltering(query) ? (
+        <p className="guideline__pending">
+          No criteria in {guideline.num} match the current filter.
+        </p>
       ) : (
         <p className="guideline__pending">
           Not yet documented — {expected.length}{' '}

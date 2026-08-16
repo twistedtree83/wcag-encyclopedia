@@ -12,18 +12,23 @@
 import { CORPUS } from './criteria/corpus';
 import { EXPECTED_TOTAL } from './criteria/manifest';
 import { GUIDELINES, PRINCIPLES } from './criteria/structure';
+import { useState } from 'react';
 import { useCurrentGuideline } from './hooks/useCurrentGuideline';
 import { useTheme } from './theme/useTheme';
 import { GuidelineSection } from './components/GuidelineSection';
 import { PrincipleOpener } from './components/PrincipleOpener';
 import { Rail } from './components/Rail';
 import { Strip } from './components/Strip';
+import { Controls } from './components/Controls';
+import { EMPTY_QUERY, countMatches, summarise, type Query } from './catalog/filter';
 import { HowToRead } from './sections/HowToRead';
 import { ObeysItsOwnRules } from './sections/ObeysItsOwnRules';
 
 export function App() {
   const current = useCurrentGuideline();
   const { theme, toggle } = useTheme();
+  const [query, setQuery] = useState<Query>(EMPTY_QUERY);
+  const summary = summarise(countMatches(CORPUS, query), query);
 
   return (
     <>
@@ -43,6 +48,8 @@ export function App() {
             {theme === 'dark' ? 'Light mode' : 'Dark mode'}
           </button>
         </div>
+
+        <Controls query={query} onChange={setQuery} summary={summary} />
         <Strip current={current} />
       </header>
 
@@ -90,7 +97,7 @@ export function App() {
             <div key={principle.num}>
               <PrincipleOpener principle={principle} />
               {GUIDELINES.filter((g) => g.principle === principle.num).map((g) => (
-                <GuidelineSection key={g.num} num={g.num} />
+                <GuidelineSection key={g.num} num={g.num} query={query} />
               ))}
             </div>
           ))}
