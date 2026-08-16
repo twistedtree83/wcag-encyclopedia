@@ -9,7 +9,19 @@ import { G1_2 } from './g1-2';
 import { G1_3 } from './g1-3';
 import { G1_4 } from './g1-4';
 
-export const CORPUS: readonly CriterionRecord[] = [...G1_1, ...G1_2, ...G1_3, ...G1_4];
+const AUTHORED = [...G1_1, ...G1_2, ...G1_3, ...G1_4];
+
+/** Criterion numbers sort numerically, not lexically — 1.4.10 comes after 1.4.9, not after 1.4.1. */
+function byNumber(a: CriterionRecord, b: CriterionRecord): number {
+  const pa = a.num.split('.').map(Number);
+  const pb = b.num.split('.').map(Number);
+  for (let i = 0; i < 3; i++) {
+    if ((pa[i] ?? 0) !== (pb[i] ?? 0)) return (pa[i] ?? 0) - (pb[i] ?? 0);
+  }
+  return 0;
+}
+
+export const CORPUS: readonly CriterionRecord[] = [...AUTHORED].sort(byNumber);
 
 export function criterion(num: string): CriterionRecord | undefined {
   return CORPUS.find((c) => c.num === num);

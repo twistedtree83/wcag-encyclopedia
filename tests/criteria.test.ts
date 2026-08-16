@@ -194,3 +194,14 @@ describe('measured contrast ratios are computed, never authored', () => {
     },
   );
 });
+
+describe('corpus ordering', () => {
+  it('lists criteria in numeric order, so 1.4.10 follows 1.4.9 rather than 1.4.1', () => {
+    const key = (num: string) => {
+      const [a = 0, b = 0, c = 0] = num.split('.').map(Number);
+      return a * 10000 + b * 100 + c;
+    };
+    const keys = CORPUS.map((r) => key(r.num));
+    expect(keys).toEqual([...keys].sort((x, y) => x - y));
+  });
+});

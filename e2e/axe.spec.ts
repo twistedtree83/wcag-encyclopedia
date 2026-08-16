@@ -13,8 +13,19 @@ import AxeBuilder from '@axe-core/playwright';
 
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 
+/**
+ * A page that teaches by showing failures contains failures. Elements marked
+ * `data-depicts-failure` are the ones whose violation *is* the lesson — the low-contrast text
+ * inside a 1.4.3 fail frame, for instance. Excluding them is not a way to quiet the scan:
+ *
+ *  - the exclusion is opt-in per element, never per component, so an accidental violation
+ *    elsewhere in a fail frame is still caught (that is how the T-02 bug surfaced);
+ *  - a separate test asserts every excluded element really does sit inside a FAIL frame;
+ *  - and the colours they use are audited in the opposite direction by TOKEN_PAIRS, which
+ *    asserts `expect: 'fail'` — so if one ever started passing, the build would break.
+ */
 async function scan(page: import('@playwright/test').Page) {
-  return new AxeBuilder({ page }).withTags(TAGS).analyze();
+  return new AxeBuilder({ page }).withTags(TAGS).exclude('[data-depicts-failure]').analyze();
 }
 
 for (const theme of ['light', 'dark'] as const) {
@@ -69,5 +80,17 @@ test('gives every interactive element a visible focus indicator', async ({ page 
       (el) => getComputedStyle(el).outlineWidth,
     );
     expect(Number.parseFloat(outlineWidth), `link ${i} has no focus outline`).toBeGreaterThan(0);
+  }
+});
+
+test('every deliberate failure sits inside a FAIL frame', async ({ page }) => {
+  await page.goto('/');
+  const marked = page.locator('[data-depicts-failure]');
+  const count = await marked.count();
+  expect(count, 'nothing is marked — the exclusion is unused and should be removed').toBeGreaterThan(0);
+
+  for (let i = 0; i < count; i++) {
+    const insideFail = await marked.nth(i).evaluate((el) => !!el.closest('.frame--fail'));
+    expect(insideFail, `excluded element ${i} is not inside a FAIL frame`).toBe(true);
   }
 });

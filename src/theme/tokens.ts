@@ -52,6 +52,9 @@ export const light = {
   /** Control edges depicted inside examples. Weak deliberately fails 1.4.11; strong passes. */
   'swatch-border-weak': '#EBEBEB',
   'swatch-border-strong': '#6A6A6A',
+  /** Body text depicted inside examples. Weak deliberately fails 1.4.3; strong passes. */
+  'swatch-text-weak': '#9C9C9C',
+  'swatch-text-strong': '#54524C',
 } as const;
 
 export type Token = keyof typeof light;
@@ -90,6 +93,8 @@ export const dark: Record<Token, string> = {
   'swatch-link': '#7FB4EE',
   'swatch-border-weak': '#2E2E28',
   'swatch-border-strong': '#8C8779',
+  'swatch-text-weak': '#575751',
+  'swatch-text-strong': '#B3ADA1',
 };
 
 export const palettes = { light, dark } as const;
@@ -181,6 +186,19 @@ export const TOKEN_PAIRS: readonly TokenPair[] = [
     bg: 'panel',
     kind: 'ui',
     where: 'depicted control edge in a passing example (1.4.11)',
+  },
+  {
+    fg: 'swatch-text-strong',
+    bg: 'panel',
+    kind: 'body',
+    where: 'depicted body text in a passing example (1.4.3)',
+  },
+  {
+    fg: 'swatch-text-weak',
+    bg: 'panel',
+    kind: 'body',
+    expect: 'fail',
+    where: 'depicted body text in a failing example (1.4.3) — must stay under 4.5:1',
   },
   {
     fg: 'swatch-border-weak',

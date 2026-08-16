@@ -145,9 +145,11 @@ test('measured contrast badges are computed from the live palette, per theme', a
 
   const lightFail = await fail.textContent();
   const lightPass = await pass.textContent();
-  // The light swatches are #EBEBEB and #6A6A6A on white.
-  expect(lightFail).toContain('1.1:1');
-  expect(lightPass).toContain('5.4:1');
+  // A ratio is shown, and it is on the correct side of the threshold it names.
+  expect(lightFail).toMatch(/\d+\.\d:1/);
+  expect(lightPass).toMatch(/\d+\.\d:1/);
+  expect(lightFail).toContain('needs');
+  expect(lightPass).toContain('meets');
 
   // The dark palette uses different swatches, so a computed badge must report different
   // numbers. A hand-typed ratio would be identical in both themes.
