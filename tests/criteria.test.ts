@@ -221,3 +221,38 @@ describe('2.3.1 is depicted, never reproduced', () => {
     expect(strobeRules).not.toMatch(/animation|@keyframes|transition/);
   });
 });
+
+/**
+ * The completeness gate.
+ *
+ * T-02 shipped `corpus ⊆ manifest` and deferred equality to the last content task, on the
+ * grounds that a failing assertion is worse than an absent one while content is still landing.
+ * Every Level A and AA criterion of WCAG 2.2 is now authored, so the corpus and the manifest
+ * are asserted equal in both directions. From here, adding a criterion that is not in the
+ * standard, or dropping one that is, breaks the build.
+ */
+describe('the corpus is complete', () => {
+  const authored = new Set(CORPUS.map((c) => c.num));
+  const expected = new Set(EXPECTED.map((c) => c.num));
+
+  it('documents every Level A and AA criterion in WCAG 2.2', () => {
+    const missing = [...expected].filter((num) => !authored.has(num));
+    expect(missing, `not yet documented: ${missing.join(', ')}`).toEqual([]);
+  });
+
+  it('documents nothing outside the closed set', () => {
+    const extra = [...authored].filter((num) => !expected.has(num));
+    expect(extra, `not a Level A or AA criterion: ${extra.join(', ')}`).toEqual([]);
+  });
+
+  it('holds exactly 55 records', () => {
+    expect(CORPUS.length).toBe(EXPECTED_TOTAL);
+  });
+
+  it('covers all thirteen guidelines', () => {
+    for (const g of GUIDELINES) {
+      const count = CORPUS.filter((c) => c.guideline === g.num).length;
+      expect(count, `guideline ${g.num} ${g.name} has no criteria`).toBeGreaterThan(0);
+    }
+  });
+});

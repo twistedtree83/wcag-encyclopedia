@@ -2129,3 +2129,63 @@ a:hover {
   color: var(--ink2);
   font-style: italic;
 }
+
+/* --- 4.1 examples ------------------------------------------------------------------------------------ */
+
+.a11ytree {
+  display: grid;
+  gap: 0.375rem;
+  margin-bottom: 0.875rem;
+  padding: 0.625rem;
+  background: var(--panel2);
+  border: 1px solid var(--rule2);
+  font-size: 0.75rem;
+  color: var(--ink);
+}
+.a11ytree__ui {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.5rem;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+}
+.a11ytree__label {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+.a11ytree__out {
+  padding: 0.375rem 0.5rem;
+  background: var(--pass-bg);
+  border-left: 3px solid var(--pass);
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.71875rem;
+  color: var(--ink);
+}
+.a11ytree__out--bad {
+  background: var(--fail-bg);
+  border-left-color: var(--fail);
+}
+.toggle {
+  width: 2rem;
+  height: 1.125rem;
+  padding: 2px;
+  border-radius: 999px;
+  background: var(--rule2);
+  display: inline-flex;
+  flex: 0 0 auto;
+}
+.toggle--on {
+  justify-content: flex-end;
+  background: var(--pass);
+}
+.toggle__knob {
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: 50%;
+  background: var(--panel);
+  display: block;
+}

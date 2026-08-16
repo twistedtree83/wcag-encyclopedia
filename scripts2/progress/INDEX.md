@@ -25,9 +25,9 @@ One line per task. Flip `[ ]` to `[x]` when the task ships, and write its ledger
 - [x] **T-22** #22 — Content: guideline 3.1 Readable (2 criteria) (needs T-03, T-07)
 - [x] **T-23** #23 — Content: guideline 3.2 Predictable (5 criteria) (needs T-03, T-07)
 - [x] **T-24** #24 — Content: guideline 3.3 Input Assistance (6 criteria) (needs T-03, T-07)
-- [ ] **T-25** #25 — Content: guideline 4.1 Compatible (2 criteria) (needs T-03, T-07)
+- [x] **T-25** #25 — Content: guideline 4.1 Compatible (2 criteria) (needs T-03, T-07)
 - [ ] **T-10** #10 — Demo library index section (needs T-09)
 - [ ] **T-11** #11 — Demos: focus and keyboard (2.4.7 x2, 2.4.11) (needs T-09, T-20)
 - [ ] **T-12** #12 — Demos: announcements, errors, targets, motion (4.1.2, 3.3.1, 4.1.3, 2.5.8, 2.2.2) (needs T-09, T-18, T-21, T-24, T-25)
 
-**24 tasks · 20 shipped · all `afk:true` · no human gates**
+**24 tasks · 21 shipped · all `afk:true` · no human gates**
