@@ -91,3 +91,14 @@ describe('the emitted token CSS', () => {
     expect(tokensCss()).toContain(':root[data-theme="dark"]');
   });
 });
+
+describe('the stylesheet does not defeat its own audit', () => {
+  it('never fades text with opacity', async () => {
+    const { readFileSync } = await import('node:fs');
+    const css = readFileSync('src/styles/global.css', 'utf8');
+    // Opacity composites a token against its background, so the pair the audit measured is
+    // not the pair that ships. A badge here measured 5.6:1 by token and 4.36:1 on screen.
+    const declarations = css.match(/^\s*opacity:\s*[\d.]+/gm) ?? [];
+    expect(declarations, `remove: ${declarations.join(', ')}`).toEqual([]);
+  });
+});

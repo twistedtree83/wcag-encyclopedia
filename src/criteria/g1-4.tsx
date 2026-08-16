@@ -7,6 +7,7 @@
  */
 
 import type { CriterionRecord } from './types';
+import { MeasuredRatio } from '../components/MeasuredRatio';
 
 export const G1_4: readonly CriterionRecord[] = [
   {
@@ -77,7 +78,8 @@ export const G1_4: readonly CriterionRecord[] = [
             <span aria-hidden="true" className="swatch-check border--weak" />
             Email me order updates
           </div>
-          <p className="example-note" style={{ marginTop: '1rem' }}>
+          <MeasuredRatio fg="swatch-border-weak" bg="panel" kind="ui" label="border" />
+          <p className="example-note">
             The border is a hair lighter than the surface it sits on. Sighted users with good
             vision fill in the edge from memory; nobody else can.
           </p>
@@ -96,9 +98,10 @@ export const G1_4: readonly CriterionRecord[] = [
             <span aria-hidden="true" className="swatch-check border--strong" />
             Email me order updates
           </div>
-          <p className="example-note" style={{ marginTop: '1rem' }}>
-            The same layout, the same type, the same spacing. The only change is a border that
-            clears 3:1 — and now the control announces itself.
+          <MeasuredRatio fg="swatch-border-strong" bg="panel" kind="ui" label="border" />
+          <p className="example-note">
+            The same layout, the same type, the same spacing. The only change is the border —
+            and now the control announces itself.
           </p>
         </>
       ),
@@ -108,8 +111,8 @@ export const G1_4: readonly CriterionRecord[] = [
       lines: [
         { kind: 'context', text: '.field,' },
         { kind: 'context', text: '.checkbox {' },
-        { kind: 'del', text: '  border: 1px solid #EBEBEB;  /* 1.1:1 — fails 1.4.11 */' },
-        { kind: 'add', text: '  border: 1px solid #6A6A6A;  /* 5.4:1 — passes      */' },
+        { kind: 'del', text: '  border: 1px solid #EBEBEB;  /* fails 1.4.11 */' },
+        { kind: 'add', text: '  border: 1px solid #6A6A6A;  /* passes        */' },
         { kind: 'context', text: '  border-radius: 4px;' },
         { kind: 'context', text: '}' },
       ],

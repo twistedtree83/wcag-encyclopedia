@@ -128,3 +128,36 @@ test('lets a keyboard user reach and scroll the diff', async ({ page }) => {
   const outline = await pre.evaluate((el) => getComputedStyle(el).outlineWidth);
   expect(Number.parseFloat(outline)).toBeGreaterThan(0);
 });
+
+test('measured contrast badges are computed from the live palette, per theme', async ({
+  page,
+}) => {
+  await page.emulateMedia({ colorScheme: 'light' });
+  await page.goto('/');
+
+  const fail = page.locator('.measured--fail').first();
+  const pass = page.locator('.measured--pass').first();
+  await expect(fail).toBeVisible();
+  await expect(pass).toBeVisible();
+
+  const lightFail = await fail.textContent();
+  const lightPass = await pass.textContent();
+  // The light swatches are #EBEBEB and #6A6A6A on white.
+  expect(lightFail).toContain('1.1:1');
+  expect(lightPass).toContain('5.4:1');
+
+  // The dark palette uses different swatches, so a computed badge must report different
+  // numbers. A hand-typed ratio would be identical in both themes.
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.goto('/');
+  expect(await page.locator('.measured--fail').first().textContent()).not.toBe(lightFail);
+  expect(await page.locator('.measured--pass').first().textContent()).not.toBe(lightPass);
+});
+
+test('the measured badge states pass or fail without relying on hue', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('.measured--fail').first()).toContainText('✕');
+  await expect(page.locator('.measured--pass').first()).toContainText('✓');
+  await expect(page.locator('.measured--fail .visually-hidden').first()).toHaveText('Fails: ');
+  await expect(page.locator('.measured--pass .visually-hidden').first()).toHaveText('Passes: ');
+});

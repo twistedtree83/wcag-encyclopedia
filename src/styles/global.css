@@ -1311,3 +1311,45 @@ a:hover {
 .drawer__link:hover {
   text-decoration: underline;
 }
+
+/* --- Measured contrast badge ---------------------------------------------------------------------- */
+
+.measured {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem 0 0.875rem;
+  padding: 0.25rem 0.5rem;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  border: 1.5px solid;
+}
+/* Square for fail, pill for pass — shape and glyph, not hue alone. */
+.measured--fail {
+  color: var(--fail);
+  border-color: var(--fail);
+  background: var(--fail-bg);
+  border-radius: 0;
+}
+.measured--pass {
+  color: var(--pass);
+  border-color: var(--pass);
+  background: var(--pass-bg);
+  border-radius: 999px;
+}
+.measured__glyph {
+  font-size: 0.8125rem;
+  line-height: 1;
+}
+.measured__need {
+  /*
+   * No opacity here. Fading text composites the colour against its background and silently
+   * defeats the token audit, which only ever sees the token values — this exact span was
+   * 4.36:1 with opacity .85 while its tokens measured 5.6:1. The quieter voice comes from
+   * weight and size instead, which is what this page's own 1.4.3 card recommends.
+   */
+  font-weight: 400;
+  font-size: 0.6875rem;
+}

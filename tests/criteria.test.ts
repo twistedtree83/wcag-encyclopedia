@@ -164,3 +164,31 @@ describe('the markup-diff variant', () => {
     },
   );
 });
+
+describe('measured contrast ratios are computed, never authored', () => {
+  const ANY_RATIO = /\b\d+(\.\d+)?\s*:\s*1\b/g;
+  /**
+   * WCAG's own thresholds are constants of the standard, not measurements — a restatement of
+   * 1.4.3 or 1.4.11 has to be able to say "3:1". What must never be authored is a ratio
+   * describing *this example's* colours, because that goes stale the moment a swatch changes
+   * and makes the page display a number it never measured.
+   */
+  const THRESHOLDS = new Set(['3:1', '4.5:1', '7:1']);
+  const measurements = (text: string) =>
+    (text.match(ANY_RATIO) ?? []).map((m) => m.replace(/\s/g, '')).filter((m) => !THRESHOLDS.has(m));
+
+  it.each(CORPUS.map((c) => [c.num, c] as const))(
+    '%s states no measured ratio as a literal',
+    (_num, record) => {
+      expect(measurements(record.plain), 'restatement').toEqual([]);
+      // Captions and diffs describe this example specifically, so they may not state any
+      // ratio at all — the badge next to them carries the measured number.
+      expect(record.fail.caption.match(ANY_RATIO), 'fail caption').toBeNull();
+      expect(record.pass.caption.match(ANY_RATIO), 'pass caption').toBeNull();
+      for (const line of record.diff?.lines ?? []) {
+        expect(line.text.match(ANY_RATIO), 'diff line').toBeNull();
+      }
+      if (record.diff) expect(record.diff.note.match(ANY_RATIO), 'diff note').toBeNull();
+    },
+  );
+});
