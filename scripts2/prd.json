@@ -130,7 +130,7 @@
       ],
       "importance": 12,
       "afk": true,
-      "passes": false
+      "passes": true
     },
     {
       "id": "T-16",
