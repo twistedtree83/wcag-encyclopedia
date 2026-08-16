@@ -19,6 +19,18 @@ import {
   renderFocus,
   renderObscured,
 } from './demos/focus';
+import {
+  nameTimeline,
+  errorTimeline,
+  liveTimeline,
+  targetTimeline,
+  carouselTimeline,
+  renderName,
+  renderError,
+  renderLive,
+  renderTarget,
+  renderCarousel,
+} from './demos/announce';
 
 export type DemoEntry = {
   readonly id: string;
@@ -58,8 +70,42 @@ export const DEMOS: readonly DemoEntry[] = [
     duration: obscuredTimeline.duration,
     Player: () => <DemoPlayer timeline={obscuredTimeline} render={renderObscured} />,
   },
+  {
+    id: nameTimeline.id,
+    title: nameTimeline.title,
+    criterion: '4.1.2',
+    duration: nameTimeline.duration,
+    Player: () => <DemoPlayer timeline={nameTimeline} render={renderName} />,
+  },
+  {
+    id: errorTimeline.id,
+    title: errorTimeline.title,
+    criterion: '3.3.1',
+    duration: errorTimeline.duration,
+    Player: () => <DemoPlayer timeline={errorTimeline} render={renderError} />,
+  },
+  {
+    id: liveTimeline.id,
+    title: liveTimeline.title,
+    criterion: '4.1.3',
+    duration: liveTimeline.duration,
+    Player: () => <DemoPlayer timeline={liveTimeline} render={renderLive} />,
+  },
+  {
+    id: targetTimeline.id,
+    title: targetTimeline.title,
+    criterion: '2.5.8',
+    duration: targetTimeline.duration,
+    Player: () => <DemoPlayer timeline={targetTimeline} render={renderTarget} />,
+  },
+  {
+    id: carouselTimeline.id,
+    title: carouselTimeline.title,
+    criterion: '2.2.2',
+    duration: carouselTimeline.duration,
+    Player: () => <DemoPlayer timeline={carouselTimeline} render={renderCarousel} />,
+  },
 ];
-
 export function demoById(id: string): DemoEntry | undefined {
   return DEMOS.find((d) => d.id === id);
 }

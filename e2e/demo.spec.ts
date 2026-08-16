@@ -117,6 +117,9 @@ test('every registered demo plays, pauses, and scrubs independently', async ({ p
     const caption = player.locator('.demo__caption');
     const scrub = player.locator('.demo__scrub');
 
+    // Demos autoplay, so read from known positions rather than from wherever the clock is.
+    // Scrubbing also pauses, which is what makes the second read stable.
+    await scrub.fill('0');
     const atStart = await caption.textContent();
     await scrub.fill(await scrub.getAttribute('max').then((m) => m!));
     const atEnd = await caption.textContent();

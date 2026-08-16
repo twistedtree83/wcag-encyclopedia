@@ -233,6 +233,7 @@ export const G2_5: readonly CriterionRecord[] = [
     name: 'Target Size (Minimum)',
     level: 'AA',
     guideline: '2.5',
+    demos: ['targets-2-5-8'],
     plain:
       'Targets need to be at least 24 by 24 CSS pixels, or spaced so that a 24px circle centred ' +
       'on each does not overlap its neighbours. New in WCAG 2.2. Inline links in a sentence are ' +

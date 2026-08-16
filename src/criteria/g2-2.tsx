@@ -60,6 +60,7 @@ export const G2_2: readonly CriterionRecord[] = [
     name: 'Pause, Stop, Hide',
     level: 'A',
     guideline: '2.2',
+    demos: ['autoplay-2-2-2'],
     plain:
       'Anything that moves, blinks, scrolls, or auto-updates for more than five seconds needs a ' +
       'way to pause, stop, or hide it — provided it runs alongside other content. Motion in the ' +

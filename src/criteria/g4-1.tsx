@@ -14,6 +14,7 @@ export const G4_1: readonly CriterionRecord[] = [
     name: 'Name, Role, Value',
     level: 'A',
     guideline: '4.1',
+    demos: ['name-4-1-2'],
     plain:
       'Every control has to expose three things programmatically: what it is called, what kind ' +
       'of thing it is, and what state it is in — and it has to update as that state changes. ' +
@@ -84,6 +85,7 @@ export const G4_1: readonly CriterionRecord[] = [
     name: 'Status Messages',
     level: 'AA',
     guideline: '4.1',
+    demos: ['live-4-1-3'],
     plain:
       'When something important changes without moving focus — a result count, a saved ' +
       'confirmation, an error appearing — it has to be announced. Moving focus to it would be a ' +

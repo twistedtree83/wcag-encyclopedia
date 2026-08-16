@@ -15,6 +15,7 @@ export const G3_3: readonly CriterionRecord[] = [
     name: 'Error Identification',
     level: 'A',
     guideline: '3.3',
+    demos: ['errors-3-3-1'],
     plain:
       'When input is rejected, say so in text, and say which field. A red outline is not an ' +
       'error message — it is invisible to a screen reader and to anyone who cannot distinguish ' +
