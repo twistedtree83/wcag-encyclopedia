@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#FAF7F1; --panel:#FFFFFF; --panel2:#F4F0E7;
+  --ink:#1B1A16; --ink2:#585449; --ink3:#777263;
+  --rule:#DFD8C9; --rule2:#B4AC99;
+  --link:#144E8C; --link-hover:#0C3563; --focus:#144E8C;
+  --fail:#A32017; --fail-bg:#FCF1F0; --pass:#1A6B3C; --pass-bg:#EFF7F1;
+  --p1:#8A5300; --p2:#0D6664; --p3:#3B4CA8; --p4:#93264A;
+  --p1-wash:#F6EEDD; --p2-wash:#E7F2F1; --p3-wash:#ECEEF9; --p4-wash:#F8EBEF;
+}
+[data-theme="dark"]{
+  --bg:#131311; --panel:#1C1C19; --panel2:#232320;
+  --ink:#F3F0E8; --ink2:#B3ADA1; --ink3:#948E82;
+  --rule:#33332E; --rule2:#514F47;
+  --link:#8FBEF0; --link-hover:#BCD9F8; --focus:#8FBEF0;
+  --fail:#F2A6A0; --fail-bg:#2A1917; --pass:#8ED6A8; --pass-bg:#152420;
+  --p1:#E0A93F; --p2:#5AC9C1; --p3:#A3B1F7; --p4:#F49AB0;
+  --p1-wash:#241D0F; --p2-wash:#0F2322; --p3-wash:#171A2C; --p4-wash:#271420;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg)}
+a{color:var(--link);text-decoration-thickness:1px;text-underline-offset:2px}
+a:hover{color:var(--link-hover)}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+html{scroll-behavior:smooth;scroll-padding-top:104px}
+input[type=range]{accent-color:var(--ink2)}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}
+}
+</style>
+</helmet>
+<div data-theme="{{ theme }}" style="background:var(--bg);color:var(--ink);font-family:'Public Sans',system-ui,sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased">
+
+<a href="#main" style="position:absolute;left:8px;top:-60px;z-index:60;background:var(--panel);color:var(--ink);border:2px solid var(--ink);padding:10px 16px;font-weight:600;font-size:15px;text-decoration:none" style-focus="top:8px">Skip to content</a>
+
+<div>
+<div style="{{ frameStyle }}">
+
+<header style="position:sticky;top:0;z-index:40;background:var(--bg);border-bottom:1px solid var(--rule)">
+  <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:10px 24px;max-width:1400px;margin:0 auto">
+    <div style="display:flex;align-items:baseline;gap:10px;margin-right:auto">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)">WCAG 2.2</span>
+      <span style="font-family:Newsreader,serif;font-size:19px;font-weight:500;letter-spacing:-.01em">Visual Encyclopedia</span>
+    </div>
+
+    <div style="{{ searchWrap }}">
+      <label for="q" style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)">Search</label>
+      <input id="q" type="search" placeholder="Criterion name or number" value="{{ q }}" onInput="{{ onSearch }}" style="width:210px;padding:7px 10px;font-family:'Public Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--panel);border:1px solid var(--rule2);border-radius:3px" />
+    </div>
+
+    <fieldset style="{{ groupBox }}">
+      <legend style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">Conformance level filter</legend>
+      <button type="button" onClick="{{ setAll }}" aria-pressed="{{ allOn }}" style="{{ btnAll }}">Everything</button>
+      <button type="button" onClick="{{ setA }}" aria-pressed="{{ aOn }}" style="{{ btnA }}">Level A</button>
+      <button type="button" onClick="{{ setAA }}" aria-pressed="{{ aaOn }}" style="{{ btnAA }}">Level AA</button>
+    </fieldset>
+
+    <fieldset style="{{ groupBox }}">
+      <legend style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">Viewport preview</legend>
+      <button type="button" onClick="{{ setDesktop }}" aria-pressed="{{ vDesktopOn }}" style="{{ btnDesktop }}">Desktop</button>
+      <button type="button" onClick="{{ setTablet }}" aria-pressed="{{ vTabletOn }}" style="{{ btnTablet }}">Tablet</button>
+      <button type="button" onClick="{{ setMobile }}" aria-pressed="{{ vMobileOn }}" style="{{ btnMobile }}">320px</button>
+    </fieldset>
+
+    <button type="button" onClick="{{ toggleTheme }}" style="display:flex;align-items:center;gap:8px;padding:7px 12px;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);background:var(--panel);border:1px solid var(--rule2);border-radius:3px;cursor:pointer">{{ themeLabel }}</button>
+
+    <button type="button" onClick="{{ toggleNav }}" aria-expanded="{{ navOpen }}" style="{{ hamburgerStyle }}">☰ Guidelines</button>
+  </div>
+  <div style="{{ stripStyle }}">
+    <span style="letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)">You are in</span>
+    <span aria-hidden="true" style="{{ hereDot }}"></span>
+    <span style="{{ hereStyle }}">{{ here }}</span>
+    <span style="color:var(--rule2)">/</span>
+    <span>{{ hereGuideline }}</span>
+    <span style="margin-left:auto">{{ filterNote }}</span>
+  </div>
+</header>
+
+<div style="{{ shellGrid }}">
+
+  <nav aria-label="Guidelines" style="{{ railStyle }}">
+    <p style="margin:0 0 14px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)">Contents</p>
+
+    <p style="margin:0 0 6px;display:flex;align-items:center;gap:8px;font-family:'Public Sans',sans-serif;font-size:13px;font-weight:700;letter-spacing:.02em;color:var(--p1)"><span aria-hidden="true" style="width:9px;height:9px;background:var(--p1);border-radius:0"></span>1 · Perceivable</p>
+    <ul style="list-style:none;margin:0 0 20px;padding:0;display:grid;gap:1px">
+      <li style="display:flex"><span aria-hidden="true" style="{{ m11 }}"></span><a href="#g1.1" style="{{ railLink }}"><span style="font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums">1.1</span> Text Alternatives</a></li>
+      <li style="display:flex"><span aria-hidden="true" style="{{ m12 }}"></span><a href="#g1.2" style="{{ railLink }}"><span style="font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums">1.2</span> Time-based Media</a></li>
+      <li style="display:flex"><span aria-hidden="true" style="{{ m13 }}"></span><a href="#g1.3" style="{{ railLink }}"><span style="font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums">1.3</span> Adaptable</a></li>
+      <li style="display:flex"><span aria-hidden="true" style="{{ m14 }}"></span><a href="#g1.4" style="{{ railLink }}"><span style="font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums">1.4</span> Distinguishable</a></li>
+    </ul>
+
+    <p style="margin:0 0 6px;display:flex;align-items:center;gap:8px;font-family:'Public Sans',sans-serif;font-size:13px;font-weight:700;letter-spacing:.02em;color:var(--p2)"><span aria-hidden="true" style="width:9px;height:9px;background:var(--p2);border-radius:50%"></span>2 · Operable</p>
+    <ul style="list-style:none;margin:0 0 20px;padding:0;display:grid;gap:1px">
+      <li style="display:flex"><span aria-hidden="true" style="{{ m21 }}"></span><a href="#g2.1" style="{{ railLink }}"><span style="font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums">2.1</span> Keyboard Accessible</a></li>
+      <li style="display:flex"><span aria-hidden="true" style="{{ m22 }}"></span><a href="#g2.2" style="{{ railLink }}"><span style="font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums">2.2</span> Enough Time</a></li>
+      <li style="display:flex"><span aria-hidden="true" style="{{ m23 }}"></span><a href="#g2.3" style="{{ railLink }}"><span style="font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums">2.3</span> Seizures &amp; Physical Reactions</a></li>
+      <li style="display:flex"><span aria-hidden="true" style="{{ m24 }}"></span><a href="#g2.4" style="{{ railLink }}"><span style="font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums">2.4</span> Navigable</a></li>
+      <li style="display:flex"><span aria-hidden="true" style="{{ m25 }}"></span><a href="#g2.5" style="{{ railLink }}"><span style="font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums">2.5</span> Input Modalities</a></li>
+    </ul>
+
+    <p style="margin:0 0 6px;display:flex;align-items:center;gap:8px;font-family:'Public Sans',sans-serif;font-size:13px;font-weight:700;letter-spacing:.02em;color:var(--p3)"><span aria-hidden="true" style="width:9px;height:9px;background:var(--p3);clip-path:polygon(50% 0,100% 100%,0 100%)"></span>3 · Understandable</p>
+    <ul style="list-style:none;margin:0 0 20px;padding:0;display:grid;gap:1px">
+      <li style="display:flex"><span aria-hidden="true" style="{{ m31 }}"></span><a href="#g3.1" style="{{ railLink }}"><span style="font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums">3.1</span> Readable</a></li>
+      <li style="display:flex"><span aria-hidden="true" style="{{ m32 }}"></span><a href="#g3.2" style="{{ railLink }}"><span style="font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums">3.2</span> Predictable</a></li>
+      <li style="display:flex"><span aria-hidden="true" style="{{ m33 }}"></span><a href="#g3.3" style="{{ railLink }}"><span style="font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums">3.3</span> Input Assistance</a></li>
+    </ul>
+
+    <p style="margin:0 0 6px;display:flex;align-items:center;gap:8px;font-family:'Public Sans',sans-serif;font-size:13px;font-weight:700;letter-spacing:.02em;color:var(--p4)"><span aria-hidden="true" style="width:9px;height:9px;background:var(--p4);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)"></span>4 · Robust</p>
+    <ul style="list-style:none;margin:0 0 24px;padding:0;display:grid;gap:1px">
+      <li style="display:flex"><span aria-hidden="true" style="{{ m41 }}"></span><a href="#g4.1" style="{{ railLink }}"><span style="font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums">4.1</span> Compatible</a></li>
+    </ul>
+
+    <p style="margin:0;padding-top:16px;border-top:1px solid var(--rule);font-size:12.5px;line-height:1.55;color:var(--ink2)">Level A and AA are documented in full. AAA criteria appear where they change a common pattern.</p>
+  </nav>
+
+  <div style="{{ drawerStyle }}">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)">Contents</span>
+      <button type="button" onClick="{{ toggleNav }}" style="padding:8px 12px;min-height:44px;font-size:14px;font-weight:600;color:var(--ink);background:var(--panel2);border:1px solid var(--rule2);border-radius:3px;cursor:pointer">Close ✕</button>
+    </div>
+    <div style="display:grid;gap:10px;padding:0 0 18px;margin-bottom:18px;border-bottom:1px solid var(--rule2)">
+      <label for="mq" style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)">Search criteria</label>
+      <input id="mq" type="search" placeholder="Criterion name or number" value="{{ q }}" onInput="{{ onSearch }}" style="width:100%;min-height:44px;padding:8px 10px;font-family:'Public Sans',sans-serif;font-size:15px;color:var(--ink);background:var(--panel);border:1px solid var(--rule2);border-radius:3px" />
+      <fieldset style="display:flex;border:1px solid var(--rule2);border-radius:3px;padding:0;margin:0;background:var(--panel)">
+        <legend style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">Conformance level filter</legend>
+        <button type="button" onClick="{{ setAll }}" aria-pressed="{{ allOn }}" style="{{ mBtnAll }}">All</button>
+        <button type="button" onClick="{{ setA }}" aria-pressed="{{ aOn }}" style="{{ mBtnA }}">A</button>
+        <button type="button" onClick="{{ setAA }}" aria-pressed="{{ aaOn }}" style="{{ mBtnAA }}">AA</button>
+      </fieldset>
+      <fieldset style="display:flex;border:1px solid var(--rule2);border-radius:3px;padding:0;margin:0;background:var(--panel)">
+        <legend style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">Viewport preview</legend>
+        <button type="button" onClick="{{ setDesktop }}" aria-pressed="{{ vDesktopOn }}" style="{{ mBtnDesktop }}">Desktop</button>
+        <button type="button" onClick="{{ setTablet }}" aria-pressed="{{ vTabletOn }}" style="{{ mBtnTablet }}">Tablet</button>
+        <button type="button" onClick="{{ setMobile }}" aria-pressed="{{ vMobileOn }}" style="{{ mBtnMobile }}">320</button>
+      </fieldset>
+    </div>
+    <p style="margin:0 0 4px;font-size:13px;font-weight:700;color:var(--p1)">1 · Perceivable</p>
+    <ul style="list-style:none;margin:0 0 16px;padding:0">
+      <li><a href="#g1.1" onClick="{{ toggleNav }}" style="{{ drawerLink }}">1.1 Text Alternatives</a></li>
+      <li><a href="#g1.2" onClick="{{ toggleNav }}" style="{{ drawerLink }}">1.2 Time-based Media</a></li>
+      <li><a href="#g1.3" onClick="{{ toggleNav }}" style="{{ drawerLink }}">1.3 Adaptable</a></li>
+      <li><a href="#g1.4" onClick="{{ toggleNav }}" style="{{ drawerLink }}">1.4 Distinguishable</a></li>
+    </ul>
+    <p style="margin:0 0 4px;font-size:13px;font-weight:700;color:var(--p2)">2 · Operable</p>
+    <ul style="list-style:none;margin:0 0 16px;padding:0">
+      <li><a href="#g2.1" onClick="{{ toggleNav }}" style="{{ drawerLink }}">2.1 Keyboard Accessible</a></li>
+      <li><a href="#g2.2" onClick="{{ toggleNav }}" style="{{ drawerLink }}">2.2 Enough Time</a></li>
+      <li><a href="#g2.3" onClick="{{ toggleNav }}" style="{{ drawerLink }}">2.3 Seizures &amp; Physical Reactions</a></li>
+      <li><a href="#g2.4" onClick="{{ toggleNav }}" style="{{ drawerLink }}">2.4 Navigable</a></li>
+      <li><a href="#g2.5" onClick="{{ toggleNav }}" style="{{ drawerLink }}">2.5 Input Modalities</a></li>
+    </ul>
+    <p style="margin:0 0 4px;font-size:13px;font-weight:700;color:var(--p3)">3 · Understandable</p>
+    <ul style="list-style:none;margin:0 0 16px;padding:0">
+      <li><a href="#g3.1" onClick="{{ toggleNav }}" style="{{ drawerLink }}">3.1 Readable</a></li>
+      <li><a href="#g3.2" onClick="{{ toggleNav }}" style="{{ drawerLink }}">3.2 Predictable</a></li>
+      <li><a href="#g3.3" onClick="{{ toggleNav }}" style="{{ drawerLink }}">3.3 Input Assistance</a></li>
+    </ul>
+    <p style="margin:0 0 4px;font-size:13px;font-weight:700;color:var(--p4)">4 · Robust</p>
+    <ul style="list-style:none;margin:0;padding:0">
+      <li><a href="#g4.1" onClick="{{ toggleNav }}" style="{{ drawerLink }}">4.1 Compatible</a></li>
+    </ul>
+  </div>
+
+  <main id="main" style="min-width:0;padding:0 24px 96px">
+
+    <section aria-labelledby="title" style="padding:64px 0 48px;border-bottom:1px solid var(--rule);max-width:900px">
+      <p style="margin:0 0 20px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3)">A field guide to the Web Content Accessibility Guidelines</p>
+      <h1 id="title" style="margin:0 0 24px;font-family:Newsreader,serif;font-size:clamp(32px,6cqw,72px);line-height:1.02;font-weight:500;letter-spacing:-.025em;text-wrap:balance">Every WCAG 2.2 criterion, shown rather than described.</h1>
+      <p style="margin:0 0 28px;font-size:19px;line-height:1.6;color:var(--ink2);max-width:62ch;text-wrap:pretty">Four principles, thirteen guidelines, and a card for each success criterion: a plain-English restatement, a failing example, and the same interface after it passes. Everything on this page obeys the criteria it documents.</p>
+      <dl style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:20px 28px;margin:0;padding-top:28px;border-top:1px solid var(--rule);max-width:760px">
+        <div><dt style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px">Version</dt><dd style="margin:0;font-family:Newsreader,serif;font-size:24px">WCAG 2.2</dd></div>
+        <div><dt style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px">Target</dt><dd style="margin:0;font-family:Newsreader,serif;font-size:24px">Level AA</dd></div>
+        <div><dt style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px">Structure</dt><dd style="margin:0;font-family:Newsreader,serif;font-size:24px">4 / 13</dd></div>
+        <div><dt style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px">Demos</dt><dd style="margin:0;font-family:Newsreader,serif;font-size:24px">9 captioned</dd></div>
+      </dl>
+    </section>
+
+    <section aria-labelledby="how" style="padding:40px 0;border-bottom:1px solid var(--rule);max-width:900px">
+      <h2 id="how" style="margin:0 0 18px;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--ink3)">How to read a card</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:18px">
+        <p style="margin:0;font-size:15px;line-height:1.6;color:var(--ink2)"><strong style="color:var(--ink)">Number and level.</strong> Criterion numbers are set in tabular monospace so they align down the page. Badges differ in shape, outline, and label — never hue alone.</p>
+        <p style="margin:0;font-size:15px;line-height:1.6;color:var(--ink2)"><strong style="color:var(--ink)">Fail, then pass.</strong> The left frame is marked <span style="font-family:'IBM Plex Mono',monospace">✕ FAIL</span>, the right <span style="font-family:'IBM Plex Mono',monospace">✓ PASS</span>. A caption under each names the one thing that changed.</p>
+        <p style="margin:0;font-size:15px;line-height:1.6;color:var(--ink2)"><strong style="color:var(--ink)">Evidence.</strong> Where the point is code, a markup diff sits beneath the visual. Where the point is perceptual, the visual carries it alone.</p>
+      </div>
+    </section>
+
+    <section aria-labelledby="p1h" id="p1" style="margin:56px -24px 0;padding:72px 24px;background:var(--p1-wash);border-top:3px solid var(--p1);border-bottom:1px solid var(--rule)">
+      <div style="max-width:900px;display:grid;display:flex;flex-wrap:wrap;gap:24px 32px;align-items:flex-start">
+        <span aria-hidden="true" style="font-family:Newsreader,serif;font-size:clamp(56px,10cqw,132px);line-height:.8;color:var(--p1);font-weight:400">1</span>
+        <div>
+          <p style="margin:0 0 10px;display:flex;align-items:center;gap:10px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--p1);font-weight:600"><span aria-hidden="true" style="width:9px;height:9px;background:var(--p1)"></span>Principle one</p>
+          <h2 id="p1h" style="margin:0 0 18px;font-family:Newsreader,serif;font-size:clamp(34px,6cqw,68px);line-height:1;font-weight:500;letter-spacing:-.02em">Perceivable</h2>
+          <p style="margin:0 0 26px;font-family:Newsreader,serif;font-size:clamp(19px,2.4cqw,28px);line-height:1.35;color:var(--ink);max-width:34ch;font-style:italic">If you can't perceive it, it isn't there for you.</p>
+          <p style="margin:0 0 28px;font-size:16px;line-height:1.65;color:var(--ink2);max-width:60ch;text-wrap:pretty">Information and interface components must be presentable in ways every user can sense. Text that can be read aloud or enlarged; contrast that survives a bright room; structure that survives losing the layout.</p>
+          <ul style="list-style:none;margin:0;padding:0;display:grid;gap:0;border-top:1px solid var(--rule2);max-width:520px">
+            <li><a href="#g1.1" style="display:flex;gap:16px;padding:12px 4px;border-bottom:1px solid var(--rule2);font-size:15px;text-decoration:none;color:var(--ink)"><span style="font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums;color:var(--p1)">1.1</span>Text Alternatives</a></li>
+            <li><a href="#g1.2" style="display:flex;gap:16px;padding:12px 4px;border-bottom:1px solid var(--rule2);font-size:15px;text-decoration:none;color:var(--ink)"><span style="font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums;color:var(--p1)">1.2</span>Time-based Media</a></li>
+            <li><a href="#g1.3" style="display:flex;gap:16px;padding:12px 4px;border-bottom:1px solid var(--rule2);font-size:15px;text-decoration:none;color:var(--ink)"><span style="font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums;color:var(--p1)">1.3</span>Adaptable</a></li>
+            <li><a href="#g1.4" style="display:flex;gap:16px;padding:12px 4px;border-bottom:1px solid var(--rule2);font-size:15px;text-decoration:none;color:var(--ink);font-weight:600"><span style="font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums;color:var(--p1)">1.4</span>Distinguishable <span style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)">below</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="g1.4" data-guideline="1.4" aria-labelledby="g14h" style="padding:64px 0 8px;max-width:1080px">
+      <div style="display:flex;align-items:baseline;gap:8px 16px;flex-wrap:wrap;padding-bottom:18px;border-bottom:2px solid var(--ink)">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:clamp(18px,2.4cqw,28px);font-variant-numeric:tabular-nums;color:var(--p1);font-weight:500">1.4</span>
+        <h3 id="g14h" style="margin:0;font-family:Newsreader,serif;font-size:clamp(24px,3.4cqw,40px);line-height:1.1;font-weight:500;letter-spacing:-.015em">Distinguishable</h3>
+        <span style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)">Guideline 4 of 4 · Perceivable</span>
+      </div>
+      <p style="margin:20px 0 0;font-size:17px;line-height:1.6;color:var(--ink2);max-width:62ch;text-wrap:pretty">Make it easier for users to see and hear content, including separating foreground from background. This is where most audits fail, and where the failures are easiest to see.</p>
+
+      <div style="display:grid;gap:36px;padding-top:40px">
+
+        <article id="1.4.1" data-card="1.4.1" style="{{ card141 }}">
+          <div style="display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap;padding-bottom:20px;border-bottom:1px solid var(--rule)">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-variant-numeric:tabular-nums;color:var(--ink2);padding-top:4px">1.4.1</span>
+            <h4 style="margin:0;font-family:Newsreader,serif;font-size:26px;line-height:1.2;font-weight:500">Use of Color</h4>
+            <span style="display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border:2px solid var(--ink);border-radius:0;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.1em;background:var(--ink);color:var(--panel)"><span aria-hidden="true">■</span>LEVEL A</span>
+            <a href="#1.4.1" aria-label="Link to criterion 1.4.1" style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:13px;text-decoration:none;padding-top:4px">#</a>
+          </div>
+          <p style="margin:20px 0 0;font-size:17px;line-height:1.6;max-width:64ch;text-wrap:pretty"><strong>In plain English:</strong> colour can carry meaning, but never on its own. If removing all colour from the screen would lose information, add a shape, a label, an underline, or an icon.</p>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:20px;padding-top:24px">
+            <div style="border:2px solid var(--fail);border-radius:4px;overflow:hidden;background:var(--fail-bg)">
+              <p style="margin:0;display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:2px solid var(--fail);font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:600;letter-spacing:.12em;color:var(--fail)"><span aria-hidden="true" style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border:1.5px solid var(--fail);border-radius:0">✕</span>FAIL</p>
+              <div style="padding:20px;background:var(--panel)">
+                <p style="margin:0 0 14px;font-size:15px;line-height:1.65;color:var(--ink)">Your order ships in two days. See the <span style="color:#1668C4">delivery schedule</span> for regional cut-off times, or read the <span style="color:#1668C4">returns policy</span>.</p>
+                <p style="margin:0;font-size:13px;line-height:1.5;color:var(--ink2)">Links are blue text and nothing else. In greyscale, at low vision, or on a monochrome display they are indistinguishable from the sentence around them.</p>
+              </div>
+              <p style="margin:0;padding:10px 12px;border-top:1px solid var(--rule);font-size:13px;line-height:1.5;background:var(--fail-bg);color:var(--ink)"><strong>What's wrong:</strong> hue is the only signal.</p>
+            </div>
+            <div style="border:2px solid var(--pass);border-radius:4px;overflow:hidden;background:var(--pass-bg)">
+              <p style="margin:0;display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:2px solid var(--pass);font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:600;letter-spacing:.12em;color:var(--pass)"><span aria-hidden="true" style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border:1.5px solid var(--pass);border-radius:50%">✓</span>PASS</p>
+              <div style="padding:20px;background:var(--panel)">
+                <p style="margin:0 0 14px;font-size:15px;line-height:1.65;color:var(--ink)">Your order ships in two days. See the <a href="#1.4.1" style="text-decoration:underline;text-decoration-thickness:1.5px">delivery schedule</a> for regional cut-off times, or read the <a href="#1.4.1" style="text-decoration:underline;text-decoration-thickness:1.5px">returns policy</a>.</p>
+                <p style="margin:0;font-size:13px;line-height:1.5;color:var(--ink2)">The underline survives greyscale, inverted colour, and a monochrome print-out. Colour still helps; it is no longer load-bearing.</p>
+              </div>
+              <p style="margin:0;padding:10px 12px;border-top:1px solid var(--rule);font-size:13px;line-height:1.5;background:var(--pass-bg);color:var(--ink)"><strong>What changed:</strong> a persistent underline was added.</p>
+            </div>
+          </div>
+        </article>
+
+        <article id="1.4.3" data-card="1.4.3" style="{{ card143 }}">
+          <div style="display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap;padding-bottom:20px;border-bottom:1px solid var(--rule)">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-variant-numeric:tabular-nums;color:var(--ink2);padding-top:4px">1.4.3</span>
+            <h4 style="margin:0;font-family:Newsreader,serif;font-size:26px;line-height:1.2;font-weight:500">Contrast (Minimum)</h4>
+            <span style="display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border:2px solid var(--ink);border-radius:999px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.1em;color:var(--ink);background:transparent"><span aria-hidden="true">◐</span>LEVEL AA</span>
+            <a href="#1.4.3" aria-label="Link to criterion 1.4.3" style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:13px;text-decoration:none;padding-top:4px">#</a>
+          </div>
+          <p style="margin:20px 0 0;font-size:17px;line-height:1.6;max-width:64ch;text-wrap:pretty"><strong>In plain English:</strong> body text needs at least 4.5:1 against its background. Text at 24px, or 19px bold and above, needs 3:1. Measure it; don't eyeball it.</p>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:20px;padding-top:24px">
+            <div style="border:2px solid var(--fail);border-radius:4px;overflow:hidden;background:var(--fail-bg)">
+              <p style="margin:0;display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:2px solid var(--fail);font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:600;letter-spacing:.12em;color:var(--fail)"><span aria-hidden="true" style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border:1.5px solid var(--fail)">✕</span>FAIL</p>
+              <div style="padding:20px;background:#FFFFFF">
+                <p style="margin:0 0 6px;font-family:'Public Sans',sans-serif;font-size:13px;font-weight:600;color:#A8A8A8">Card number</p>
+                <p style="margin:0 0 16px;font-family:'IBM Plex Mono',monospace;font-size:15px;color:#B0B0B0">4242 4242 4242 4242</p>
+                <p style="margin:0;font-size:14px;line-height:1.55;color:#9C9C9C">Placeholder grey, helper grey, and disabled grey are three different mistakes with the same cause.</p>
+                <p style="margin:16px 0 0;display:inline-flex;gap:8px;align-items:center;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:#8A1F17;border:1.5px solid #8A1F17;padding:3px 8px">✕ 2.3:1 measured</p>
+              </div>
+              <p style="margin:0;padding:10px 12px;border-top:1px solid var(--rule);font-size:13px;line-height:1.5;background:var(--fail-bg);color:var(--ink)"><strong>What's wrong:</strong> #9C9C9C on white is 2.3:1 — half the required ratio.</p>
+            </div>
+            <div style="border:2px solid var(--pass);border-radius:4px;overflow:hidden;background:var(--pass-bg)">
+              <p style="margin:0;display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:2px solid var(--pass);font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:600;letter-spacing:.12em;color:var(--pass)"><span aria-hidden="true" style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border:1.5px solid var(--pass);border-radius:50%">✓</span>PASS</p>
+              <div style="padding:20px;background:#FFFFFF">
+                <p style="margin:0 0 6px;font-family:'Public Sans',sans-serif;font-size:13px;font-weight:600;color:#3F3F3F">Card number</p>
+                <p style="margin:0 0 16px;font-family:'IBM Plex Mono',monospace;font-size:15px;color:#1C1C1C">4242 4242 4242 4242</p>
+                <p style="margin:0;font-size:14px;line-height:1.55;color:#54524C">Helper text at #54524C keeps its quieter voice through weight and size rather than through fading out.</p>
+                <p style="margin:16px 0 0;display:inline-flex;gap:8px;align-items:center;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:#0F5C31;border:1.5px solid #0F5C31;padding:3px 8px">✓ 7.4:1 measured</p>
+              </div>
+              <p style="margin:0;padding:10px 12px;border-top:1px solid var(--rule);font-size:13px;line-height:1.5;background:var(--pass-bg);color:var(--ink)"><strong>What changed:</strong> hierarchy moved from lightness to weight and scale.</p>
+            </div>
+          </div>
+        </article>
+
+        <article id="1.4.11" data-card="1.4.11" style="{{ card1411 }}">
+          <div style="display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap;padding-bottom:20px;border-bottom:1px solid var(--rule)">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-variant-numeric:tabular-nums;color:var(--ink2);padding-top:4px">1.4.11</span>
+            <h4 style="margin:0;font-family:Newsreader,serif;font-size:26px;line-height:1.2;font-weight:500">Non-text Contrast</h4>
+            <span style="display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border:2px solid var(--ink);border-radius:999px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.1em;color:var(--ink);background:transparent"><span aria-hidden="true">◐</span>LEVEL AA</span>
+            <a href="#1.4.11" aria-label="Link to criterion 1.4.11" style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:13px;text-decoration:none;padding-top:4px">#</a>
+          </div>
+          <p style="margin:20px 0 0;font-size:17px;line-height:1.6;max-width:64ch;text-wrap:pretty"><strong>In plain English:</strong> the parts of a control that tell you it is a control — the input's edge, the checkbox box, the focus ring, the chart key — need 3:1 against what sits behind them.</p>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:20px;padding-top:24px">
+            <div style="border:2px solid var(--fail);border-radius:4px;overflow:hidden;background:var(--fail-bg)">
+              <p style="margin:0;display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:2px solid var(--fail);font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:600;letter-spacing:.12em;color:var(--fail)"><span aria-hidden="true" style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border:1.5px solid var(--fail)">✕</span>FAIL</p>
+              <div style="padding:20px;background:#FFFFFF">
+                <p style="margin:0 0 6px;font-size:13px;font-weight:600;color:#3F3F3F">Email address</p>
+                <div aria-hidden="true" style="height:40px;border:1px solid #EBEBEB;border-radius:4px;background:#FFFFFF;display:flex;align-items:center;padding:0 12px;font-size:14px;color:#7A7A7A">you@example.com</div>
+                <div style="display:flex;align-items:center;gap:10px;margin-top:16px">
+                  <span aria-hidden="true" style="width:18px;height:18px;border:1px solid #EDEDED;border-radius:3px;display:block"></span>
+                  <span style="font-size:14px;color:#3F3F3F">Email me order updates</span>
+                </div>
+                <p style="margin:16px 0 0;display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:#8A1F17;border:1.5px solid #8A1F17;padding:3px 8px">✕ border 1.2:1</p>
+              </div>
+              <p style="margin:0;padding:10px 12px;border-top:1px solid var(--rule);font-size:13px;line-height:1.5;background:var(--fail-bg);color:var(--ink)"><strong>What's wrong:</strong> the field and checkbox edges vanish; only the placeholder hints that anything is editable.</p>
+            </div>
+            <div style="border:2px solid var(--pass);border-radius:4px;overflow:hidden;background:var(--pass-bg)">
+              <p style="margin:0;display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:2px solid var(--pass);font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:600;letter-spacing:.12em;color:var(--pass)"><span aria-hidden="true" style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border:1.5px solid var(--pass);border-radius:50%">✓</span>PASS</p>
+              <div style="padding:20px;background:#FFFFFF">
+                <p style="margin:0 0 6px;font-size:13px;font-weight:600;color:#3F3F3F">Email address</p>
+                <div aria-hidden="true" style="height:40px;border:1px solid #6A6A6A;border-radius:4px;background:#FFFFFF;display:flex;align-items:center;padding:0 12px;font-size:14px;color:#5A5A5A">you@example.com</div>
+                <div style="display:flex;align-items:center;gap:10px;margin-top:16px">
+                  <span aria-hidden="true" style="width:18px;height:18px;border:1.5px solid #6A6A6A;border-radius:3px;display:block"></span>
+                  <span style="font-size:14px;color:#3F3F3F">Email me order updates</span>
+                </div>
+                <p style="margin:16px 0 0;display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:#0F5C31;border:1.5px solid #0F5C31;padding:3px 8px">✓ border 4.8:1</p>
+              </div>
+              <p style="margin:0;padding:10px 12px;border-top:1px solid var(--rule);font-size:13px;line-height:1.5;background:var(--pass-bg);color:var(--ink)"><strong>What changed:</strong> one border colour, on every control at once.</p>
+            </div>
+          </div>
+
+          <figure style="margin:24px 0 0;border:1px solid var(--rule2);border-radius:4px;overflow:hidden;background:var(--panel2)">
+            <figcaption style="display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:1px solid var(--rule2);font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2)">Markup diff <span style="color:var(--ink3);text-transform:none;letter-spacing:0">— styles.css, one declaration</span></figcaption>
+            <pre style="margin:0;padding:16px 14px;overflow-x:auto;font-family:'IBM Plex Mono',monospace;font-size:13.5px;line-height:1.75;color:var(--ink)"><code>  .field,
+  .checkbox {
+<span style="display:block;background:var(--fail-bg);border-left:3px solid var(--fail);padding-left:8px;margin-left:-11px">-   border: 1px solid #EBEBEB;  /* 1.2:1 — fails 1.4.11 */</span><span style="display:block;background:var(--pass-bg);border-left:3px solid var(--pass);padding-left:8px;margin-left:-11px">+   border: 1px solid #6A6A6A;  /* 4.8:1 — passes  */</span>    border-radius: 4px;
+  }</code></pre>
+            <p style="margin:0;padding:10px 14px;border-top:1px solid var(--rule2);font-size:13px;line-height:1.5;color:var(--ink2)">Lines are marked <span style="font-family:'IBM Plex Mono',monospace;color:var(--ink)">-</span> and <span style="font-family:'IBM Plex Mono',monospace;color:var(--ink)">+</span> as well as tinted, so the diff reads without colour.</p>
+          </figure>
+        </article>
+
+        <article id="1.4.10" data-card="1.4.10" style="{{ card1410 }}">
+          <div style="display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap;padding-bottom:20px;border-bottom:1px solid var(--rule)">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-variant-numeric:tabular-nums;color:var(--ink2);padding-top:4px">1.4.10</span>
+            <h4 style="margin:0;font-family:Newsreader,serif;font-size:26px;line-height:1.2;font-weight:500">Reflow</h4>
+            <span style="display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border:2px solid var(--ink);border-radius:999px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.1em;color:var(--ink);background:transparent"><span aria-hidden="true">◐</span>LEVEL AA</span>
+            <a href="#1.4.10" aria-label="Link to criterion 1.4.10" style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:13px;text-decoration:none;padding-top:4px">#</a>
+          </div>
+          <p style="margin:20px 0 0;font-size:17px;line-height:1.6;max-width:64ch;text-wrap:pretty"><strong>In plain English:</strong> at 320 CSS pixels wide, content must not require scrolling in two directions. Same content, one column, no horizontal scrollbar.</p>
+
+          <figure style="margin:24px 0 0;border:1px solid var(--rule2);border-radius:6px;overflow:hidden;background:var(--panel2)">
+            <div style="position:relative;aspect-ratio:16/9;background:#111110;overflow:hidden;container-type:inline-size">
+              <div style="position:absolute;inset:0;display:grid;grid-template-columns:1.6fr 1fr;gap:0">
+                <div style="background:#FFFFFF;padding:2.4cqw 2.6cqw;overflow:hidden">
+                  <div style="display:flex;align-items:center;gap:1.3cqw;padding-bottom:1.6cqw;border-bottom:1px solid #DDD9D0">
+                    <span style="width:1.7cqw;height:1.7cqw;background:#1C1C1C;display:block;flex:0 0 auto"></span>
+                    <span style="font-family:Newsreader,serif;font-size:2.1cqw;line-height:1.1;color:#1C1C1C;white-space:nowrap">Northbound Supply</span>
+                    <span style="margin-left:auto;font-size:1.6cqw;line-height:1.1;color:#3F3F3F;white-space:nowrap;overflow:hidden">Catalogue Orders Account</span>
+                  </div>
+                  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.3cqw;padding-top:2cqw">
+                    <div style="height:9cqw;background:#F1EDE4;border:1px solid #DDD9D0"></div>
+                    <div style="height:9cqw;background:#F1EDE4;border:1px solid #DDD9D0"></div>
+                    <div style="height:9cqw;background:#F1EDE4;border:1px solid #DDD9D0"></div>
+                  </div>
+                  <div style="display:grid;gap:.85cqw;padding-top:2cqw">
+                    <span style="height:1.15cqw;background:#1C1C1C;width:70%;display:block"></span>
+                    <span style="height:1cqw;background:#8D887E;width:92%;display:block"></span>
+                    <span style="height:1cqw;background:#8D887E;width:84%;display:block"></span>
+                  </div>
+                </div>
+                <div style="background:#FFFFFF;border-left:1px dashed #B4AC99;padding:2.4cqw 2cqw;overflow:hidden">
+                  <div style="display:flex;flex-direction:column;gap:1.3cqw">
+                    <div style="display:flex;align-items:center;gap:1cqw;padding-bottom:1.3cqw;border-bottom:1px solid #DDD9D0">
+                      <span style="width:1.5cqw;height:1.5cqw;background:#1C1C1C;display:block;flex:0 0 auto"></span>
+                      <span style="font-family:Newsreader,serif;font-size:1.8cqw;line-height:1.1;color:#1C1C1C;white-space:nowrap">Northbound</span>
+                      <span style="margin-left:auto;font-size:1.8cqw;line-height:1;color:#1C1C1C">☰</span>
+                    </div>
+                    <div style="height:7cqw;background:#F1EDE4;border:1px solid #DDD9D0"></div>
+                    <div style="height:7cqw;background:#F1EDE4;border:1px solid #DDD9D0"></div>
+                    <span style="height:1cqw;background:#1C1C1C;width:80%;display:block"></span>
+                    <span style="height:.85cqw;background:#8D887E;width:96%;display:block"></span>
+                  </div>
+                </div>
+              </div>
+              <div aria-hidden="true" style="position:absolute;left:0;right:0;bottom:0;padding:1cqw 1.8cqw;background:rgba(17,17,16,.92);font-family:'IBM Plex Mono',monospace;font-size:clamp(8px,1.7cqw,11px);letter-spacing:.1em;text-transform:uppercase;color:#F3F0E8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">1280 px → 320 px</div>
+            </div>
+
+            <p style="margin:0;padding:12px 16px;border-top:1px solid var(--rule2);background:var(--panel);font-size:14.5px;line-height:1.6;color:var(--ink)"><span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-right:8px">Caption</span>The three-column catalogue collapses to one column as the viewport narrows. Navigation becomes a menu button. No horizontal scrollbar appears at any width.</p>
+
+            <div style="display:flex;align-items:center;gap:14px;padding:10px 16px;border-top:1px solid var(--rule2);background:var(--panel2);flex-wrap:wrap">
+              <button type="button" onClick="{{ togglePlay }}" aria-label="{{ playLabel }}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:44px;min-height:44px;padding:0 14px;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;color:var(--ink);background:var(--panel);border:1.5px solid var(--ink);border-radius:3px;cursor:pointer">{{ playGlyph }}</button>
+              <label for="scrub" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">Scrub position</label>
+              <input id="scrub" type="range" min="0" max="12" step="0.1" value="{{ scrub }}" onInput="{{ onScrub }}" style="flex:1;min-width:120px;height:32px" />
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;font-variant-numeric:tabular-nums;color:var(--ink2)">{{ scrubTime }} / 0:12</span>
+              <span style="display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border:1.5px solid var(--ink2);border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--ink)">CC ON</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)">Silent · looping</span>
+            </div>
+          </figure>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:20px;padding-top:24px">
+            <div style="border:2px solid var(--fail);border-radius:4px;overflow:hidden;background:var(--fail-bg)">
+              <p style="margin:0;display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:2px solid var(--fail);font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:600;letter-spacing:.12em;color:var(--fail)"><span aria-hidden="true" style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border:1.5px solid var(--fail)">✕</span>FAIL AT 320 PX</p>
+              <div style="padding:16px;background:var(--panel);display:flex;justify-content:center">
+                <div style="width:150px;border:1px solid var(--rule2);background:#FFF;padding:10px;overflow:hidden;position:relative">
+                  <div style="display:grid;grid-template-columns:repeat(3,110px);width:max-content;gap:6px">
+                    <div style="height:40px;background:#F1EDE4;border:1px solid #DDD9D0"></div>
+                    <div style="height:40px;background:#F1EDE4;border:1px solid #DDD9D0"></div>
+                    <div style="height:40px;background:#F1EDE4;border:1px solid #DDD9D0"></div>
+                  </div>
+                  <div style="height:8px;margin-top:10px;background:#DDD9D0;border:1px solid #B4AC99"></div>
+                  <span aria-hidden="true" style="position:absolute;right:4px;bottom:20px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8A1F17">→</span>
+                </div>
+              </div>
+              <p style="margin:0;padding:10px 12px;border-top:1px solid var(--rule);font-size:13px;line-height:1.5;background:var(--fail-bg);color:var(--ink)"><strong>What's wrong:</strong> fixed 110px columns force a horizontal scrollbar — two-direction scrolling.</p>
+            </div>
+            <div style="border:2px solid var(--pass);border-radius:4px;overflow:hidden;background:var(--pass-bg)">
+              <p style="margin:0;display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:2px solid var(--pass);font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:600;letter-spacing:.12em;color:var(--pass)"><span aria-hidden="true" style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border:1.5px solid var(--pass);border-radius:50%">✓</span>PASS AT 320 PX</p>
+              <div style="padding:16px;background:var(--panel);display:flex;justify-content:center">
+                <div style="width:150px;border:1px solid var(--rule2);background:#FFF;padding:10px">
+                  <div style="display:grid;gap:6px">
+                    <div style="height:34px;background:#F1EDE4;border:1px solid #DDD9D0"></div>
+                    <div style="height:34px;background:#F1EDE4;border:1px solid #DDD9D0"></div>
+                    <div style="height:34px;background:#F1EDE4;border:1px solid #DDD9D0"></div>
+                  </div>
+                </div>
+              </div>
+              <p style="margin:0;padding:10px 12px;border-top:1px solid var(--rule);font-size:13px;line-height:1.5;background:var(--pass-bg);color:var(--ink)"><strong>What changed:</strong> <span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px">minmax(0,1fr)</span> replaced the fixed track width.</p>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <section aria-labelledby="demos" style="padding:64px 0 0;max-width:1080px;border-top:1px solid var(--rule);margin-top:56px">
+      <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;padding-bottom:16px;border-bottom:2px solid var(--ink)">
+        <h2 id="demos" style="margin:0;font-family:Newsreader,serif;font-size:clamp(23px,3cqw,36px);font-weight:500;letter-spacing:-.015em">Demo library</h2>
+        <span style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)">Eight slots awaiting capture</span>
+      </div>
+      <p style="margin:18px 0 28px;font-size:16px;line-height:1.6;color:var(--ink2);max-width:62ch;text-wrap:pretty">Every slot uses the frame specified above: 16:9 chrome-less browser mock, one caption line, play/pause and scrub. Silent, looping, captions on by default.</p>
+      <ul style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:20px">
+        <li style="{{ slotBox }}"><span style="{{ slotFrame }}">Slot 02</span><span style="{{ slotNum }}">2.4.7</span><span style="{{ slotTitle }}">Keyboard traversal of a checkout form with a visible focus ring</span><span style="{{ slotMeta }}">0:14 · captioned</span></li>
+        <li style="{{ slotBox }}"><span style="{{ slotFrame }}">Slot 03</span><span style="{{ slotNum }}">2.4.7</span><span style="{{ slotTitle }}">The same traversal with focus styles removed — the cursor vanishes</span><span style="{{ slotMeta }}">0:14 · captioned</span></li>
+        <li style="{{ slotBox }}"><span style="{{ slotFrame }}">Slot 04</span><span style="{{ slotNum }}">4.1.2</span><span style="{{ slotTitle }}">Screen reader on an unlabelled icon button vs. a labelled one</span><span style="{{ slotMeta }}">0:18 · captioned</span></li>
+        <li style="{{ slotBox }}"><span style="{{ slotFrame }}">Slot 05</span><span style="{{ slotNum }}">3.3.1</span><span style="{{ slotTitle }}">Generic "invalid input" vs. inline, named, linked errors</span><span style="{{ slotMeta }}">0:16 · captioned</span></li>
+        <li style="{{ slotBox }}"><span style="{{ slotFrame }}">Slot 06</span><span style="{{ slotNum }}">4.1.3</span><span style="{{ slotTitle }}">A live region announcing an asynchronous cart update</span><span style="{{ slotMeta }}">0:10 · captioned</span></li>
+        <li style="{{ slotBox }}"><span style="{{ slotFrame }}">Slot 07</span><span style="{{ slotNum }}">2.5.8</span><span style="{{ slotTitle }}">Tap targets at 18px vs. 24px with a fingertip overlay</span><span style="{{ slotMeta }}">0:09 · captioned</span></li>
+        <li style="{{ slotBox }}"><span style="{{ slotFrame }}">Slot 08</span><span style="{{ slotNum }}">2.4.11</span><span style="{{ slotTitle }}">A sticky header obscuring the focused element vs. scroll-padding</span><span style="{{ slotMeta }}">0:12 · captioned</span></li>
+        <li style="{{ slotBox }}"><span style="{{ slotFrame }}">Slot 09</span><span style="{{ slotNum }}">2.2.2</span><span style="{{ slotTitle }}">Autoplaying carousel vs. one with a pause control</span><span style="{{ slotMeta }}">0:12 · captioned</span></li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="rules" style="margin:72px 0 0;padding:40px 28px;background:var(--panel2);border:1px solid var(--rule2);border-radius:6px;max-width:1080px">
+      <h2 id="rules" style="margin:0 0 20px;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--ink3)">This page obeys its own rules</h2>
+      <ul style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:14px 28px;font-size:15px;line-height:1.6;color:var(--ink2)">
+        <li style="display:flex;gap:10px"><span aria-hidden="true" style="color:var(--pass);font-family:'IBM Plex Mono',monospace">✓</span>Body text at or above 4.5:1, UI and large text at or above 3:1, in both themes.</li>
+        <li style="display:flex;gap:10px"><span aria-hidden="true" style="color:var(--pass);font-family:'IBM Plex Mono',monospace">✓</span>Focus rings on every interactive element, never removed.</li>
+        <li style="display:flex;gap:10px"><span aria-hidden="true" style="color:var(--pass);font-family:'IBM Plex Mono',monospace">✓</span>Skip link first in the tab order; landmarks and unskipped heading levels.</li>
+        <li style="display:flex;gap:10px"><span aria-hidden="true" style="color:var(--pass);font-family:'IBM Plex Mono',monospace">✓</span>Nothing carried by hue alone: badges differ in shape, glyph, and label.</li>
+        <li style="display:flex;gap:10px"><span aria-hidden="true" style="color:var(--pass);font-family:'IBM Plex Mono',monospace">✓</span>Demo controls keyboard-reachable, 44px minimum, captions on.</li>
+        <li style="display:flex;gap:10px"><span aria-hidden="true" style="color:var(--pass);font-family:'IBM Plex Mono',monospace">✓</span>Full behaviour at 320px and 200% zoom; motion respects <span style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:var(--ink)">prefers-reduced-motion</span>.</li>
+      </ul>
+    </section>
+
+  </main>
+</div>
+</div>
+</div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;defaultTheme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light'|'dark'&quot;,&quot;section&quot;:&quot;Presentation&quot;},&quot;defaultLevel&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;All&quot;,&quot;A&quot;,&quot;AA&quot;],&quot;default&quot;:&quot;All&quot;,&quot;tsType&quot;:&quot;'All'|'A'|'AA'&quot;,&quot;section&quot;:&quot;Presentation&quot;},&quot;viewport&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;desktop&quot;,&quot;tablet&quot;,&quot;mobile&quot;],&quot;default&quot;:&quot;desktop&quot;,&quot;tsType&quot;:&quot;'desktop'|'tablet'|'mobile'&quot;,&quot;section&quot;:&quot;Presentation&quot;}}">
+class Component extends DCLogic {
+  state = {};
+
+  get theme() { return this.state.theme ?? this.props.defaultTheme ?? 'light'; }
+  get level() { return this.state.level ?? this.props.defaultLevel ?? 'All'; }
+  get view() { return this.state.view ?? this.props.viewport ?? 'desktop'; }
+
+  componentDidMount() {
+    const els = Array.from(document.querySelectorAll('[data-guideline]'));
+    if (!els.length || !('IntersectionObserver' in window)) return;
+    this.io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) this.setState({ cur: e.target.getAttribute('data-guideline') });
+      });
+    }, { rootMargin: '-120px 0px -60% 0px' });
+    els.forEach(el => this.io.observe(el));
+  }
+  componentWillUnmount() { if (this.io) this.io.disconnect(); }
+
+  seg(on) {
+    return {
+      padding: '7px 12px', minHeight: '38px', border: 'none',
+      borderRight: '1px solid var(--rule2)',
+      fontFamily: "'IBM Plex Mono',monospace", fontSize: '12px', letterSpacing: '.06em',
+      textTransform: 'uppercase', cursor: 'pointer',
+      background: on ? 'var(--ink)' : 'transparent',
+      color: on ? 'var(--panel)' : 'var(--ink)',
+      fontWeight: on ? 600 : 400
+    };
+  }
+
+  mseg(on) {
+    return Object.assign(this.seg(on), { flex: 1, minHeight: '44px', fontSize: '13px' });
+  }
+
+  marker(active, hue) {
+    return {
+      width: '3px', flex: '0 0 3px', marginRight: '9px', borderRadius: '2px',
+      background: active ? hue : 'var(--rule)'
+    };
+  }
+
+  cardStyle(visible, narrow) {
+    return visible ? {
+      display: 'block', background: 'var(--panel)', border: '1px solid var(--rule2)',
+      borderRadius: '6px', padding: narrow ? '14px' : '24px', scrollMarginTop: '112px',
+      minWidth: 0
+    } : { display: 'none' };
+  }
+
+  matches(num, name, lvl) {
+    const q = (this.state.q ?? '').trim().toLowerCase();
+    const lv = this.level;
+    if (lv !== 'All' && lv !== lvl) return false;
+    if (!q) return true;
+    return (num + ' ' + name).toLowerCase().includes(q);
+  }
+
+  fmt(t) {
+    const s = Math.max(0, Math.round(t ?? 4));
+    return '0:' + String(s).padStart(2, '0');
+  }
+
+  renderVals() {
+    const cur = this.state.cur ?? '1.4';
+    const lvl = this.level, view = this.view, theme = this.theme;
+    const mobile = view === 'mobile';
+    const navOpen = !!this.state.navOpen && mobile;
+    const playing = this.state.playing ?? true;
+    const scrub = this.state.scrub ?? 4;
+
+    const vis = {
+      '1.4.1': this.matches('1.4.1', 'Use of Color', 'A'),
+      '1.4.3': this.matches('1.4.3', 'Contrast Minimum', 'AA'),
+      '1.4.11': this.matches('1.4.11', 'Non-text Contrast', 'AA'),
+      '1.4.10': this.matches('1.4.10', 'Reflow', 'AA')
+    };
+    const shown = Object.values(vis).filter(Boolean).length;
+    const q = this.state.q ?? '';
+
+    const frameWidth = mobile ? '320px' : (view === 'tablet' ? '834px' : '100%');
+    const railLink = {
+      display: 'block', flex: 1, padding: '5px 0', fontSize: '14px', lineHeight: 1.4,
+      color: 'var(--ink)', textDecoration: 'none'
+    };
+
+    return {
+      theme,
+      themeLabel: theme === 'dark' ? '☀ Light' : '☾ Dark',
+      toggleTheme: () => this.setState({ theme: theme === 'dark' ? 'light' : 'dark' }),
+
+      q,
+      onSearch: (e) => this.setState({ q: e.target.value }),
+      searchWrap: mobile ? { display: 'none' } : { display: 'flex', alignItems: 'center', gap: '8px' },
+      groupBox: mobile ? { display: 'none' } : {
+        display: 'flex', alignItems: 'center', border: '1px solid var(--rule2)',
+        borderRadius: '3px', padding: 0, margin: 0, background: 'var(--panel)'
+      },
+      stripStyle: {
+        display: 'flex', alignItems: 'center', gap: '10px',
+        padding: mobile ? '0 16px 8px' : '0 24px 10px',
+        maxWidth: '1400px', margin: '0 auto', whiteSpace: 'nowrap', overflow: 'hidden',
+        fontFamily: "'IBM Plex Mono',monospace", fontSize: '11.5px', color: 'var(--ink2)'
+      },
+      mBtnAll: this.mseg(lvl === 'All'), mBtnA: this.mseg(lvl === 'A'),
+      mBtnAA: Object.assign(this.mseg(lvl === 'AA'), { borderRight: 'none' }),
+      mBtnDesktop: this.mseg(view === 'desktop'), mBtnTablet: this.mseg(view === 'tablet'),
+      mBtnMobile: Object.assign(this.mseg(mobile), { borderRight: 'none' }),
+      allOn: lvl === 'All', aOn: lvl === 'A', aaOn: lvl === 'AA',
+      btnAll: this.seg(lvl === 'All'), btnA: this.seg(lvl === 'A'),
+      btnAA: Object.assign(this.seg(lvl === 'AA'), { borderRight: 'none' }),
+      setAll: () => this.setState({ level: 'All' }),
+      setA: () => this.setState({ level: 'A' }),
+      setAA: () => this.setState({ level: 'AA' }),
+      filterNote: mobile ? '' : shown === 4
+        ? 'Showing all criteria in view'
+        : 'Showing ' + shown + ' of 4 criteria in 1.4',
+
+      vDesktopOn: view === 'desktop', vTabletOn: view === 'tablet', vMobileOn: mobile,
+      btnDesktop: this.seg(view === 'desktop'), btnTablet: this.seg(view === 'tablet'),
+      btnMobile: Object.assign(this.seg(mobile), { borderRight: 'none' }),
+      setDesktop: () => this.setState({ view: 'desktop', navOpen: false }),
+      setTablet: () => this.setState({ view: 'tablet', navOpen: false }),
+      setMobile: () => this.setState({ view: 'mobile', navOpen: true }),
+
+      frameStyle: {
+        width: frameWidth, maxWidth: '100%', margin: '0 auto', position: 'relative',
+        containerType: 'inline-size', overflowX: 'clip',
+        border: view === 'desktop' ? 'none' : '1px solid var(--rule2)',
+        minHeight: view === 'desktop' ? '0' : '100vh',
+        background: 'var(--bg)'
+      },
+
+      shellGrid: {
+        display: 'grid',
+        gridTemplateColumns: mobile ? '1fr' : '250px minmax(0,1fr)',
+        gap: mobile ? '0' : '40px',
+        maxWidth: '1400px', margin: '0 auto',
+        alignItems: 'start'
+      },
+      railStyle: mobile ? { display: 'none' } : {
+        position: 'sticky', top: '112px', padding: '40px 0 40px 24px',
+        borderRight: '1px solid var(--rule)', minHeight: '0'
+      },
+      drawerStyle: navOpen ? {
+        display: 'block', position: 'fixed', inset: '0', zIndex: 50, overflowY: 'auto',
+        background: 'var(--bg)', padding: '20px', maxWidth: '320px', margin: '0 auto',
+        borderLeft: '1px solid var(--rule2)', borderRight: '1px solid var(--rule2)'
+      } : { display: 'none' },
+      drawerLink: {
+        display: 'block', padding: '12px 4px', minHeight: '44px', fontSize: '15px',
+        color: 'var(--ink)', textDecoration: 'none', borderBottom: '1px solid var(--rule)'
+      },
+      navOpen,
+      toggleNav: () => this.setState({ navOpen: !this.state.navOpen }),
+      hamburgerStyle: mobile ? {
+        display: 'inline-flex', alignItems: 'center', gap: '8px', minHeight: '44px',
+        padding: '0 14px', fontFamily: "'IBM Plex Mono',monospace", fontSize: '13px',
+        color: 'var(--ink)', background: 'var(--panel)', border: '1.5px solid var(--ink)',
+        borderRadius: '3px', cursor: 'pointer'
+      } : { display: 'none' },
+
+      here: 'Perceivable',
+      hereGuideline: mobile ? cur : (cur === '1.4' ? '1.4 Distinguishable' : cur),
+      hereStyle: { color: 'var(--p1)', fontWeight: 600 },
+      hereDot: { width: '8px', height: '8px', background: 'var(--p1)', display: 'block' },
+
+      railLink,
+      m11: this.marker(false, 'var(--p1)'), m12: this.marker(false, 'var(--p1)'),
+      m13: this.marker(false, 'var(--p1)'), m14: this.marker(cur === '1.4', 'var(--p1)'),
+      m21: this.marker(false, 'var(--p2)'), m22: this.marker(false, 'var(--p2)'),
+      m23: this.marker(false, 'var(--p2)'), m24: this.marker(false, 'var(--p2)'),
+      m25: this.marker(false, 'var(--p2)'),
+      m31: this.marker(false, 'var(--p3)'), m32: this.marker(false, 'var(--p3)'),
+      m33: this.marker(false, 'var(--p3)'),
+      m41: this.marker(false, 'var(--p4)'),
+
+      card141: this.cardStyle(vis['1.4.1'], mobile),
+      card143: this.cardStyle(vis['1.4.3'], mobile),
+      card1411: this.cardStyle(vis['1.4.11'], mobile),
+      card1410: this.cardStyle(vis['1.4.10'], mobile),
+
+      playing, playGlyph: playing ? '❚❚ Pause' : '▶ Play',
+      playLabel: playing ? 'Pause demo' : 'Play demo',
+      togglePlay: () => this.setState({ playing: !playing }),
+      scrub, scrubTime: this.fmt(scrub),
+      onScrub: (e) => this.setState({ scrub: parseFloat(e.target.value) }),
+
+      slotBox: {
+        display: 'grid', gap: '6px', padding: '0', border: '1px solid var(--rule)',
+        borderRadius: '5px', background: 'var(--panel)', overflow: 'hidden'
+      },
+      slotFrame: {
+        display: 'flex', alignItems: 'flex-end', aspectRatio: '16/9', padding: '10px',
+        background: 'repeating-linear-gradient(135deg,var(--panel2),var(--panel2) 8px,var(--bg) 8px,var(--bg) 16px)',
+        borderBottom: '1px dashed var(--rule2)',
+        fontFamily: "'IBM Plex Mono',monospace", fontSize: '10.5px', letterSpacing: '.12em',
+        textTransform: 'uppercase', color: 'var(--ink3)'
+      },
+      slotNum: {
+        margin: '8px 12px 0', fontFamily: "'IBM Plex Mono',monospace", fontSize: '12px',
+        fontVariantNumeric: 'tabular-nums', color: 'var(--p2)', fontWeight: 600
+      },
+      slotTitle: { margin: '0 12px', fontSize: '14px', lineHeight: 1.45, color: 'var(--ink)' },
+      slotMeta: {
+        margin: '0 12px 12px', paddingTop: '6px', borderTop: '1px solid var(--rule)',
+        fontFamily: "'IBM Plex Mono',monospace", fontSize: '11px', color: 'var(--ink3)'
+      }
+    };
+  }
+}
+
+</script>
+</body>
+</html>
