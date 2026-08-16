@@ -1,0 +1,397 @@
+/*
+ * Base styles and the T-02 component set.
+ *
+ * Colour only ever comes from a token (see theme/tokens.ts) — no literal hex here, so the
+ * contrast audit genuinely covers what ships. The two exceptions are inside example markup,
+ * where a specific failing colour is the point being demonstrated.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Sticky masthead clearance, so a deep-linked card is never obscured — 2.4.11. */
+  scroll-padding-top: 5.5rem;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Public Sans', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: var(--link);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+a:hover {
+  color: var(--link-hover);
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* --- Skip link: first focusable element on the page ------------------------------------ */
+
+.skip-link {
+  position: absolute;
+  left: 0.5rem;
+  top: -4rem;
+  z-index: 60;
+  padding: 0.625rem 1rem;
+  background: var(--panel);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  text-decoration: none;
+  transition: top 0.15s ease;
+}
+.skip-link:focus {
+  top: 0.5rem;
+}
+
+/* --- Masthead -------------------------------------------------------------------------- */
+
+.masthead {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: var(--bg);
+  border-bottom: 1px solid var(--rule);
+}
+.masthead__inner {
+  display: flex;
+  align-items: baseline;
+  gap: 0.625rem;
+  max-width: 87.5rem;
+  margin: 0 auto;
+  padding: 0.75rem 1.5rem;
+}
+.masthead__eyebrow {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+.masthead__title {
+  font-family: Newsreader, Georgia, serif;
+  font-size: 1.1875rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+/* --- Layout ---------------------------------------------------------------------------- */
+
+.main {
+  max-width: 67.5rem;
+  margin: 0 auto;
+  padding: 0 1.5rem 6rem;
+  container-type: inline-size;
+}
+
+/* --- Hero ------------------------------------------------------------------------------ */
+
+.hero {
+  padding: 4rem 0 3rem;
+  border-bottom: 1px solid var(--rule);
+}
+.hero__eyebrow {
+  margin: 0 0 1.25rem;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.71875rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+.hero__h1 {
+  margin: 0 0 1.5rem;
+  font-family: Newsreader, Georgia, serif;
+  font-size: clamp(2rem, 6cqw, 4.5rem);
+  line-height: 1.02;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+.hero__lede {
+  margin: 0 0 1.75rem;
+  font-size: 1.1875rem;
+  line-height: 1.6;
+  color: var(--ink2);
+  max-width: 62ch;
+  text-wrap: pretty;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.375rem), 1fr));
+  gap: 1.25rem 1.75rem;
+  margin: 0;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--rule);
+  max-width: 47.5rem;
+}
+.facts dt {
+  margin-bottom: 0.375rem;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+.facts dd {
+  margin: 0;
+  font-family: Newsreader, Georgia, serif;
+  font-size: 1.5rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Guideline section ------------------------------------------------------------------ */
+
+.guideline {
+  padding: 4rem 0 0.5rem;
+}
+.guideline__head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem 1rem;
+  flex-wrap: wrap;
+  padding-bottom: 1.125rem;
+  border-bottom: 2px solid var(--ink);
+}
+.guideline__num {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: clamp(1.125rem, 2.4cqw, 1.75rem);
+  font-variant-numeric: tabular-nums;
+  color: var(--p1);
+  font-weight: 500;
+}
+.guideline__name {
+  margin: 0;
+  font-family: Newsreader, Georgia, serif;
+  font-size: clamp(1.5rem, 3.4cqw, 2.5rem);
+  line-height: 1.1;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+.guideline__meta {
+  margin-left: auto;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+.guideline__cards {
+  display: grid;
+  gap: 2.25rem;
+  padding-top: 2.5rem;
+}
+
+/* --- Criterion card --------------------------------------------------------------------- */
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--rule2);
+  border-radius: 0.375rem;
+  padding: 1.5rem;
+  scroll-margin-top: 7rem;
+  min-width: 0;
+}
+.card__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--rule);
+}
+.card__num {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.9375rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink2);
+  padding-top: 0.25rem;
+}
+.card__name {
+  margin: 0;
+  font-family: Newsreader, Georgia, serif;
+  font-size: 1.625rem;
+  line-height: 1.2;
+  font-weight: 500;
+}
+.card__anchor {
+  margin-left: auto;
+  padding-top: 0.25rem;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.8125rem;
+  text-decoration: none;
+}
+.card__plain {
+  margin: 1.25rem 0 0;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  max-width: 64ch;
+  text-wrap: pretty;
+}
+
+/* --- Level badge: shape + glyph + label, never hue alone --------------------------------- */
+
+.level-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.5625rem;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 2px solid var(--ink);
+  white-space: nowrap;
+}
+.level-badge--a {
+  background: var(--ink);
+  color: var(--panel);
+  border-radius: 0;
+}
+.level-badge--aa {
+  background: transparent;
+  color: var(--ink);
+  border-radius: 999px;
+}
+.level-badge--aaa {
+  background: transparent;
+  color: var(--ink);
+  border-radius: 999px;
+  outline: 1px solid var(--ink);
+  outline-offset: 2px;
+}
+
+/* --- Fail / pass pair -------------------------------------------------------------------- */
+
+.example-pair {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16.25rem), 1fr));
+  gap: 1.25rem;
+  padding-top: 1.5rem;
+}
+
+.frame {
+  border-radius: 0.25rem;
+  overflow: hidden;
+  border: 2px solid;
+}
+.frame--fail {
+  border-color: var(--fail);
+  background: var(--fail-bg);
+}
+.frame--pass {
+  border-color: var(--pass);
+  background: var(--pass-bg);
+}
+
+.frame__label {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 2px solid;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.71875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.frame--fail .frame__label {
+  color: var(--fail);
+  border-color: var(--fail);
+}
+.frame--pass .frame__label {
+  color: var(--pass);
+  border-color: var(--pass);
+}
+
+.frame__glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  border: 1.5px solid currentColor;
+  font-size: 0.6875rem;
+  line-height: 1;
+}
+/* Square for fail, circle for pass — shape carries it alongside glyph and word. */
+.frame--fail .frame__glyph {
+  border-radius: 0;
+}
+.frame--pass .frame__glyph {
+  border-radius: 50%;
+}
+
+.frame__body {
+  padding: 1.25rem;
+  background: var(--panel);
+}
+.frame__caption {
+  margin: 0;
+  padding: 0.625rem 0.75rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+/* --- Inside examples --------------------------------------------------------------------- */
+
+.example-prose {
+  margin: 0 0 0.875rem;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: var(--ink);
+}
+.example-note {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--ink2);
+}
+.example-link {
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+}
+
+/*
+ * A link as some other product would draw it: coloured, not underlined. Deliberately a
+ * failing pattern for 1.4.1 — and deliberately *not* failing 1.4.3, so the example
+ * demonstrates one defect rather than two.
+ */
+.swatch-link {
+  color: var(--swatch-link);
+}

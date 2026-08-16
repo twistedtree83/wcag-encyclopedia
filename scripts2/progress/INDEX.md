@@ -5,7 +5,7 @@ Graph: `scripts2/prd.json` · Repo: https://github.com/twistedtree83/wcag-encycl
 One line per task. Flip `[ ]` to `[x]` when the task ships, and write its ledger to
 `scripts2/progress/<ID>.md`. Ordered by importance; dependencies in parentheses.
 
-- [ ] **T-02** #2 — Walking skeleton: build, token palettes, one criterion card, contrast audit, CI (no deps)
+- [x] **T-02** #2 — Walking skeleton: build, token palettes, one criterion card, contrast audit, CI (no deps)
 - [ ] **T-03** #3 — App shell: header, rail, scroll-spy, principle opener, guideline section, deep links (needs T-02)
 - [ ] **T-07** #7 — Markup-diff card variant, proven on 1.4.11 (needs T-02)
 - [ ] **T-09** #9 — Demo timeline runtime, player, and the reflow demo (1.4.10) (needs T-02)
@@ -30,4 +30,4 @@ One line per task. Flip `[ ]` to `[x]` when the task ships, and write its ledger
 - [ ] **T-11** #11 — Demos: focus and keyboard (2.4.7 x2, 2.4.11) (needs T-09, T-20)
 - [ ] **T-12** #12 — Demos: announcements, errors, targets, motion (4.1.2, 3.3.1, 4.1.3, 2.5.8, 2.2.2) (needs T-09, T-18, T-21, T-24, T-25)
 
-**24 tasks · 0 shipped · all `afk:true` · no human gates**
+**24 tasks · 1 shipped · all `afk:true` · no human gates**
