@@ -2083,3 +2083,49 @@ a:hover {
   font-size: 0.75rem;
   color: var(--ink);
 }
+
+/* --- 3.3 examples ------------------------------------------------------------------------------------ */
+
+.formdemo {
+  display: grid;
+  gap: 0.375rem;
+  margin-bottom: 0.875rem;
+  padding: 0.625rem;
+  background: var(--panel2);
+  border: 1px solid var(--rule2);
+}
+.formdemo__banner {
+  padding: 0.375rem 0.5rem;
+  background: var(--pass-bg);
+  border-left: 3px solid var(--pass);
+  font-size: 0.75rem;
+  color: var(--ink);
+}
+.formdemo__banner--bad {
+  background: var(--fail-bg);
+  border-left-color: var(--fail);
+}
+.formdemo__label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.formdemo__hint {
+  font-size: 0.71875rem;
+  color: var(--ink2);
+}
+.formdemo__err {
+  font-size: 0.71875rem;
+  font-weight: 600;
+  color: var(--fail);
+}
+/* An error signalled by border colour alone — the failure 3.3.1 describes. */
+.formdemo__field--bad {
+  border: 2px solid var(--fail);
+  border-radius: 0.25rem;
+}
+/* Placeholder-as-label: the text sits in the field, so it vanishes on typing. */
+.formdemo__ph {
+  color: var(--ink2);
+  font-style: italic;
+}
