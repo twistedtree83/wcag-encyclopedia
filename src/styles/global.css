@@ -1031,3 +1031,26 @@ a:hover {
   background: var(--rule);
   border: 1px solid var(--rule2);
 }
+
+/* --- Theme toggle ------------------------------------------------------------------------------ */
+
+.theme-toggle {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0 0.875rem;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--rule2);
+  border-radius: 0.1875rem;
+  cursor: pointer;
+}
+.theme-toggle:hover {
+  background: var(--panel2);
+}

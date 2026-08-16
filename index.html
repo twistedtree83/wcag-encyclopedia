@@ -15,6 +15,27 @@
       rel="stylesheet"
     />
     <!--@tokens-->
+    <script>
+      /*
+       * Runs before first paint so the page never flashes the wrong theme. Mirrors
+       * resolveTheme() in src/theme/useTheme.ts: an explicit choice wins over the OS
+       * setting in both directions.
+       */
+      (function () {
+        try {
+          var stored = localStorage.getItem('wcag-encyclopedia:theme');
+          var theme =
+            stored === 'light' || stored === 'dark'
+              ? stored
+              : window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) {
+          /* storage blocked — the CSS media query still gives the right default */
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
