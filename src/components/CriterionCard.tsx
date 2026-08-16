@@ -13,6 +13,7 @@
 import type { CriterionRecord } from '../criteria/types';
 import { LevelBadge } from './LevelBadge';
 import { ExamplePair } from './ExamplePair';
+import { MarkupDiff } from './MarkupDiff';
 
 export function CriterionCard({ criterion }: { criterion: CriterionRecord }) {
   const headingId = `c-${criterion.num}-heading`;
@@ -39,6 +40,8 @@ export function CriterionCard({ criterion }: { criterion: CriterionRecord }) {
       </p>
 
       <ExamplePair fail={criterion.fail} pass={criterion.pass} />
+
+      {criterion.diff ? <MarkupDiff diff={criterion.diff} /> : null}
     </article>
   );
 }

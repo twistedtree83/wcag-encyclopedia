@@ -56,4 +56,66 @@ export const G1_4: readonly CriterionRecord[] = [
       ),
     },
   },
+
+  {
+    num: '1.4.11',
+    name: 'Non-text Contrast',
+    level: 'AA',
+    guideline: '1.4',
+    plain:
+      'The parts of a control that tell you it is a control — the input’s edge, the checkbox ' +
+      'box, the focus ring, the chart key — need 3:1 against whatever sits behind them.',
+    fail: {
+      caption: 'The field and checkbox edges vanish; only the placeholder hints anything is editable.',
+      render: () => (
+        <>
+          <p className="swatch-label">Email address</p>
+          <div aria-hidden="true" className="swatch-field border--weak">
+            you@example.com
+          </div>
+          <div className="swatch-row">
+            <span aria-hidden="true" className="swatch-check border--weak" />
+            Email me order updates
+          </div>
+          <p className="example-note" style={{ marginTop: '1rem' }}>
+            The border is a hair lighter than the surface it sits on. Sighted users with good
+            vision fill in the edge from memory; nobody else can.
+          </p>
+        </>
+      ),
+    },
+    pass: {
+      caption: 'One border colour, changed on every control at once.',
+      render: () => (
+        <>
+          <p className="swatch-label">Email address</p>
+          <div aria-hidden="true" className="swatch-field border--strong">
+            you@example.com
+          </div>
+          <div className="swatch-row">
+            <span aria-hidden="true" className="swatch-check border--strong" />
+            Email me order updates
+          </div>
+          <p className="example-note" style={{ marginTop: '1rem' }}>
+            The same layout, the same type, the same spacing. The only change is a border that
+            clears 3:1 — and now the control announces itself.
+          </p>
+        </>
+      ),
+    },
+    diff: {
+      title: 'styles.css, one declaration',
+      lines: [
+        { kind: 'context', text: '.field,' },
+        { kind: 'context', text: '.checkbox {' },
+        { kind: 'del', text: '  border: 1px solid #EBEBEB;  /* 1.1:1 — fails 1.4.11 */' },
+        { kind: 'add', text: '  border: 1px solid #6A6A6A;  /* 5.4:1 — passes      */' },
+        { kind: 'context', text: '  border-radius: 4px;' },
+        { kind: 'context', text: '}' },
+      ],
+      note:
+        'Lines are marked - and + as well as tinted, so the diff reads without colour. One ' +
+        'declaration fixes every control that shares the class.',
+    },
+  },
 ];

@@ -49,6 +49,9 @@ export const light = {
    * it is the missing underline.
    */
   'swatch-link': '#1668C4',
+  /** Control edges depicted inside examples. Weak deliberately fails 1.4.11; strong passes. */
+  'swatch-border-weak': '#EBEBEB',
+  'swatch-border-strong': '#6A6A6A',
 } as const;
 
 export type Token = keyof typeof light;
@@ -85,6 +88,8 @@ export const dark: Record<Token, string> = {
   'p4-wash': '#271420',
 
   'swatch-link': '#7FB4EE',
+  'swatch-border-weak': '#2E2E28',
+  'swatch-border-strong': '#8C8779',
 };
 
 export const palettes = { light, dark } as const;
@@ -103,6 +108,14 @@ export type TokenPair = {
   readonly bg: Token;
   readonly kind: 'body' | 'large' | 'ui';
   readonly where: string;
+  /**
+   * What the audit should assert. `pass` (the default) is the interface's own chrome, which
+   * must clear its threshold. `fail` is a colour used inside a *failing* example, where the
+   * whole point is that it does not — asserting the failure means a colour drift that
+   * accidentally made the bad example look acceptable would break the build too. A fail
+   * example must break exactly what it claims to break, in both directions.
+   */
+  readonly expect?: 'pass' | 'fail';
 };
 
 export const TOKEN_PAIRS: readonly TokenPair[] = [
@@ -163,4 +176,17 @@ export const TOKEN_PAIRS: readonly TokenPair[] = [
   // Colours used inside examples are audited too — a fail example must break exactly the
   // criterion it illustrates, never a second one by accident.
   { fg: 'swatch-link', bg: 'panel', kind: 'body', where: 'depicted link inside an example' },
+  {
+    fg: 'swatch-border-strong',
+    bg: 'panel',
+    kind: 'ui',
+    where: 'depicted control edge in a passing example (1.4.11)',
+  },
+  {
+    fg: 'swatch-border-weak',
+    bg: 'panel',
+    kind: 'ui',
+    expect: 'fail',
+    where: 'depicted control edge in a failing example (1.4.11) — must stay under 3:1',
+  },
 ];

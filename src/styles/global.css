@@ -696,3 +696,117 @@ a:hover {
   font-family: 'IBM Plex Mono', ui-monospace, monospace;
   flex: 0 0 auto;
 }
+
+/* --- Utility ------------------------------------------------------------------------------- */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* --- Markup diff --------------------------------------------------------------------------- */
+
+.diff {
+  margin: 1.5rem 0 0;
+  border: 1px solid var(--rule2);
+  border-radius: 0.25rem;
+  overflow: hidden;
+  background: var(--panel2);
+}
+.diff__caption {
+  padding: 0.5rem 0.875rem;
+  border-bottom: 1px solid var(--rule2);
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink2);
+}
+.diff__where {
+  color: var(--ink3);
+  text-transform: none;
+  letter-spacing: 0;
+}
+.diff__pre {
+  margin: 0;
+  padding: 0.75rem 0;
+  /* Long lines scroll here, never on the page — 1.4.10. */
+  overflow-x: auto;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.84375rem;
+  line-height: 1.75;
+  color: var(--ink);
+}
+.diff__line {
+  display: block;
+  padding-right: 0.875rem;
+  border-left: 3px solid transparent;
+}
+.diff__line--del {
+  background: var(--fail-bg);
+  border-left-color: var(--fail);
+}
+.diff__line--add {
+  background: var(--pass-bg);
+  border-left-color: var(--pass);
+}
+/* The glyph is real text in the gutter, so the diff survives colour being removed. */
+.diff__gutter {
+  display: inline-block;
+  width: 1.5rem;
+  padding-left: 0.625rem;
+  font-weight: 600;
+  white-space: pre;
+}
+.diff__note {
+  margin: 0;
+  padding: 0.625rem 0.875rem;
+  border-top: 1px solid var(--rule2);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--ink2);
+}
+
+/* --- Depicted controls inside examples -------------------------------------------------------- */
+
+.swatch-field {
+  height: 2.5rem;
+  border-radius: 0.25rem;
+  background: var(--panel);
+  display: flex;
+  align-items: center;
+  padding: 0 0.75rem;
+  font-size: 0.875rem;
+  color: var(--ink2);
+}
+.swatch-check {
+  width: 1.125rem;
+  height: 1.125rem;
+  border-radius: 0.1875rem;
+  display: block;
+  flex: 0 0 auto;
+}
+.swatch-row {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: var(--ink);
+}
+.swatch-label {
+  margin: 0 0 0.375rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.border--weak {
+  border: 1px solid var(--swatch-border-weak);
+}
+.border--strong {
+  border: 1.5px solid var(--swatch-border-strong);
+}

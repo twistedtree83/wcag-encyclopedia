@@ -35,11 +35,21 @@ describe('the token palettes', () => {
         const fg = palette[pair.fg];
         const bg = palette[pair.bg];
         const ratio = contrastRatio(fg, bg);
-        if (!meetsAA(ratio, pair.kind)) {
+        const passes = meetsAA(ratio, pair.kind);
+        const shouldPass = (pair.expect ?? 'pass') === 'pass';
+
+        if (shouldPass && !passes) {
           failures.push(
             `${theme}: --${pair.fg} (${fg}) on --${pair.bg} (${bg}) ` +
               `is ${formatRatio(ratio)}, needs ${requiredRatio(pair.kind)}:1 ` +
               `for ${pair.kind} — ${pair.where}`,
+          );
+        }
+        if (!shouldPass && passes) {
+          failures.push(
+            `${theme}: --${pair.fg} (${fg}) on --${pair.bg} (${bg}) ` +
+              `is ${formatRatio(ratio)} and now CLEARS ${requiredRatio(pair.kind)}:1 — ` +
+              `it is meant to fail, or the example stops demonstrating anything. ${pair.where}`,
           );
         }
       }

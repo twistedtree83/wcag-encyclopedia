@@ -132,3 +132,35 @@ describe('corpus lookups', () => {
     }
   });
 });
+
+describe('the markup-diff variant', () => {
+  const withDiff = CORPUS.filter((c) => c.diff);
+
+  it('is used by at least one criterion', () => {
+    expect(withDiff.length).toBeGreaterThan(0);
+  });
+
+  it.each(withDiff.map((c) => [c.num, c] as const))(
+    '%s has a diff that actually changes something',
+    (_num, record) => {
+      const diff = record.diff!;
+      expect(diff.title.trim()).not.toBe('');
+      expect(diff.note.trim()).not.toBe('');
+      expect(diff.lines.length).toBeGreaterThan(0);
+      // A diff with no removal or no addition is not a diff.
+      expect(diff.lines.some((l) => l.kind === 'del')).toBe(true);
+      expect(diff.lines.some((l) => l.kind === 'add')).toBe(true);
+    },
+  );
+
+  it.each(withDiff.map((c) => [c.num, c] as const))(
+    '%s writes diff lines without their own leading +/- markers',
+    (_num, record) => {
+      // The gutter glyph is rendered, not authored — otherwise it doubles up.
+      for (const line of record.diff!.lines) {
+        expect(line.text.trimStart().startsWith('+ ')).toBe(false);
+        expect(line.text.trimStart().startsWith('- ')).toBe(false);
+      }
+    },
+  );
+});

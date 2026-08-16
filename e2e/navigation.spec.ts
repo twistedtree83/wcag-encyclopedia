@@ -85,3 +85,46 @@ test('marks the current guideline in the rail as you scroll', async ({ page }) =
   await expect(current).toHaveCount(1);
   await expect(current).toContainText('Navigable');
 });
+
+test('renders a markup diff whose changed lines are marked with glyphs, not colour alone', async ({
+  page,
+}) => {
+  await page.goto('/');
+  const diff = page.locator('.diff').first();
+  await expect(diff).toBeVisible();
+
+  // The gutter glyph must be real text, so the diff survives colour being removed.
+  const gutters = await diff.locator('.diff__gutter').allTextContents();
+  expect(gutters).toContain('-');
+  expect(gutters).toContain('+');
+
+  // And the change must be announced to screen readers, not shown only as a tint.
+  await expect(diff.locator('.diff__line--del .visually-hidden')).toHaveText('removed: ');
+  await expect(diff.locator('.diff__line--add .visually-hidden')).toHaveText('added: ');
+});
+
+test('a long diff line scrolls inside the diff, not the page', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 720 });
+  await page.goto('/');
+  const scrollable = await page
+    .locator('.diff__pre')
+    .first()
+    .evaluate((el) => getComputedStyle(el).overflowX);
+  expect(scrollable).toBe('auto');
+
+  const pageOverflows = await page.evaluate(
+    () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
+  );
+  expect(pageOverflows).toBe(false);
+});
+
+test('lets a keyboard user reach and scroll the diff', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 720 });
+  await page.goto('/');
+  const pre = page.locator('.diff__pre').first();
+  // A scrollable region a keyboard user cannot focus is a region they cannot read — 2.1.1.
+  await expect(pre).toHaveAttribute('tabindex', '0');
+  await pre.focus();
+  const outline = await pre.evaluate((el) => getComputedStyle(el).outlineWidth);
+  expect(Number.parseFloat(outline)).toBeGreaterThan(0);
+});
