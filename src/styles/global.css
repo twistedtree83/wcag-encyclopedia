@@ -2065,3 +2065,21 @@ a:hover {
   font-size: 0.8125rem;
   color: var(--ink);
 }
+
+/* --- 3.2 examples ------------------------------------------------------------------------------------ */
+
+.navcompare {
+  display: grid;
+  gap: 0.375rem;
+  margin-bottom: 0.875rem;
+  padding: 0.625rem;
+  background: var(--panel2);
+  border: 1px solid var(--rule2);
+}
+.navcompare__row {
+  padding: 0.375rem 0.5rem;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  font-size: 0.75rem;
+  color: var(--ink);
+}
