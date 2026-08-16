@@ -20,6 +20,8 @@ import { PrincipleOpener } from './components/PrincipleOpener';
 import { Rail } from './components/Rail';
 import { Strip } from './components/Strip';
 import { Controls } from './components/Controls';
+import { Drawer } from './components/Drawer';
+import { useViewport, VIEWPORTS, type ViewportName } from './hooks/useViewport';
 import { EMPTY_QUERY, countMatches, summarise, type Query } from './catalog/filter';
 import { HowToRead } from './sections/HowToRead';
 import { ObeysItsOwnRules } from './sections/ObeysItsOwnRules';
@@ -29,6 +31,7 @@ export function App() {
   const { theme, toggle } = useTheme();
   const [query, setQuery] = useState<Query>(EMPTY_QUERY);
   const summary = summarise(countMatches(CORPUS, query), query);
+  const { viewport, width, setViewport, navOpen, setNavOpen } = useViewport();
 
   return (
     <>
@@ -36,7 +39,36 @@ export function App() {
         Skip to content
       </a>
 
-      <header className="masthead">
+      <div className="preview-bar">
+        <span className="preview-bar__label" id="viewport-label">
+          Preview width
+        </span>
+        <fieldset className="viewport-picker" aria-labelledby="viewport-label">
+          {(Object.keys(VIEWPORTS) as ViewportName[]).map((name) => (
+            <button
+              key={name}
+              type="button"
+              className="controls__seg"
+              aria-pressed={viewport === name}
+              onClick={() => setViewport(name)}
+            >
+              {VIEWPORTS[name].label}
+            </button>
+          ))}
+        </fieldset>
+      </div>
+
+      {/*
+        The preview frame. `container-type: inline-size` on it is what makes the preview
+        honest: everything inside sizes against this box rather than the browser window, so
+        narrowing it exercises the same code paths a real 320px screen would.
+      */}
+      <div
+        className="preview"
+        data-viewport={viewport}
+        style={width === null ? undefined : { width: `${width}px` }}
+      >
+        <header className="masthead">
         <div className="masthead__inner">
           <span className="masthead__eyebrow">WCAG 2.2</span>
           <span className="masthead__title">Visual Encyclopedia</span>
@@ -47,9 +79,13 @@ export function App() {
                 "Dark" is ambiguous about which one it does. */}
             {theme === 'dark' ? 'Light mode' : 'Dark mode'}
           </button>
+
+          <button type="button" className="nav-toggle" onClick={() => setNavOpen(true)}>
+            ☰ Guidelines
+          </button>
         </div>
 
-        <Controls query={query} onChange={setQuery} summary={summary} />
+        <Controls query={query} onChange={setQuery} summary={summary} idPrefix="masthead" />
         <Strip current={current} />
       </header>
 
@@ -104,6 +140,15 @@ export function App() {
 
           <ObeysItsOwnRules />
         </main>
+      </div>
+
+        <Drawer
+          open={navOpen}
+          onClose={() => setNavOpen(false)}
+          query={query}
+          onQueryChange={setQuery}
+          summary={summary}
+        />
       </div>
     </>
   );

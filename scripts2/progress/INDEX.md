@@ -11,7 +11,7 @@ One line per task. Flip `[ ]` to `[x]` when the task ships, and write its ledger
 - [x] **T-09** #9 — Demo timeline runtime, player, and the reflow demo (1.4.10) (needs T-02)
 - [x] **T-04** #4 — Theme: OS default, explicit override, persistence (needs T-02)
 - [x] **T-05** #5 — Filter and search: level filter, text search, result count (needs T-03)
-- [ ] **T-06** #6 — Responsive shell: container queries, 320px, mobile drawer, viewport preview (needs T-03)
+- [x] **T-06** #6 — Responsive shell: container queries, 320px, mobile drawer, viewport preview (needs T-03)
 - [ ] **T-08** #8 — Computed contrast badges on examples (needs T-02)
 - [ ] **T-13** #13 — Content: guideline 1.1 Text Alternatives (1 criterion) (needs T-03, T-07)
 - [ ] **T-14** #14 — Content: guideline 1.2 Time-based Media (5 criteria) (needs T-03, T-07)
@@ -30,4 +30,4 @@ One line per task. Flip `[ ]` to `[x]` when the task ships, and write its ledger
 - [ ] **T-11** #11 — Demos: focus and keyboard (2.4.7 x2, 2.4.11) (needs T-09, T-20)
 - [ ] **T-12** #12 — Demos: announcements, errors, targets, motion (4.1.2, 3.3.1, 4.1.3, 2.5.8, 2.2.2) (needs T-09, T-18, T-21, T-24, T-25)
 
-**24 tasks · 6 shipped · all `afk:true` · no human gates**
+**24 tasks · 7 shipped · all `afk:true` · no human gates**

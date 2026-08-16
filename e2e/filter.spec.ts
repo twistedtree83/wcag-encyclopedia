@@ -29,7 +29,7 @@ test('the level buttons expose their pressed state', async ({ page }) => {
 
 test('search finds a criterion by name and by number', async ({ page }) => {
   await page.goto('/');
-  const search = page.getByLabel('Search');
+  const search = page.locator('.masthead .controls__input');
 
   await search.fill('reflow');
   await expect(page.locator('[id="1.4.10"]')).toBeVisible();
@@ -42,7 +42,7 @@ test('search finds a criterion by name and by number', async ({ page }) => {
 
 test('the count matches the number of cards actually rendered', async ({ page }) => {
   await page.goto('/');
-  const summary = page.locator('.controls__summary');
+  const summary = page.locator('.masthead .controls__summary');
 
   await expect(summary).toHaveText('3 criteria documented');
   await expect(page.locator('.card')).toHaveCount(3);
@@ -56,15 +56,15 @@ test('announces the result count, so a screen reader user knows the filter did s
   page,
 }) => {
   await page.goto('/');
-  const summary = page.locator('.controls__summary');
+  const summary = page.locator('.masthead .controls__summary');
   await expect(summary).toHaveAttribute('role', 'status');
   await expect(summary).toHaveAttribute('aria-live', 'polite');
 });
 
 test('says so plainly when nothing matches', async ({ page }) => {
   await page.goto('/');
-  await page.getByLabel('Search').fill('zzzz');
-  await expect(page.locator('.controls__summary')).toHaveText('No criteria match');
+  await page.locator('.masthead .controls__input').fill('zzzz');
+  await expect(page.locator('.masthead .controls__summary')).toHaveText('No criteria match');
   await expect(page.locator('.card')).toHaveCount(0);
 });
 
@@ -73,11 +73,11 @@ test('distinguishes "filtered out" from "not yet documented"', async ({ page }) 
   // 1.1 has nothing authored yet.
   await expect(page.locator('[id="g1.1"] .guideline__pending')).toContainText('Not yet documented');
 
-  await page.getByLabel('Search').fill('reflow');
+  await page.locator('.masthead .controls__input').fill('reflow');
   // 1.4 has criteria, but none match — a different message, not the same placeholder.
   await expect(page.locator('[id="g2.1"] .guideline__pending')).toContainText('Not yet documented');
   await page.getByRole('button', { name: 'Level A', exact: true }).click();
-  await page.getByLabel('Search').fill('reflow');
+  await page.locator('.masthead .controls__input').fill('reflow');
   await expect(page.locator('[id="g1.4"] .guideline__pending')).toContainText(
     'match the current filter',
   );

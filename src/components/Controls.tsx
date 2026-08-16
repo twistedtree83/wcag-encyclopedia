@@ -18,19 +18,27 @@ export function Controls({
   query,
   onChange,
   summary,
+  /**
+   * Two instances exist — one in the masthead, one in the drawer — and only ever one is
+   * exposed at a time. They still need distinct element ids, or `label for` is ambiguous
+   * and the document is invalid regardless of which is visible.
+   */
+  idPrefix,
 }: {
   query: Query;
   onChange: (next: Query) => void;
   summary: string;
+  idPrefix: string;
 }) {
+  const searchId = `${idPrefix}-search`;
   return (
     <div className="controls">
       <div className="controls__search">
-        <label className="controls__label" htmlFor="criterion-search">
+        <label className="controls__label" htmlFor={searchId}>
           Search
         </label>
         <input
-          id="criterion-search"
+          id={searchId}
           className="controls__input"
           type="search"
           placeholder="Criterion name or number"
