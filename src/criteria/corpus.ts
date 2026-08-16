@@ -4,9 +4,10 @@
  */
 
 import type { CriterionRecord } from './types';
+import { G1_1 } from './g1-1';
 import { G1_4 } from './g1-4';
 
-export const CORPUS: readonly CriterionRecord[] = [...G1_4];
+export const CORPUS: readonly CriterionRecord[] = [...G1_1, ...G1_4];
 
 export function criterion(num: string): CriterionRecord | undefined {
   return CORPUS.find((c) => c.num === num);

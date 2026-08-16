@@ -99,8 +99,11 @@ test('renders a markup diff whose changed lines are marked with glyphs, not colo
   expect(gutters).toContain('+');
 
   // And the change must be announced to screen readers, not shown only as a tint.
-  await expect(diff.locator('.diff__line--del .visually-hidden')).toHaveText('removed: ');
-  await expect(diff.locator('.diff__line--add .visually-hidden')).toHaveText('added: ');
+  // A diff may have several removed/added lines; every one of them must be announced.
+  await expect(diff.locator('.diff__line--del .visually-hidden').first()).toHaveText('removed: ');
+  await expect(diff.locator('.diff__line--add .visually-hidden').first()).toHaveText('added: ');
+  const dels = await diff.locator('.diff__line--del').count();
+  expect(await diff.locator('.diff__line--del .visually-hidden').count()).toBe(dels);
 });
 
 test('a long diff line scrolls inside the diff, not the page', async ({ page }) => {

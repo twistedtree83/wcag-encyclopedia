@@ -1,10 +1,22 @@
 import { test, expect } from '@playwright/test';
+import { CORPUS } from '../src/criteria/corpus';
+import { GUIDELINES } from '../src/criteria/structure';
+
+/**
+ * Counts are derived from the corpus, never hardcoded — otherwise every content task breaks
+ * this file for no reason.
+ */
+const TOTAL = CORPUS.length;
+const LEVEL_A = CORPUS.filter((c) => c.level === 'A').length;
+/** A guideline with nothing authored yet, or undefined once the corpus is complete. */
+const undocumented = GUIDELINES.find((g) => !CORPUS.some((c) => c.guideline === g.num))?.num;
+/** A guideline that has criteria but none at Level A, if one exists. */
+const documented = GUIDELINES.find((g) => CORPUS.some((c) => c.guideline === g.num))!.num;
 
 test('filtering to Level A hides AA criteria from the page and the a11y tree', async ({
   page,
 }) => {
   await page.goto('/');
-  await expect(page.locator('[id="1.4.3"]')).toHaveCount(0); // not yet authored
   await expect(page.locator('[id="1.4.1"]')).toBeVisible();
   await expect(page.locator('[id="1.4.11"]')).toBeVisible();
 
@@ -44,12 +56,12 @@ test('the count matches the number of cards actually rendered', async ({ page })
   await page.goto('/');
   const summary = page.locator('.masthead .controls__summary');
 
-  await expect(summary).toHaveText('3 criteria documented');
-  await expect(page.locator('.card')).toHaveCount(3);
+  await expect(summary).toHaveText(`${TOTAL} criteria documented`);
+  await expect(page.locator('.card')).toHaveCount(TOTAL);
 
   await page.getByRole('button', { name: 'Level A', exact: true }).click();
-  await expect(summary).toHaveText('Showing 1 of 3 criteria');
-  await expect(page.locator('.card')).toHaveCount(1);
+  await expect(summary).toHaveText(`Showing ${LEVEL_A} of ${TOTAL} criteria`);
+  await expect(page.locator('.card')).toHaveCount(LEVEL_A);
 });
 
 test('announces the result count, so a screen reader user knows the filter did something', async ({
@@ -69,16 +81,17 @@ test('says so plainly when nothing matches', async ({ page }) => {
 });
 
 test('distinguishes "filtered out" from "not yet documented"', async ({ page }) => {
+  test.skip(!undocumented, 'corpus is complete — nothing is undocumented any more');
   await page.goto('/');
-  // 1.1 has nothing authored yet.
-  await expect(page.locator('[id="g1.1"] .guideline__pending')).toContainText('Not yet documented');
 
-  await page.locator('.masthead .controls__input').fill('reflow');
-  // 1.4 has criteria, but none match — a different message, not the same placeholder.
-  await expect(page.locator('[id="g2.1"] .guideline__pending')).toContainText('Not yet documented');
-  await page.getByRole('button', { name: 'Level A', exact: true }).click();
-  await page.locator('.masthead .controls__input').fill('reflow');
-  await expect(page.locator('[id="g1.4"] .guideline__pending')).toContainText(
+  await expect(
+    page.locator(`[id="g${undocumented}"] .guideline__pending`),
+  ).toContainText('Not yet documented');
+
+  // A guideline that does have criteria, filtered so none match, gets a different message —
+  // "not yet documented" would misreport the project's own progress.
+  await page.locator('.masthead .controls__input').fill('zzzz-no-such-criterion');
+  await expect(page.locator(`[id="g${documented}"] .guideline__pending`)).toContainText(
     'match the current filter',
   );
 });
