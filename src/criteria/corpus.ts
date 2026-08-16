@@ -13,8 +13,9 @@ import { G2_2 } from './g2-2';
 import { G2_3 } from './g2-3';
 import { G2_4 } from './g2-4';
 import { G2_5 } from './g2-5';
+import { G3_1 } from './g3-1';
 
-const AUTHORED = [...G1_1, ...G1_2, ...G1_3, ...G1_4, ...G2_1, ...G2_2, ...G2_3, ...G2_4, ...G2_5];
+const AUTHORED = [...G1_1, ...G1_2, ...G1_3, ...G1_4, ...G2_1, ...G2_2, ...G2_3, ...G2_4, ...G2_5, ...G3_1];
 
 /** Criterion numbers sort numerically, not lexically — 1.4.10 comes after 1.4.9, not after 1.4.1. */
 function byNumber(a: CriterionRecord, b: CriterionRecord): number {

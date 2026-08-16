@@ -214,7 +214,7 @@
       ],
       "importance": 19,
       "afk": true,
-      "passes": false
+      "passes": true
     },
     {
       "id": "T-23",
