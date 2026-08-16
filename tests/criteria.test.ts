@@ -147,9 +147,11 @@ describe('the markup-diff variant', () => {
       expect(diff.title.trim()).not.toBe('');
       expect(diff.note.trim()).not.toBe('');
       expect(diff.lines.length).toBeGreaterThan(0);
-      // A diff with no removal or no addition is not a diff.
-      expect(diff.lines.some((l) => l.kind === 'del')).toBe(true);
-      expect(diff.lines.some((l) => l.kind === 'add')).toBe(true);
+      // At least one changed line — a "diff" of pure context shows nothing. Purely additive
+      // diffs are legitimate: some fixes genuinely are "add this line" (1.2.5 adds a
+      // descriptions track), and manufacturing a removal to balance it would be dishonest.
+      const changed = diff.lines.filter((l) => l.kind !== 'context');
+      expect(changed.length, 'a diff must change something').toBeGreaterThan(0);
     },
   );
 

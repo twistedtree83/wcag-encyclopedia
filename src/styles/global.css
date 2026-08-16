@@ -1391,3 +1391,75 @@ a:hover {
   color: var(--ink);
   overflow-wrap: anywhere;
 }
+
+/* --- Depicted media player -------------------------------------------------------------------------- */
+
+.player {
+  display: block;
+  margin: 0 0 0.875rem;
+  border: 1px solid var(--rule2);
+  background: var(--panel2);
+}
+.player__screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+  aspect-ratio: 16 / 9;
+  padding: 0.5rem;
+  background: var(--panel2);
+  border-bottom: 1px solid var(--rule2);
+}
+.player__badge {
+  padding: 0.125rem 0.375rem;
+  border: 1px solid var(--rule2);
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink2);
+}
+.player__cc {
+  align-self: center;
+  margin-top: auto;
+  padding: 0.25rem 0.5rem;
+  background: var(--ink);
+  color: var(--panel);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  text-align: center;
+}
+.player__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.5rem;
+}
+.player__play {
+  font-size: 0.6875rem;
+  color: var(--ink);
+}
+.player__track {
+  flex: 1;
+  height: 3px;
+  background: var(--rule2);
+}
+.transcript {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0 0 0.875rem;
+  padding: 0.625rem 0.75rem;
+  background: var(--panel2);
+  border-left: 3px solid var(--rule2);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.transcript strong {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
