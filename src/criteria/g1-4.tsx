@@ -118,4 +118,65 @@ export const G1_4: readonly CriterionRecord[] = [
         'declaration fixes every control that shares the class.',
     },
   },
+  {
+    num: '1.4.10',
+    name: 'Reflow',
+    level: 'AA',
+    guideline: '1.4',
+    demo: 'reflow-1-4-10',
+    plain:
+      'At 320 CSS pixels wide, content must not require scrolling in two directions. Same ' +
+      'content, one column, no horizontal scrollbar.',
+    fail: {
+      caption: 'Fixed 110px columns force a horizontal scrollbar — two-direction scrolling.',
+      render: () => (
+        <div className="mini">
+          <div className="mini__frame">
+            <div className="mini__row mini__row--fixed">
+              <span className="mini__tile" />
+              <span className="mini__tile" />
+              <span className="mini__tile" />
+            </div>
+            <span className="mini__scrollbar" aria-hidden="true" />
+          </div>
+          <p className="example-note">
+            The grid keeps its three tracks at every width, so the reader has to scroll sideways
+            to reach the third — while also scrolling down to read. Two directions at once.
+          </p>
+        </div>
+      ),
+    },
+    pass: {
+      caption: 'minmax(0, 1fr) replaced the fixed track width.',
+      render: () => (
+        <div className="mini">
+          <div className="mini__frame">
+            <div className="mini__col">
+              <span className="mini__tile" />
+              <span className="mini__tile" />
+              <span className="mini__tile" />
+            </div>
+          </div>
+          <p className="example-note">
+            The same three tiles, stacked. Nothing is hidden and nothing is dropped — the
+            layout simply stops insisting on a width the screen does not have.
+          </p>
+        </div>
+      ),
+    },
+    diff: {
+      title: 'catalogue.css, the grid track',
+      lines: [
+        { kind: 'context', text: '.catalogue {' },
+        { kind: 'context', text: '  display: grid;' },
+        { kind: 'del', text: '  grid-template-columns: repeat(3, 110px);  /* never narrows */' },
+        { kind: 'add', text: '  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));' },
+        { kind: 'context', text: '  gap: 6px;' },
+        { kind: 'context', text: '}' },
+      ],
+      note:
+        'A fixed track cannot reflow. Letting the track shrink to zero and letting auto-fit ' +
+        'decide the count is what turns three columns into one.',
+    },
+  },
 ];

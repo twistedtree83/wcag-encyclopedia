@@ -14,9 +14,11 @@ import type { CriterionRecord } from '../criteria/types';
 import { LevelBadge } from './LevelBadge';
 import { ExamplePair } from './ExamplePair';
 import { MarkupDiff } from './MarkupDiff';
+import { demoById } from '../demo/registry';
 
 export function CriterionCard({ criterion }: { criterion: CriterionRecord }) {
   const headingId = `c-${criterion.num}-heading`;
+  const demo = criterion.demo ? demoById(criterion.demo) : undefined;
 
   return (
     <article id={criterion.num} className="card" aria-labelledby={headingId}>
@@ -38,6 +40,8 @@ export function CriterionCard({ criterion }: { criterion: CriterionRecord }) {
       <p className="card__plain">
         <strong>In plain English:</strong> {criterion.plain}
       </p>
+
+      {demo ? <demo.Player /> : null}
 
       <ExamplePair fail={criterion.fail} pass={criterion.pass} />
 
