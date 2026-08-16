@@ -1,9 +1,10 @@
 name: verify
 
+# Pushes to main are gated by the deploy workflow, which runs the same `npm run verify`
+# before publishing. Running it here too would just do the work twice.
 on:
-  push:
-    branches: [main]
   pull_request:
+  workflow_dispatch:
 
 jobs:
   verify:
