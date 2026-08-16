@@ -17,7 +17,7 @@ One line per task. Flip `[ ]` to `[x]` when the task ships, and write its ledger
 - [x] **T-14** #14 — Content: guideline 1.2 Time-based Media (5 criteria) (needs T-03, T-07)
 - [x] **T-15** #15 — Content: guideline 1.3 Adaptable (5 criteria) (needs T-03, T-07)
 - [x] **T-16** #16 — Content: guideline 1.4 Distinguishable (6 criteria) (needs T-03, T-07)
-- [ ] **T-17** #17 — Content: guideline 2.1 Keyboard Accessible (3 criteria) (needs T-03, T-07)
+- [x] **T-17** #17 — Content: guideline 2.1 Keyboard Accessible (3 criteria) (needs T-03, T-07)
 - [ ] **T-18** #18 — Content: guideline 2.2 Enough Time (2 criteria) (needs T-03, T-07)
 - [ ] **T-19** #19 — Content: guideline 2.3 Seizures and Physical Reactions (1 criterion) (needs T-03, T-07)
 - [ ] **T-20** #20 — Content: guideline 2.4 Navigable (8 criteria) (needs T-03, T-07)
@@ -30,4 +30,4 @@ One line per task. Flip `[ ]` to `[x]` when the task ships, and write its ledger
 - [ ] **T-11** #11 — Demos: focus and keyboard (2.4.7 x2, 2.4.11) (needs T-09, T-20)
 - [ ] **T-12** #12 — Demos: announcements, errors, targets, motion (4.1.2, 3.3.1, 4.1.3, 2.5.8, 2.2.2) (needs T-09, T-18, T-21, T-24, T-25)
 
-**24 tasks · 12 shipped · all `afk:true` · no human gates**
+**24 tasks · 13 shipped · all `afk:true` · no human gates**

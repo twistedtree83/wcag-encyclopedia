@@ -1660,3 +1660,65 @@ a:hover {
   bottom: calc(100% + 0.75rem);
   pointer-events: none;
 }
+
+/* --- 2.1 examples ------------------------------------------------------------------------------------ */
+
+.fakebtn,
+.realbtn {
+  display: inline-block;
+  margin-bottom: 0.875rem;
+  padding: 0.5rem 0.875rem;
+  background: var(--ink);
+  color: var(--panel);
+  border: none;
+  border-radius: 0.1875rem;
+  font-family: 'Public Sans', system-ui, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.realbtn {
+  cursor: pointer;
+}
+
+.trap {
+  display: grid;
+  gap: 0.5rem;
+  margin-bottom: 0.875rem;
+  padding: 0.75rem;
+  background: var(--panel2);
+  border: 1.5px solid var(--fail);
+}
+.trap--ok {
+  border-color: var(--pass);
+}
+.trap__title {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.trap__cycle {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.6875rem;
+  color: var(--ink2);
+}
+
+.keys {
+  margin-bottom: 0.875rem;
+  padding: 0.625rem 0.75rem;
+  background: var(--panel2);
+  border: 1px solid var(--rule2);
+  font-size: 0.8125rem;
+  color: var(--ink);
+}
+.keys kbd {
+  display: inline-block;
+  min-width: 1.375rem;
+  padding: 0.125rem 0.3125rem;
+  background: var(--panel);
+  border: 1px solid var(--rule2);
+  border-radius: 0.1875rem;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.75rem;
+  text-align: center;
+  color: var(--ink);
+}
