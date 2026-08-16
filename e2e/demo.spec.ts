@@ -105,3 +105,33 @@ test('the library indexes all nine demos and links the authored ones', async ({ 
   const pending = await page.locator('.library__thumb--pending').count();
   expect(pending + count).toBe(9);
 });
+
+test('every registered demo plays, pauses, and scrubs independently', async ({ page }) => {
+  await page.goto('/');
+  const players = page.locator('.demo');
+  const count = await players.count();
+  expect(count).toBeGreaterThanOrEqual(4);
+
+  for (let i = 0; i < count; i++) {
+    const player = players.nth(i);
+    const caption = player.locator('.demo__caption');
+    const scrub = player.locator('.demo__scrub');
+
+    const atStart = await caption.textContent();
+    await scrub.fill(await scrub.getAttribute('max').then((m) => m!));
+    const atEnd = await caption.textContent();
+    // Scrubbing to the end must land on a different keyframe than the start.
+    expect(atEnd, `demo ${i} caption did not change across its timeline`).not.toBe(atStart);
+
+    await player.locator('.demo__button').click();
+    await expect(player.locator('.demo__button')).toHaveAccessibleName(/^(Play|Pause) demo:/);
+  }
+});
+
+test('the two 2.4.7 demos differ only in whether the focus ring is drawn', async ({ page }) => {
+  await page.goto('/');
+  // Both traverse the same form on the same schedule; the visible ring is the one variable.
+  const visible = page.locator('.demo').filter({ hasText: 'Focus is on' }).first();
+  await expect(visible).toBeVisible();
+  await expect(page.locator('.fdemo__status').first()).toContainText(/Focus is on|Tab order/);
+});

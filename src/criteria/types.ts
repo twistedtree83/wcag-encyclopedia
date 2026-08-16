@@ -45,8 +45,12 @@ export type CriterionRecord = {
   readonly fail: Example;
   readonly pass: Example;
   readonly diff?: Diff;
-  /** Id of the demo illustrating this criterion. Owned by T-09 onward. */
-  readonly demo?: string;
+  /**
+   * Ids of the demos illustrating this criterion, in the order they should be read. Usually
+   * one; 2.4.7 carries two, because seeing the focus ring and its absence back to back is the
+   * lesson and neither half teaches it alone.
+   */
+  readonly demos?: readonly string[];
 };
 
 export type Guideline = {

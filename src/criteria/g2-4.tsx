@@ -289,6 +289,7 @@ export const G2_4: readonly CriterionRecord[] = [
     name: 'Focus Visible',
     level: 'AA',
     guideline: '2.4',
+    demos: ['focus-visible-2-4-7', 'focus-lost-2-4-7'],
     plain:
       'Keyboard focus has to be visible. Removing the outline because it is ugly is the single ' +
       'most common accessibility failure on the web, and it makes a site unusable rather than ' +
@@ -347,6 +348,7 @@ export const G2_4: readonly CriterionRecord[] = [
     name: 'Focus Not Obscured (Minimum)',
     level: 'AA',
     guideline: '2.4',
+    demos: ['obscured-2-4-11'],
     plain:
       'When something receives focus, it must not be entirely hidden behind other content. New ' +
       'in WCAG 2.2, and almost always caused by a sticky header swallowing whatever you just ' +

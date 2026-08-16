@@ -2292,3 +2292,105 @@ a:hover {
   font-size: 0.6875rem;
   color: var(--ink3);
 }
+
+/* --- Focus demos (2.4.7, 2.4.11) ---------------------------------------------------------------------- */
+
+.fdemo,
+.odemo {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2cqw;
+  padding: 4cqw 6cqw;
+}
+.fdemo__form {
+  display: grid;
+  gap: 1.4cqw;
+}
+.fdemo__field,
+.fdemo__button {
+  display: flex;
+  align-items: center;
+  height: 5.5cqw;
+  min-height: 16px;
+  padding: 0 1.6cqw;
+  background: var(--panel);
+  border: 1px solid var(--rule2);
+  font-size: clamp(0.5rem, 1.9cqw, 0.875rem);
+  color: var(--ink2);
+}
+.fdemo__button {
+  justify-content: center;
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--panel);
+  font-weight: 600;
+}
+.fdemo__focused {
+  outline: 0.6cqw solid var(--focus);
+  outline-offset: 0.4cqw;
+  color: var(--ink);
+}
+.fdemo__button.fdemo__focused {
+  color: var(--panel);
+}
+.fdemo__status {
+  margin: 0;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: clamp(0.5rem, 1.7cqw, 0.75rem);
+  color: var(--ink2);
+}
+
+.odemo__viewport {
+  position: relative;
+  height: 60cqh;
+  min-height: 5rem;
+  overflow: hidden;
+  background: var(--panel);
+  border: 1px solid var(--rule2);
+}
+.odemo__header {
+  position: absolute;
+  inset: 0 0 auto 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  height: 3rem;
+  padding: 0 1.6cqw;
+  background: var(--ink);
+  color: var(--panel);
+  font-size: clamp(0.5rem, 1.7cqw, 0.75rem);
+  font-weight: 600;
+}
+.odemo__scroller {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.5rem 1.6cqw;
+  transition: transform 0.25s linear;
+}
+.odemo__row {
+  display: flex;
+  align-items: center;
+  height: 1.75rem;
+  padding: 0 0.5rem;
+  background: var(--panel2);
+  border: 1px solid var(--rule);
+  font-size: clamp(0.5rem, 1.7cqw, 0.75rem);
+  color: var(--ink2);
+}
+.odemo__row--focused {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  color: var(--ink);
+}
+/* scroll-padding applied: the row is pushed clear of the sticky header. */
+.odemo__row--clear {
+  margin-top: 3rem;
+}
+@media (prefers-reduced-motion: reduce) {
+  .odemo__scroller {
+    transition: none;
+  }
+}

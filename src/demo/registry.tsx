@@ -12,6 +12,13 @@
 import type { ReactNode } from 'react';
 import { DemoPlayer } from './DemoPlayer';
 import { reflowTimeline, renderReflow } from './demos/reflow';
+import {
+  focusVisibleTimeline,
+  focusLostTimeline,
+  obscuredTimeline,
+  renderFocus,
+  renderObscured,
+} from './demos/focus';
 
 export type DemoEntry = {
   readonly id: string;
@@ -29,6 +36,27 @@ export const DEMOS: readonly DemoEntry[] = [
     criterion: '1.4.10',
     duration: reflowTimeline.duration,
     Player: () => <DemoPlayer timeline={reflowTimeline} render={renderReflow} />,
+  },
+  {
+    id: focusVisibleTimeline.id,
+    title: focusVisibleTimeline.title,
+    criterion: '2.4.7',
+    duration: focusVisibleTimeline.duration,
+    Player: () => <DemoPlayer timeline={focusVisibleTimeline} render={renderFocus} />,
+  },
+  {
+    id: focusLostTimeline.id,
+    title: focusLostTimeline.title,
+    criterion: '2.4.7',
+    duration: focusLostTimeline.duration,
+    Player: () => <DemoPlayer timeline={focusLostTimeline} render={renderFocus} />,
+  },
+  {
+    id: obscuredTimeline.id,
+    title: obscuredTimeline.title,
+    criterion: '2.4.11',
+    duration: obscuredTimeline.duration,
+    Player: () => <DemoPlayer timeline={obscuredTimeline} render={renderObscured} />,
   },
 ];
 

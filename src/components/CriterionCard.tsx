@@ -18,7 +18,7 @@ import { demoById } from '../demo/registry';
 
 export function CriterionCard({ criterion }: { criterion: CriterionRecord }) {
   const headingId = `c-${criterion.num}-heading`;
-  const demo = criterion.demo ? demoById(criterion.demo) : undefined;
+  const demos = (criterion.demos ?? []).map(demoById).filter((d) => d !== undefined);
 
   return (
     <article id={criterion.num} className="card" aria-labelledby={headingId}>
@@ -41,7 +41,9 @@ export function CriterionCard({ criterion }: { criterion: CriterionRecord }) {
         <strong>In plain English:</strong> {criterion.plain}
       </p>
 
-      {demo ? <demo.Player /> : null}
+      {demos.map((demo) => (
+        <demo.Player key={demo.id} />
+      ))}
 
       <ExamplePair fail={criterion.fail} pass={criterion.pass} />
 

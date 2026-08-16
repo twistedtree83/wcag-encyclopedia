@@ -126,7 +126,7 @@ export const G1_4: readonly CriterionRecord[] = [
     name: 'Reflow',
     level: 'AA',
     guideline: '1.4',
-    demo: 'reflow-1-4-10',
+    demos: ['reflow-1-4-10'],
     plain:
       'At 320 CSS pixels wide, content must not require scrolling in two directions. Same ' +
       'content, one column, no horizontal scrollbar.',

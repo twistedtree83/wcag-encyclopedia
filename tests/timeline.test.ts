@@ -167,10 +167,20 @@ describe('the registered demos', () => {
     }
   });
 
-  it('links every criterion that names a demo to one that is registered', () => {
-    for (const record of CORPUS.filter((c) => c.demo)) {
-      const entry = DEMOS.find((d) => d.id === record.demo);
-      expect(entry, `${record.num} names demo "${record.demo}"`).toBeDefined();
+  it('links every criterion that names demos to ones that are registered', () => {
+    for (const record of CORPUS.filter((c) => c.demos?.length)) {
+      for (const id of record.demos!) {
+        expect(DEMOS.find((d) => d.id === id), `${record.num} names demo "${id}"`).toBeDefined();
+      }
+    }
+  });
+
+  it('renders every registered demo on some criterion card', () => {
+    // A demo that is registered but named by no card exists only in the library index, where
+    // its link would lead to a card that does not show it.
+    const named = new Set(CORPUS.flatMap((c) => c.demos ?? []));
+    for (const entry of DEMOS) {
+      expect(named.has(entry.id), `demo "${entry.id}" is not shown on any card`).toBe(true);
     }
   });
 });
