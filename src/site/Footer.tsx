@@ -3,8 +3,6 @@ import { Brand } from './Brand';
 import { useRoute } from './RouteContext';
 import { PATHS } from './routes';
 
-const SOURCE_CODE = 'https://github.com/twistedtree83/wcag-encyclopedia';
-
 /** Logo and one-line description, then the Principles, Tools and About columns. */
 export function Footer() {
   const { href } = useRoute();
@@ -26,7 +24,7 @@ export function Footer() {
       links: [
         { to: href(`${PATHS.about}#how-we-test`), label: 'How we test' },
         { to: href(`${PATHS.about}#accessibility-statement`), label: 'Accessibility statement' },
-        { to: SOURCE_CODE, label: 'Source code' },
+        { to: href(`${PATHS.about}#source-code`), label: 'Source code' },
       ],
     },
   ];
