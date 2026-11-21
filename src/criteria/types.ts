@@ -10,6 +10,9 @@ import type { ReactNode } from 'react';
 
 export type Level = 'A' | 'AA' | 'AAA';
 
+/** The WCAG version that introduced a criterion. */
+export type Since = '2.0' | '2.1' | '2.2';
+
 /** A rendered piece of interface, plus the one line naming what is wrong or what changed. */
 export type Example = {
   /** Real interface, not a description of one. */
@@ -40,6 +43,11 @@ export type CriterionRecord = {
   readonly level: Level;
   /** Dotted pair, e.g. '1.4'. Must be `num` minus its last segment. */
   readonly guideline: string;
+  /**
+   * The WCAG version that introduced this criterion. Drives the facts card's "In WCAG since"
+   * and the "new in 2.2" filter. Exactly six records are '2.2'.
+   */
+  readonly since: Since;
   /** Plain English. Original prose — never W3C normative text. */
   readonly plain: string;
   readonly fail: Example;
@@ -51,6 +59,12 @@ export type CriterionRecord = {
    * lesson and neither half teaches it alone.
    */
   readonly demos?: readonly string[];
+  /**
+   * Ids of the labs (see `src/labs/registry.ts`) the reader can try on this criterion's page,
+   * in reading order. A list, like `demos`, because 1.4.3 carries two. Omit rather than leave
+   * empty. Labs add to `fail` and `pass`; they never replace them.
+   */
+  readonly labs?: readonly string[];
 };
 
 export type Guideline = {

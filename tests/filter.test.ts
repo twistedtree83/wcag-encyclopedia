@@ -19,6 +19,7 @@ const record = (num: string, name: string, level: 'A' | 'AA'): CriterionRecord =
   name,
   level,
   guideline: num.split('.').slice(0, 2).join('.'),
+  since: '2.0',
   plain: 'x',
   fail: { render: () => null, caption: 'c' },
   pass: { render: () => null, caption: 'c' },

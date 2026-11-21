@@ -13,6 +13,7 @@ export const G3_2: readonly CriterionRecord[] = [
     num: '3.2.1',
     name: 'On Focus',
     level: 'A',
+    since: '2.0',
     guideline: '3.2',
     plain:
       'Focusing something must not change the context — no navigating away, no opening a ' +
@@ -55,6 +56,7 @@ export const G3_2: readonly CriterionRecord[] = [
     num: '3.2.2',
     name: 'On Input',
     level: 'A',
+    since: '2.0',
     guideline: '3.2',
     plain:
       'Changing a setting must not change the context either, unless you warned the reader ' +
@@ -96,6 +98,7 @@ export const G3_2: readonly CriterionRecord[] = [
     num: '3.2.3',
     name: 'Consistent Navigation',
     level: 'AA',
+    since: '2.0',
     guideline: '3.2',
     plain:
       'Navigation repeated across pages has to stay in the same relative order. You may add and ' +
@@ -136,6 +139,7 @@ export const G3_2: readonly CriterionRecord[] = [
     num: '3.2.4',
     name: 'Consistent Identification',
     level: 'AA',
+    since: '2.0',
     guideline: '3.2',
     plain:
       'The same function needs the same name and icon everywhere. Three words for one action ' +
@@ -178,6 +182,7 @@ export const G3_2: readonly CriterionRecord[] = [
     num: '3.2.6',
     name: 'Consistent Help',
     level: 'A',
+    since: '2.2',
     guideline: '3.2',
     plain:
       'If help is offered — a contact link, a chat widget, a help page — it has to appear in ' +

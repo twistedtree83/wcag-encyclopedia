@@ -117,11 +117,11 @@ The binding constraint is unchanged: **the site obeys every criterion it documen
 **Criteria corpus**: the record shape gains two fields.
 
 ```
-{ num, name, level, guideline, since, plain, fail, pass, diff?, demo?, lab? }
+{ num, name, level, guideline, since, plain, fail, pass, diff?, demo?, labs? }
 ```
 
 - `since: '2.0' | '2.1' | '2.2'`: required. It drives the facts card and the "new in 2.2" filter. Six records are `2.2`: 2.4.11, 2.5.7, 2.5.8, 3.2.6, 3.3.7 and 3.3.8.
-- `lab?`: optional. A reference to a lab component. When it's present, the criterion page shows a "Try it yourself" section.
+- `labs?`: optional. A list of lab ids, in reading order, each resolved against the lab registry (`src/labs/registry.ts`). A list because 1.4.3 carries two labs. Omit it rather than leave it empty. When it's present, the criterion page shows a "Try it yourself" section.
 
 **Contrast engine** (`src/color/contrast.ts`): kept. It already uses the 0.03928 threshold and truncates. It gains the guide's nearest-passing-colour search: mix towards black and towards white, and keep the smaller change. Ratios display truncated to two decimals in the colour check and stay truncated everywhere.
 
@@ -168,7 +168,7 @@ Labs never replace the fail and pass examples. Every criterion keeps both.
 Tests check behaviour a reader or maintainer would notice, never internal structure. Component rendering isn't unit-tested; the axe scan and visual checks cover it.
 
 1. **Token contrast audit**, rebuilt for Swatch. Every pair in guide §3.4, in both themes, including control borders on cards in the dark theme (3.7:1, the tightest pair). Failures name the pair and the measured ratio.
-2. **Data integrity.** As before, plus `since` is valid on every record, exactly six records are `2.2`, and every `lab` reference resolves.
+2. **Data integrity.** As before, plus `since` is valid on every record, exactly six records are `2.2`, and every `labs` reference resolves.
 3. **Filter engine.** Each input on its own, combinations (for example AA and new in 2.2), search across all four fields, counts matching results, and an empty query returning all 55.
 4. **Contrast engine.** The nearest passing colour reaches 4.5:1 and is the smaller of the two changes, and truncation never turns a fail into a pass (4.499 shows 4.49).
 5. **`frameAt`**, unchanged.
@@ -184,7 +184,7 @@ Tests check behaviour a reader or maintainer would notice, never internal struct
 | # | Slice | Blocked by |
 |---|---|---|
 | R-01 | Walking skeleton: Swatch tokens and contrast audit, fonts, header, footer, theme toggle, pre-render step, one 1.4.3 criterion page, axe on it | — |
-| R-02 | `since` and `lab?` on all 55 records, data-integrity test | R-01 |
+| R-02 | `since` and `labs?` on all 55 records, data-integrity test | R-01 |
 | R-03 | All 55 criterion pages, full anatomy, `#number` redirect | R-02 |
 | R-04 | Filter engine: principle, level, new in 2.2, wider search | R-02 |
 | R-05 | All criteria page | R-03, R-04 |
@@ -213,4 +213,4 @@ Tests check behaviour a reader or maintainer would notice, never internal struct
 
 - **R-01 carries the risk.** The pre-render step and hydration are the new infrastructure; everything else is components and content on top. Prove it end to end on one criterion page before building the rest.
 - **The tightest contrast pair is the one to watch.** Control borders on cards in the dark theme are 3.7:1. Don't darken `--line-2` or lighten `--card-bg` without re-running the audit.
-- **The lab slot is the most important decision for the long term.** Keep the `lab?` contract small and data-driven, so that building towards a fully interactive site means writing labs, not redesigning criterion pages.
+- **The lab slot is the most important decision for the long term.** Keep the `labs?` contract small and data-driven, so that building towards a fully interactive site means writing labs, not redesigning criterion pages.

@@ -13,6 +13,7 @@ export const G4_1: readonly CriterionRecord[] = [
     num: '4.1.2',
     name: 'Name, Role, Value',
     level: 'A',
+    since: '2.0',
     guideline: '4.1',
     demos: ['name-4-1-2'],
     plain:
@@ -84,6 +85,7 @@ export const G4_1: readonly CriterionRecord[] = [
     num: '4.1.3',
     name: 'Status Messages',
     level: 'AA',
+    since: '2.1',
     guideline: '4.1',
     demos: ['live-4-1-3'],
     plain:

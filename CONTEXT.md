@@ -36,7 +36,7 @@ data-integrity test asserts the exact set.
 **Criterion record** — the typed data for one criterion. The unit of authoring. Shape:
 
 ```
-{ num, name, level, guideline, since, plain, fail, pass, diff?, demo?, lab? }
+{ num, name, level, guideline, since, plain, fail, pass, diff?, demo?, labs? }
 ```
 
 **Since** — the WCAG version that introduced a criterion: `2.0`, `2.1` or `2.2`. Six criteria in

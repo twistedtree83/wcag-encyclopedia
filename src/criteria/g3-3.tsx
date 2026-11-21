@@ -14,6 +14,7 @@ export const G3_3: readonly CriterionRecord[] = [
     num: '3.3.1',
     name: 'Error Identification',
     level: 'A',
+    since: '2.0',
     guideline: '3.3',
     demos: ['errors-3-3-1'],
     plain:
@@ -82,6 +83,7 @@ export const G3_3: readonly CriterionRecord[] = [
     num: '3.3.2',
     name: 'Labels or Instructions',
     level: 'A',
+    since: '2.0',
     guideline: '3.3',
     plain:
       'Fields need labels, and any format requirement has to be stated before the reader types ' +
@@ -131,6 +133,7 @@ export const G3_3: readonly CriterionRecord[] = [
     num: '3.3.3',
     name: 'Error Suggestion',
     level: 'AA',
+    since: '2.0',
     guideline: '3.3',
     plain:
       'When you know what is wrong and you know how to fix it, say so. Naming the problem is ' +
@@ -174,6 +177,7 @@ export const G3_3: readonly CriterionRecord[] = [
     num: '3.3.4',
     name: 'Error Prevention (Legal, Financial, Data)',
     level: 'AA',
+    since: '2.0',
     guideline: '3.3',
     plain:
       'For anything legally binding, financial, or destructive, give the reader a way out: make ' +
@@ -218,6 +222,7 @@ export const G3_3: readonly CriterionRecord[] = [
     num: '3.3.7',
     name: 'Redundant Entry',
     level: 'A',
+    since: '2.2',
     guideline: '3.3',
     plain:
       'Do not ask for the same information twice in one process. Either carry it forward or ' +
@@ -264,6 +269,7 @@ export const G3_3: readonly CriterionRecord[] = [
     num: '3.3.8',
     name: 'Accessible Authentication (Minimum)',
     level: 'AA',
+    since: '2.2',
     guideline: '3.3',
     plain:
       'Signing in must not depend on a cognitive function test — remembering a password, ' +

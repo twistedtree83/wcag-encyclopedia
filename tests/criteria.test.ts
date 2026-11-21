@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { CORPUS, criterion, criteriaFor, populatedGuidelines } from '../src/criteria/corpus';
 import { EXPECTED, EXPECTED_TOTAL, expectedFor } from '../src/criteria/manifest';
 import { GUIDELINES, PRINCIPLES, PRINCIPLE_MARKS, guidelineFor } from '../src/criteria/structure';
+import { LABS, unresolvedLabs } from '../src/labs/registry';
 
 /**
  * Data integrity.
@@ -256,4 +257,79 @@ describe('the corpus is complete', () => {
       expect(count, `guideline ${g.num} ${g.name} has no criteria`).toBeGreaterThan(0);
     }
   });
+});
+
+/**
+ * Since: the WCAG version that introduced each criterion. It drives the facts card's
+ * "In WCAG since" and the "new in 2.2" filter, so it is typed once on the record and checked
+ * here against the standard's own lists of what 2.1 and 2.2 added.
+ */
+describe('since', () => {
+  const NEW_IN_2_1 = [
+    '1.3.4', '1.3.5', '1.4.10', '1.4.11', '1.4.12', '1.4.13',
+    '2.1.4', '2.5.1', '2.5.2', '2.5.3', '2.5.4', '4.1.3',
+  ];
+  const NEW_IN_2_2 = ['2.4.11', '2.5.7', '2.5.8', '3.2.6', '3.3.7', '3.3.8'];
+
+  it.each(CORPUS.map((c) => [c.num, c] as const))('%s has a valid since', (_num, record) => {
+    expect(['2.0', '2.1', '2.2']).toContain(record.since);
+  });
+
+  it('marks exactly six criteria as new in 2.2: 2.4.11, 2.5.7, 2.5.8, 3.2.6, 3.3.7, 3.3.8', () => {
+    const newIn22 = CORPUS.filter((c) => c.since === '2.2').map((c) => c.num);
+    expect(newIn22).toEqual(NEW_IN_2_2);
+  });
+
+  it('marks the twelve Level A and AA criteria that WCAG 2.1 added as 2.1', () => {
+    const newIn21 = CORPUS.filter((c) => c.since === '2.1').map((c) => c.num);
+    expect(newIn21).toEqual(NEW_IN_2_1);
+  });
+
+  it('marks the other 37 as 2.0', () => {
+    expect(CORPUS.filter((c) => c.since === '2.0')).toHaveLength(37);
+  });
+});
+
+/**
+ * Labs: interactive exhibits a record can point at. A lab adds to a criterion's fail and pass
+ * examples and never replaces them, so the completeness check above still applies to every
+ * record that carries one.
+ */
+describe('lab references', () => {
+  it('flags a reference that does not resolve to a real lab', () => {
+    expect(unresolvedLabs({ labs: ['no-such-lab'] })).toEqual(['no-such-lab']);
+  });
+
+  it('flags nothing on a record without labs', () => {
+    expect(unresolvedLabs({})).toEqual([]);
+  });
+
+  it('flags nothing for a lab that is registered', () => {
+    for (const lab of LABS) {
+      expect(unresolvedLabs({ labs: [lab.id] }), lab.id).toEqual([]);
+    }
+  });
+
+  it('registers every lab once', () => {
+    const ids = LABS.map((l) => l.id);
+    expect(ids.length).toBe(new Set(ids).size);
+  });
+
+  it.each(CORPUS.map((c) => [c.num, c] as const))(
+    '%s refers only to labs that exist, each once',
+    (_num, record) => {
+      expect(unresolvedLabs(record), 'unknown lab ids').toEqual([]);
+      const ids = record.labs ?? [];
+      expect(ids.length, 'a lab listed twice').toBe(new Set(ids).size);
+    },
+  );
+
+  it.each(CORPUS.filter((c) => c.labs).map((c) => [c.num, c] as const))(
+    '%s keeps its fail and pass examples alongside its labs',
+    (_num, record) => {
+      expect(record.labs!.length, 'an empty labs list: omit the field instead').toBeGreaterThan(0);
+      expect(typeof record.fail.render).toBe('function');
+      expect(typeof record.pass.render).toBe('function');
+    },
+  );
 });

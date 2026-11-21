@@ -13,6 +13,7 @@ export const G1_3: readonly CriterionRecord[] = [
     num: '1.3.1',
     name: 'Info and Relationships',
     level: 'A',
+    since: '2.0',
     guideline: '1.3',
     plain:
       'Structure you can see has to exist in the markup too. Headings marked up as headings, ' +
@@ -71,6 +72,7 @@ export const G1_3: readonly CriterionRecord[] = [
     num: '1.3.2',
     name: 'Meaningful Sequence',
     level: 'A',
+    since: '2.0',
     guideline: '1.3',
     plain:
       'When the order of the content matters, the reading order in the markup has to match. ' +
@@ -126,6 +128,7 @@ export const G1_3: readonly CriterionRecord[] = [
     num: '1.3.3',
     name: 'Sensory Characteristics',
     level: 'A',
+    since: '2.0',
     guideline: '1.3',
     plain:
       'Instructions cannot depend on shape, size, position, or sound alone. "The button on the ' +
@@ -167,6 +170,7 @@ export const G1_3: readonly CriterionRecord[] = [
     num: '1.3.4',
     name: 'Orientation',
     level: 'AA',
+    since: '2.1',
     guideline: '1.3',
     plain:
       'Do not lock the screen to portrait or landscape unless the orientation is essential — a ' +
@@ -215,6 +219,7 @@ export const G1_3: readonly CriterionRecord[] = [
     num: '1.3.5',
     name: 'Identify Input Purpose',
     level: 'AA',
+    since: '2.1',
     guideline: '1.3',
     plain:
       'Fields collecting the user’s own information — name, email, address, phone — need to ' +

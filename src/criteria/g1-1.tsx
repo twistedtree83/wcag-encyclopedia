@@ -22,6 +22,7 @@ export const G1_1: readonly CriterionRecord[] = [
     num: '1.1.1',
     name: 'Non-text Content',
     level: 'A',
+    since: '2.0',
     guideline: '1.1',
     plain:
       'Anything that is not text — an image, an icon, a chart, a video thumbnail — needs a ' +

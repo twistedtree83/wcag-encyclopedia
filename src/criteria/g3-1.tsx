@@ -12,6 +12,7 @@ export const G3_1: readonly CriterionRecord[] = [
     num: '3.1.1',
     name: 'Language of Page',
     level: 'A',
+    since: '2.0',
     guideline: '3.1',
     plain:
       'Declare the page’s language in the markup. It is what tells a screen reader which voice ' +
@@ -55,6 +56,7 @@ export const G3_1: readonly CriterionRecord[] = [
     num: '3.1.2',
     name: 'Language of Parts',
     level: 'AA',
+    since: '2.0',
     guideline: '3.1',
     plain:
       'Passages in another language need their own lang attribute, so a screen reader switches ' +
