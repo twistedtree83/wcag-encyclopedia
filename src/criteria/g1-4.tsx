@@ -233,7 +233,7 @@ export const G1_4: readonly CriterionRecord[] = [
     level: 'AA',
     since: '2.0',
     guideline: '1.4',
-    labs: ['colour-check'],
+    labs: ['colour-check', 'fade-text'],
     plain:
       'Body text needs at least 4.5:1 against its background. Text at 24px, or 18.66px and ' +
       'bold, needs 3:1. Measure it rather than judging by eye — a screen at full brightness in ' +

@@ -159,7 +159,10 @@ export function ColourCheck({ state, id: given, wide = false, title }: Props) {
 
       <div className="score">
         <span>Contrast ratio</span>
-        <output htmlFor={`${id}-fg ${id}-bg`}>{`${formatScore(ratio)} : 1`}</output>
+        {/* <output> is a live status region by default; the verdict below speaks instead. */}
+        <output htmlFor={`${id}-fg ${id}-bg`} aria-live="off">
+          {`${formatScore(ratio)} : 1`}
+        </output>
       </div>
 
       <ul className="res">

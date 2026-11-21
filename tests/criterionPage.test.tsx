@@ -11,9 +11,9 @@ import { criterionPath } from '../src/site/routes';
  * runs (ADR 0001). Optional sections appear only when the record has something to put in them.
  */
 
-// A fixture lab on top of the real registry, so records' real labs still render.
-vi.mock('../src/labs/registry', async (importActual) => {
-  const real = await importActual<typeof import('../src/labs/registry')>();
+// Adds a fixture lab; every real lab still resolves through the real registry.
+vi.mock('../src/labs/registry', async (importOriginal) => {
+  const real = await importOriginal<typeof import('../src/labs/registry')>();
   return {
     ...real,
     labById: (id: string) =>
