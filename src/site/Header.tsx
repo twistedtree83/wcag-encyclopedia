@@ -7,6 +7,7 @@ import { PATHS, type PageKind } from './routes';
 const SECTION: Record<PageKind, string> = {
   about: PATHS.about,
   'colour-check': PATHS.colourCheck,
+  criteria: PATHS.criteria,
   criterion: PATHS.criteria,
 };
 

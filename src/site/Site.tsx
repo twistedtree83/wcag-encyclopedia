@@ -1,7 +1,9 @@
 import { useEffect } from 'react';
 import { criterion } from '../criteria/corpus';
+import { EXPECTED_TOTAL } from '../criteria/manifest';
 import { AboutPage } from '../pages/AboutPage';
 import { ColourCheckPage } from '../pages/ColourCheckPage';
+import { CriteriaPage } from '../pages/CriteriaPage';
 import { CriterionPage } from '../pages/CriterionPage';
 import { Footer } from './Footer';
 import { Header } from './Header';
@@ -41,6 +43,8 @@ function Page({ route }: { route: Route }) {
       return <AboutPage />;
     case 'colour-check':
       return <ColourCheckPage />;
+    case 'criteria':
+      return <CriteriaPage />;
     case 'criterion':
       return <CriterionPage record={recordFor(route)} />;
   }
@@ -66,6 +70,11 @@ export function pageMeta(route: Route): { title: string; description: string } {
         title: 'Colour check: WCAG Encyclopedia',
         description:
           'Check any text and background colour against the WCAG contrast thresholds, see the pair in a real layout, and get the closest colour that passes.',
+      };
+    case 'criteria':
+      return {
+        title: 'All criteria: WCAG Encyclopedia',
+        description: `Search and filter all ${EXPECTED_TOTAL} Level A and AA success criteria of WCAG 2.2, each in a sentence with the way it most often goes wrong.`,
       };
     case 'criterion': {
       const record = recordFor(route);
