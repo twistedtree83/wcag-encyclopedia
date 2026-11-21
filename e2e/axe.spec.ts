@@ -166,3 +166,27 @@ for (const url of SITE_PAGES) {
     }
   });
 }
+
+/**
+ * Pages whose content changes after load: scan the states too, not only the first paint.
+ * The All criteria index filtered to one principle, and with nothing matching.
+ */
+const STATE_PAGES = ['/criteria/?p=2', '/criteria/?q=zzzz'];
+
+for (const url of STATE_PAGES) {
+  for (const mode of MODES) {
+    test(`${url} has no accessibility violations (${mode.name})`, async ({ page }) => {
+      await page.setViewportSize({ width: mode.width, height: 800 });
+      await page.emulateMedia({ colorScheme: mode.colorScheme });
+      await openSitePage(page, url);
+      const results = await new AxeBuilder({ page })
+        .withTags(SITE_TAGS)
+        .exclude('[data-depicts-failure]')
+        .analyze();
+      expect(
+        results.violations,
+        results.violations.map((v) => `${v.id}: ${v.help}`).join('\n'),
+      ).toEqual([]);
+    });
+  }
+}

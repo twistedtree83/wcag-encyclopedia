@@ -13,6 +13,10 @@ describe('the route list', () => {
     expect(ROUTES).toContainEqual({ path: 'criteria/1.4.3/', page: 'criterion', num: '1.4.3' });
   });
 
+  it('publishes the All criteria page at criteria/', () => {
+    expect(ROUTES).toContainEqual({ path: 'criteria/', page: 'criteria' });
+  });
+
   it('publishes the About page at about/', () => {
     expect(ROUTES).toContainEqual({ path: 'about/', page: 'about' });
   });
