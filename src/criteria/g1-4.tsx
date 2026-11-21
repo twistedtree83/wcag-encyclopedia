@@ -264,6 +264,7 @@ export const G1_4: readonly CriterionRecord[] = [
         </>
       ),
     },
+    labs: ['fade-text'],
   },
 
   {
