@@ -4,16 +4,24 @@
  */
 import { StrictMode } from 'react';
 import { renderToString } from 'react-dom/server';
+import { legacyRedirectScript } from './site/legacyRedirect';
 import { Site, pageMeta } from './site/Site';
 import { ROUTES, type Route } from './site/routes';
 
 export { ROUTES };
 
-export function render(route: Route): { html: string; title: string; description: string } {
+/**
+ * A route rendered for the prerender step: the app markup, the title and description, and
+ * `head`, extra markup for the page's `<head>` (the old `#number` redirect, on Home only).
+ */
+export type Rendered = { html: string; title: string; description: string; head: string };
+
+export function render(route: Route): Rendered {
   const html = renderToString(
     <StrictMode>
       <Site route={route} />
     </StrictMode>,
   );
-  return { html, ...pageMeta(route) };
+  const head = route.page === 'home' ? legacyRedirectScript() : '';
+  return { html, head, ...pageMeta(route) };
 }

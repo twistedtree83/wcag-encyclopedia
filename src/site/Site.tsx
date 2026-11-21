@@ -5,6 +5,7 @@ import { AboutPage } from '../pages/AboutPage';
 import { ColourCheckPage } from '../pages/ColourCheckPage';
 import { CriteriaPage } from '../pages/CriteriaPage';
 import { CriterionPage } from '../pages/CriterionPage';
+import { HomePage } from '../pages/HomePage';
 import { Footer } from './Footer';
 import { Header } from './Header';
 import { RouteProvider } from './RouteContext';
@@ -47,6 +48,8 @@ function Page({ route }: { route: Route }) {
       return <CriteriaPage />;
     case 'criterion':
       return <CriterionPage record={recordFor(route)} />;
+    case 'home':
+      return <HomePage />;
   }
 }
 
@@ -75,6 +78,11 @@ export function pageMeta(route: Route): { title: string; description: string } {
       return {
         title: 'All criteria: WCAG Encyclopedia',
         description: `Search and filter all ${EXPECTED_TOTAL} Level A and AA success criteria of WCAG 2.2, each in a sentence with the way it most often goes wrong.`,
+      };
+    case 'home':
+      return {
+        title: 'WCAG Encyclopedia: every criterion, shown broken then fixed',
+        description: `All ${EXPECTED_TOTAL} Level A and AA success criteria of WCAG 2.2, explained in plain language and shown broken then fixed, with a live colour check.`,
       };
     case 'criterion': {
       const record = recordFor(route);
