@@ -11,12 +11,17 @@ import { criterionPath } from '../src/site/routes';
  * runs (ADR 0001). Optional sections appear only when the record has something to put in them.
  */
 
-vi.mock('../src/labs/registry', () => ({
-  labById: (id: string) =>
-    id === 'fixture-lab'
-      ? { id, title: 'Try it: a fixture lab', Lab: () => <p>Fixture lab body</p> }
-      : undefined,
-}));
+// A fixture lab on top of the real registry, so records' real labs still render.
+vi.mock('../src/labs/registry', async (importActual) => {
+  const real = await importActual<typeof import('../src/labs/registry')>();
+  return {
+    ...real,
+    labById: (id: string) =>
+      id === 'fixture-lab'
+        ? { id, title: 'Try it: a fixture lab', Lab: () => <p>Fixture lab body</p> }
+        : real.labById(id),
+  };
+});
 
 const main = (html: string) => html.slice(html.indexOf('<main'), html.indexOf('</main>'));
 const h2s = (html: string) =>

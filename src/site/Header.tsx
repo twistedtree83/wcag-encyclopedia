@@ -6,6 +6,7 @@ import { PATHS, type PageKind } from './routes';
 /** Which nav item each page sits under. */
 const SECTION: Record<PageKind, string> = {
   about: PATHS.about,
+  'colour-check': PATHS.colourCheck,
   criterion: PATHS.criteria,
 };
 

@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { criterion } from '../criteria/corpus';
 import { AboutPage } from '../pages/AboutPage';
+import { ColourCheckPage } from '../pages/ColourCheckPage';
 import { CriterionPage } from '../pages/CriterionPage';
 import { Footer } from './Footer';
 import { Header } from './Header';
@@ -38,6 +39,8 @@ function Page({ route }: { route: Route }) {
   switch (route.page) {
     case 'about':
       return <AboutPage />;
+    case 'colour-check':
+      return <ColourCheckPage />;
     case 'criterion':
       return <CriterionPage record={recordFor(route)} />;
   }
@@ -57,6 +60,12 @@ export function pageMeta(route: Route): { title: string; description: string } {
         title: 'About: WCAG Encyclopedia',
         description:
           'What the WCAG Encyclopedia is, its accessibility statement and how each claim is checked, and where to find the source code.',
+      };
+    case 'colour-check':
+      return {
+        title: 'Colour check: WCAG Encyclopedia',
+        description:
+          'Check any text and background colour against the WCAG contrast thresholds, see the pair in a real layout, and get the closest colour that passes.',
       };
     case 'criterion': {
       const record = recordFor(route);

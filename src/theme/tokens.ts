@@ -99,6 +99,9 @@ function withAliases(base: Record<BaseToken, string>, theme: 'light' | 'dark') {
     // The edge of a card surface (.surf): none to see in dark (it matches the card), a
     // hairline in light. Decorative: cards are told apart by their fill and spacing.
     'surf-edge': isDark ? base.raise : base.line,
+    // The edge of the colour check panel: none in dark (it is darker than the page), a
+    // hairline in light, where the panel is white on paper. Decorative.
+    'chk-edge': isDark ? base.deep : base.line,
   };
 }
 

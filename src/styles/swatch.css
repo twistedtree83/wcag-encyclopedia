@@ -38,6 +38,7 @@
   --gap: 18px;
   --pad: 28px;
   --hero-gap: 32px;
+  --prev-pad: 24px;
 
   --rad: 28px;
   --rad-sm: 12px;
@@ -747,6 +748,422 @@ footer.foot p {
   text-align: right;
 }
 
+/* --- Colour check (R-06) ---------------------------------------------------------------- */
+
+.ph h1 em {
+  font-style: normal;
+  color: var(--accent-text);
+}
+.chk {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: calc(var(--pad) + 2px);
+  border: var(--bwid) solid var(--chk-edge);
+  border-radius: var(--rad);
+  background: var(--deep);
+}
+.ph + .chk {
+  margin-top: 40px;
+}
+.chk h2.t {
+  font: var(--hw) calc(28px * var(--ts)) / 1.1 var(--fh), sans-serif;
+  margin: 0 0 6px;
+}
+.chk .s {
+  margin: 0 0 22px;
+  color: var(--ink-2);
+  font-size: calc(var(--small) + 1px);
+}
+.chk-in {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 12px;
+  align-items: end;
+  margin: 0 0 18px;
+}
+.chk fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+.chk legend {
+  font-size: var(--small);
+  font-weight: 600;
+  padding: 0;
+  margin: 0 0 6px;
+}
+.cf {
+  display: flex;
+  min-height: 48px;
+  overflow: hidden;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  background: var(--bg);
+}
+.cf input[type='color'] {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: none;
+  width: 52px;
+  padding: 0;
+  border: 0;
+  border-right: var(--bwid) solid var(--line-2);
+  background: none;
+  cursor: pointer;
+}
+.cf input[type='color']::-webkit-color-swatch-wrapper {
+  padding: 6px;
+}
+.cf input[type='color']::-webkit-color-swatch {
+  border: 0;
+  border-radius: 6px;
+}
+.cf input[type='text'] {
+  width: 100%;
+  min-width: 0;
+  padding: 0 12px;
+  border: 0;
+  background: transparent;
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.cf:focus-within {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+.cf input:focus-visible {
+  outline: 0;
+}
+.swap {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+.swap:hover {
+  background: var(--raise);
+}
+.prev {
+  display: grid;
+  gap: 12px;
+  padding: var(--prev-pad);
+  border-radius: calc(var(--rad) * 0.65);
+  /* A faint inner edge, so a white preview still reads as a box on a white card. */
+  box-shadow: inset 0 0 0 1.5px rgba(128, 128, 128, 0.45);
+  transition: filter 0.2s;
+}
+.prev.grey {
+  filter: grayscale(1);
+}
+.prev p {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.5;
+}
+.prev .pvh {
+  font: 700 calc(26px * var(--ts)) / 1.1 var(--fh), sans-serif;
+}
+.prev .lnk {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 600;
+}
+.prev .row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+.prev .fbtn {
+  padding: 8px 16px;
+  border: 2px solid currentColor;
+  border-radius: var(--rad-btn);
+  font-weight: 600;
+  font-size: 15px;
+}
+.prev .finp {
+  min-width: 150px;
+  padding: 7px 12px;
+  border: 2px solid currentColor;
+  border-radius: var(--rad-sm);
+  font-size: 15px;
+}
+.prev small {
+  font-size: 14px;
+}
+.score {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 20px 0 14px;
+}
+.score span {
+  font-weight: 600;
+}
+.score output {
+  font: var(--hw) calc(var(--num) * 0.7 * var(--ts)) / 1 var(--fh), sans-serif;
+  white-space: nowrap;
+}
+.res {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.res li {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 10px 12px;
+  border: var(--bwid) solid var(--line);
+  border-radius: var(--rad-sm);
+  font-size: 14px;
+}
+.res strong {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font: 700 15px var(--fh), sans-serif;
+}
+.res .ok strong {
+  color: var(--ok-text);
+}
+.res .bad strong {
+  color: var(--err-text);
+}
+.fix {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 14px 0 0;
+  padding: 14px 16px;
+  border-radius: var(--rad-sm);
+  background: var(--bg);
+  font-size: var(--small);
+}
+.fix b {
+  font-weight: 600;
+}
+.chk-x {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  margin: 8px 0 0;
+  font-size: var(--small);
+  cursor: pointer;
+}
+.chk-x input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  accent-color: var(--btn-bg);
+}
+.lab-more {
+  margin: 18px 0 0;
+}
+
+/* The wide check on its own page: inputs and results on the left, a large preview right. */
+.wide {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: 0 40px;
+  padding: calc(var(--pad) + 8px);
+}
+.wide > * {
+  grid-column: 1;
+}
+.wide > .prev {
+  grid-column: 2;
+  grid-row: 1 / span 8;
+  align-self: stretch;
+  align-content: center;
+  gap: 18px;
+  padding: calc(var(--prev-pad) + 14px);
+}
+.wide > .prev .pvh {
+  font-size: calc(40px * var(--ts));
+}
+.wide > .prev p {
+  font-size: 20px;
+}
+
+.presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  list-style: none;
+  margin: 28px 0 0;
+  padding: 0;
+}
+.presets button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 16px 0 8px;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-chip);
+  background: transparent;
+  font-weight: 500;
+  font-size: var(--small);
+  cursor: pointer;
+}
+.presets button:hover {
+  background: var(--raise);
+}
+.presets .d {
+  display: inline-flex;
+}
+.presets .d i {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.5);
+}
+.presets .d i + i {
+  margin-left: -8px;
+}
+
+/* Done well, done badly */
+.pairs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gap);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.pairs > li {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: calc(var(--pad) - 6px);
+  border-radius: var(--rad);
+}
+.pairs h3 {
+  font: var(--hw2) calc((var(--h3) - 1px) * var(--ts)) / 1.2 var(--fh), sans-serif;
+}
+.pairs .duo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 10px;
+}
+.tile {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 118px;
+  padding: 16px 14px;
+  border-radius: calc(var(--rad) * 0.5);
+  box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.35);
+}
+.tile .sm {
+  font: 700 19px/1.15 var(--fh), sans-serif;
+  overflow-wrap: anywhere;
+}
+/* The badly tile's sample is drawn here, out of reach of assistive technology. */
+.tile .sm[data-t]::before {
+  content: attr(data-t);
+}
+/* The badge is the same ink-on-white chip on every tile, whatever the tile's colours. */
+.tag {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px 3px 8px;
+  border-radius: var(--rad-chip);
+  background: #1a1c1c;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+}
+.tag svg {
+  flex: none;
+}
+.pairs p {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--small);
+  line-height: 1.5;
+}
+.pairs .btn {
+  align-self: flex-start;
+  margin-top: auto;
+}
+
+/* What the numbers mean, and what a ratio can't tell you */
+.learn {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gap);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.learn li {
+  padding: var(--pad);
+  border-radius: var(--rad);
+}
+.learn h3 {
+  font: var(--hw2) calc(var(--h3) * 1.2 * var(--ts)) / 1.15 var(--fh), sans-serif;
+  margin: 6px 0 10px;
+}
+.learn .big {
+  margin: 0 0 12px;
+  color: var(--ink);
+  font: var(--hw) calc(var(--num) * 0.8 * var(--ts)) / 1 var(--fh), sans-serif;
+  letter-spacing: var(--hls);
+}
+.learn p {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: 16px;
+}
+.limits {
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  gap: 56px;
+  align-items: start;
+}
+.limits .bh {
+  margin: 0;
+}
+.limits ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.limits li {
+  padding: 20px 0;
+  border-top: var(--bwid) solid var(--line);
+}
+.limits li b {
+  display: block;
+  margin: 0 0 4px;
+  font: var(--hw2) calc(20px * var(--ts)) / 1.2 var(--fh), sans-serif;
+}
+.limits li span {
+  color: var(--ink-2);
+  font-size: 16px;
+}
+
 /* --- Breakpoints ------------------------------------------------------------------------ */
 
 @media (max-width: 1100px) {
@@ -755,6 +1172,23 @@ footer.foot p {
   }
   .grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .pairs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .learn,
+  .limits {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .limits {
+    gap: 24px;
+  }
+  .wide {
+    display: block;
+  }
+  .wide > .prev {
+    margin: 4px 0 0;
+    padding: var(--prev-pad);
   }
 }
 
@@ -804,6 +1238,25 @@ footer.foot p {
   }
   .checks li {
     padding: 22px;
+  }
+  .pairs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .chk,
+  .wide {
+    padding: 20px;
+  }
+  .chk-in {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .swap {
+    justify-self: start;
+  }
+  .wide > .prev .pvh {
+    font-size: 28px;
+  }
+  .wide > .prev p {
+    font-size: 17px;
   }
   footer.foot {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);

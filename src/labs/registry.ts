@@ -10,6 +10,7 @@
 
 import type { ReactNode } from 'react';
 import type { CriterionRecord } from '../criteria/types';
+import { ColourCheckLab } from './ColourCheck';
 
 export type LabEntry = {
   readonly id: string;
@@ -19,7 +20,9 @@ export type LabEntry = {
   readonly Lab: () => ReactNode;
 };
 
-export const LABS: readonly LabEntry[] = [];
+export const LABS: readonly LabEntry[] = [
+  { id: 'colour-check', title: 'Try it: check your own colours', Lab: ColourCheckLab },
+];
 
 export function labById(id: string): LabEntry | undefined {
   return LABS.find((l) => l.id === id);

@@ -12,7 +12,7 @@
 
 import { EXPECTED } from '../criteria/manifest';
 
-export type PageKind = 'about' | 'criterion';
+export type PageKind = 'about' | 'colour-check' | 'criterion';
 
 export type Route = {
   readonly path: string;
@@ -40,7 +40,10 @@ export function criterionPath(num: string): string {
 const PUBLISHED_CRITERIA: readonly string[] = EXPECTED.map((c) => c.num);
 
 /** Pages that are not criterion pages (home, colour check, all criteria, about) go here. */
-const FIXED_ROUTES: readonly Route[] = [{ path: PATHS.about, page: 'about' }];
+const FIXED_ROUTES: readonly Route[] = [
+  { path: PATHS.about, page: 'about' },
+  { path: PATHS.colourCheck, page: 'colour-check' },
+];
 
 const CRITERION_ROUTES: readonly Route[] = PUBLISHED_CRITERIA.map((num) => ({
   path: criterionPath(num),
