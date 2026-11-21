@@ -45,7 +45,7 @@ Graph: `scripts2/prd-redesign.json` · Parent: #27 · Branch: `redesign`
 - [ ] **R-06** #33 — Colour check lab and the Colour check page (needs R-03)
 - [x] **R-07** #34 — Fade-the-text lab on 1.4.3 (needs R-03)
 - [x] **R-09** #36 — About page with the accessibility statement (needs R-01)
-- [ ] **R-05** #32 — All criteria page (needs R-03, R-04)
+- [x] **R-05** #32 — All criteria page (needs R-03, R-04)
 - [ ] **R-08** #35 — Home page (needs R-05, R-06, R-07)
 - [ ] **R-10** #37 — Delete the retired single-page modules (needs R-08)
 - [ ] **R-11** #38 — Cutover: owner's visual sign-off, then merge the redesign and deploy (needs R-10)
