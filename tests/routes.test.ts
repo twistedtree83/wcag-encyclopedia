@@ -13,6 +13,10 @@ describe('the route list', () => {
     expect(ROUTES).toContainEqual({ path: 'criteria/1.4.3/', page: 'criterion', num: '1.4.3' });
   });
 
+  it('publishes the About page at about/', () => {
+    expect(ROUTES).toContainEqual({ path: 'about/', page: 'about' });
+  });
+
   it('only publishes criteria the manifest knows', () => {
     const known = new Set(EXPECTED.map((c) => c.num));
     for (const route of ROUTES.filter((r) => r.page === 'criterion')) {

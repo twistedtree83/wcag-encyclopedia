@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { criterion } from '../criteria/corpus';
+import { AboutPage } from '../pages/AboutPage';
 import { CriterionPage } from '../pages/CriterionPage';
 import { Footer } from './Footer';
 import { Header } from './Header';
@@ -35,6 +36,8 @@ export function Site({ route }: { route: Route }) {
 
 function Page({ route }: { route: Route }) {
   switch (route.page) {
+    case 'about':
+      return <AboutPage />;
     case 'criterion':
       return <CriterionPage record={recordFor(route)} />;
   }
@@ -49,6 +52,12 @@ function recordFor(route: Route) {
 /** The document title and description for a route. */
 export function pageMeta(route: Route): { title: string; description: string } {
   switch (route.page) {
+    case 'about':
+      return {
+        title: 'About: WCAG Encyclopedia',
+        description:
+          'What the WCAG Encyclopedia is, its accessibility statement and how each claim is checked, and where to find the source code.',
+      };
     case 'criterion': {
       const record = recordFor(route);
       return {
