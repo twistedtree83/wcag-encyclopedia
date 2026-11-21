@@ -1,42 +1,150 @@
 import type { CriterionRecord, Example } from '../criteria/types';
 import { principleFor } from '../criteria/structure';
+import { demoById } from '../demo/registry';
+import { labById } from '../labs/registry';
+import { Breadcrumb } from '../components/Breadcrumb';
+import { Facts } from '../components/Facts';
 import { FailIcon, PassIcon } from '../components/Icons';
+import { IndexCard } from '../components/IndexCard';
+import { MarkupDiff } from '../components/MarkupDiff';
+import { Pager } from '../components/Pager';
+import { LevelTag, Marker, NewTag } from '../components/Tags';
+import { neighbours, related } from '../site/criterionNav';
+import { PATHS } from '../site/routes';
 
 /**
- * A criterion page. R-01 ships the head and the Broken / Fixed stages; R-03 adds the rest of
- * the anatomy (breadcrumb, facts, diff, demos, labs, siblings, pager).
+ * A criterion page, in the PRD's order: breadcrumb, head and facts, Broken then fixed, the
+ * diff, the demos, the labs, "Also in", and the pager. The diff, demo and lab sections appear
+ * only when the record has one. Everything except the demos' and labs' controls is readable
+ * in the static HTML, before any script runs.
  */
 export function CriterionPage({ record }: { record: CriterionRecord }) {
   const principle = principleFor(record.guideline);
   if (!principle) throw new Error(`${record.num}: no principle for guideline ${record.guideline}`);
 
+  const demos = (record.demos ?? []).map((id) => {
+    const demo = demoById(id);
+    if (!demo) throw new Error(`${record.num}: no demo ${id}`);
+    return demo;
+  });
+  const labs = (record.labs ?? []).map((id) => {
+    const lab = labById(id);
+    if (!lab) throw new Error(`${record.num}: no lab ${id}`);
+    return lab;
+  });
+  const also = related(record);
+  const { prev, next } = neighbours(record.num);
+
   return (
     <>
+      <Breadcrumb
+        trail={[
+          { to: PATHS.home, label: 'Home' },
+          { to: PATHS.criteria, label: 'Criteria' },
+        ]}
+        current={`${record.num} ${record.name}`}
+      />
+
       <section className="ch" aria-labelledby="criterion-title">
         <div>
           <p className="meta">
-            <span className={`mk p${principle.num}`} aria-hidden="true" />
+            <Marker principle={principle.num} />
             {record.num} · {principle.name}
-            <span className={record.level === 'AA' ? 'lv aa' : 'lv'}>
-              <span className="sr">Level </span>
-              {record.level}
-            </span>
+            <LevelTag level={record.level} />
+            {record.since === '2.2' ? <NewTag /> : null}
           </p>
           <h1 id="criterion-title">{record.name}</h1>
           <p className="plain">{record.plain}</p>
         </div>
+        <Facts record={record} principle={principle} />
       </section>
 
       <section className="band" aria-labelledby="examples-title">
         <div className="bh">
-          <h2 id="examples-title">Broken, then fixed</h2>
-          <p>The same interface twice: first with the mistake, then with the smallest change that fixes it.</p>
+          <div>
+            <h2 id="examples-title">Broken, then fixed</h2>
+            <p>
+              The same interface twice: first with the mistake, then with the smallest change that
+              fixes it.
+            </p>
+          </div>
         </div>
         <div className="ex">
           <Stage kind="bad" example={record.fail} />
           <Stage kind="good" example={record.pass} />
         </div>
       </section>
+
+      {record.diff ? (
+        <section className="band" aria-labelledby="diff-title">
+          <div className="bh">
+            <div>
+              <h2 id="diff-title">What changed in the code</h2>
+              <p>
+                The fix as a diff: removed lines are marked with a minus, added lines with a plus.
+              </p>
+            </div>
+          </div>
+          <MarkupDiff diff={record.diff} />
+        </section>
+      ) : null}
+
+      {demos.length > 0 ? (
+        <section className="band" aria-labelledby="demo-title">
+          <div className="bh">
+            <div>
+              <h2 id="demo-title">Watch it happen</h2>
+              <p>
+                {demos.length > 1 ? 'These demos play' : 'This demo plays'} the failure out over
+                time. {demos.length > 1 ? 'They are' : 'It is'} silent and captioned, and you can
+                pause or scrub at any point.
+              </p>
+            </div>
+          </div>
+          <div className="demos">
+            {demos.map((demo) => (
+              <demo.Player key={demo.id} />
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      {labs.length > 0 ? (
+        <section className="band" aria-labelledby="lab-title">
+          <div className="bh">
+            <div>
+              <h2 id="lab-title">Try it yourself</h2>
+              <p>Change the interface yourself and watch where it starts to fail.</p>
+            </div>
+          </div>
+          {labs.map(({ id, title, Lab }) => (
+            <div className="lab-slot" key={id}>
+              <h3>{title}</h3>
+              <Lab />
+            </div>
+          ))}
+        </section>
+      ) : null}
+
+      <section className="band" aria-labelledby="also-title">
+        <div className="bh">
+          <div>
+            <h2 id="also-title">{also.heading}</h2>
+            <p>
+              {also.byGuideline
+                ? 'Criteria in the same guideline often fail together.'
+                : 'This guideline has no other Level A or AA criteria, so here are more under the same principle.'}
+            </p>
+          </div>
+        </div>
+        <ul className="grid">
+          {also.records.map((r) => (
+            <IndexCard key={r.num} record={r} />
+          ))}
+        </ul>
+      </section>
+
+      <Pager {...(prev ? { prev } : {})} {...(next ? { next } : {})} />
     </>
   );
 }

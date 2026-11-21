@@ -96,6 +96,9 @@ function withAliases(base: Record<BaseToken, string>, theme: 'light' | 'dark') {
     // Decorative: the labels say which is which.
     'stage-edge-bad': isDark ? base.a3 : base['line-2'],
     'stage-edge-good': isDark ? base.a1 : base['line-2'],
+    // The edge of a card surface (.surf): none to see in dark (it matches the card), a
+    // hairline in light. Decorative: cards are told apart by their fill and spacing.
+    'surf-edge': isDark ? base.raise : base.line,
   };
 }
 

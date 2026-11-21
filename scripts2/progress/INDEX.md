@@ -40,7 +40,7 @@ Graph: `scripts2/prd-redesign.json` · Parent: #27 · Branch: `redesign`
 
 - [x] **R-01** #28 — Redesign walking skeleton: Swatch tokens, page shell and one pre-rendered criterion page (no deps)
 - [x] **R-02** #29 — Criterion records gain `since` and `lab?` (needs R-01)
-- [ ] **R-03** #30 — All 55 criterion pages with the full anatomy (needs R-02)
+- [x] **R-03** #30 — All 55 criterion pages with the full anatomy (needs R-02)
 - [x] **R-04** #31 — Filter engine: principle, level, new in 2.2, and wider search (needs R-02)
 - [ ] **R-06** #33 — Colour check lab and the Colour check page (needs R-03)
 - [ ] **R-07** #34 — Fade-the-text lab on 1.4.3 (needs R-03)

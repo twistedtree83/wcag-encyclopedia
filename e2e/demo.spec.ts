@@ -1,12 +1,33 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 
 /**
- * The demo player, end to end. Every property here is one the eight later demos inherit, so a
- * regression caught by this file is a regression in all nine.
+ * The demo player, end to end, on the criterion pages that carry demos (R-03). Every property
+ * here is one the eight later demos inherit, so a regression caught by this file is a
+ * regression in all nine.
  */
 
+/** The criterion pages with a demo, and how many players each has. */
+const DEMO_PAGES = {
+  '1.4.10': 1,
+  '2.2.2': 1,
+  '2.4.7': 2,
+  '2.4.11': 1,
+  '2.5.8': 1,
+  '3.3.1': 1,
+  '4.1.2': 1,
+  '4.1.3': 1,
+} as const;
+
+/** Opens a criterion page and waits until it is hydrated, so the controls are live. */
+async function open(page: Page, num: string) {
+  const url = `/criteria/${num}/`;
+  const response = await page.goto(url);
+  expect(response?.status(), `${url} was not built`).toBe(200);
+  await page.waitForFunction(() => document.documentElement.dataset.hydrated === 'true');
+}
+
 test('plays, pauses, and names the action on its button', async ({ page }) => {
-  await page.goto('/');
+  await open(page, '1.4.10');
   const button = page.locator('.demo__button').first();
 
   // Autoplays (no reduced-motion preference), so the control offers Pause.
@@ -18,7 +39,7 @@ test('plays, pauses, and names the action on its button', async ({ page }) => {
 });
 
 test('scrubbing to a position renders that position’s caption', async ({ page }) => {
-  await page.goto('/');
+  await open(page, '1.4.10');
   const scrub = page.locator('.demo__scrub').first();
   const caption = page.locator('.demo__caption').first();
 
@@ -29,14 +50,14 @@ test('scrubbing to a position renders that position’s caption', async ({ page 
 });
 
 test('scrubbing takes manual control rather than fighting the clock', async ({ page }) => {
-  await page.goto('/');
+  await open(page, '1.4.10');
   const scrub = page.locator('.demo__scrub').first();
   await scrub.fill('6');
   await expect(page.locator('.demo__button').first()).toHaveAccessibleName(/^Play demo:/);
 });
 
 test('the scrub control is keyboard operable and labelled', async ({ page }) => {
-  await page.goto('/');
+  await open(page, '1.4.10');
   const scrub = page.locator('.demo__scrub').first();
   await expect(scrub).toHaveAccessibleName(/scrub position/i);
   await scrub.focus();
@@ -46,7 +67,7 @@ test('the scrub control is keyboard operable and labelled', async ({ page }) => 
 });
 
 test('transport controls are at least 44px', async ({ page }) => {
-  await page.goto('/');
+  await open(page, '1.4.10');
   for (const sel of ['.demo__button', '.demo__scrub']) {
     const box = await page.locator(sel).first().boundingBox();
     expect(box!.height, `${sel} is under 44px tall`).toBeGreaterThanOrEqual(44);
@@ -54,7 +75,7 @@ test('transport controls are at least 44px', async ({ page }) => {
 });
 
 test('captions are on and the demo is silent — no media element anywhere', async ({ page }) => {
-  await page.goto('/');
+  await open(page, '1.4.10');
   await expect(page.locator('.demo__caption').first()).toBeVisible();
   await expect(page.locator('.demo__badge').first()).toHaveText(/cc on/i);
   // Demos are code-driven by design; a <video> or <audio> tag means someone took a shortcut.
@@ -63,7 +84,7 @@ test('captions are on and the demo is silent — no media element anywhere', asy
 
 test('does not auto-play under prefers-reduced-motion, but still scrubs', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto('/');
+  await open(page, '1.4.10');
 
   const button = page.locator('.demo__button').first();
   await expect(button).toHaveAccessibleName(/^Play demo:/);
@@ -77,7 +98,7 @@ test('does not auto-play under prefers-reduced-motion, but still scrubs', async 
 test('the demo renders in both themes', async ({ page }) => {
   for (const theme of ['light', 'dark'] as const) {
     await page.emulateMedia({ colorScheme: theme });
-    await page.goto('/');
+    await open(page, '1.4.10');
     await expect(page.locator('.demo__stage').first()).toBeVisible();
     const bg = await page
       .locator('.demo__stage')
@@ -106,33 +127,39 @@ test('the library indexes all nine demos and links the authored ones', async ({ 
   expect(pending + count).toBe(9);
 });
 
-test('every registered demo plays, pauses, and scrubs independently', async ({ page }) => {
-  await page.goto('/');
-  const players = page.locator('.demo');
-  const count = await players.count();
-  expect(count).toBeGreaterThanOrEqual(4);
+for (const [num, expected] of Object.entries(DEMO_PAGES)) {
+  test(`every demo on ${num} plays, pauses, and scrubs independently`, async ({ page }) => {
+    await open(page, num);
+    const players = page.locator('.demo');
+    const count = await players.count();
+    expect(count).toBe(expected);
 
-  for (let i = 0; i < count; i++) {
-    const player = players.nth(i);
-    const caption = player.locator('.demo__caption');
-    const scrub = player.locator('.demo__scrub');
+    for (let i = 0; i < count; i++) {
+      const player = players.nth(i);
+      const caption = player.locator('.demo__caption');
+      const scrub = player.locator('.demo__scrub');
 
-    // Demos autoplay, so read from known positions rather than from wherever the clock is.
-    // Scrubbing also pauses, which is what makes the second read stable.
-    await scrub.fill('0');
-    const atStart = await caption.textContent();
-    await scrub.fill(await scrub.getAttribute('max').then((m) => m!));
-    const atEnd = await caption.textContent();
-    // Scrubbing to the end must land on a different keyframe than the start.
-    expect(atEnd, `demo ${i} caption did not change across its timeline`).not.toBe(atStart);
+      // Demos autoplay, so read from known positions rather than from wherever the clock is.
+      // Scrubbing also pauses, which is what makes the second read stable.
+      await scrub.fill('0');
+      const atStart = await caption.textContent();
+      await scrub.fill(await scrub.getAttribute('max').then((m) => m!));
+      const atEnd = await caption.textContent();
+      // Scrubbing to the end must land on a different keyframe than the start.
+      expect(atEnd, `demo ${i} caption did not change across its timeline`).not.toBe(atStart);
 
-    await player.locator('.demo__button').click();
-    await expect(player.locator('.demo__button')).toHaveAccessibleName(/^(Play|Pause) demo:/);
-  }
+      await player.locator('.demo__button').click();
+      await expect(player.locator('.demo__button')).toHaveAccessibleName(/^(Play|Pause) demo:/);
+    }
+  });
+}
+
+test('the nine demos are all mounted across the criterion pages', () => {
+  expect(Object.values(DEMO_PAGES).reduce((a, b) => a + b, 0)).toBe(9);
 });
 
 test('the two 2.4.7 demos differ only in whether the focus ring is drawn', async ({ page }) => {
-  await page.goto('/');
+  await open(page, '2.4.7');
   // Both traverse the same form on the same schedule; the visible ring is the one variable.
   const visible = page.locator('.demo').filter({ hasText: 'Focus is on' }).first();
   await expect(visible).toBeVisible();

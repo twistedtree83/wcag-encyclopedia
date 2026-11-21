@@ -569,15 +569,199 @@ footer.foot p {
   font-size: 0.92em;
 }
 
+/* --- Criterion page parts: crumbs, facts, cards, pager (R-03) --------------------------- */
+
+.surf {
+  background: var(--card-bg);
+  border: var(--bwid) solid var(--surf-edge);
+}
+
+.trail {
+  padding: 28px 0 0;
+  font-size: var(--small);
+  color: var(--ink-2);
+}
+.trail ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.trail li + li::before {
+  content: '/';
+  margin: 0 10px;
+  color: var(--ink-2);
+}
+.trail a {
+  display: inline-block;
+  padding: 4px 0;
+  text-underline-offset: 4px;
+}
+.trail [aria-current] {
+  display: inline-block;
+  padding: 4px 0;
+  color: var(--ink);
+  font-weight: 400;
+}
+
+.new-tag {
+  padding: 3px 8px;
+  border-radius: var(--rad-chip);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.facts {
+  margin: 0;
+  padding: 26px var(--pad);
+  border-radius: var(--rad);
+}
+.facts div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-top: var(--bwid) solid var(--line);
+}
+.facts div:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+.facts dt {
+  color: var(--ink-2);
+}
+.facts dd {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-weight: 600;
+  text-align: right;
+}
+
+/* The diff at full width on a criterion page: a panel like the stages (restyle only). */
+.band .diff {
+  margin: 0;
+  border-color: var(--line-2);
+  border-radius: var(--rad-sm);
+}
+
+.demos {
+  display: grid;
+  gap: var(--gap);
+}
+.lab-slot + .lab-slot {
+  margin-top: 48px;
+}
+.lab-slot h3 {
+  margin: 0 0 18px;
+  font: var(--hw2) calc(var(--h3) * var(--ts)) / 1.15 var(--fh), sans-serif;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: calc(var(--gap) - 2px);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.grid a {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+  padding: calc(var(--pad) - 4px);
+  border-radius: calc(var(--rad) * 0.8);
+  color: var(--ink);
+  text-decoration: none;
+  transition:
+    transform var(--speed),
+    border-color var(--speed);
+}
+.grid a:hover {
+  transform: translateY(calc(var(--lift) * -1));
+  border-color: var(--line-2);
+}
+.grid .top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink-2);
+  font-size: var(--small);
+  font-weight: 600;
+}
+.grid .top .lv {
+  margin-left: auto;
+}
+.grid h3 {
+  font: var(--hw2) calc(var(--h3) * var(--ts)) / 1.15 var(--fh), sans-serif;
+}
+.grid p {
+  margin: auto 0 0;
+  color: var(--ink-2);
+  font-size: var(--small);
+  line-height: 1.5;
+}
+.grid p b {
+  color: var(--err-text);
+  font-weight: 600;
+}
+
+.pager {
+  margin-top: var(--sp);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--gap);
+}
+.pager a {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 24px var(--pad);
+  border-radius: var(--rad);
+  color: var(--ink);
+  text-decoration: none;
+  transition: transform var(--speed);
+}
+.pager a:hover {
+  transform: translateY(calc(var(--lift) * -1));
+}
+.pager .k {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink-2);
+}
+.pager b {
+  font: var(--hw2) calc(var(--h3) * var(--ts)) / 1.2 var(--fh), sans-serif;
+}
+.pager .nx {
+  align-items: flex-end;
+  text-align: right;
+}
+
 /* --- Breakpoints ------------------------------------------------------------------------ */
 
 @media (max-width: 1100px) {
   .ch {
     grid-template-columns: minmax(0, 1fr);
   }
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 900px) {
+  .pager {
+    margin-top: calc(var(--sp) * 0.72);
+  }
   .wrap {
     padding: 0 20px;
   }
@@ -600,6 +784,10 @@ footer.foot p {
     padding-top: calc(var(--sp) * 0.72);
   }
   .ex {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .grid,
+  .pager {
     grid-template-columns: minmax(0, 1fr);
   }
   .stage {

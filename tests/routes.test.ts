@@ -17,6 +17,13 @@ describe('the route list', () => {
     expect(ROUTES).toContainEqual({ path: 'about/', page: 'about' });
   });
 
+  it('publishes one criterion page for every criterion in the manifest, in number order', () => {
+    const published = ROUTES.filter((r) => r.page === 'criterion');
+    expect(published).toHaveLength(55);
+    expect(published.map((r) => r.num)).toEqual(EXPECTED.map((c) => c.num));
+    expect(routeFor('criteria/1.4.10/')?.num).toBe('1.4.10');
+  });
+
   it('only publishes criteria the manifest knows', () => {
     const known = new Set(EXPECTED.map((c) => c.num));
     for (const route of ROUTES.filter((r) => r.page === 'criterion')) {

@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { tokensCss } from './src/theme/css';
+import { legacyRedirectScript } from './src/site/legacyRedirect';
 
 /**
  * The token palettes are emitted into every HTML template at transform time, so the custom properties
@@ -11,7 +12,9 @@ function injectTokens() {
   return {
     name: 'inject-theme-tokens',
     transformIndexHtml(html: string) {
-      return html.replace('<!--@tokens-->', `<style id="theme-tokens">\n${tokensCss()}\n</style>`);
+      return html
+        .replace('<!--@tokens-->', `<style id="theme-tokens">\n${tokensCss()}\n</style>`)
+        .replace('<!--@legacy-redirect-->', legacyRedirectScript());
     },
   };
 }
