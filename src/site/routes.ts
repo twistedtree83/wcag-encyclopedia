@@ -36,13 +36,8 @@ export function criterionPath(num: string): string {
   return `criteria/${num}/`;
 }
 
-/**
- * Criterion pages published so far. R-01 proves the pipeline on 1.4.3 alone; R-03 publishes
- * the rest by widening this to every number in the manifest.
- */
-const PUBLISHED_CRITERIA: readonly string[] = EXPECTED.filter((c) => c.num === '1.4.3').map(
-  (c) => c.num,
-);
+/** Every criterion in the manifest gets a page, in number order. */
+const PUBLISHED_CRITERIA: readonly string[] = EXPECTED.map((c) => c.num);
 
 /** Pages that are not criterion pages (home, colour check, all criteria, about) go here. */
 const FIXED_ROUTES: readonly Route[] = [{ path: PATHS.about, page: 'about' }];

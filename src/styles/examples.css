@@ -704,11 +704,14 @@
   font-size: 0.75rem;
   line-height: 1.5;
   color: var(--ink);
-  visibility: hidden;
+  /* display, not visibility: a hidden tooltip must take no room, or it widens the page at
+     320px (1.4.10). */
+  display: none;
+  max-width: 60vw;
 }
 .tipword:hover .tip,
 .tipword:focus-within .tip {
-  visibility: visible;
+  display: block;
 }
 /* The failing tooltip sits above its trigger with a gap, so the pointer cannot reach it. */
 .tip--fleeting {

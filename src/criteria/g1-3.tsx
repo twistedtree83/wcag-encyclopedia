@@ -41,7 +41,7 @@ export const G1_3: readonly CriterionRecord[] = [
       render: () => (
         <>
           <div className="fauxdoc">
-            <h5 className="fauxdoc__real-h">Shipping and returns</h5>
+            <h3 className="fauxdoc__real-h">Shipping and returns</h3>
             <ul className="fauxdoc__list">
               <li>Orders leave the warehouse within two days</li>
               <li>Returns are free within thirty days</li>

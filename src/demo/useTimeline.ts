@@ -1,9 +1,18 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { clamp, frameAt, wrap, type Frame, type Timeline } from './timeline';
+
+const REDUCE = '(prefers-reduced-motion: reduce)';
 
 function prefersReducedMotion(): boolean {
   if (typeof window === 'undefined' || !window.matchMedia) return false;
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  return window.matchMedia(REDUCE).matches;
+}
+
+function subscribeReducedMotion(onChange: () => void): () => void {
+  if (typeof window === 'undefined' || !window.matchMedia) return () => {};
+  const query = window.matchMedia(REDUCE);
+  query.addEventListener('change', onChange);
+  return () => query.removeEventListener('change', onChange);
 }
 
 /**
@@ -15,6 +24,11 @@ function prefersReducedMotion(): boolean {
  *
  * Under `prefers-reduced-motion` the demo does not auto-play and the clock never advances on
  * its own, but scrubbing still works: the reader can step through the whole demo by hand.
+ *
+ * Pre-rendered pages (ADR 0001) hydrate this, so the first render must match the static HTML:
+ * it starts paused, reading no media query, and starts playing in an effect once mounted, if
+ * motion is allowed. The reduced-motion flag comes from `useSyncExternalStore`, whose server
+ * snapshot keeps hydration in step and which then follows the live preference.
  */
 export function useTimeline<S>(timeline: Timeline<S>): {
   t: number;
@@ -24,10 +38,19 @@ export function useTimeline<S>(timeline: Timeline<S>): {
   toggle: () => void;
   seek: (to: number) => void;
 } {
-  const reducedMotion = prefersReducedMotion();
+  const reducedMotion = useSyncExternalStore(
+    subscribeReducedMotion,
+    prefersReducedMotion,
+    () => false,
+  );
   const [t, setT] = useState(0);
-  const [playing, setPlaying] = useState(!reducedMotion);
+  const [playing, setPlaying] = useState(false);
   const raf = useRef(0);
+
+  // Autoplay once mounted, unless the reader asked for less motion.
+  useEffect(() => {
+    if (!prefersReducedMotion()) setPlaying(true);
+  }, []);
 
   useEffect(() => {
     if (!playing) return;

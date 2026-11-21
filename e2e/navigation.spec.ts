@@ -54,22 +54,8 @@ test('skips no heading levels', async ({ page }) => {
   }
 });
 
-test('a deep-linked card is not obscured by the sticky masthead', async ({ page }) => {
-  await page.goto('/#1.4.1');
-  await page.waitForTimeout(400);
-
-  const mastheadBottom = await page
-    .locator('.masthead')
-    .evaluate((el) => el.getBoundingClientRect().bottom);
-  const cardTop = await page
-    .locator('[id="1.4.1"]')
-    .evaluate((el) => el.getBoundingClientRect().top);
-
-  // 2.4.11, by the same mechanism the page documents.
-  expect(cardTop, 'the sticky header covers the deep-linked card').toBeGreaterThanOrEqual(
-    mastheadBottom - 1,
-  );
-});
+// R-03: '/#1.4.1' now redirects to the 1.4.1 criterion page (e2e/criterion.spec.ts), so the
+// old page's deep-linked card can no longer be reached by its fragment; that test was retired.
 
 test('marks the current guideline in the rail as you scroll', async ({ page }) => {
   await page.goto('/');
