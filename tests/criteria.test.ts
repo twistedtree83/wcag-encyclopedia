@@ -213,7 +213,8 @@ describe('2.3.1 is depicted, never reproduced', () => {
 
   it('has no animation anywhere in the strobe example styles', async () => {
     const { readFileSync } = await import('node:fs');
-    const css = readFileSync('src/styles/global.css', 'utf8');
+    const css = readFileSync('src/styles/examples.css', 'utf8');
+    expect(css.indexOf('.strobe {'), 'the strobe styles moved; point this test at them').toBeGreaterThan(-1);
     const block = css.slice(css.indexOf('.strobe {'));
     const strobeRules = block.slice(0, block.indexOf('/* ---'));
     // Reproducing this particular failure could cause a seizure in the reader the criterion

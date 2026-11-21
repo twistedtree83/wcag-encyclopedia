@@ -22,18 +22,18 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--ink);
-  font-family: 'Public Sans', system-ui, -apple-system, sans-serif;
+  font-family: 'Onest', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
 a {
-  color: var(--link);
+  color: var(--accent-text);
   text-decoration-thickness: 1px;
   text-underline-offset: 2px;
 }
 a:hover {
-  color: var(--link-hover);
+  color: var(--accent-text);
 }
 
 :focus-visible {
@@ -62,7 +62,7 @@ a:hover {
   top: -4rem;
   z-index: 60;
   padding: 0.625rem 1rem;
-  background: var(--panel);
+  background: var(--card-bg);
   color: var(--ink);
   border: 2px solid var(--ink);
   font-weight: 600;
@@ -81,7 +81,7 @@ a:hover {
   top: 0;
   z-index: 40;
   background: var(--bg);
-  border-bottom: 1px solid var(--rule);
+  border-bottom: 1px solid var(--line);
 }
 .masthead__inner {
   display: flex;
@@ -92,14 +92,14 @@ a:hover {
   padding: 0.75rem 1.5rem;
 }
 .masthead__eyebrow {
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 0.6875rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--ink3);
+  color: var(--ink-2);
 }
 .masthead__title {
-  font-family: Newsreader, Georgia, serif;
+  font-family: 'Figtree', system-ui, sans-serif;
   font-size: 1.1875rem;
   font-weight: 500;
   letter-spacing: -0.01em;
@@ -133,19 +133,19 @@ a:hover {
 
 .hero {
   padding: 4rem 0 3rem;
-  border-bottom: 1px solid var(--rule);
+  border-bottom: 1px solid var(--line);
 }
 .hero__eyebrow {
   margin: 0 0 1.25rem;
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 0.71875rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--ink3);
+  color: var(--ink-2);
 }
 .hero__h1 {
   margin: 0 0 1.5rem;
-  font-family: Newsreader, Georgia, serif;
+  font-family: 'Figtree', system-ui, sans-serif;
   font-size: clamp(2rem, 6cqw, 4.5rem);
   line-height: 1.02;
   font-weight: 500;
@@ -156,7 +156,7 @@ a:hover {
   margin: 0 0 1.75rem;
   font-size: 1.1875rem;
   line-height: 1.6;
-  color: var(--ink2);
+  color: var(--ink-2);
   max-width: 62ch;
   text-wrap: pretty;
 }
@@ -167,20 +167,20 @@ a:hover {
   gap: 1.25rem 1.75rem;
   margin: 0;
   padding-top: 1.75rem;
-  border-top: 1px solid var(--rule);
+  border-top: 1px solid var(--line);
   max-width: 47.5rem;
 }
 .facts dt {
   margin-bottom: 0.375rem;
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 0.6875rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--ink3);
+  color: var(--ink-2);
 }
 .facts dd {
   margin: 0;
-  font-family: Newsreader, Georgia, serif;
+  font-family: 'Figtree', system-ui, sans-serif;
   font-size: 1.5rem;
   font-variant-numeric: tabular-nums;
 }
@@ -199,15 +199,15 @@ a:hover {
   border-bottom: 2px solid var(--ink);
 }
 .guideline__num {
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: clamp(1.125rem, 2.4cqw, 1.75rem);
   font-variant-numeric: tabular-nums;
-  color: var(--p1);
+  color: var(--accent-text);
   font-weight: 500;
 }
 .guideline__name {
   margin: 0;
-  font-family: Newsreader, Georgia, serif;
+  font-family: 'Figtree', system-ui, sans-serif;
   font-size: clamp(1.5rem, 3.4cqw, 2.5rem);
   line-height: 1.1;
   font-weight: 500;
@@ -215,11 +215,11 @@ a:hover {
 }
 .guideline__meta {
   margin-left: auto;
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 0.6875rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--ink3);
+  color: var(--ink-2);
 }
 .guideline__cards {
   display: grid;
@@ -230,8 +230,8 @@ a:hover {
 /* --- Criterion card --------------------------------------------------------------------- */
 
 .card {
-  background: var(--panel);
-  border: 1px solid var(--rule2);
+  background: var(--card-bg);
+  border: 1px solid var(--line-2);
   border-radius: 0.375rem;
   padding: 1.5rem;
   scroll-margin-top: 7rem;
@@ -243,18 +243,18 @@ a:hover {
   gap: 1rem;
   flex-wrap: wrap;
   padding-bottom: 1.25rem;
-  border-bottom: 1px solid var(--rule);
+  border-bottom: 1px solid var(--line);
 }
 .card__num {
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 0.9375rem;
   font-variant-numeric: tabular-nums;
-  color: var(--ink2);
+  color: var(--ink-2);
   padding-top: 0.25rem;
 }
 .card__name {
   margin: 0;
-  font-family: Newsreader, Georgia, serif;
+  font-family: 'Figtree', system-ui, sans-serif;
   font-size: 1.625rem;
   line-height: 1.2;
   font-weight: 500;
@@ -262,7 +262,7 @@ a:hover {
 .card__anchor {
   margin-left: auto;
   padding-top: 0.25rem;
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 0.8125rem;
   text-decoration: none;
 }
@@ -281,7 +281,7 @@ a:hover {
   align-items: center;
   gap: 0.375rem;
   padding: 0.25rem 0.5625rem;
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.1em;
@@ -291,7 +291,7 @@ a:hover {
 }
 .level-badge--a {
   background: var(--ink);
-  color: var(--panel);
+  color: var(--card-bg);
   border-radius: 0;
 }
 .level-badge--aa {
@@ -322,12 +322,12 @@ a:hover {
   border: 2px solid;
 }
 .frame--fail {
-  border-color: var(--fail);
-  background: var(--fail-bg);
+  border-color: var(--err-text);
+  background: var(--deep);
 }
 .frame--pass {
-  border-color: var(--pass);
-  background: var(--pass-bg);
+  border-color: var(--ok-text);
+  background: var(--deep);
 }
 
 .frame__label {
@@ -337,19 +337,19 @@ a:hover {
   gap: 0.5rem;
   padding: 0.5rem 0.75rem;
   border-bottom: 2px solid;
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 0.71875rem;
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 .frame--fail .frame__label {
-  color: var(--fail);
-  border-color: var(--fail);
+  color: var(--err-text);
+  border-color: var(--err-text);
 }
 .frame--pass .frame__label {
-  color: var(--pass);
-  border-color: var(--pass);
+  color: var(--ok-text);
+  border-color: var(--ok-text);
 }
 
 .frame__glyph {
@@ -372,43 +372,15 @@ a:hover {
 
 .frame__body {
   padding: 1.25rem;
-  background: var(--panel);
+  background: var(--card-bg);
 }
 .frame__caption {
   margin: 0;
   padding: 0.625rem 0.75rem;
-  border-top: 1px solid var(--rule);
+  border-top: 1px solid var(--line);
   font-size: 0.8125rem;
   line-height: 1.5;
   color: var(--ink);
-}
-
-/* --- Inside examples --------------------------------------------------------------------- */
-
-.example-prose {
-  margin: 0 0 0.875rem;
-  font-size: 0.9375rem;
-  line-height: 1.65;
-  color: var(--ink);
-}
-.example-note {
-  margin: 0;
-  font-size: 0.8125rem;
-  line-height: 1.5;
-  color: var(--ink2);
-}
-.example-link {
-  text-decoration: underline;
-  text-decoration-thickness: 1.5px;
-}
-
-/*
- * A link as some other product would draw it: coloured, not underlined. Deliberately a
- * failing pattern for 1.4.1 — and deliberately *not* failing 1.4.3, so the example
- * demonstrates one defect rather than two.
- */
-.swatch-link {
-  color: var(--swatch-link);
 }
 
 /* --- Strip: "You are in" ---------------------------------------------------------------- */
@@ -423,20 +395,20 @@ a:hover {
   margin-inline: auto;
   white-space: nowrap;
   overflow: hidden;
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 0.71875rem;
-  color: var(--ink2);
+  color: var(--ink-2);
 }
 .strip__label {
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--ink3);
+  color: var(--ink-2);
 }
 .strip__principle {
   font-weight: 600;
 }
 .strip__sep {
-  color: var(--rule2);
+  color: var(--line-2);
 }
 
 /* --- Principle markers: shape carries the grouping alongside hue -------------------------- */
@@ -466,7 +438,7 @@ a:hover {
   position: sticky;
   top: 7rem;
   padding: 2.5rem 0 2.5rem 1.5rem;
-  border-right: 1px solid var(--rule);
+  border-right: 1px solid var(--line);
 }
 @container preview (max-width: 960px) {
   .rail {
@@ -475,11 +447,11 @@ a:hover {
 }
 .rail__heading {
   margin: 0 0 0.875rem;
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 0.6875rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--ink3);
+  color: var(--ink-2);
 }
 .rail__principle {
   display: flex;
@@ -522,33 +494,33 @@ a:hover {
   font-weight: 700;
 }
 .rail__num {
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-variant-numeric: tabular-nums;
 }
 .rail__note {
   margin: 0;
   padding-top: 1rem;
-  border-top: 1px solid var(--rule);
+  border-top: 1px solid var(--line);
   font-size: 0.78125rem;
   line-height: 1.55;
-  color: var(--ink2);
+  color: var(--ink-2);
 }
 
 /* --- Shared section furniture -------------------------------------------------------------- */
 
 .section-eyebrow {
   margin: 0 0 1.125rem;
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 0.75rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   font-weight: 600;
-  color: var(--ink3);
+  color: var(--ink-2);
 }
 
 .howto {
   padding: 2.5rem 0;
-  border-bottom: 1px solid var(--rule);
+  border-bottom: 1px solid var(--line);
 }
 .howto__grid {
   display: grid;
@@ -559,13 +531,13 @@ a:hover {
   margin: 0;
   font-size: 0.9375rem;
   line-height: 1.6;
-  color: var(--ink2);
+  color: var(--ink-2);
 }
 .howto__grid strong {
   color: var(--ink);
 }
 .howto__grid code {
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 0.875em;
 }
 
@@ -575,7 +547,7 @@ a:hover {
   margin: 3.5rem -1.5rem 0;
   padding: 4.5rem 1.5rem;
   border-top: 3px solid;
-  border-bottom: 1px solid var(--rule);
+  border-bottom: 1px solid var(--line);
 }
 .opener__inner {
   display: flex;
@@ -585,7 +557,7 @@ a:hover {
   max-width: 56.25rem;
 }
 .opener__ordinal {
-  font-family: Newsreader, Georgia, serif;
+  font-family: 'Figtree', system-ui, sans-serif;
   font-size: clamp(3.5rem, 10cqw, 8.25rem);
   line-height: 0.8;
   font-weight: 400;
@@ -598,7 +570,7 @@ a:hover {
   align-items: center;
   gap: 0.625rem;
   margin: 0 0 0.625rem;
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 0.71875rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -606,7 +578,7 @@ a:hover {
 }
 .opener__name {
   margin: 0 0 1.125rem;
-  font-family: Newsreader, Georgia, serif;
+  font-family: 'Figtree', system-ui, sans-serif;
   font-size: clamp(2.125rem, 6cqw, 4.25rem);
   line-height: 1;
   font-weight: 500;
@@ -614,7 +586,7 @@ a:hover {
 }
 .opener__tagline {
   margin: 0 0 1.625rem;
-  font-family: Newsreader, Georgia, serif;
+  font-family: 'Figtree', system-ui, sans-serif;
   font-size: clamp(1.1875rem, 2.4cqw, 1.75rem);
   line-height: 1.35;
   font-style: italic;
@@ -625,7 +597,7 @@ a:hover {
   margin: 0 0 1.75rem;
   font-size: 1rem;
   line-height: 1.65;
-  color: var(--ink2);
+  color: var(--ink-2);
   max-width: 60ch;
   text-wrap: pretty;
 }
@@ -633,14 +605,14 @@ a:hover {
   list-style: none;
   margin: 0;
   padding: 0;
-  border-top: 1px solid var(--rule2);
+  border-top: 1px solid var(--line-2);
   max-width: 32.5rem;
 }
 .opener__link {
   display: flex;
   gap: 1rem;
   padding: 0.75rem 0.25rem;
-  border-bottom: 1px solid var(--rule2);
+  border-bottom: 1px solid var(--line-2);
   font-size: 0.9375rem;
   text-decoration: none;
   color: var(--ink);
@@ -649,7 +621,7 @@ a:hover {
   text-decoration: underline;
 }
 .opener__num {
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-variant-numeric: tabular-nums;
 }
 
@@ -658,12 +630,12 @@ a:hover {
 .guideline__pending {
   margin: 1.5rem 0 0;
   padding: 1rem 1.125rem;
-  border: 1px dashed var(--rule2);
+  border: 1px dashed var(--line-2);
   border-radius: 0.375rem;
   font-size: 0.9375rem;
   line-height: 1.6;
-  color: var(--ink2);
-  background: var(--panel2);
+  color: var(--ink-2);
+  background: var(--deep);
 }
 
 /* --- Obeys its own rules ----------------------------------------------------------------------- */
@@ -671,8 +643,8 @@ a:hover {
 .rules {
   margin: 4.5rem 0 0;
   padding: 2.5rem 1.75rem;
-  background: var(--panel2);
-  border: 1px solid var(--rule2);
+  background: var(--deep);
+  border: 1px solid var(--line-2);
   border-radius: 0.375rem;
 }
 .rules__list {
@@ -684,351 +656,16 @@ a:hover {
   gap: 0.875rem 1.75rem;
   font-size: 0.9375rem;
   line-height: 1.6;
-  color: var(--ink2);
+  color: var(--ink-2);
 }
 .rules__list li {
   display: flex;
   gap: 0.625rem;
 }
 .rules__tick {
-  color: var(--pass);
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  color: var(--ok-text);
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   flex: 0 0 auto;
-}
-
-/* --- Utility ------------------------------------------------------------------------------- */
-
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
-/* --- Markup diff --------------------------------------------------------------------------- */
-
-.diff {
-  margin: 1.5rem 0 0;
-  border: 1px solid var(--rule2);
-  border-radius: 0.25rem;
-  overflow: hidden;
-  background: var(--panel2);
-}
-.diff__caption {
-  padding: 0.5rem 0.875rem;
-  border-bottom: 1px solid var(--rule2);
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
-  font-size: 0.6875rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink2);
-}
-.diff__where {
-  color: var(--ink3);
-  text-transform: none;
-  letter-spacing: 0;
-}
-.diff__pre {
-  margin: 0;
-  padding: 0.75rem 0;
-  /* Long lines scroll here, never on the page — 1.4.10. */
-  overflow-x: auto;
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
-  font-size: 0.84375rem;
-  line-height: 1.75;
-  color: var(--ink);
-}
-.diff__line {
-  display: block;
-  padding-right: 0.875rem;
-  border-left: 3px solid transparent;
-}
-.diff__line--del {
-  background: var(--fail-bg);
-  border-left-color: var(--fail);
-}
-.diff__line--add {
-  background: var(--pass-bg);
-  border-left-color: var(--pass);
-}
-/* The glyph is real text in the gutter, so the diff survives colour being removed. */
-.diff__gutter {
-  display: inline-block;
-  width: 1.5rem;
-  padding-left: 0.625rem;
-  font-weight: 600;
-  white-space: pre;
-}
-.diff__note {
-  margin: 0;
-  padding: 0.625rem 0.875rem;
-  border-top: 1px solid var(--rule2);
-  font-size: 0.8125rem;
-  line-height: 1.5;
-  color: var(--ink2);
-}
-
-/* --- Depicted controls inside examples -------------------------------------------------------- */
-
-.swatch-field {
-  height: 2.5rem;
-  border-radius: 0.25rem;
-  background: var(--panel);
-  display: flex;
-  align-items: center;
-  padding: 0 0.75rem;
-  font-size: 0.875rem;
-  color: var(--ink2);
-}
-.swatch-check {
-  width: 1.125rem;
-  height: 1.125rem;
-  border-radius: 0.1875rem;
-  display: block;
-  flex: 0 0 auto;
-}
-.swatch-row {
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-  margin-top: 1rem;
-  font-size: 0.875rem;
-  color: var(--ink);
-}
-.swatch-label {
-  margin: 0 0 0.375rem;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--ink);
-}
-.border--weak {
-  border: 1px solid var(--swatch-border-weak);
-}
-.border--strong {
-  border: 1.5px solid var(--swatch-border-strong);
-}
-
-/* --- Demo player ----------------------------------------------------------------------------- */
-
-.demo {
-  margin: 1.5rem 0 0;
-  border: 1px solid var(--rule2);
-  border-radius: 0.375rem;
-  overflow: hidden;
-  background: var(--panel2);
-}
-.demo__stage {
-  aspect-ratio: 16 / 9;
-  background: var(--bg);
-  border-bottom: 1px solid var(--rule2);
-  container-type: inline-size;
-  overflow: hidden;
-  position: relative;
-}
-.demo__caption {
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid var(--rule2);
-  background: var(--panel);
-  font-size: 0.90625rem;
-  line-height: 1.6;
-  color: var(--ink);
-}
-.demo__caption-label {
-  margin-right: 0.5rem;
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
-  font-size: 0.65625rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink3);
-}
-.demo__transport {
-  display: flex;
-  align-items: center;
-  gap: 0.875rem;
-  flex-wrap: wrap;
-  padding: 0.625rem 1rem;
-  background: var(--panel2);
-}
-.demo__button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  /* 2.5.8: every control at least 44px in both dimensions. */
-  min-width: 2.75rem;
-  min-height: 2.75rem;
-  padding: 0 0.875rem;
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--ink);
-  background: var(--panel);
-  border: 1.5px solid var(--ink);
-  border-radius: 0.1875rem;
-  cursor: pointer;
-}
-.demo__scrub {
-  flex: 1;
-  min-width: 7.5rem;
-  height: 2.75rem;
-  accent-color: var(--ink2);
-}
-.demo__time {
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
-  font-size: 0.78125rem;
-  font-variant-numeric: tabular-nums;
-  color: var(--ink2);
-}
-.demo__badge {
-  padding: 0.25rem 0.5rem;
-  border: 1.5px solid var(--ink2);
-  border-radius: 0.1875rem;
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink);
-}
-.demo__meta {
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
-  font-size: 0.6875rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink3);
-}
-
-/* --- Reflow demo stage ------------------------------------------------------------------------ */
-
-.reflow {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 4cqw 3cqw 6cqw;
-}
-.reflow__viewport {
-  max-width: 100%;
-  border: 1px solid var(--rule2);
-  background: var(--panel);
-  overflow: hidden;
-  container-type: inline-size;
-}
-.reflow__page {
-  padding: 2.5cqw;
-  display: grid;
-  gap: 2cqw;
-}
-.reflow__bar {
-  display: flex;
-  align-items: center;
-  gap: 1.4cqw;
-  padding-bottom: 1.6cqw;
-  border-bottom: 1px solid var(--rule);
-}
-.reflow__logo {
-  width: 1.8cqw;
-  height: 1.8cqw;
-  min-width: 6px;
-  min-height: 6px;
-  background: var(--ink);
-  flex: 0 0 auto;
-}
-.reflow__brand {
-  font-family: Newsreader, Georgia, serif;
-  font-size: clamp(0.5rem, 2.2cqw, 1rem);
-  color: var(--ink);
-  white-space: nowrap;
-}
-.reflow__nav,
-.reflow__menu {
-  margin-left: auto;
-  font-size: clamp(0.4rem, 1.7cqw, 0.8125rem);
-  color: var(--ink2);
-  white-space: nowrap;
-}
-.reflow__grid {
-  display: grid;
-  gap: 1.4cqw;
-}
-.reflow__tile {
-  height: 9cqw;
-  min-height: 14px;
-  background: var(--panel2);
-  border: 1px solid var(--rule);
-  display: block;
-}
-.reflow__lines {
-  display: grid;
-  gap: 1cqw;
-}
-.reflow__line {
-  height: 1.1cqw;
-  min-height: 3px;
-  background: var(--rule2);
-  width: 92%;
-  display: block;
-}
-.reflow__line--head {
-  background: var(--ink);
-  width: 70%;
-}
-.reflow__line--short {
-  width: 78%;
-}
-.reflow__ruler {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin: 0;
-  padding: 1cqw 2cqw;
-  background: var(--panel2);
-  border-top: 1px solid var(--rule);
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
-  font-size: clamp(0.5rem, 1.7cqw, 0.6875rem);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.1em;
-  color: var(--ink2);
-}
-
-/* --- Mini mocks inside fail/pass frames --------------------------------------------------------- */
-
-.mini__frame {
-  width: 9.375rem;
-  margin: 0 auto 0.875rem;
-  padding: 0.625rem;
-  border: 1px solid var(--rule2);
-  background: var(--panel);
-  overflow: hidden;
-  position: relative;
-}
-.mini__row--fixed {
-  display: grid;
-  grid-template-columns: repeat(3, 6.875rem);
-  width: max-content;
-  gap: 0.375rem;
-}
-.mini__col {
-  display: grid;
-  gap: 0.375rem;
-}
-.mini__tile {
-  height: 2.125rem;
-  background: var(--panel2);
-  border: 1px solid var(--rule);
-  display: block;
-}
-.mini__scrollbar {
-  display: block;
-  height: 0.5rem;
-  margin-top: 0.625rem;
-  background: var(--rule);
-  border: 1px solid var(--rule2);
 }
 
 /* --- Theme toggle ------------------------------------------------------------------------------ */
@@ -1040,18 +677,18 @@ a:hover {
   gap: 0.5rem;
   min-height: 2.75rem;
   padding: 0 0.875rem;
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 0.75rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--ink);
-  background: var(--panel);
-  border: 1px solid var(--rule2);
+  background: var(--card-bg);
+  border: 1px solid var(--line-2);
   border-radius: 0.1875rem;
   cursor: pointer;
 }
 .theme-toggle:hover {
-  background: var(--panel2);
+  background: var(--deep);
 }
 
 /* --- Search and level filter -------------------------------------------------------------------- */
@@ -1071,22 +708,22 @@ a:hover {
   gap: 0.5rem;
 }
 .controls__label {
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 0.6875rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--ink2);
+  color: var(--ink-2);
 }
 .controls__input {
   width: 13.125rem;
   max-width: 100%;
   min-height: 2.75rem;
   padding: 0.4375rem 0.625rem;
-  font-family: 'Public Sans', system-ui, sans-serif;
+  font-family: 'Onest', system-ui, sans-serif;
   font-size: 0.875rem;
   color: var(--ink);
-  background: var(--panel);
-  border: 1px solid var(--rule2);
+  background: var(--card-bg);
+  border: 1px solid var(--line-2);
   border-radius: 0.1875rem;
 }
 .controls__group {
@@ -1094,21 +731,21 @@ a:hover {
   align-items: center;
   padding: 0;
   margin: 0;
-  background: var(--panel);
-  border: 1px solid var(--rule2);
+  background: var(--card-bg);
+  border: 1px solid var(--line-2);
   border-radius: 0.1875rem;
 }
 .controls__seg {
   min-height: 2.75rem;
   padding: 0 0.75rem;
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 0.75rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--ink);
   background: transparent;
   border: none;
-  border-right: 1px solid var(--rule2);
+  border-right: 1px solid var(--line-2);
   cursor: pointer;
 }
 .controls__seg:last-child {
@@ -1117,14 +754,14 @@ a:hover {
 /* State, not just fill: the pressed option is also bold, and aria-pressed carries it to AT. */
 .controls__seg[aria-pressed='true'] {
   background: var(--ink);
-  color: var(--panel);
+  color: var(--card-bg);
   font-weight: 600;
 }
 .controls__summary {
   margin: 0 0 0 auto;
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 0.71875rem;
-  color: var(--ink2);
+  color: var(--ink-2);
 }
 
 /* --- Viewport preview frame ---------------------------------------------------------------------- */
@@ -1143,8 +780,8 @@ a:hover {
 }
 .preview[data-viewport='tablet'],
 .preview[data-viewport='mobile'] {
-  border-left: 1px solid var(--rule2);
-  border-right: 1px solid var(--rule2);
+  border-left: 1px solid var(--line-2);
+  border-right: 1px solid var(--line-2);
   min-height: 100vh;
 }
 
@@ -1156,14 +793,14 @@ a:hover {
   max-width: 87.5rem;
   margin: 0 auto;
   padding: 0.5rem 1.5rem;
-  border-bottom: 1px solid var(--rule);
+  border-bottom: 1px solid var(--line);
 }
 .preview-bar__label {
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 0.6875rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--ink3);
+  color: var(--ink-2);
 }
 .viewport-picker {
   display: flex;
@@ -1172,8 +809,8 @@ a:hover {
   max-width: 100%;
   margin: 0;
   padding: 0;
-  background: var(--panel);
-  border: 1px solid var(--rule2);
+  background: var(--card-bg);
+  border: 1px solid var(--line-2);
   border-radius: 0.1875rem;
 }
 
@@ -1185,10 +822,10 @@ a:hover {
   gap: 0.5rem;
   min-height: 2.75rem;
   padding: 0 0.875rem;
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 0.8125rem;
   color: var(--ink);
-  background: var(--panel);
+  background: var(--card-bg);
   border: 1.5px solid var(--ink);
   border-radius: 0.1875rem;
   cursor: pointer;
@@ -1235,7 +872,7 @@ a:hover {
   margin: 0 0 0 auto;
   padding: 1.25rem;
   border: none;
-  border-left: 1px solid var(--rule2);
+  border-left: 1px solid var(--line-2);
   background: var(--bg);
   color: var(--ink);
   overflow-y: auto;
@@ -1250,11 +887,11 @@ a:hover {
   margin-bottom: 1rem;
 }
 .drawer__heading {
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 0.6875rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--ink3);
+  color: var(--ink-2);
 }
 .drawer__close {
   min-height: 2.75rem;
@@ -1262,8 +899,8 @@ a:hover {
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--ink);
-  background: var(--panel2);
-  border: 1px solid var(--rule2);
+  background: var(--deep);
+  border: 1px solid var(--line-2);
   border-radius: 0.1875rem;
   cursor: pointer;
 }
@@ -1272,7 +909,7 @@ a:hover {
   align-items: stretch;
   padding: 0 0 1.125rem;
   margin: 0 0 1.125rem;
-  border-bottom: 1px solid var(--rule2);
+  border-bottom: 1px solid var(--line-2);
 }
 .drawer .controls__search {
   flex-direction: column;
@@ -1306,888 +943,10 @@ a:hover {
   font-size: 0.9375rem;
   color: var(--ink);
   text-decoration: none;
-  border-bottom: 1px solid var(--rule);
+  border-bottom: 1px solid var(--line);
 }
 .drawer__link:hover {
   text-decoration: underline;
-}
-
-/* --- Measured contrast badge ---------------------------------------------------------------------- */
-
-.measured {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin: 1rem 0 0.875rem;
-  padding: 0.25rem 0.5rem;
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
-  font-size: 0.75rem;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  border: 1.5px solid;
-}
-/* Square for fail, pill for pass — shape and glyph, not hue alone. */
-.measured--fail {
-  color: var(--fail);
-  border-color: var(--fail);
-  background: var(--fail-bg);
-  border-radius: 0;
-}
-.measured--pass {
-  color: var(--pass);
-  border-color: var(--pass);
-  background: var(--pass-bg);
-  border-radius: 999px;
-}
-.measured__glyph {
-  font-size: 0.8125rem;
-  line-height: 1;
-}
-.measured__need {
-  /*
-   * No opacity here. Fading text composites the colour against its background and silently
-   * defeats the token audit, which only ever sees the token values — this exact span was
-   * 4.36:1 with opacity .85 while its tokens measured 5.6:1. The quieter voice comes from
-   * weight and size instead, which is what this page's own 1.4.3 card recommends.
-   */
-  font-weight: 400;
-  font-size: 0.6875rem;
-}
-
-/* --- Alt-text example ------------------------------------------------------------------------------ */
-
-.alt-list {
-  list-style: none;
-  margin: 0 0 0.875rem;
-  padding: 0;
-  display: grid;
-  gap: 0.875rem;
-}
-.alt-list li {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 0.25rem 0.625rem;
-  align-items: center;
-}
-.alt-list .example-note {
-  grid-column: 2;
-}
-.thumb {
-  grid-row: span 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.75rem;
-  height: 2.25rem;
-  background: var(--panel2);
-  border: 1px solid var(--rule2);
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
-  font-size: 0.625rem;
-  color: var(--ink2);
-}
-.alt-code {
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
-  font-size: 0.78125rem;
-  color: var(--ink);
-  overflow-wrap: anywhere;
-}
-
-/* --- Depicted media player -------------------------------------------------------------------------- */
-
-.player {
-  display: block;
-  margin: 0 0 0.875rem;
-  border: 1px solid var(--rule2);
-  background: var(--panel2);
-}
-.player__screen {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 0.5rem;
-  aspect-ratio: 16 / 9;
-  padding: 0.5rem;
-  background: var(--panel2);
-  border-bottom: 1px solid var(--rule2);
-}
-.player__badge {
-  padding: 0.125rem 0.375rem;
-  border: 1px solid var(--rule2);
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
-  font-size: 0.625rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink2);
-}
-.player__cc {
-  align-self: center;
-  margin-top: auto;
-  padding: 0.25rem 0.5rem;
-  background: var(--ink);
-  color: var(--panel);
-  font-size: 0.75rem;
-  line-height: 1.4;
-  text-align: center;
-}
-.player__bar {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.375rem 0.5rem;
-}
-.player__play {
-  font-size: 0.6875rem;
-  color: var(--ink);
-}
-.player__track {
-  flex: 1;
-  height: 3px;
-  background: var(--rule2);
-}
-.transcript {
-  display: grid;
-  gap: 0.25rem;
-  margin: 0 0 0.875rem;
-  padding: 0.625rem 0.75rem;
-  background: var(--panel2);
-  border-left: 3px solid var(--rule2);
-  font-size: 0.8125rem;
-  line-height: 1.6;
-  color: var(--ink);
-}
-.transcript strong {
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
-  font-size: 0.625rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink3);
-}
-
-/* --- 1.3 examples ------------------------------------------------------------------------------------ */
-
-.fauxdoc {
-  display: grid;
-  gap: 0.375rem;
-  margin-bottom: 0.875rem;
-  padding: 0.75rem;
-  background: var(--panel2);
-  border: 1px solid var(--rule);
-}
-.fauxdoc__fake-h,
-.fauxdoc__real-h {
-  margin: 0;
-  font-family: 'Public Sans', system-ui, sans-serif;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--ink);
-}
-.fauxdoc__line {
-  font-size: 0.875rem;
-  color: var(--ink);
-}
-.fauxdoc__list {
-  margin: 0;
-  padding-left: 1.125rem;
-  font-size: 0.875rem;
-  color: var(--ink);
-}
-
-.seq {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 0.875rem;
-  flex-wrap: wrap;
-}
-.seq__step {
-  flex: 1;
-  min-width: 4.5rem;
-  padding: 0.5rem;
-  background: var(--panel2);
-  border: 1px solid var(--rule2);
-  font-size: 0.8125rem;
-  color: var(--ink);
-}
-/* The whole point of the failing example: painted order, not document order. */
-.seq--reordered .seq__step:nth-child(1) {
-  order: 3;
-}
-.seq--reordered .seq__step:nth-child(2) {
-  order: 1;
-}
-.seq--reordered .seq__step:nth-child(3) {
-  order: 2;
-}
-
-.orient {
-  display: flex;
-  gap: 0.75rem;
-  align-items: center;
-  margin-bottom: 0.875rem;
-}
-.orient__device {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 0.25rem;
-  padding: 0.5rem;
-  background: var(--panel2);
-  border: 1.5px solid var(--rule2);
-  border-radius: 0.25rem;
-}
-.orient__device--port {
-  width: 2.75rem;
-  height: 4.5rem;
-}
-.orient__device--land {
-  width: 4.5rem;
-  height: 2.75rem;
-}
-.orient__msg {
-  font-size: 0.5625rem;
-  line-height: 1.3;
-  text-align: center;
-  color: var(--ink2);
-}
-.orient__bar {
-  height: 0.375rem;
-  background: var(--rule2);
-  display: block;
-}
-
-/* --- 1.4 examples ------------------------------------------------------------------------------------ */
-
-.faded {
-  margin: 0 0 0.625rem;
-  font-size: 0.875rem;
-  line-height: 1.55;
-  color: var(--swatch-text-weak);
-}
-.solid {
-  margin: 0 0 0.625rem;
-  font-size: 0.875rem;
-  line-height: 1.55;
-  color: var(--swatch-text-strong);
-}
-.mono {
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
-  font-size: 0.9375rem;
-}
-
-.clipbox {
-  margin-bottom: 0.875rem;
-  padding: 0.5rem 0.625rem;
-  border: 1px solid var(--rule2);
-  background: var(--panel2);
-  font-size: 0.8125rem;
-  line-height: 1.5;
-  color: var(--ink);
-  min-height: 3rem;
-}
-/* The failure, reproduced rather than described: fixed height plus clipping. */
-.clipbox--fixed {
-  height: 2.25rem;
-  min-height: 0;
-  overflow: hidden;
-}
-
-.imgtext {
-  display: block;
-  margin-bottom: 0.875rem;
-  padding: 0.5rem 0.625rem;
-  background: var(--panel2);
-  border: 1px dashed var(--rule2);
-  font-family: Newsreader, Georgia, serif;
-  font-size: 1.125rem;
-  color: var(--ink2);
-  /* Blurred to stand in for a bitmap enlarged past its native size. */
-  filter: blur(0.4px);
-}
-.realtext {
-  display: block;
-  margin-bottom: 0.875rem;
-  padding: 0.5rem 0.625rem;
-  background: var(--panel2);
-  border: 1px solid var(--rule2);
-  font-family: Newsreader, Georgia, serif;
-  font-size: 1.125rem;
-  color: var(--ink);
-}
-
-.spacing {
-  margin-bottom: 0.875rem;
-  padding: 0.5rem 0.625rem;
-  border: 1px solid var(--rule2);
-  background: var(--panel2);
-  font-size: 0.8125rem;
-  color: var(--ink);
-  /* The reader-stylesheet overrides 1.4.12 actually names. */
-  line-height: 1.5;
-  letter-spacing: 0.12em;
-  word-spacing: 0.16em;
-}
-.spacing--rigid {
-  height: 2.75rem;
-  overflow: hidden;
-}
-
-.tipword {
-  position: relative;
-  border-bottom: 1px dotted var(--ink2);
-  cursor: help;
-}
-.tip {
-  position: absolute;
-  left: 0;
-  top: calc(100% + 0.375rem);
-  z-index: 5;
-  width: 13rem;
-  padding: 0.5rem 0.625rem;
-  background: var(--panel);
-  border: 1px solid var(--rule2);
-  font-size: 0.75rem;
-  line-height: 1.5;
-  color: var(--ink);
-  visibility: hidden;
-}
-.tipword:hover .tip,
-.tipword:focus-within .tip {
-  visibility: visible;
-}
-/* The failing tooltip sits above its trigger with a gap, so the pointer cannot reach it. */
-.tip--fleeting {
-  top: auto;
-  bottom: calc(100% + 0.75rem);
-  pointer-events: none;
-}
-
-/* --- 2.1 examples ------------------------------------------------------------------------------------ */
-
-.fakebtn,
-.realbtn {
-  display: inline-block;
-  margin-bottom: 0.875rem;
-  padding: 0.5rem 0.875rem;
-  background: var(--ink);
-  color: var(--panel);
-  border: none;
-  border-radius: 0.1875rem;
-  font-family: 'Public Sans', system-ui, sans-serif;
-  font-size: 0.875rem;
-  font-weight: 600;
-}
-.realbtn {
-  cursor: pointer;
-}
-
-.trap {
-  display: grid;
-  gap: 0.5rem;
-  margin-bottom: 0.875rem;
-  padding: 0.75rem;
-  background: var(--panel2);
-  border: 1.5px solid var(--fail);
-}
-.trap--ok {
-  border-color: var(--pass);
-}
-.trap__title {
-  font-size: 0.8125rem;
-  font-weight: 700;
-  color: var(--ink);
-}
-.trap__cycle {
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
-  font-size: 0.6875rem;
-  color: var(--ink2);
-}
-
-.keys {
-  margin-bottom: 0.875rem;
-  padding: 0.625rem 0.75rem;
-  background: var(--panel2);
-  border: 1px solid var(--rule2);
-  font-size: 0.8125rem;
-  color: var(--ink);
-}
-.keys kbd {
-  display: inline-block;
-  min-width: 1.375rem;
-  padding: 0.125rem 0.3125rem;
-  background: var(--panel);
-  border: 1px solid var(--rule2);
-  border-radius: 0.1875rem;
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
-  font-size: 0.75rem;
-  text-align: center;
-  color: var(--ink);
-}
-
-/* --- 2.2 examples ------------------------------------------------------------------------------------ */
-
-.notice {
-  display: grid;
-  gap: 0.375rem;
-  margin-bottom: 0.875rem;
-  padding: 0.625rem 0.75rem;
-  background: var(--panel2);
-  border-left: 3px solid var(--pass);
-  font-size: 0.8125rem;
-  color: var(--ink);
-}
-.notice--bad {
-  border-left-color: var(--fail);
-}
-.notice__title {
-  font-weight: 700;
-}
-.notice__actions {
-  display: flex;
-  gap: 0.375rem;
-  flex-wrap: wrap;
-  margin-top: 0.25rem;
-}
-.pill {
-  display: inline-block;
-  padding: 0.25rem 0.5rem;
-  background: var(--panel);
-  border: 1px solid var(--rule2);
-  border-radius: 0.1875rem;
-  font-size: 0.75rem;
-  color: var(--ink);
-}
-
-.carousel {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.375rem;
-  margin-bottom: 0.875rem;
-  padding: 0.625rem;
-  background: var(--panel2);
-  border: 1px solid var(--rule2);
-}
-.carousel__slide {
-  height: 2.25rem;
-  background: var(--panel);
-  border: 1px solid var(--rule);
-  display: block;
-}
-.carousel__slide--on {
-  border-color: var(--rule2);
-  background: var(--bg);
-}
-.carousel__dots {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.6875rem;
-  color: var(--ink2);
-}
-
-/* --- 2.3 example: a depiction, never an animation ------------------------------------------------------ */
-
-/*
- * There is deliberately no animation in this block, and there must never be one. The failing
- * example for 2.3.1 is four still frames laid side by side — showing a real strobe could cause
- * a seizure in exactly the reader this criterion protects.
- */
-.strobe {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.1875rem;
-  margin-bottom: 0.375rem;
-  padding: 0.25rem;
-  border: 1px solid var(--rule2);
-  background: var(--panel2);
-}
-.strobe__frame {
-  height: 2rem;
-  display: block;
-  border: 1px solid var(--rule);
-}
-.strobe__frame--a {
-  background: var(--panel);
-}
-.strobe__frame--b {
-  background: var(--ink2);
-}
-.strobe__label {
-  margin: 0 0 0.875rem;
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
-  font-size: 0.6875rem;
-  line-height: 1.5;
-  color: var(--ink2);
-}
-
-/* --- 2.4 examples ------------------------------------------------------------------------------------ */
-
-.tabstops,
-.tabs,
-.linklist,
-.focusrow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.375rem;
-  margin-bottom: 0.875rem;
-}
-.linklist {
-  flex-direction: column;
-  gap: 0.5rem;
-  font-size: 0.8125rem;
-  color: var(--ink);
-}
-.tabstops__item,
-.tabs__tab {
-  padding: 0.25rem 0.5rem;
-  background: var(--panel2);
-  border: 1px solid var(--rule);
-  font-size: 0.75rem;
-  color: var(--ink2);
-}
-.tabstops__item--goal {
-  border-color: var(--rule2);
-  color: var(--ink);
-  font-weight: 600;
-}
-.tabstops__item--skip {
-  background: var(--ink);
-  color: var(--panel);
-  border-color: var(--ink);
-  font-weight: 600;
-}
-.tabs__tab {
-  flex: 1;
-  min-width: 5rem;
-  color: var(--ink);
-}
-
-.stack {
-  position: relative;
-  display: grid;
-  gap: 0.375rem;
-  margin-bottom: 0.875rem;
-  padding: 0.625rem;
-  background: var(--panel2);
-  border: 1px solid var(--rule2);
-  font-size: 0.75rem;
-}
-.stack__page {
-  padding: 0.5rem;
-  background: var(--panel);
-  border: 2px solid var(--focus);
-  color: var(--ink);
-}
-.stack__page--inert {
-  border: 1px solid var(--rule);
-  color: var(--ink2);
-}
-.stack__modal {
-  padding: 0.5rem;
-  margin-left: 1.25rem;
-  background: var(--panel);
-  border: 1px solid var(--rule);
-  color: var(--ink2);
-}
-.stack__modal--on {
-  border: 2px solid var(--focus);
-  color: var(--ink);
-}
-
-.crumbs {
-  margin-bottom: 0.875rem;
-  padding: 0.375rem 0.5rem;
-  background: var(--panel2);
-  border: 1px solid var(--rule);
-  font-size: 0.75rem;
-  color: var(--ink2);
-}
-
-.focusdemo {
-  padding: 0.4375rem 0.625rem;
-  background: var(--panel2);
-  border: 1px solid var(--rule2);
-  font-size: 0.75rem;
-  color: var(--ink);
-}
-.focusdemo--on {
-  outline: 3px solid var(--focus);
-  outline-offset: 2px;
-}
-.focusdemo--none {
-  /* The failure itself: focus is somewhere in this row and nothing shows where. */
-  outline: none;
-}
-
-.obscure {
-  position: relative;
-  display: grid;
-  gap: 0.375rem;
-  margin-bottom: 0.875rem;
-  padding: 0.625rem;
-  background: var(--panel2);
-  border: 1px solid var(--rule2);
-  font-size: 0.75rem;
-}
-.obscure__bar {
-  padding: 0.375rem 0.5rem;
-  background: var(--ink);
-  color: var(--panel);
-  font-weight: 600;
-}
-.obscure__field {
-  padding: 0.4375rem 0.5rem;
-  background: var(--panel);
-  border: 1px solid var(--rule);
-  color: var(--ink);
-}
-.obscure__field--on {
-  outline: 3px solid var(--focus);
-  outline-offset: 2px;
-}
-/* Tucked up behind the bar — the criterion's failure, shown rather than described. */
-.obscure__field--under {
-  margin-top: -1.75rem;
-  position: relative;
-  z-index: -1;
-  color: var(--ink2);
-}
-.obscure__spacer {
-  height: 0.5rem;
-}
-
-/* --- 2.5 examples ------------------------------------------------------------------------------------ */
-
-.gesture,
-.press,
-.namebox,
-.dragdemo {
-  display: grid;
-  gap: 0.375rem;
-  margin-bottom: 0.875rem;
-  padding: 0.625rem;
-  background: var(--panel2);
-  border: 1px solid var(--rule2);
-  font-size: 0.75rem;
-  color: var(--ink);
-}
-.gesture__stage {
-  height: 2.75rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--panel);
-  border: 1px solid var(--rule);
-  color: var(--ink2);
-}
-.gesture__hint,
-.press__note {
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
-  font-size: 0.6875rem;
-  color: var(--ink2);
-}
-.press {
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: center;
-  gap: 0.5rem;
-}
-.press__btn {
-  padding: 0.375rem 0.625rem;
-  background: var(--ink);
-  color: var(--panel);
-  border-radius: 0.1875rem;
-  font-weight: 600;
-}
-.press__btn--bad {
-  background: var(--fail);
-  color: var(--panel);
-}
-.namebox__visual {
-  display: inline-block;
-  width: max-content;
-  padding: 0.375rem 0.75rem;
-  background: var(--ink);
-  color: var(--panel);
-  border-radius: 0.1875rem;
-  font-weight: 600;
-}
-.namebox__aria {
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
-  font-size: 0.6875rem;
-  color: var(--ink2);
-}
-.dragdemo__row {
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  padding: 0.375rem 0.5rem;
-  background: var(--panel);
-  border: 1px solid var(--rule);
-}
-
-.targets {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  margin-bottom: 0.875rem;
-  padding: 0.625rem;
-  background: var(--panel2);
-  border: 1px solid var(--rule2);
-}
-.target {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 24px;
-  min-height: 24px;
-  padding: 4px;
-  background: var(--panel);
-  border: 1px solid var(--rule2);
-  font-size: 0.75rem;
-  color: var(--ink);
-}
-/* The failure at actual size: 16px targets, four pixels apart. */
-.target--small {
-  min-width: 16px;
-  min-height: 16px;
-  padding: 0;
-  font-size: 0.625rem;
-}
-
-/* --- 3.1 examples ------------------------------------------------------------------------------------ */
-
-.codeline {
-  margin-bottom: 0.875rem;
-  padding: 0.5rem 0.625rem;
-  background: var(--panel2);
-  border: 1px solid var(--rule2);
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
-  font-size: 0.8125rem;
-  color: var(--ink);
-}
-
-/* --- 3.2 examples ------------------------------------------------------------------------------------ */
-
-.navcompare {
-  display: grid;
-  gap: 0.375rem;
-  margin-bottom: 0.875rem;
-  padding: 0.625rem;
-  background: var(--panel2);
-  border: 1px solid var(--rule2);
-}
-.navcompare__row {
-  padding: 0.375rem 0.5rem;
-  background: var(--panel);
-  border: 1px solid var(--rule);
-  font-size: 0.75rem;
-  color: var(--ink);
-}
-
-/* --- 3.3 examples ------------------------------------------------------------------------------------ */
-
-.formdemo {
-  display: grid;
-  gap: 0.375rem;
-  margin-bottom: 0.875rem;
-  padding: 0.625rem;
-  background: var(--panel2);
-  border: 1px solid var(--rule2);
-}
-.formdemo__banner {
-  padding: 0.375rem 0.5rem;
-  background: var(--pass-bg);
-  border-left: 3px solid var(--pass);
-  font-size: 0.75rem;
-  color: var(--ink);
-}
-.formdemo__banner--bad {
-  background: var(--fail-bg);
-  border-left-color: var(--fail);
-}
-.formdemo__label {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--ink);
-}
-.formdemo__hint {
-  font-size: 0.71875rem;
-  color: var(--ink2);
-}
-.formdemo__err {
-  font-size: 0.71875rem;
-  font-weight: 600;
-  color: var(--fail);
-}
-/* An error signalled by border colour alone — the failure 3.3.1 describes. */
-.formdemo__field--bad {
-  border: 2px solid var(--fail);
-  border-radius: 0.25rem;
-}
-/* Placeholder-as-label: the text sits in the field, so it vanishes on typing. */
-.formdemo__ph {
-  color: var(--ink2);
-  font-style: italic;
-}
-
-/* --- 4.1 examples ------------------------------------------------------------------------------------ */
-
-.a11ytree {
-  display: grid;
-  gap: 0.375rem;
-  margin-bottom: 0.875rem;
-  padding: 0.625rem;
-  background: var(--panel2);
-  border: 1px solid var(--rule2);
-  font-size: 0.75rem;
-  color: var(--ink);
-}
-.a11ytree__ui {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.375rem 0.5rem;
-  background: var(--panel);
-  border: 1px solid var(--rule);
-}
-.a11ytree__label {
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
-  font-size: 0.625rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink3);
-}
-.a11ytree__out {
-  padding: 0.375rem 0.5rem;
-  background: var(--pass-bg);
-  border-left: 3px solid var(--pass);
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
-  font-size: 0.71875rem;
-  color: var(--ink);
-}
-.a11ytree__out--bad {
-  background: var(--fail-bg);
-  border-left-color: var(--fail);
-}
-.toggle {
-  width: 2rem;
-  height: 1.125rem;
-  padding: 2px;
-  border-radius: 999px;
-  background: var(--rule2);
-  display: inline-flex;
-  flex: 0 0 auto;
-}
-.toggle--on {
-  justify-content: flex-end;
-  background: var(--pass);
-}
-.toggle__knob {
-  width: 0.875rem;
-  height: 0.875rem;
-  border-radius: 50%;
-  background: var(--panel);
-  display: block;
 }
 
 /* --- Demo library -------------------------------------------------------------------------------------- */
@@ -2195,7 +954,7 @@ a:hover {
 .library {
   margin-top: 4rem;
   padding-top: 4rem;
-  border-top: 1px solid var(--rule);
+  border-top: 1px solid var(--line);
 }
 .library__head {
   display: flex;
@@ -2207,24 +966,24 @@ a:hover {
 }
 .library__title {
   margin: 0;
-  font-family: Newsreader, Georgia, serif;
+  font-family: 'Figtree', system-ui, sans-serif;
   font-size: clamp(1.4375rem, 3cqw, 2.25rem);
   font-weight: 500;
   letter-spacing: -0.015em;
 }
 .library__count {
   margin-left: auto;
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 0.6875rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--ink3);
+  color: var(--ink-2);
 }
 .library__lede {
   margin: 1.125rem 0 1.75rem;
   font-size: 1rem;
   line-height: 1.6;
-  color: var(--ink2);
+  color: var(--ink-2);
   max-width: 62ch;
   text-wrap: pretty;
 }
@@ -2240,9 +999,9 @@ a:hover {
   display: grid;
   gap: 0.375rem;
   padding: 0 0 0.75rem;
-  border: 1px solid var(--rule);
+  border: 1px solid var(--line);
   border-radius: 0.3125rem;
-  background: var(--panel);
+  background: var(--card-bg);
   overflow: hidden;
 }
 .library__thumb {
@@ -2250,17 +1009,17 @@ a:hover {
   align-items: center;
   justify-content: center;
   aspect-ratio: 16 / 9;
-  background: var(--panel2);
-  border-bottom: 1px solid var(--rule);
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  background: var(--deep);
+  border-bottom: 1px solid var(--line);
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 0.875rem;
-  color: var(--ink2);
+  color: var(--ink-2);
 }
 .library__thumb--pending {
   background: repeating-linear-gradient(
     135deg,
-    var(--panel2),
-    var(--panel2) 8px,
+    var(--deep),
+    var(--deep) 8px,
     var(--bg) 8px,
     var(--bg) 16px
   );
@@ -2268,15 +1027,15 @@ a:hover {
   font-size: 0.65625rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--ink3);
+  color: var(--ink-2);
 }
 .library__num {
   margin: 0.5rem 0.75rem 0;
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 0.75rem;
   font-variant-numeric: tabular-nums;
   font-weight: 600;
-  color: var(--p2);
+  color: var(--accent-text);
 }
 .library__desc {
   margin: 0 0.75rem;
@@ -2287,298 +1046,9 @@ a:hover {
 .library__meta {
   margin: 0 0.75rem;
   padding-top: 0.375rem;
-  border-top: 1px solid var(--rule);
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  border-top: 1px solid var(--line);
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 0.6875rem;
-  color: var(--ink3);
+  color: var(--ink-2);
 }
 
-/* --- Focus demos (2.4.7, 2.4.11) ---------------------------------------------------------------------- */
-
-.fdemo,
-.odemo {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 2cqw;
-  padding: 4cqw 6cqw;
-}
-.fdemo__form {
-  display: grid;
-  gap: 1.4cqw;
-}
-.fdemo__field,
-.fdemo__button {
-  display: flex;
-  align-items: center;
-  height: 5.5cqw;
-  min-height: 16px;
-  padding: 0 1.6cqw;
-  background: var(--panel);
-  border: 1px solid var(--rule2);
-  font-size: clamp(0.5rem, 1.9cqw, 0.875rem);
-  color: var(--ink2);
-}
-.fdemo__button {
-  justify-content: center;
-  background: var(--ink);
-  border-color: var(--ink);
-  color: var(--panel);
-  font-weight: 600;
-}
-.fdemo__focused {
-  outline: 0.6cqw solid var(--focus);
-  outline-offset: 0.4cqw;
-  color: var(--ink);
-}
-.fdemo__button.fdemo__focused {
-  color: var(--panel);
-}
-.fdemo__status {
-  margin: 0;
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
-  font-size: clamp(0.5rem, 1.7cqw, 0.75rem);
-  color: var(--ink2);
-}
-
-.odemo__viewport {
-  position: relative;
-  height: 60cqh;
-  min-height: 5rem;
-  overflow: hidden;
-  background: var(--panel);
-  border: 1px solid var(--rule2);
-}
-.odemo__header {
-  position: absolute;
-  inset: 0 0 auto 0;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  height: 3rem;
-  padding: 0 1.6cqw;
-  background: var(--ink);
-  color: var(--panel);
-  font-size: clamp(0.5rem, 1.7cqw, 0.75rem);
-  font-weight: 600;
-}
-.odemo__scroller {
-  display: grid;
-  gap: 0.5rem;
-  padding: 0.5rem 1.6cqw;
-  transition: transform 0.25s linear;
-}
-.odemo__row {
-  display: flex;
-  align-items: center;
-  height: 1.75rem;
-  padding: 0 0.5rem;
-  background: var(--panel2);
-  border: 1px solid var(--rule);
-  font-size: clamp(0.5rem, 1.7cqw, 0.75rem);
-  color: var(--ink2);
-}
-.odemo__row--focused {
-  outline: 3px solid var(--focus);
-  outline-offset: 2px;
-  color: var(--ink);
-}
-/* scroll-padding applied: the row is pushed clear of the sticky header. */
-.odemo__row--clear {
-  margin-top: 3rem;
-}
-@media (prefers-reduced-motion: reduce) {
-  .odemo__scroller {
-    transition: none;
-  }
-}
-
-/* --- Announcement / error / live / target / carousel demos ---------------------------------------------- */
-
-.adem {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 2cqw;
-  padding: 4cqw 6cqw;
-  font-size: clamp(0.5rem, 1.9cqw, 0.875rem);
-}
-.adem__toolbar,
-.adem__cart {
-  display: flex;
-  align-items: center;
-  gap: 1.6cqw;
-  flex-wrap: wrap;
-}
-.adem__icon {
-  display: inline-flex;
-  align-items: center;
-  gap: 1cqw;
-  padding: 1cqw 1.6cqw;
-  background: var(--panel);
-  border: 1px solid var(--rule2);
-  color: var(--ink);
-}
-.adem__icon--focused {
-  outline: 0.5cqw solid var(--focus);
-  outline-offset: 0.3cqw;
-}
-.adem__name {
-  font-size: 0.9em;
-}
-.adem__speech,
-.adem__region {
-  margin: 0;
-  padding: 1cqw 1.6cqw;
-  background: var(--panel2);
-  border-left: 0.6cqw solid var(--p2);
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
-  font-size: clamp(0.45rem, 1.7cqw, 0.75rem);
-  line-height: 1.5;
-  color: var(--ink);
-}
-.adem__speech--quiet {
-  border-left-color: var(--rule2);
-  color: var(--ink2);
-}
-.adem__speaker {
-  display: block;
-  font-size: 0.8em;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink3);
-}
-.adem__region {
-  border-left-color: var(--rule2);
-  color: var(--ink2);
-}
-.adem__form {
-  display: grid;
-  gap: 1.2cqw;
-}
-.adem__row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.6cqw;
-}
-.adem__input {
-  flex: 1;
-  max-width: 60%;
-  padding: 0.8cqw 1.2cqw;
-  background: var(--panel);
-  border: 1px solid var(--rule2);
-  color: var(--ink2);
-}
-.adem__input--bad {
-  border: 0.4cqw solid var(--fail);
-}
-.adem__banner {
-  padding: 1cqw 1.6cqw;
-  background: var(--pass-bg);
-  border-left: 0.6cqw solid var(--pass);
-  color: var(--ink);
-}
-.adem__banner--bad {
-  background: var(--fail-bg);
-  border-left-color: var(--fail);
-}
-.adem__err {
-  color: var(--fail);
-  font-weight: 600;
-}
-.adem__badge,
-.adem__addbtn {
-  padding: 1cqw 1.6cqw;
-  background: var(--panel);
-  border: 1px solid var(--rule2);
-  color: var(--ink);
-}
-.adem__addbtn {
-  background: var(--ink);
-  border-color: var(--ink);
-  color: var(--panel);
-  font-weight: 600;
-}
-
-.tdem__row {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 1.5rem 0.5rem;
-  background: var(--panel);
-  border: 1px solid var(--rule2);
-}
-.tdem__target {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 auto;
-  background: var(--panel2);
-  border: 1px solid var(--rule2);
-  font-size: 0.625rem;
-  color: var(--ink);
-  transition: width 0.2s linear, height 0.2s linear;
-}
-/* A fingertip contact patch, drawn to scale against the targets. */
-.tdem__tip {
-  position: absolute;
-  top: 50%;
-  width: 45px;
-  height: 45px;
-  margin: -22px 0 0 -11px;
-  border-radius: 50%;
-  border: 2px dashed var(--p4);
-  background: color-mix(in srgb, var(--p4) 14%, transparent);
-  transition: left 0.25s linear;
-}
-
-.cdem__stage {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 30cqh;
-  min-height: 3rem;
-  background: var(--panel);
-  border: 1px solid var(--rule2);
-  color: var(--ink);
-}
-.cdem__dots {
-  display: flex;
-  align-items: center;
-  gap: 1.2cqw;
-  margin-top: 1.2cqw;
-}
-.cdem__dot {
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 50%;
-  background: var(--rule2);
-  display: block;
-}
-.cdem__dot--on {
-  background: var(--ink);
-}
-.cdem__pause {
-  padding: 0.8cqw 1.4cqw;
-  background: var(--panel);
-  border: 1px solid var(--ink);
-  font-size: clamp(0.45rem, 1.6cqw, 0.75rem);
-  color: var(--ink);
-}
-.cdem__pause--on {
-  background: var(--ink);
-  color: var(--panel);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .tdem__target,
-  .tdem__tip {
-    transition: none;
-  }
-}

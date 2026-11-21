@@ -15,7 +15,7 @@ function PrincipleGroup({ principle, current }: { principle: Principle; current:
 
   return (
     <>
-      <p className="rail__principle" style={{ color: `var(--${mark.token})` }}>
+      <p className="rail__principle" style={{ color: 'var(--accent-text)' }}>
         <span
           aria-hidden="true"
           className={`marker marker--${mark.shape}`}
@@ -31,7 +31,7 @@ function PrincipleGroup({ principle, current }: { principle: Principle; current:
               <span
                 aria-hidden="true"
                 className="rail__bar"
-                style={{ background: active ? `var(--${mark.token})` : 'var(--rule)' }}
+                style={{ background: active ? `var(--${mark.token})` : 'var(--line)' }}
               />
               <a
                 className="rail__link"

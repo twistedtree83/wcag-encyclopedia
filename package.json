@@ -6,7 +6,7 @@
   "description": "A visual encyclopedia of WCAG 2.2 — every Level A and AA criterion, shown rather than described.",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && vite build --ssr src/entry-server.tsx --outDir dist-ssr && node scripts/prerender.mjs",
     "preview": "vite preview --port 4173 --strictPort",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",

@@ -138,8 +138,10 @@ test('measured contrast badges are computed from the live palette, per theme', a
   await page.emulateMedia({ colorScheme: 'light' });
   await page.goto('/');
 
-  const fail = page.locator('.measured--fail').first();
-  const pass = page.locator('.measured--pass').first();
+  // Both themes' badges are in the markup and the token cascade hides the inactive one
+  // (theme/css.ts), so read the visible one.
+  const fail = page.locator('.measured--fail:visible').first();
+  const pass = page.locator('.measured--pass:visible').first();
   await expect(fail).toBeVisible();
   await expect(pass).toBeVisible();
 
@@ -155,8 +157,8 @@ test('measured contrast badges are computed from the live palette, per theme', a
   // numbers. A hand-typed ratio would be identical in both themes.
   await page.emulateMedia({ colorScheme: 'dark' });
   await page.goto('/');
-  expect(await page.locator('.measured--fail').first().textContent()).not.toBe(lightFail);
-  expect(await page.locator('.measured--pass').first().textContent()).not.toBe(lightPass);
+  expect(await page.locator('.measured--fail:visible').first().textContent()).not.toBe(lightFail);
+  expect(await page.locator('.measured--pass:visible').first().textContent()).not.toBe(lightPass);
 });
 
 test('the measured badge states pass or fail without relying on hue', async ({ page }) => {

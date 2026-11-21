@@ -22,7 +22,7 @@ export function Strip({ current }: { current: string }) {
         className={`marker marker--${mark.shape}`}
         style={{ background: `var(--${mark.token})` }}
       />
-      <span className="strip__principle" style={{ color: `var(--${mark.token})` }}>
+      <span className="strip__principle" style={{ color: 'var(--accent-text)' }}>
         {principle.name}
       </span>
       <span className="strip__sep">/</span>

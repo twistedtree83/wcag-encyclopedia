@@ -14,7 +14,7 @@ import { EXPECTED_TOTAL } from './criteria/manifest';
 import { GUIDELINES, PRINCIPLES } from './criteria/structure';
 import { useState } from 'react';
 import { useCurrentGuideline } from './hooks/useCurrentGuideline';
-import { useTheme } from './theme/useTheme';
+import { ThemeToggle } from './site/ThemeToggle';
 import { GuidelineSection } from './components/GuidelineSection';
 import { PrincipleOpener } from './components/PrincipleOpener';
 import { Rail } from './components/Rail';
@@ -29,7 +29,6 @@ import { DemoLibrary } from './sections/DemoLibrary';
 
 export function App() {
   const current = useCurrentGuideline();
-  const { theme, toggle } = useTheme();
   const [query, setQuery] = useState<Query>(EMPTY_QUERY);
   const summary = summarise(countMatches(CORPUS, query), query);
   const { viewport, width, setViewport, navOpen, setNavOpen } = useViewport();
@@ -74,12 +73,7 @@ export function App() {
           <span className="masthead__eyebrow">WCAG 2.2</span>
           <span className="masthead__title">Visual Encyclopedia</span>
 
-          <button type="button" className="theme-toggle" onClick={toggle}>
-            <span aria-hidden="true">{theme === 'dark' ? '☀' : '☾'}</span>
-            {/* The label names the action, not the current state — a button labelled
-                "Dark" is ambiguous about which one it does. */}
-            {theme === 'dark' ? 'Light mode' : 'Dark mode'}
-          </button>
+          <ThemeToggle />
 
           <button type="button" className="nav-toggle" onClick={() => setNavOpen(true)}>
             ☰ Guidelines

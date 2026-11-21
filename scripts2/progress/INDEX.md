@@ -38,7 +38,7 @@ One line per task. Flip `[ ]` to `[x]` when the task ships, and write its ledger
 
 Graph: `scripts2/prd-redesign.json` · Parent: #27 · Branch: `redesign`
 
-- [ ] **R-01** #28 — Redesign walking skeleton: Swatch tokens, page shell and one pre-rendered criterion page (no deps)
+- [x] **R-01** #28 — Redesign walking skeleton: Swatch tokens, page shell and one pre-rendered criterion page (no deps)
 - [ ] **R-02** #29 — Criterion records gain `since` and `lab?` (needs R-01)
 - [ ] **R-03** #30 — All 55 criterion pages with the full anatomy (needs R-02)
 - [ ] **R-04** #31 — Filter engine: principle, level, new in 2.2, and wider search (needs R-02)
