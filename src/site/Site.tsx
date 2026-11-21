@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { criterion } from '../criteria/corpus';
 import { EXPECTED_TOTAL } from '../criteria/manifest';
 import { AboutPage } from '../pages/AboutPage';
+import { ColourCheckPage } from '../pages/ColourCheckPage';
 import { CriteriaPage } from '../pages/CriteriaPage';
 import { CriterionPage } from '../pages/CriterionPage';
 import { Footer } from './Footer';
@@ -40,6 +41,8 @@ function Page({ route }: { route: Route }) {
   switch (route.page) {
     case 'about':
       return <AboutPage />;
+    case 'colour-check':
+      return <ColourCheckPage />;
     case 'criteria':
       return <CriteriaPage />;
     case 'criterion':
@@ -61,6 +64,12 @@ export function pageMeta(route: Route): { title: string; description: string } {
         title: 'About: WCAG Encyclopedia',
         description:
           'What the WCAG Encyclopedia is, its accessibility statement and how each claim is checked, and where to find the source code.',
+      };
+    case 'colour-check':
+      return {
+        title: 'Colour check: WCAG Encyclopedia',
+        description:
+          'Check any text and background colour against the WCAG contrast thresholds, see the pair in a real layout, and get the closest colour that passes.',
       };
     case 'criteria':
       return {

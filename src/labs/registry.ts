@@ -4,12 +4,11 @@
  * A criterion record points at labs by id in its `labs` field; when it has any, the criterion
  * page shows a "Try it yourself" section. Adding a lab is adding an entry here and an id on a
  * record: data, not layout. Labs add to a record's fail and pass examples, never replace them.
- *
- * Empty until R-06 (colour check) and R-07 (fade the text) register the first two.
  */
 
 import type { ReactNode } from 'react';
 import type { CriterionRecord } from '../criteria/types';
+import { ColourCheckLab } from './ColourCheck';
 import { FadeLab } from './FadeLab';
 
 export type LabEntry = {
@@ -21,6 +20,7 @@ export type LabEntry = {
 };
 
 export const LABS: readonly LabEntry[] = [
+  { id: 'colour-check', title: 'Try it: check your own colours', Lab: ColourCheckLab },
   { id: 'fade-text', title: 'Try it: fade the text', Lab: FadeLab },
 ];
 
