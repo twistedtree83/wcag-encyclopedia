@@ -13,6 +13,7 @@ export const G2_5: readonly CriterionRecord[] = [
     num: '2.5.1',
     name: 'Pointer Gestures',
     level: 'A',
+    since: '2.1',
     guideline: '2.5',
     plain:
       'Anything driven by a multi-finger or path-based gesture — pinch, two-finger rotate, ' +
@@ -57,6 +58,7 @@ export const G2_5: readonly CriterionRecord[] = [
     num: '2.5.2',
     name: 'Pointer Cancellation',
     level: 'A',
+    since: '2.1',
     guideline: '2.5',
     plain:
       'Actions should fire on release, not on press — so someone who lands on the wrong control ' +
@@ -99,6 +101,7 @@ export const G2_5: readonly CriterionRecord[] = [
     num: '2.5.3',
     name: 'Label in Name',
     level: 'A',
+    since: '2.1',
     guideline: '2.5',
     plain:
       'A control’s accessible name must contain the text shown on it. Voice-control users say ' +
@@ -141,6 +144,7 @@ export const G2_5: readonly CriterionRecord[] = [
     num: '2.5.4',
     name: 'Motion Actuation',
     level: 'A',
+    since: '2.1',
     guideline: '2.5',
     plain:
       'If moving the device does something — shake to undo, tilt to steer — there has to be a ' +
@@ -186,6 +190,7 @@ export const G2_5: readonly CriterionRecord[] = [
     num: '2.5.7',
     name: 'Dragging Movements',
     level: 'AA',
+    since: '2.2',
     guideline: '2.5',
     plain:
       'Anything you drag needs a way to do the same thing without dragging. New in WCAG 2.2. ' +
@@ -232,6 +237,7 @@ export const G2_5: readonly CriterionRecord[] = [
     num: '2.5.8',
     name: 'Target Size (Minimum)',
     level: 'AA',
+    since: '2.2',
     guideline: '2.5',
     demos: ['targets-2-5-8'],
     plain:

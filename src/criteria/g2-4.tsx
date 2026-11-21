@@ -13,6 +13,7 @@ export const G2_4: readonly CriterionRecord[] = [
     num: '2.4.1',
     name: 'Bypass Blocks',
     level: 'A',
+    since: '2.0',
     guideline: '2.4',
     plain:
       'Give people a way past the things that repeat on every page. A skip link is the usual ' +
@@ -61,6 +62,7 @@ export const G2_4: readonly CriterionRecord[] = [
     num: '2.4.2',
     name: 'Page Titled',
     level: 'A',
+    since: '2.0',
     guideline: '2.4',
     plain:
       'Every page needs a title that describes it. It is the first thing a screen reader ' +
@@ -103,6 +105,7 @@ export const G2_4: readonly CriterionRecord[] = [
     num: '2.4.3',
     name: 'Focus Order',
     level: 'A',
+    since: '2.0',
     guideline: '2.4',
     plain:
       'Focus has to move in an order that preserves meaning. Usually that means source order — ' +
@@ -145,6 +148,7 @@ export const G2_4: readonly CriterionRecord[] = [
     num: '2.4.4',
     name: 'Link Purpose (In Context)',
     level: 'A',
+    since: '2.0',
     guideline: '2.4',
     plain:
       'What a link does has to be clear from its text, or from the sentence, list item, cell, ' +
@@ -205,6 +209,7 @@ export const G2_4: readonly CriterionRecord[] = [
     num: '2.4.5',
     name: 'Multiple Ways',
     level: 'AA',
+    since: '2.0',
     guideline: '2.4',
     plain:
       'Offer more than one route to each page — navigation plus search, or a sitemap, or an ' +
@@ -245,6 +250,7 @@ export const G2_4: readonly CriterionRecord[] = [
     num: '2.4.6',
     name: 'Headings and Labels',
     level: 'AA',
+    since: '2.0',
     guideline: '2.4',
     plain:
       'Where headings and labels exist, they have to describe the topic or purpose. This is ' +
@@ -288,6 +294,7 @@ export const G2_4: readonly CriterionRecord[] = [
     num: '2.4.7',
     name: 'Focus Visible',
     level: 'AA',
+    since: '2.0',
     guideline: '2.4',
     demos: ['focus-visible-2-4-7', 'focus-lost-2-4-7'],
     plain:
@@ -347,6 +354,7 @@ export const G2_4: readonly CriterionRecord[] = [
     num: '2.4.11',
     name: 'Focus Not Obscured (Minimum)',
     level: 'AA',
+    since: '2.2',
     guideline: '2.4',
     demos: ['obscured-2-4-11'],
     plain:

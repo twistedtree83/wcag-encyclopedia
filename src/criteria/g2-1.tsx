@@ -13,6 +13,7 @@ export const G2_1: readonly CriterionRecord[] = [
     num: '2.1.1',
     name: 'Keyboard',
     level: 'A',
+    since: '2.0',
     guideline: '2.1',
     plain:
       'Everything the interface can do must be doable from a keyboard. Not "most things", and ' +
@@ -63,6 +64,7 @@ export const G2_1: readonly CriterionRecord[] = [
     num: '2.1.2',
     name: 'No Keyboard Trap',
     level: 'A',
+    since: '2.0',
     guideline: '2.1',
     plain:
       'If focus can get into something, it has to be able to get out using the keyboard alone. ' +
@@ -112,6 +114,7 @@ export const G2_1: readonly CriterionRecord[] = [
     num: '2.1.4',
     name: 'Character Key Shortcuts',
     level: 'A',
+    since: '2.1',
     guideline: '2.1',
     plain:
       'A shortcut bound to a single letter, number, or symbol must be switchable off, ' +

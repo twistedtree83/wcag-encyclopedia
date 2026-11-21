@@ -12,6 +12,7 @@ export const G2_2: readonly CriterionRecord[] = [
     num: '2.2.1',
     name: 'Timing Adjustable',
     level: 'A',
+    since: '2.0',
     guideline: '2.2',
     plain:
       'If something is on a timer, the reader must be able to turn it off, adjust it to at ' +
@@ -59,6 +60,7 @@ export const G2_2: readonly CriterionRecord[] = [
     num: '2.2.2',
     name: 'Pause, Stop, Hide',
     level: 'A',
+    since: '2.0',
     guideline: '2.2',
     demos: ['autoplay-2-2-2'],
     plain:

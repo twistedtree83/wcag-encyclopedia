@@ -14,6 +14,7 @@ export const G2_3: readonly CriterionRecord[] = [
     num: '2.3.1',
     name: 'Three Flashes or Below Threshold',
     level: 'A',
+    since: '2.0',
     guideline: '2.3',
     plain:
       'Nothing may flash more than three times per second, unless the flashing area is very ' +

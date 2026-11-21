@@ -14,6 +14,7 @@ export const G1_4: readonly CriterionRecord[] = [
     num: '1.4.1',
     name: 'Use of Color',
     level: 'A',
+    since: '2.0',
     guideline: '1.4',
     plain:
       'Colour can carry meaning, but never on its own. If removing all colour from the screen ' +
@@ -62,6 +63,7 @@ export const G1_4: readonly CriterionRecord[] = [
     num: '1.4.11',
     name: 'Non-text Contrast',
     level: 'AA',
+    since: '2.1',
     guideline: '1.4',
     plain:
       'The parts of a control that tell you it is a control — the input’s edge, the checkbox ' +
@@ -125,6 +127,7 @@ export const G1_4: readonly CriterionRecord[] = [
     num: '1.4.10',
     name: 'Reflow',
     level: 'AA',
+    since: '2.1',
     guideline: '1.4',
     demos: ['reflow-1-4-10'],
     plain:
@@ -186,6 +189,7 @@ export const G1_4: readonly CriterionRecord[] = [
     num: '1.4.2',
     name: 'Audio Control',
     level: 'A',
+    since: '2.0',
     guideline: '1.4',
     plain:
       'If sound plays automatically for more than three seconds, there has to be a way to stop ' +
@@ -225,6 +229,7 @@ export const G1_4: readonly CriterionRecord[] = [
     num: '1.4.3',
     name: 'Contrast (Minimum)',
     level: 'AA',
+    since: '2.0',
     guideline: '1.4',
     plain:
       'Body text needs at least 4.5:1 against its background. Text at 24px, or 18.66px and ' +
@@ -265,6 +270,7 @@ export const G1_4: readonly CriterionRecord[] = [
     num: '1.4.4',
     name: 'Resize Text',
     level: 'AA',
+    since: '2.0',
     guideline: '1.4',
     plain:
       'Text has to survive being enlarged to 200% without losing content or function. That ' +
@@ -318,6 +324,7 @@ export const G1_4: readonly CriterionRecord[] = [
     num: '1.4.5',
     name: 'Images of Text',
     level: 'AA',
+    since: '2.0',
     guideline: '1.4',
     plain:
       'Use real text, not a picture of text. Pictures of text do not reflow, do not respond to ' +
@@ -356,6 +363,7 @@ export const G1_4: readonly CriterionRecord[] = [
     num: '1.4.12',
     name: 'Text Spacing',
     level: 'AA',
+    since: '2.1',
     guideline: '1.4',
     plain:
       'A reader must be able to increase line height to 1.5×, paragraph spacing to 2×, letter ' +
@@ -396,6 +404,7 @@ export const G1_4: readonly CriterionRecord[] = [
     num: '1.4.13',
     name: 'Content on Hover or Focus',
     level: 'AA',
+    since: '2.1',
     guideline: '1.4',
     plain:
       'Anything that appears on hover or focus — a tooltip, a popover, a dropdown — has to be ' +

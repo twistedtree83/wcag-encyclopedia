@@ -29,6 +29,7 @@ export const G1_2: readonly CriterionRecord[] = [
     num: '1.2.1',
     name: 'Audio-only and Video-only (Prerecorded)',
     level: 'A',
+    since: '2.0',
     guideline: '1.2',
     plain:
       'A recording with only sound needs a transcript. A recording with only pictures needs ' +
@@ -74,6 +75,7 @@ export const G1_2: readonly CriterionRecord[] = [
     num: '1.2.2',
     name: 'Captions (Prerecorded)',
     level: 'A',
+    since: '2.0',
     guideline: '1.2',
     plain:
       'Prerecorded video with sound needs captions: the dialogue, who is speaking, and the ' +
@@ -110,6 +112,7 @@ export const G1_2: readonly CriterionRecord[] = [
     num: '1.2.3',
     name: 'Audio Description or Media Alternative (Prerecorded)',
     level: 'A',
+    since: '2.0',
     guideline: '1.2',
     plain:
       'If the picture carries information the soundtrack does not, offer that information some ' +
@@ -152,6 +155,7 @@ export const G1_2: readonly CriterionRecord[] = [
     num: '1.2.4',
     name: 'Captions (Live)',
     level: 'AA',
+    since: '2.0',
     guideline: '1.2',
     plain:
       'Live video with sound needs live captions. Real time, as it happens — a transcript ' +
@@ -186,6 +190,7 @@ export const G1_2: readonly CriterionRecord[] = [
     num: '1.2.5',
     name: 'Audio Description (Prerecorded)',
     level: 'AA',
+    since: '2.0',
     guideline: '1.2',
     plain:
       'At AA the text alternative is no longer enough on its own: prerecorded video needs an ' +
