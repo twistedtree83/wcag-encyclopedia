@@ -6,6 +6,8 @@ This is the reference for building the new WCAG Encyclopedia design. It covers e
 - **Source of truth for values:** the `:root` block at the top of `design/mockups/swatch/swatch.css`. If this guide and that file ever disagree, the file wins.
 - **Screenshots:** `design/new-design/screenshots/`, in three folders: `pages`, `components` and `states`. Every page is captured in dark and light themes, at desktop width (1440px) and phone width (390px).
 
+> **Do NOT include the tweak bar in the build.** The Tweaks button, its panel, `tweak.js` and the "tweak bar" styles at the end of `swatch.css` are a design tool for choosing values in the mockup. They are not part of the website. Take the token values from the `:root` block, and leave the tweak bar behind. See [section 13](#13-the-tweak-bar).
+
 ![Home page, dark theme](screenshots/pages/home-dark-desktop.png)
 
 ---
@@ -570,7 +572,16 @@ Check each item on every new page or component:
 
 ## 13. The tweak bar
 
-The tweak bar is a design tool built into the mockup, not part of the product. Open it with the **Tweaks** button at the bottom right, or add `?tweaks` to any page URL.
+> **Do NOT include the tweak bar in the build.** It exists only in the mockup, for choosing values. Do not ship:
+> - the Tweaks button or panel
+> - `tweak.js`
+> - the `.tw-*` styles
+> - the `swatch-tweaks-v2` storage
+> - the `?tweaks` URL parameter
+>
+> The build gets the chosen values through **Copy CSS** or the `:root` block in `swatch.css`, and nothing else from this section.
+
+The tweak bar is a design tool built into the mockup. Open it with the **Tweaks** button at the bottom right, or add `?tweaks` to any page URL.
 
 ![Tweak bar](screenshots/states/tweak-bar-open.png)
 
@@ -673,12 +684,17 @@ Set on `<html>`. The defaults are listed first.
 |---|---|
 | `swatch.css` | Every token and component style. The tweak bar's own styles are at the end, marked "never tweaked". |
 | `site.js` | Shared code: colour maths (relative luminance, ratio, nearest passing colour), data loading, header and footer, the colour check, the pairs and the index. |
-| `tweak.js` | The tweak bar. Not for production. |
+| `tweak.js` | The tweak bar. **Do not include in the build.** |
 | `index.html`, `contrast.html`, `criteria.html`, `criterion.html` | The four page templates. |
 | `../corpus.js` | Criterion data generated from `src/criteria/*.tsx`, as `[number, name, level, plain, failCaption, passCaption]`. |
 
 **For the real build**
 
+- **Do NOT include the tweak bar.** Leave out:
+  - `tweak.js`
+  - the `.tw-*` rules at the end of `swatch.css`, under "tweak bar (fixed design, never tweaked)"
+  - the `tweak.js` script tag on each page
+  - the Tweaks button
 - Load only Figtree (400–800) and Onest (400–700).
 - Keep the colour maths exactly as written in `site.js`:
   - WCAG relative luminance with the 0.03928 threshold
