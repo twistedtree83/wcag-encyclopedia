@@ -31,3 +31,21 @@ One line per task. Flip `[ ]` to `[x]` when the task ships, and write its ledger
 - [x] **T-12** #12 — Demos: announcements, errors, targets, motion (4.1.2, 3.3.1, 4.1.3, 2.5.8, 2.2.2) (needs T-09, T-18, T-21, T-24, T-25)
 
 **24 tasks · 24 shipped · all `afk:true` · no human gates**
+
+---
+
+# Progress index — Swatch redesign
+
+Graph: `scripts2/prd-redesign.json` · Parent: #27 · Branch: `redesign`
+
+- [ ] **R-01** #28 — Redesign walking skeleton: Swatch tokens, page shell and one pre-rendered criterion page (no deps)
+- [ ] **R-02** #29 — Criterion records gain `since` and `lab?` (needs R-01)
+- [ ] **R-03** #30 — All 55 criterion pages with the full anatomy (needs R-02)
+- [ ] **R-04** #31 — Filter engine: principle, level, new in 2.2, and wider search (needs R-02)
+- [ ] **R-06** #33 — Colour check lab and the Colour check page (needs R-03)
+- [ ] **R-07** #34 — Fade-the-text lab on 1.4.3 (needs R-03)
+- [ ] **R-09** #36 — About page with the accessibility statement (needs R-01)
+- [ ] **R-05** #32 — All criteria page (needs R-03, R-04)
+- [ ] **R-08** #35 — Home page (needs R-05, R-06, R-07)
+- [ ] **R-10** #37 — Delete the retired single-page modules (needs R-08)
+- [ ] **R-11** #38 — Cutover: owner's visual sign-off, then merge the redesign and deploy (needs R-10)
