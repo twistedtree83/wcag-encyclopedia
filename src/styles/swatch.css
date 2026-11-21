@@ -1,0 +1,500 @@
+/*
+ * The Swatch shell, for the pre-rendered pages (ADR 0001).
+ *
+ * Ported from design/mockups/swatch/swatch.css, default style only: no tweak bar and no
+ * data-* switches except data-theme. Colour tokens are not declared here; they come from
+ * src/theme/tokens.ts, injected into the page head, so the contrast audit covers them. This
+ * file holds the non-colour tokens and the components.
+ *
+ * Sections are appended per component (later tickets add theirs at the end, in their own
+ * section), then the breakpoints and reduced motion close the file.
+ */
+
+/* --- Tokens: type, layout, shape, motion ------------------------------------------------ */
+
+:root {
+  --fh: 'Figtree';
+  --fb: 'Onest';
+  --hw: 800;
+  --hw2: 700;
+  --bw: 400;
+  --ts: 1;
+  --h1: 96px;
+  --h1-sub: 84px;
+  --h2: 64px;
+  --h3: 22px;
+  --num: 64px;
+  --lede: 20px;
+  --body: 18px;
+  --small: 15px;
+  --eye: 16px;
+  --lh: 1.6;
+  --hlh: 1;
+  --hls: -0.02em;
+
+  --maxw: 1240px;
+  --gut: 56px;
+  --sp: 100px;
+  --gap: 18px;
+  --pad: 28px;
+  --hero-gap: 32px;
+
+  --rad: 28px;
+  --rad-sm: 12px;
+  --rad-btn: 999px;
+  --rad-chip: 999px;
+  --rad-badge: 6px;
+  --bwid: 1.5px;
+
+  --btn-h: 55px;
+  --btn-px: 24px;
+  --btn-w: 500;
+  --nav-gap: 6px;
+  --lift: 4px;
+  --speed: 0.15s;
+}
+
+/* --- Base ------------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--bg);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: var(--bw) calc(var(--body) * var(--ts)) / var(--lh) var(--fb), system-ui, sans-serif;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--fh), sans-serif;
+  margin: 0;
+}
+
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip {
+  position: absolute;
+  left: 16px;
+  top: -80px;
+  z-index: 50;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 10px 18px;
+  border-radius: var(--rad-btn);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-weight: 600;
+  text-decoration: none;
+}
+.skip:focus {
+  top: 12px;
+}
+
+.wrap {
+  max-width: calc(var(--maxw) + var(--gut) * 2);
+  margin: 0 auto;
+  padding: 0 var(--gut);
+}
+
+/* --- Header ----------------------------------------------------------------------------- */
+
+header.top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  padding: 28px 0;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  font: var(--hw2) 20px/1 var(--fh), sans-serif;
+  text-decoration: none;
+}
+.brand i {
+  display: flex;
+  gap: 3px;
+}
+.brand__dot {
+  display: block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+.brand__dot--a1 {
+  background: var(--a1);
+}
+.brand__dot--a2 {
+  background: var(--a2);
+}
+.brand__dot--a3 {
+  background: var(--a3);
+}
+
+header.top nav {
+  margin-left: auto;
+}
+header.top nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--nav-gap);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+header.top nav a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 10px 16px;
+  border-radius: var(--rad-btn);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 1.4;
+}
+header.top nav a:hover {
+  background: var(--raise);
+}
+header.top nav [aria-current] {
+  background: var(--nav-on-bg);
+  color: var(--nav-on-fg);
+}
+header.top nav [aria-current]:hover {
+  background: var(--nav-on-bg);
+}
+
+/* --- Buttons ---------------------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: var(--btn-h);
+  padding: 0 var(--btn-px);
+  border-radius: var(--rad-btn);
+  border: 2px solid transparent;
+  background: none;
+  font-weight: var(--btn-w);
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform var(--speed);
+}
+.btn:hover {
+  transform: translateY(calc(var(--lift) * -1));
+}
+.btn:active {
+  transform: translateY(0);
+}
+.btn.p {
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+}
+.btn.o {
+  border-color: var(--btn2-line);
+  color: var(--ink);
+}
+.btn.sm {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 18px;
+  font-size: var(--small);
+}
+
+/* The theme toggle: a secondary button whose pressed state is drawn as well as announced. */
+.theme-toggle[aria-pressed='true'] {
+  background: var(--chip-on-bg);
+  border-color: var(--chip-on-bg);
+  color: var(--chip-on-fg);
+}
+
+/* --- Type and section heads ------------------------------------------------------------- */
+
+h1 {
+  font-weight: var(--hw);
+  font-size: calc(var(--ts) * max(calc(var(--h1-sub) * 0.52), min(var(--h1-sub), 7.5vw)));
+  line-height: var(--hlh);
+  letter-spacing: calc(var(--hls) - 0.005em);
+  overflow-wrap: break-word;
+}
+
+section.band {
+  padding: var(--sp) 0 0;
+  scroll-margin-top: 12px;
+}
+.bh {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 24px 40px;
+  margin: 0 0 40px;
+}
+.bh h2 {
+  font-weight: var(--hw);
+  font-size: calc(var(--ts) * max(calc(var(--h2) * 0.56), min(var(--h2), 6vw)));
+  letter-spacing: var(--hls);
+  line-height: var(--hlh);
+  margin: 0 0 14px;
+}
+.bh p {
+  color: var(--ink-2);
+  max-width: 56ch;
+  margin: 0;
+}
+
+/* --- Markers and badges ----------------------------------------------------------------- */
+
+.mk {
+  display: inline-block;
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+.mk.p1 {
+  background: var(--a1);
+}
+.mk.p2 {
+  background: var(--a2);
+  border-radius: 50%;
+}
+.mk.p3 {
+  background: var(--a3);
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+.mk.p4 {
+  background: var(--a4);
+  transform: rotate(45deg) scale(0.78);
+  box-shadow: inset 0 0 0 1.5px var(--line-2);
+}
+
+.lv {
+  font: 700 12px/1 var(--fb), sans-serif;
+  letter-spacing: 0.06em;
+  border: var(--bwid) solid var(--ink-2);
+  border-radius: var(--rad-badge);
+  padding: 5px 7px;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.lv.aa {
+  background: var(--badge-bg);
+  border-color: var(--badge-bg);
+  color: var(--badge-fg);
+}
+
+/* --- Criterion page --------------------------------------------------------------------- */
+
+.ch {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+  gap: 56px;
+  align-items: start;
+  padding: 40px 0 0;
+}
+.ch .meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 18px;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.ch .plain {
+  max-width: 54ch;
+  margin: 28px 0 0;
+  font-size: calc((var(--lede) + 1px) * var(--ts));
+  line-height: 1.55;
+}
+
+.ex {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--gap);
+}
+
+.stage {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-height: 260px;
+  margin: 0;
+  padding: calc(var(--pad) + 4px);
+  border-radius: var(--rad);
+  background: var(--deep);
+}
+.stage.bad {
+  box-shadow: inset 0 0 0 2px var(--stage-edge-bad);
+}
+.stage.good {
+  box-shadow: inset 0 0 0 2px var(--stage-edge-good);
+}
+.stage figcaption {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+}
+.stage .lbl {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px 6px 10px;
+  border-radius: var(--rad-chip);
+  color: var(--on-a);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.stage.bad .lbl {
+  background: var(--a3);
+}
+.stage.good .lbl {
+  background: var(--a1);
+}
+.stage q {
+  font: var(--hw2) calc(28px * var(--ts)) / 1.2 var(--fh), sans-serif;
+  quotes: none;
+}
+.stage__example {
+  min-width: 0;
+}
+
+/* --- Footer ----------------------------------------------------------------------------- */
+
+footer.foot {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 32px;
+  margin-top: var(--sp);
+  padding: 44px 0 48px;
+  border-top: var(--bwid) solid var(--line);
+  color: var(--ink-2);
+  font-size: var(--small);
+}
+footer.foot h2 {
+  font: 600 var(--small) var(--fb), sans-serif;
+  color: var(--ink);
+  margin: 0 0 12px;
+}
+footer.foot ul {
+  display: grid;
+  gap: 2px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+footer.foot ul a {
+  display: inline-block;
+  padding: 6px 0;
+  text-decoration: none;
+}
+footer.foot ul a:hover {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+footer.foot .brand {
+  margin: 0 0 14px;
+  color: var(--ink);
+}
+footer.foot p {
+  max-width: 36ch;
+  margin: 0;
+}
+
+/* --- Breakpoints ------------------------------------------------------------------------ */
+
+@media (max-width: 1100px) {
+  .ch {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .wrap {
+    padding: 0 20px;
+  }
+  header.top {
+    gap: 12px;
+  }
+  /* Phones: the links wrap under the logo; the toggle stays beside it. */
+  header.top nav {
+    order: 3;
+    flex-basis: 100%;
+    margin-left: 0;
+  }
+  header.top .theme-toggle {
+    margin-left: auto;
+  }
+  header.top nav a {
+    padding: 10px 12px;
+  }
+  section.band {
+    padding-top: calc(var(--sp) * 0.72);
+  }
+  .ex {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .stage {
+    padding: 24px;
+    min-height: 200px;
+  }
+  footer.foot {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  footer.foot > div:first-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

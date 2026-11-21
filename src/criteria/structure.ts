@@ -64,10 +64,10 @@ export const GUIDELINES: readonly Guideline[] = [
 
 /** Accent token and marker shape per principle. Both carry the grouping; neither alone. */
 export const PRINCIPLE_MARKS: Record<1 | 2 | 3 | 4, { token: string; shape: MarkerShape }> = {
-  1: { token: 'p1', shape: 'square' },
-  2: { token: 'p2', shape: 'circle' },
-  3: { token: 'p3', shape: 'triangle' },
-  4: { token: 'p4', shape: 'diamond' },
+  1: { token: 'a1', shape: 'square' },
+  2: { token: 'a2', shape: 'circle' },
+  3: { token: 'a3', shape: 'triangle' },
+  4: { token: 'a4', shape: 'diamond' },
 };
 
 export function guidelineFor(num: string): Guideline | undefined {

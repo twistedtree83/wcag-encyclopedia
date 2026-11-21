@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!--
+      The template for every pre-rendered page (ADR 0001). scripts/prerender.mjs fills the
+      title, description, route and app markup per route, then removes this file from dist/.
+    -->
+    <title><!--@title--></title>
+    <meta name="description" content="<!--@description-->" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Onest:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!--@tokens-->
+    <script>
+      /*
+       * Runs before first paint so the page never flashes the wrong theme. Mirrors
+       * resolveTheme() in src/theme/useTheme.ts: an explicit choice wins over the OS
+       * setting in both directions.
+       */
+      (function () {
+        try {
+          var stored = localStorage.getItem('wcag-encyclopedia:theme');
+          var theme =
+            stored === 'light' || stored === 'dark'
+              ? stored
+              : window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) {
+          /* storage blocked: the CSS media query still gives the right default */
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"><!--@app--></div>
+    <script type="module" src="/src/entry-client.tsx"></script>
+  </body>
+</html>

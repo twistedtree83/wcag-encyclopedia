@@ -10,7 +10,7 @@
 import { criteriaFor } from '../criteria/corpus';
 import { filterCriteria, isFiltering, type Query } from '../catalog/filter';
 import { EXPECTED } from '../criteria/manifest';
-import { guidelineFor, principleFor, PRINCIPLE_MARKS } from '../criteria/structure';
+import { guidelineFor, principleFor } from '../criteria/structure';
 import { CriterionCard } from './CriterionCard';
 
 export function GuidelineSection({ num, query }: { num: string; query: Query }) {
@@ -18,7 +18,6 @@ export function GuidelineSection({ num, query }: { num: string; query: Query }) 
   const principle = principleFor(num);
   if (!guideline || !principle) return null;
 
-  const mark = PRINCIPLE_MARKS[principle.num];
   const authored = criteriaFor(num);
   // Filtered-out criteria are not rendered at all, so they are absent from the accessibility
   // tree as well as the screen — a screen reader user and a sighted user see the same set.
@@ -34,7 +33,7 @@ export function GuidelineSection({ num, query }: { num: string; query: Query }) 
       aria-labelledby={headingId}
     >
       <div className="guideline__head">
-        <span className="guideline__num" style={{ color: `var(--${mark.token})` }}>
+        <span className="guideline__num" style={{ color: 'var(--accent-text)' }}>
           {guideline.num}
         </span>
         <h3 id={headingId} className="guideline__name">

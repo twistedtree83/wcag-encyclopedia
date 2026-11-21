@@ -17,16 +17,16 @@ export function PrincipleOpener({ principle }: { principle: Principle }) {
       className="opener"
       aria-labelledby={headingId}
       style={{
-        background: `var(--${mark.token}-wash)`,
+        background: 'var(--deep)',
         borderTopColor: `var(--${mark.token})`,
       }}
     >
       <div className="opener__inner">
-        <span aria-hidden="true" className="opener__ordinal" style={{ color: `var(--${mark.token})` }}>
+        <span aria-hidden="true" className="opener__ordinal" style={{ color: 'var(--accent-text)' }}>
           {principle.num}
         </span>
         <div className="opener__body">
-          <p className="opener__eyebrow" style={{ color: `var(--${mark.token})` }}>
+          <p className="opener__eyebrow" style={{ color: 'var(--accent-text)' }}>
             <span
               aria-hidden="true"
               className={`marker marker--${mark.shape}`}
@@ -43,7 +43,7 @@ export function PrincipleOpener({ principle }: { principle: Principle }) {
             {guidelines.map((g) => (
               <li key={g.num}>
                 <a className="opener__link" href={`#g${g.num}`}>
-                  <span className="opener__num" style={{ color: `var(--${mark.token})` }}>
+                  <span className="opener__num" style={{ color: 'var(--accent-text)' }}>
                     {g.num}
                   </span>
                   {g.name}

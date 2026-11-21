@@ -63,7 +63,7 @@ export function Drawer({
           const mark = PRINCIPLE_MARKS[principle.num];
           return (
             <div key={principle.num}>
-              <p className="drawer__principle" style={{ color: `var(--${mark.token})` }}>
+              <p className="drawer__principle" style={{ color: 'var(--accent-text)' }}>
                 <span
                   aria-hidden="true"
                   className={`marker marker--${mark.shape}`}

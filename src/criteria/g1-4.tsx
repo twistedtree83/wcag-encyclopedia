@@ -78,7 +78,7 @@ export const G1_4: readonly CriterionRecord[] = [
             <span aria-hidden="true" className="swatch-check border--weak" />
             Email me order updates
           </div>
-          <MeasuredRatio fg="swatch-border-weak" bg="panel" kind="ui" label="border" />
+          <MeasuredRatio fg="ex-border-weak" bg="deep" kind="ui" label="border" />
           <p className="example-note">
             The border is a hair lighter than the surface it sits on. Sighted users with good
             vision fill in the edge from memory; nobody else can.
@@ -98,7 +98,7 @@ export const G1_4: readonly CriterionRecord[] = [
             <span aria-hidden="true" className="swatch-check border--strong" />
             Email me order updates
           </div>
-          <MeasuredRatio fg="swatch-border-strong" bg="panel" kind="ui" label="border" />
+          <MeasuredRatio fg="ex-border-strong" bg="deep" kind="ui" label="border" />
           <p className="example-note">
             The same layout, the same type, the same spacing. The only change is the border —
             and now the control announces itself.
@@ -241,7 +241,7 @@ export const G1_4: readonly CriterionRecord[] = [
             Placeholder grey, helper grey, and disabled grey are three different mistakes with
             the same cause.
           </p>
-          <MeasuredRatio fg="swatch-text-weak" bg="panel" kind="body" />
+          <MeasuredRatio fg="ex-text-weak" bg="deep" kind="body" />
         </>
       ),
     },
@@ -255,7 +255,7 @@ export const G1_4: readonly CriterionRecord[] = [
             Helper text keeps its quieter voice through size and weight rather than by fading
             towards the background.
           </p>
-          <MeasuredRatio fg="swatch-text-strong" bg="panel" kind="body" />
+          <MeasuredRatio fg="ex-text-strong" bg="deep" kind="body" />
         </>
       ),
     },
