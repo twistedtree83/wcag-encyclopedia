@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Case Files — WCAG Encyclopedia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=Lexend:wght@300;400;600&family=Old+Standard+TT:wght@700&display=swap">
+<style>
+:root{--cream:#F8F3EA;--paper:#EEE5D4;--coral:#C8432F;--char:#2A2B2D;--ink:#22201D;--ink-2:#55504A;--line:#D8CDBC}
+*{box-sizing:border-box}
+html{background:var(--cream)}
+body{margin:0;color:var(--ink);font:300 17px/1.7 "Lexend",system-ui,sans-serif}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--char);outline-offset:3px}
+.on-dark :focus-visible,.on-coral :focus-visible{outline-color:#fff}
+.skip{position:absolute;left:16px;top:-60px;background:var(--char);color:#fff;padding:10px 14px;z-index:9}
+.skip:focus{top:12px}
+.wrap{max-width:1320px;margin:0 auto;padding:0 48px}
+.caps{font-family:"Josefin Sans",sans-serif;text-transform:uppercase;letter-spacing:.02em;font-weight:600}
+header.top{display:flex;justify-content:space-between;align-items:center;padding:24px 0;border-bottom:1px solid var(--line)}
+.brand{text-decoration:none;font:700 22px/1 "Josefin Sans";text-transform:uppercase;letter-spacing:.06em}
+.brand small{display:block;font:300 13px/1.4 "Lexend";letter-spacing:0;text-transform:none;color:var(--ink-2);margin-top:4px}
+nav ul{display:flex;gap:28px;list-style:none;margin:0;padding:0;font-weight:400;font-size:16px}
+nav a{text-decoration:none;padding:10px 0}
+nav a:hover,nav [aria-current]{text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:2px}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:0;position:relative}
+.coral{background:var(--coral);color:#fff}
+.dark{background:var(--char);color:#fff}
+/* row 1 */
+.r1{margin-top:40px}
+.title{grid-column:1/5;padding:36px 36px 44px;align-self:start}
+h1{font:600 clamp(40px,4.4vw,62px)/1.02 "Josefin Sans";text-transform:uppercase;margin:0;letter-spacing:.01em}
+.photo{grid-column:5/9;align-self:start;height:290px;background:#d9d6d0;position:relative;overflow:hidden;margin:0}
+.shot{position:absolute;inset:18px 18px 0;background:#f4f4f2;border-radius:6px 6px 0 0;padding:18px;filter:grayscale(1) contrast(1.05);box-shadow:0 0 0 1px #bbb}
+.shot .bar{height:10px;width:40%;background:#cfcfcf;border-radius:3px;margin-bottom:16px}
+.shot .fld{height:30px;border:1px solid #e2e2e2;border-radius:4px;margin-bottom:10px;background:#fff}
+.shot .ph::before{content:attr(data-t)}.shot .ph{font:400 11px "Lexend";color:#c8c8c8;padding:6px 10px}
+.shot .go{display:inline-flex;gap:8px;margin-top:6px}
+.shot .go i{width:32px;height:32px;border-radius:50%;background:#555;display:block}
+.photo figcaption{position:absolute;left:0;bottom:0;background:var(--char);color:#fff;font:400 13px "Lexend";padding:6px 12px}
+.long{grid-column:9/13;padding:0 0 0 40px;font-size:15px;line-height:1.75;color:var(--ink-2)}
+.long p{margin:0 0 14px}
+.long p:first-child{margin-top:-6px}
+.pull{grid-column:2/9;text-align:center;padding:56px 40px 64px;font:400 19px/1.65 "Lexend";max-width:66ch;justify-self:center}
+.path{position:absolute;inset:0;pointer-events:none;width:100%;height:100%}
+.path path{fill:none;stroke:#A39888;stroke-width:1.3;stroke-dasharray:3 7;stroke-linecap:round}
+/* row 2 */
+.case{grid-column:1/7;padding:48px 40px 40px;position:relative;overflow:hidden;min-height:600px;display:flex;flex-direction:column;align-items:center}
+.case h2{font:600 clamp(30px,3vw,42px)/1.05 "Josefin Sans";text-transform:uppercase;text-align:center;margin:0 0 34px;letter-spacing:.02em}
+.clip{background:var(--paper);color:var(--ink);width:280px;padding:16px 18px 18px;box-shadow:0 10px 30px rgba(0,0,0,.35);position:relative;z-index:2}
+.clip .mast{display:flex;justify-content:space-between;border-bottom:1px solid var(--ink);font:700 11px "Old Standard TT";letter-spacing:.06em;padding-bottom:4px;text-transform:uppercase}
+.clip h3{font:700 30px/1 "Old Standard TT";margin:10px 0 8px;text-transform:uppercase;letter-spacing:-.01em}
+.clip p{font:400 14px/1.5 "Lexend";margin:0 0 10px;color:var(--ink)}
+.clip .q{font-family:ui-monospace,monospace;font-size:13px;background:#E2D7C2;padding:8px 10px;line-height:1.6}
+.side{position:absolute;background:var(--paper);width:170px;height:200px;padding:14px;box-shadow:0 8px 24px rgba(0,0,0,.35);z-index:1}
+.side b{display:block;font:700 22px/1 "Old Standard TT";color:var(--ink);text-transform:uppercase}
+.side i{display:block;height:6px;background:#C9BCA5;margin:8px 0}
+.s1{left:-30px;top:170px;transform:rotate(-8deg)}
+.s2{right:-50px;top:96px;transform:rotate(9deg)}
+.case .tail{position:relative;z-index:3;font:600 clamp(28px,3vw,40px)/1 "Josefin Sans";text-transform:uppercase;margin:34px 0 0;letter-spacing:.02em}
+.next{position:absolute;right:36px;top:46%;width:56px;height:56px;border-radius:50%;border:1.5px solid #fff;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:22px;z-index:3;background:var(--char)}
+.next:hover{background:#fff;color:var(--char)}
+.solve{grid-column:7/13;display:grid;grid-template-rows:auto 1fr;background:var(--cream)}
+.solve .head{padding:44px 40px 40px}
+.solve h2{font:600 clamp(30px,3vw,42px)/1.05 "Josefin Sans";text-transform:uppercase;margin:0 0 18px;letter-spacing:.02em}
+.solve .head p{margin:0;max-width:44ch}
+.split{display:grid;grid-template-columns:1fr 1fr;align-items:stretch}
+.code{background:var(--char);color:#F1EDE6;font:400 14px/1.7 ui-monospace,SFMono-Regular,monospace;padding:26px 24px;margin:0;white-space:pre-wrap}
+.code .del{color:#FFB3A9}.code .add{color:#B9E3B0}
+.code .k{display:block;font:600 13px "Josefin Sans";letter-spacing:.12em;text-transform:uppercase;color:#C9C4BC;margin-bottom:10px}
+.split .txt{padding:26px 28px;font-size:15px;color:var(--ink-2)}
+.split .txt p{margin:0 0 12px}
+/* index */
+.files{padding:96px 0 80px}
+.files>h2{font:600 clamp(36px,4vw,56px)/1 "Josefin Sans";text-transform:uppercase;margin:0 0 10px}
+.files>p{margin:0 0 36px;color:var(--ink-2);max-width:60ch}
+.files ol{list-style:none;margin:0;padding:0;border-top:2px solid var(--ink);counter-reset:c}
+.files li a{display:grid;grid-template-columns:90px 1.4fr 1fr 130px;gap:24px;align-items:center;padding:22px 0;border-bottom:1px solid var(--line);text-decoration:none}
+.files li a:hover h3{text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:2px}
+.files .no{font:600 30px/1 "Josefin Sans";color:var(--coral)}
+.files h3{font:600 22px/1.2 "Josefin Sans";text-transform:uppercase;margin:0;letter-spacing:.02em}
+.files .who{font-size:15px;color:var(--ink-2)}
+.tag{justify-self:end;font:600 13px "Josefin Sans";letter-spacing:.12em;text-transform:uppercase;border:1.5px solid currentColor;padding:7px 10px 5px}
+.tag.open{background:var(--coral);color:#fff;border-color:var(--coral)}
+footer{border-top:1px solid var(--line);padding:24px 0 44px;display:flex;justify-content:space-between;font-size:14px;color:var(--ink-2)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:900px){
+  .wrap{padding:0 16px}
+  header.top{flex-direction:column;align-items:flex-start;gap:10px}
+  nav ul{gap:18px;flex-wrap:wrap}
+  .grid>*{grid-column:1/-1 !important}
+  .title{padding:26px 22px 30px}
+  .long{padding:24px 0 0}
+  .pull{padding:32px 0}
+  .path{display:none}
+  .case{padding:36px 20px;min-height:0}
+  .clip{width:100%;max-width:300px}
+  .side{display:none}
+  .next{position:static;margin-top:24px}
+  .solve .head{padding:30px 20px}
+  .split{grid-template-columns:minmax(0,1fr)}
+  .files li a{grid-template-columns:56px minmax(0,1fr);row-gap:8px}
+  .files .who,.files .tag{grid-column:2;justify-self:start}
+  footer{flex-direction:column;gap:6px}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="wrap">
+<header class="top">
+  <a class="brand" href="#">The Case Files<small>Web accessibility failures, investigated</small></a>
+  <nav aria-label="Main"><ul><li><a href="#" aria-current="page">Cases</a></li><li><a href="#">Criteria</a></li><li><a href="#">Demos</a></li><li><a href="#">About</a></li></ul></nav>
+</header>
+<main id="main">
+<div class="grid r1">
+  <svg class="path" viewBox="0 0 1224 700" preserveAspectRatio="none" aria-hidden="true"><path d="M1224 560 C 1140 540, 1090 590, 1120 630 S 1010 680, 940 610 S 760 560, 640 660 S 300 700, 0 640"/></svg>
+  <div class="title coral on-coral"><h1>What went missing &amp; why?</h1></div>
+  <figure class="photo" aria-labelledby="ph-c">
+    <div class="shot" aria-hidden="true"><div class="bar"></div><div class="fld"><div class="ph" data-t="Email"></div></div><div class="fld"><div class="ph" data-t="Card number"></div></div><div class="go"><i></i><i></i><i></i></div></div>
+    <figcaption id="ph-c">Exhibit A: a checkout with no labels</figcaption>
+  </figure>
+  <div class="long">
+    <p>A shopper using a screen reader reached this checkout and heard four things: “edit text, edit text, button, button.” The labels lived only in placeholder text, which disappears when you type and which many screen readers don't announce.</p>
+    <p>The three round buttons were icons with no names. One paid, one saved the basket, one cleared it. The shopper had a one in three chance.</p>
+    <p>Each case file follows one failure like this from the first report to the fix. Every one is a real pattern, rebuilt so you can try it yourself.</p>
+  </div>
+  <p class="pull">Fifty-five criteria. Each one is here because somebody, somewhere, couldn't finish what they came to do.</p>
+</div>
+
+<div class="grid">
+  <section class="case dark on-dark" aria-labelledby="c-h">
+    <h2 id="c-h">The case of the silent button</h2>
+    <div class="side s1" aria-hidden="true"><b>Lost at checkout</b><i></i><i></i><i></i><i style="width:60%"></i></div>
+    <article class="clip">
+      <div class="mast"><span>Case 4.1.2</span><span>Name, Role, Value</span></div>
+      <h3>Three buttons, no names</h3>
+      <p>Icon buttons with no accessible name. A screen reader can only say what the markup tells it.</p>
+      <p class="q">» button<br>» button<br>» button</p>
+    </article>
+    <div class="side s2" aria-hidden="true"><b>Report filed</b><i></i><i></i><i style="width:70%"></i></div>
+    <p class="tail">Solved in one line</p>
+    <a class="next" href="#" aria-label="Next case: the focus that vanished">→</a>
+  </section>
+  <section class="solve" aria-labelledby="s-h">
+    <div class="head coral on-coral"><h2 id="s-h">The fix: say what it is</h2><p>Give every control a name a person would use. If there is no visible text, add a label that a screen reader can read.</p></div>
+    <div class="split">
+      <pre class="code"><span class="k">Before → after</span><span class="del">- &lt;button&gt;&lt;svg…/&gt;&lt;/button&gt;</span>
+<span class="add">+ &lt;button aria-label="Pay £24.00"&gt;
++   &lt;svg aria-hidden="true"…/&gt;
++ &lt;/button&gt;</span></pre>
+      <div class="txt"><p>Now the same screen reader says “Pay £24.00, button”.</p><p>Better still, show the words on screen. Then people using voice control can say them too.</p></div>
+    </div>
+  </section>
+</div>
+
+<section class="files" aria-labelledby="f-h">
+  <h2 id="f-h">Open case files</h2>
+  <p>Six of the 55. Each file has the report, a live rebuild of the failure, and the fix.</p>
+  <ol>
+    <li><a href="#"><span class="no">01</span><h3>The focus that vanished</h3><span class="who">2.4.7 · Keyboard users</span><span class="tag">Solved</span></a></li>
+    <li><a href="#"><span class="no">02</span><h3>The field with no name</h3><span class="who">3.3.2 · Screen reader users</span><span class="tag">Solved</span></a></li>
+    <li><a href="#"><span class="no">03</span><h3>Grey on grey</h3><span class="who">1.4.3 · People with low vision</span><span class="tag">Solved</span></a></li>
+    <li><a href="#"><span class="no">04</span><h3>The silent button</h3><span class="who">4.1.2 · Screen reader users</span><span class="tag">Solved</span></a></li>
+    <li><a href="#"><span class="no">05</span><h3>The target you couldn't hit</h3><span class="who">2.5.8 · People with tremors</span><span class="tag open">In progress</span></a></li>
+    <li><a href="#"><span class="no">06</span><h3>The error only shown in red</h3><span class="who">1.4.1 · People with colour blindness</span><span class="tag open">In progress</span></a></li>
+  </ol>
+</section>
+</main>
+<footer><span>The Case Files · WCAG 2.2</span><span>This page passes every criterion it describes.</span></footer>
+</div>
+</body>
+</html>

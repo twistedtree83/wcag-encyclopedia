@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sticker — WCAG Encyclopedia mockup B</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,800;1,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&display=swap">
+<style>
+/* Direction B — "Sticker". Loud studio poster. After the Dovv hero:
+   ultra-heavy condensed caps, rotated gradient stickers, a 3D-ish mascot.
+   Pairing: Big Shoulders Display (Chicago-poster condensed) / Atkinson Hyperlegible Next
+   (built by the Braille Institute for low-vision readers) / Atkinson Hyperlegible Mono. */
+:root{
+  --bg:#EDEDEA; --card:#FFFFFF; --ink:#0B0B0B; --ink-2:#4A4A47; --line:#D6D6D1;
+  --hot:#FF4D8D; --sun:#FFB020; --lime:#B8F34A; --sky:#7CC4FF; --fail:#C0182B; --pass:#137A3A;
+  --display:"Big Shoulders Display", Impact, sans-serif; --text:"Atkinson Hyperlegible Next", system-ui, sans-serif; --mono:"Atkinson Hyperlegible Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#121212;--card:#1C1C1C;--ink:#F4F4F0;--ink-2:#BDBDB6;--line:#333;--fail:#FF7A85;--pass:#6BDB91}}
+:root[data-theme="dark"]{--bg:#121212;--card:#1C1C1C;--ink:#F4F4F0;--ink-2:#BDBDB6;--line:#333;--fail:#FF7A85;--pass:#6BDB91}
+*{box-sizing:border-box}
+html{overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--text);font-size:18px;line-height:1.55;overflow-x:hidden}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px;box-shadow:0 0 0 6px var(--sun);border-radius:6px}
+.skip{position:absolute;left:16px;top:-60px;background:var(--ink);color:var(--bg);padding:10px 14px;z-index:99;border-radius:8px}.skip:focus{top:12px}
+.wrap{max-width:1380px;margin:0 auto;padding:0 24px}
+.mono{font-family:var(--mono)}
+
+header{display:flex;align-items:center;gap:16px;padding:20px 0}
+.logo{font-family:var(--display);font-weight:900;font-size:34px;letter-spacing:.01em;line-height:1;text-decoration:none;color:inherit}
+.pill{display:inline-flex;align-items:center;gap:10px;background:var(--card);border-radius:999px;padding:8px 8px 8px 16px;font-size:15px;box-shadow:0 1px 0 var(--line),0 6px 20px rgba(0,0,0,.06)}
+.pill .dot{width:9px;height:9px;border-radius:50%;background:#1DB954}
+.pill a{color:var(--ink-2);text-decoration:none;padding:6px 10px;border-left:1px solid var(--line)}
+.pill a:hover{color:var(--ink)}
+header .sp{flex:1}
+.btn{font:inherit;font-weight:600;font-size:16px;border-radius:999px;padding:12px 22px;min-height:48px;border:2px solid var(--ink);background:var(--ink);color:var(--bg);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:transform .15s}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn:hover{transform:translateY(-2px)}
+.icon-btn{all:unset;cursor:pointer;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:var(--card)}
+.icon-btn:focus-visible{outline:3px solid var(--ink);box-shadow:0 0 0 6px var(--sun)}
+
+/* ---- hero ---- */
+.hero{position:relative;text-align:center;padding:80px 0 60px;user-select:none}
+h1{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:clamp(64px,13vw,210px);line-height:.82;letter-spacing:-.01em;margin:0}
+h1 .row{display:block}
+.hero p{max-width:34ch;margin:36px auto 28px;font-size:21px;color:var(--ink-2)}
+.hero .ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.sticker{position:absolute;z-index:3;cursor:grab;touch-action:none;font-family:var(--text);font-weight:800;filter:drop-shadow(0 10px 18px rgba(0,0,0,.18));transition:transform .2s}
+.sticker:active{cursor:grabbing}
+.sticker.tape{padding:14px 26px;border-radius:999px;font-size:24px;color:#2A0012;background:linear-gradient(100deg,#FF7AB0,#FFB3D1 55%,#E7C6FF);border:5px solid #fff}
+.sticker.tape.orange{color:#2B1300;background:linear-gradient(100deg,#FFB020,#FFD27A)}
+.sticker.star{width:150px;height:150px;display:grid;place-items:center;text-align:center;color:#0B1A00;line-height:.9}
+.sticker.star svg{position:absolute;inset:0}
+.sticker.star span{position:relative;font-family:var(--display);font-size:46px}
+.sticker.star small{display:block;font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.04em}
+
+/* mascot / rive slot */
+.mascot{position:absolute;right:6%;top:40px;width:150px;height:150px;z-index:2}
+.mascot .face{width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 35% 30%,#FFF6B8 0 12%,#FFD43B 40%,#F59F00 85%);border:6px solid #fff;box-shadow:0 18px 40px rgba(0,0,0,.18),inset -10px -14px 24px rgba(180,90,0,.35);position:relative}
+.eye{position:absolute;top:40%;width:22px;height:30px;background:#1B1B1B;border-radius:50%}
+.eye.l{left:30%}.eye.r{left:58%}
+.eye i{position:absolute;width:7px;height:7px;background:#fff;border-radius:50%;top:6px;left:5px}
+.focus-ring{position:absolute;inset:-14px;border:4px dashed var(--ink);border-radius:50%;animation:spin 14s linear infinite;opacity:.0;transition:opacity .2s}
+.mascot:hover .focus-ring,.mascot.focused .focus-ring{opacity:1}
+.slot-tag{position:absolute;bottom:-34px;left:50%;transform:translateX(-50%);white-space:nowrap;font-family:var(--mono);font-size:12px;background:var(--ink);color:var(--bg);padding:3px 8px;border-radius:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ---- marquee ---- */
+.marquee{background:var(--ink);color:var(--bg);overflow:hidden;position:relative;transform:rotate(-1.5deg);margin:40px -40px;padding:14px 0}
+.track{display:flex;gap:40px;width:max-content;animation:slide 40s linear infinite;font-family:var(--display);font-weight:800;font-size:44px;text-transform:uppercase;line-height:1}
+.track span{display:inline-flex;gap:14px;align-items:center}
+.track b{font-family:var(--mono);font-weight:600;font-size:16px;background:var(--lime);color:#0B1A00;padding:4px 10px;border-radius:999px}
+.marquee.paused .track{animation-play-state:paused}
+.marquee button{position:absolute;right:52px;top:50%;transform:translateY(-50%);z-index:2;font:600 13px var(--mono);border-radius:999px;border:0;background:var(--bg);color:var(--ink);padding:8px 14px;min-height:36px;cursor:pointer}
+@keyframes slide{to{transform:translateX(-50%)}}
+
+/* ---- break / fix ---- */
+section{padding:110px 0}
+.sec-head{display:flex;flex-wrap:wrap;gap:24px;align-items:end;justify-content:space-between;margin-bottom:40px}
+h2{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:clamp(48px,7vw,110px);line-height:.85;margin:0}
+h2 .out{color:transparent;-webkit-text-stroke:2px var(--ink)}
+.switch{display:inline-flex;align-items:center;gap:16px;font-weight:800;font-size:20px;cursor:pointer;background:var(--card);border-radius:999px;padding:8px 20px 8px 8px;border:0;color:var(--ink);font-family:var(--text);min-height:56px}
+.switch .knob{width:92px;height:44px;border-radius:999px;background:var(--fail);position:relative;transition:background .25s}
+.switch .knob::after{content:"✕";position:absolute;left:4px;top:4px;width:36px;height:36px;border-radius:50%;background:#fff;color:var(--fail);display:grid;place-items:center;font-size:18px;transition:left .25s cubic-bezier(.5,1.6,.4,1)}
+.switch[aria-checked="true"] .knob{background:var(--pass)}
+.switch[aria-checked="true"] .knob::after{content:"✓";left:52px;color:var(--pass)}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.tile{background:var(--card);border-radius:28px;padding:22px;display:flex;flex-direction:column;gap:16px;min-height:340px;position:relative;transition:transform .2s}
+.tile:nth-child(odd){transform:rotate(-1deg)}.tile:nth-child(even){transform:rotate(1deg)}
+.tile:hover{transform:rotate(0) translateY(-6px)}
+.tile .top{display:flex;justify-content:space-between;align-items:center}
+.num{font-family:var(--mono);font-weight:600;font-size:15px}
+.lvl{font-family:var(--mono);font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;border:2px solid var(--ink)}
+.lvl.aa{background:var(--ink);color:var(--bg)}
+.tile h3{font-family:var(--display);font-weight:800;font-size:34px;line-height:.95;text-transform:uppercase;margin:0}
+.stage{flex:1;border-radius:18px;background:#F3F3F0;color:#111;padding:18px;display:flex;flex-direction:column;justify-content:center;gap:10px;font-size:16px}
+.verdict{font-weight:800;display:inline-flex;align-items:center;gap:8px}
+.verdict.fail{color:var(--fail)}.verdict.pass{color:var(--pass)}
+.verdict .g{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:13px}
+.verdict.fail .g{background:var(--fail);border-radius:4px}.verdict.pass .g{background:var(--pass)}
+/* example internals */
+.ex-link{color:#1A5FD1}
+.fixed .ex-link{text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:2px}
+.ex-field{display:block;width:100%;border:2px solid #9A9A95;border-radius:10px;padding:10px 12px;font:inherit;background:#fff;color:#111}
+.ex-field.f{outline:none}
+.fixed .ex-field.f{outline:3px solid #1A5FD1;outline-offset:2px}
+.ex-err{font-size:14px}
+.broken .ex-field.e{border-color:#C0182B}
+.broken .ex-err{display:none}
+.fixed .ex-err{display:flex;gap:6px;color:#9B0E1F;font-weight:600}
+.ex-icons{display:flex;gap:4px}
+.ex-icons span{width:14px;height:14px;border-radius:3px;background:#222;display:block}
+.fixed .ex-icons{gap:10px}.fixed .ex-icons span{width:28px;height:28px;border-radius:8px}
+.cap{font-size:15px;color:var(--ink-2);margin:0}
+
+/* ---- browse ---- */
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{font:600 16px var(--text);border-radius:999px;padding:10px 18px;min-height:44px;border:2px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-top:28px}
+.c{background:var(--card);border-radius:22px;padding:20px;display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit;border:2px solid transparent;transition:border-color .15s}
+.c:hover{border-color:var(--ink)}
+.c h3{margin:0;font-size:20px;font-weight:800;line-height:1.2}
+.c p{margin:0;color:var(--ink-2);font-size:15px}
+
+/* ---- spline slot ---- */
+.spline{border-radius:36px;background:var(--ink);color:var(--bg);display:grid;grid-template-columns:1fr 1fr;overflow:hidden;min-height:480px}
+.spline .copy{padding:48px;display:flex;flex-direction:column;justify-content:center;gap:20px}
+.spline h2{color:var(--bg);font-size:clamp(44px,5vw,84px)}
+.spline .scene{position:relative;display:grid;place-items:center;background:radial-gradient(circle at 50% 60%,#333 0,#0B0B0B 70%)}
+.cube{width:160px;height:160px;position:relative;transform-style:preserve-3d;animation:rot 12s linear infinite}
+.cube div{position:absolute;inset:0;border-radius:24px;display:grid;place-items:center;font-family:var(--display);font-weight:900;font-size:56px;color:#111}
+.cube div:nth-child(1){background:var(--hot);transform:translateZ(80px)}
+.cube div:nth-child(2){background:var(--sun);transform:rotateY(90deg) translateZ(80px)}
+.cube div:nth-child(3){background:var(--lime);transform:rotateY(180deg) translateZ(80px)}
+.cube div:nth-child(4){background:var(--sky);transform:rotateY(-90deg) translateZ(80px)}
+.scene{perspective:800px}
+@keyframes rot{to{transform:rotateX(-18deg) rotateY(360deg)}}
+.scene .slot-tag{bottom:20px;background:var(--bg);color:var(--ink)}
+footer{padding:40px 0 70px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;color:var(--ink-2);font-size:15px}
+
+@media (max-width:980px){.tiles{grid-template-columns:1fr 1fr}.spline{grid-template-columns:1fr}.spline .scene{min-height:320px}.pill{display:none}.mascot{width:96px;height:96px;right:4%;top:6px}.sticker.star{width:110px;height:110px}.sticker.star span{font-size:34px}.sticker.tape{font-size:17px;padding:10px 18px}}
+@media (max-width:600px){.tiles{grid-template-columns:1fr}.wrap{padding:0 16px}.spline .copy{padding:28px}}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="wrap">
+<header>
+  <a class="logo" href="#">WCAG/SEEN</a>
+  <span class="pill"><span class="dot" aria-hidden="true"></span>WCAG 2.2 · all 55 A + AA criteria<a href="#browse">Browse <span aria-hidden="true">→</span></a></span>
+  <span class="sp"></span>
+  <button class="icon-btn" id="theme" aria-label="Switch to dark theme"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9A7 7 0 0 1 12 3z" fill="currentColor"/></svg></button>
+  <a class="btn" href="#browse">Start reading</a>
+</header>
+
+<main id="main">
+<div class="hero" id="hero">
+  <div class="sticker tape" style="left:4%;top:120px;transform:rotate(-12deg)" aria-hidden="true">Shown, not described</div>
+  <div class="sticker star" style="left:4%;top:400px;transform:rotate(8deg)" aria-hidden="true">
+    <svg viewBox="0 0 100 100"><path fill="#B8F34A" stroke="#fff" stroke-width="3" d="M50 2l8 14 15-7 2 16 16 2-7 15 14 8-14 8 7 15-16 2-2 16-15-7-8 14-8-14-15 7-2-16-16-2 7-15L2 50l14-8-7-15 16-2 2-16 15 7z"/></svg>
+    <span>55<small>CRITERIA</small></span>
+  </div>
+  <div class="sticker tape orange" style="right:3%;top:440px;transform:rotate(7deg)" aria-hidden="true">Fail → Pass</div>
+  <div class="mascot" id="mascot" aria-hidden="true">
+    <div class="focus-ring"></div>
+    <div class="face"><span class="eye l"><i></i></span><span class="eye r"><i></i></span></div>
+    <span class="slot-tag">Rive · lookout.riv</span>
+  </div>
+  <h1><span class="row">See the rules</span><span class="row">break.</span></h1>
+  <p>Every WCAG 2.2 success criterion, drawn as the broken interface and the fixed one, side by side. Drag the stickers. Flip the switch.</p>
+  <div class="ctas"><a class="btn" href="#flip">Break something</a><a class="btn ghost" href="#browse">Browse all 55</a></div>
+</div>
+</main>
+</div>
+
+<div class="marquee" id="mq">
+  <div class="track" aria-hidden="true" id="track"></div>
+  <button id="mqb" aria-pressed="false">Pause</button>
+</div>
+
+<div class="wrap">
+<section id="flip">
+  <div class="sec-head">
+    <h2>Break it.<br><span class="out">Fix it.</span></h2>
+    <button class="switch" id="sw" role="switch" aria-checked="false"><span class="knob" aria-hidden="true"></span><span id="swl">Showing failures</span></button>
+  </div>
+  <div class="tiles broken" id="tiles">
+    <article class="tile">
+      <div class="top"><span class="num">1.4.1</span><span class="lvl">A</span></div>
+      <h3>Use of colour</h3>
+      <div class="stage"><span>Read the <span class="ex-link">returns policy</span> before you send anything back.</span></div>
+      <span class="verdict"></span><p class="cap" data-f="Blue is the only signal that this is a link." data-p="An underline was added."></p>
+    </article>
+    <article class="tile">
+      <div class="top"><span class="num">2.4.7</span><span class="lvl aa">AA</span></div>
+      <h3>Focus visible</h3>
+      <div class="stage"><input class="ex-field" value="Jo Bloggs" aria-label="Name (example)" tabindex="-1"><input class="ex-field f" value="jo@example.com" aria-label="Email (example, focused)" tabindex="-1"></div>
+      <span class="verdict"></span><p class="cap" data-f="The focused field looks like every other field." data-p="A 3px ring marks the focused field."></p>
+    </article>
+    <article class="tile">
+      <div class="top"><span class="num">2.5.8</span><span class="lvl aa">AA</span></div>
+      <h3>Target size</h3>
+      <div class="stage"><div class="ex-icons"><span></span><span></span><span></span><span></span></div></div>
+      <span class="verdict"></span><p class="cap" data-f="14px targets, touching each other." data-p="Each target is now at least 24 by 24px."></p>
+    </article>
+    <article class="tile">
+      <div class="top"><span class="num">3.3.1</span><span class="lvl">A</span></div>
+      <h3>Error identification</h3>
+      <div class="stage"><input class="ex-field e" value="jo@example" aria-label="Email (example)" tabindex="-1"><span class="ex-err">⚠ Email needs a domain, like .com</span></div>
+      <span class="verdict"></span><p class="cap" data-f="A red border, and nothing that says why." data-p="The error is named in text by the field."></p>
+    </article>
+  </div>
+</section>
+
+<section id="browse">
+  <div class="sec-head"><h2>All 55.<br><span class="out">No homework.</span></h2>
+    <div class="chips" role="group" aria-label="Filter by level"><button class="chip" aria-pressed="true" data-l="all">Everything</button><button class="chip" aria-pressed="false" data-l="A">Level A</button><button class="chip" aria-pressed="false" data-l="AA">Level AA</button></div>
+  </div>
+  <p id="count" class="mono" aria-live="polite" style="margin:0;color:var(--ink-2)"></p>
+  <div class="grid" id="grid"></div>
+</section>
+
+<section>
+  <div class="spline">
+    <div class="copy">
+      <h2>Four principles. One object.</h2>
+      <p style="margin:0;color:#CFCFC8;max-width:38ch">Spin the block to change principle. Each face carries its own colour and its own number, so you can still tell them apart in greyscale.</p>
+      <div><a class="btn ghost" href="#browse" style="color:var(--bg);border-color:var(--bg)">Pick a principle</a></div>
+    </div>
+    <div class="scene" role="img" aria-label="Placeholder for a Spline 3D block with one face per principle">
+      <div class="cube"><div>1</div><div>2</div><div>3</div><div>4</div></div>
+      <span class="slot-tag">Spline · principle-block.splinecode</span>
+    </div>
+  </div>
+</section>
+<footer><span>WCAG/SEEN — mockup B “Sticker”</span><span class="mono">Big Shoulders Display + Atkinson Hyperlegible Next/Mono</span></footer>
+</div>
+
+<script>
+const DATA=[["1.1.1","Non-text Content","A","Images and icons have a text alternative."],["1.3.1","Info and Relationships","A","Visible structure is in the markup too."],["1.4.1","Use of Color","A","Colour is never the only signal."],["1.4.3","Contrast (Minimum)","AA","Body text reaches 4.5:1."],["1.4.10","Reflow","AA","Works at 320px with no sideways scroll."],["1.4.11","Non-text Contrast","AA","Borders and icons reach 3:1."],["2.1.1","Keyboard","A","Anything a mouse can do, a keyboard can."],["2.2.2","Pause, Stop, Hide","A","Moving content can be paused. Like that marquee."],["2.4.7","Focus Visible","AA","You can always see keyboard focus."],["2.5.8","Target Size (Minimum)","AA","Targets are at least 24 by 24px."],["3.3.1","Error Identification","A","Errors are named in words."],["4.1.2","Name, Role, Value","A","Controls say what they are."]];
+const root=document.documentElement,tb=document.getElementById('theme');
+tb.onclick=()=>{const dark=(root.dataset.theme||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'))==='dark';root.dataset.theme=dark?'light':'dark';tb.setAttribute('aria-label',dark?'Switch to dark theme':'Switch to light theme')};
+
+/* draggable stickers */
+document.querySelectorAll('.sticker').forEach(s=>{let sx,sy,ox,oy,rot=(s.style.transform.match(/-?\d+deg/)||['0deg'])[0];
+ s.addEventListener('pointerdown',e=>{s.setPointerCapture(e.pointerId);sx=e.clientX;sy=e.clientY;ox=s.offsetLeft;oy=s.offsetTop;s.style.right='auto';s.style.left=ox+'px';s.style.transform=`rotate(${rot}) scale(1.08)`});
+ s.addEventListener('pointermove',e=>{if(!s.hasPointerCapture(e.pointerId))return;s.style.left=ox+e.clientX-sx+'px';s.style.top=oy+e.clientY-sy+'px'});
+ s.addEventListener('pointerup',()=>{s.style.transform=`rotate(${rot})`})});
+
+/* mascot eyes track the pointer (stand-in for a Rive state machine: idle / look / focused) */
+const m=document.getElementById('mascot');
+addEventListener('pointermove',e=>{const r=m.getBoundingClientRect();const dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2);const d=Math.min(1,Math.hypot(dx,dy)/400),a=Math.atan2(dy,dx);m.querySelectorAll('.eye i').forEach(i=>i.style.transform=`translate(${Math.cos(a)*5*d}px,${Math.sin(a)*9*d}px)`)});
+addEventListener('focusin',()=>m.classList.add('focused'));
+
+/* marquee with a pause control (2.2.2) */
+const tr=document.getElementById('track');const items=DATA.map(d=>`<span><b>${d[0]}</b>${d[1]}</span>`).join('');tr.innerHTML=items+items;
+const mq=document.getElementById('mq'),mqb=document.getElementById('mqb');
+mqb.onclick=()=>{const p=mq.classList.toggle('paused');mqb.textContent=p?'Play':'Pause';mqb.setAttribute('aria-pressed',p)};
+
+/* break / fix switch */
+const sw=document.getElementById('sw'),tiles=document.getElementById('tiles');
+function flip(on){tiles.className='tiles '+(on?'fixed':'broken');sw.setAttribute('aria-checked',on);document.getElementById('swl').textContent=on?'Showing fixes':'Showing failures';
+ tiles.querySelectorAll('.tile').forEach(t=>{const v=t.querySelector('.verdict');v.className='verdict '+(on?'pass':'fail');v.innerHTML=on?'<span class="g" aria-hidden="true">✓</span>Pass':'<span class="g" aria-hidden="true">✕</span>Fail';const c=t.querySelector('.cap');c.textContent=on?c.dataset.p:c.dataset.f})}
+sw.onclick=()=>flip(sw.getAttribute('aria-checked')!=='true');flip(false);
+
+/* browse */
+let lvl='all';const grid=document.getElementById('grid');
+function render(){const out=DATA.filter(d=>lvl==='all'||d[2]===lvl);grid.innerHTML=out.map(d=>`<a class="c" href="#c-${d[0]}"><div class="top" style="display:flex;justify-content:space-between"><span class="num">${d[0]}</span><span class="lvl ${d[2]==='AA'?'aa':''}">${d[2]}</span></div><h3>${d[1]}</h3><p>${d[3]}</p></a>`).join('');document.getElementById('count').textContent=`Showing ${out.length} of ${DATA.length} (sample)`}
+document.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{lvl=b.dataset.l;document.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',x===b));render()});render();
+</script>
+</body>
+</html>

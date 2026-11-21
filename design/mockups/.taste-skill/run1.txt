@@ -1,0 +1,579 @@
+consistency  /Users/kane/Documents/1_Personal/5_programming projects/wcag encylopedia/design/mockups/c-bureau.html
+--quick: not checked: scroll-linked (stepping), scroll-reveal (the reveal walk; IntersectionObserver reveals are read), hover-spill, hidden-visual, loop-pause, forms, reduced-motion, the dead-IntersectionObserver walk (hidden content is read with scripts off and under reduced motion), hover-move. Still told: IntersectionObserver reveals (scroll-reveal), held sections (pinned) and CSS scroll timelines (scroll-linked); faults inside held or [data-big-scene] sections are WARNs
+
+1440x900  18 screens  54 FAIL  41 WARN
+  FAIL flush           div#top > div.tech > span.tick.tl
+       its first line sits -3px under the top edge of div.tech, where the ground changes  [1440-22-flush.jpg]
+       fix: give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)
+  FAIL flush           div#top > div.tech > span.tick.bl
+       its last line sits -3px above the lower edge of div.tech, where the ground changes to section#read  [1440-23-flush.jpg]
+       fix: give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)
+  FAIL placeholder     article.card > div.pair > figure.frame.fail > figcaption  "7The field and checkbox edges vanish; on"
+       "placeholder" is a placeholder left on the page (and 1 more like it: "The field and checkbox e")  [1440-30-placeholder.jpg]
+       fix: write the real words: take the name or figure from the brief, or remove the claim; no bracketed placeholder ships
+  FAIL placeholder     div.pair > figure.frame.fail > div.screen > span.ex-field  "jo@example.com"
+       a stand-in contact printed on the page ("jo@example.com"): no visitor can use it (and 2 more like it: "jo@example.com", "jo@example.com")  [1440-31-placeholder.jpg]
+       fix: print the real address and number, or a form or a button that names the action: never an example.com address or a number of zeros
+  FAIL overlap-text    a#today-a  "Open the card"
+       lies over the text "Offer more than one route to each page —" (p#today-p)  [1440-01-overlap-text.jpg]
+       fix: move the box off the text (or the text off the box)
+  FAIL cut-text        div.demo-wrap > div > div.transport > label.label  "PLAYHEAD"
+       runs past the edge of its box section#demos > div.demo-wrap > div > div.transport  [1440-44-cut-text.jpg]
+       fix: give the text room: no overflow clipping a line, no line past its box
+  FAIL cut-text        section#index > div.toolbar > label.search > span  "Search criteria"
+       runs past the edge of its box section#index > div.toolbar > label.search  [1440-50-cut-text.jpg]
+       fix: give the text room: no overflow clipping a line, no line past its box
+  FAIL no-visual       div#top > section.hero  "Shows how it jo@example.com ✓ pass break"
+       pictures, effects and mocks cover 11% of this section; a feature section needs a visual (about 25% or more)  [1440-02-no-visual.jpg]
+       fix: give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits
+  FAIL no-visual       section#read  "Every card has the same eight parts."
+       no picture, effect or mock in this section; a feature section needs a visual  [1440-32-no-visual.jpg]
+       fix: give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits
+  FAIL no-visual       section#specimens  "Six criteria, broken and fixed."
+       no picture, effect or mock in this section; a feature section needs a visual  [1440-37-no-visual.jpg]
+       fix: give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits
+  FAIL no-visual       section#demos  "Some failures only show up over time."
+       no picture, effect or mock in this section; a feature section needs a visual  [1440-45-no-visual.jpg]
+       fix: give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits
+  FAIL no-visual       section#levels  "A is the floor. AA is the target."
+       no picture, effect or mock in this section; a feature section needs a visual  [1440-48-no-visual.jpg]
+       fix: give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits
+  FAIL text-only       section#principles  "Four questions every interface has to an"
+       the section is only text: no picture, icon, mock or effect in it (2 sections like it at this width)  [1440-33-text-only.jpg]
+       fix: give the section a visual: a photograph that fits, the real icons, or a UI fragment on a ground
+  FAIL text-only       section#index  "All 55, by number or by name."
+       the section is only text: no picture, icon, mock or effect in it (2 sections like it at this width)  [1440-53-text-only.jpg]
+       fix: give the section a visual: a photograph that fits, the real icons, or a UI fragment on a ground
+  FAIL card-visual     div#lvls  "31 A Level A The floor. Fail one of thes"
+       3 cards hold only text: no picture, icon, UI fragment or effect in any of them  [1440-49-card-visual.jpg]
+       fix: give the cards a visual: an inset panel with a UI fragment, a photograph or real icons
+  FAIL nesting         article.card:nth-of-type(3) > div.pair > figure.frame.fail > div.screen  "Your order ships in two days. See the de"
+       3 boxes deep: article.card:nth-of-type(3) > figure.frame.fail > div.screen (text in a box in a box)  [1440-42-nesting.jpg]
+       fix: two levels at most: a card holds a lit picture (no lines, dots or plain box behind the UI), the picture holds the UI
+  FAIL button-styles   (one screen)
+       3 button styles on one screen: soft, fill #1b1712 ("Index"); soft, fill #1b1712, outline #1b1712 ("Find a criterion"); pill, fill #111111 ("Tweaks \"); the odd one out: "Tweaks \"  [1440-03-button-styles.jpg]
+       fix: one primary and one secondary button: one shape, one height per size, one label size
+  FAIL button-styles   (the page)
+       3 button styles on the page: soft, fill #1b1712 x5 ("Index"); soft, fill #1b1712, outline #1b1712 x2 ("Find a criterion"); pill, fill #111111 x1 ("Tweaks \")  [1440-04-button-styles.jpg]
+       fix: one primary and one secondary button: one shape, one height per size, one label size
+  FAIL cta             div#top > section.hero
+       the hero has no button (the nav's does not count)  [1440-05-cta.jpg]
+       fix: add the action: a button in the hero, one on every priced item, one in the closing section
+  FAIL cta             div#player > div.stage.with > div.form  "Full name Email Card number Expiry Pay £"
+       1 priced card with no action in or under it  [1440-46-cta.jpg]
+       fix: add the action: a button in the hero, one on every priced item, one in the closing section
+  FAIL copy-headline   h1#h1  "Shows how it jo@example.com ✕ fail break"
+       "Shows how it jo@example.com ✕ fail breaks, then how it’s fix" does not name what is sold (a visual reference to wcag 2 2, visual, reference, wcag, from flags); only the line under it does  [1440-06-copy-headline.jpg]
+       fix: put the category noun in the h1 (and who it is for, or where), in 2 to 8 words
+  FAIL copy-headings   h2#read-h  "Every card has the same eight parts."
+       "Every card has the same eight parts." names no product, part, place or section (15 headings like it; at most one brand line per page) (and 14 more like it: "A is the floor. AA is th", "Text Alternatives", "Time-based Media", "Adaptable", ...)  [1440-24-copy-headings.jpg]
+       fix: name the thing in every heading: the product, a part, the place or a section noun
+  FAIL heading-scale   button#tab-0 > h3  "Perceivable"
+       the text under this h3 reads larger: its letters are 16.3px tall (x-height, 32px) against the heading's 14.2px (x-height, 28px) (and 1 more like it: "Operable")  [1440-34-heading-scale.jpg]
+       fix: set the heading larger than the text under it, or that text smaller: the heading reads first
+  FAIL heading-scale   div#top > div.tech > div.stat:nth-of-type(1) > span.num  "55"
+       the figure "55" is set at 80px, larger than the section headings (h2 72px); 3 more like it  [1440-25-heading-scale.jpg]
+       fix: set figures at the h2 size or under: a stat reads as data, not as the heading
+  FAIL stagger         h1#h1  "Shows how it jo@example.com ✓ pass break"
+       the 6 lines of this heading start at 124, 386, 143, 145, 266, 266px: a headline broken across columns, read in a zigzag  [1440-07-stagger.jpg]
+       fix: start every row of the list on one left edge
+  FAIL stagger         ul#audit-list  "✓ Ink on paper needs 4.5:1 16.81:1 , pas"
+       6 rows start at 2 different left offsets (+0, +0, +0, +0, +10743, +10743px)  [1440-57-stagger.jpg]
+       fix: start every row of the list on one left edge
+  FAIL off-grid        section#specimens > div.sec-head > p  "A sample from the full set. Every ratio "
+       left edge at 744px, 14px off a common edge of its section at 730px (3 elements)  [1440-35-off-grid.jpg]
+       fix: move it onto the page margin, or the column edge its section uses
+  FAIL off-grid        ul#audit-list > li:nth-of-type(1) > span.num  "16.81:1 , passes"
+       left edge at 1253px, 9px off a common edge of its section at 1262px (3 elements, like span.num); 1 more in this section off the grid too (span.num at 1280px)  [1440-54-off-grid.jpg]
+       fix: move it onto the page margin, or the column edge its section uses
+  FAIL text-contrast   div#c143  "Your order has shipped"
+       a caption, label or muted line in #b8b4ae on #ffffff reads 2.06:1 (needs 4.5:1); 2 like it, like "Track it from your acc"  [1440-38-text-contrast.jpg]
+       fix: body text in the ink at 7:1 or more; grey (4.5:1 or more) only for captions and labels
+  FAIL section-tile    div#top > div.tech  "55 success criteria, every one at Level "
+       the section is 185px tall (0.21 screens at 1440x900), shorter than the screen: its tile (the screen from its top) shows 184px of it and 716px of the next section, its heading "Every card has the same eight " on screen  [1440-59-section-tile.jpg]
+       fix: set every section after the hero to one screen or two (height: calc(var(--h,1) * 100vh)) and fit its content above --padb
+  FAIL section-tile    section#read  "Every card has the same eight parts."
+       the section is 1187px tall (1.32 screens at 1440x900), not one screen or two: the screen one screen on from its top (scroll 2024px) shows 287px of it and 613px of the next section, its heading "Four questions every interface" on screen  [1440-60-section-tile.jpg]
+       fix: set every section after the hero to one screen or two (height: calc(var(--h,1) * 100vh)) and fit its content above --padb
+  FAIL section-tile    section#principles  "Four questions every interface has to an"
+       the section is 1344px tall (1.49 screens at 1440x900), not one screen or two: the screen one screen on from its top (scroll 3211px) shows 445px of it and 455px of the next section, its heading "Six criteria, broken and fixed" on screen  [1440-61-section-tile.jpg]
+       fix: set every section after the hero to one screen or two (height: calc(var(--h,1) * 100vh)) and fit its content above --padb
+  FAIL section-tile    section#specimens  "Six criteria, broken and fixed."
+       the section is 2450px tall (2.72 screens at 1440x900), not one screen or two: the screen 2 screens on from its top (scroll 5456px) shows 649px of it and 251px of the next section, its heading "Some failures only show up ove" on screen  [1440-62-section-tile.jpg]
+       fix: set every section after the hero to one screen or two (height: calc(var(--h,1) * 100vh)) and fit its content above --padb
+  FAIL section-tile    section#demos  "Some failures only show up over time."
+       the section is 1537px tall (1.71 screens at 1440x900), not one screen or two: the screen one screen on from its top (scroll 7005px) shows 637px of it and 263px of the next section, its heading "A is the floor. AA is the targ" on screen  [1440-63-section-tile.jpg]
+       fix: set every section after the hero to one screen or two (height: calc(var(--h,1) * 100vh)) and fit its content above --padb
+  FAIL section-tile    section#index  "All 55, by number or by name."
+       the section is 4109px tall (4.57 screens at 1440x900), not one screen or two: the screen 4 screens on from its top (scroll 12010px) shows 509px of it and 391px of the next section, its heading "A reference that passes its ow" on screen  [1440-65-section-tile.jpg]
+       fix: set every section after the hero to one screen or two (height: calc(var(--h,1) * 100vh)) and fit its content above --padb
+  FAIL heading-order   h3#today-h  "Multiple Ways"
+       "Multiple Ways" is an h3 after an h1: a level is skipped  [1440-08-heading-order.jpg]
+       fix: step down one level at a time (h1, h2, h3): change the tag, not the look; a footer's column heads are h3
+  FAIL focus-visible   input#q
+       Tab stop 11, input "": it shows no change when focused  [1440-66-focus-visible.jpg]
+       fix: keep the kit's ring (system.css :focus-visible, 2px in --action, there at once); a control that hides itself shows on focus
+  FAIL focus-visible   ol#anat-list > li:nth-of-type(1) > button  "Number The criterion’s dotted triple. It"
+       Tab stop 15, button "Number The criterion’s dotted triple. It is also i": the focus lands on something you cannot see
+       fix: keep the kit's ring (system.css :focus-visible, 2px in --action, there at once); a control that hides itself shows on focus
+  FAIL focus-visible   ol#anat-list > li:nth-of-type(2) > button  "Name The short name used in the spec."
+       Tab stop 16, button "Name The short name used in the spec.": the focus lands on something you cannot see
+       fix: keep the kit's ring (system.css :focus-visible, 2px in --action, there at once); a control that hides itself shows on focus
+  FAIL focus-visible   button#tab-0  "01 Perceivable Can people take it in? · "
+       Tab stop 23, button "01 Perceivable Can people take it in? · 20 criteri": the focus lands on something you cannot see
+       fix: keep the kit's ring (system.css :focus-visible, 2px in --action, there at once); a control that hides itself shows on focus
+  WARN cut-text        p#today-p  "Offer more than one route to each page —"
+       clamped to 3 lines  [1440-09-cut-text.jpg]
+       fix: give the text room: no overflow clipping a line, no line past its box
+  WARN card-visual     div#panel > div.gl  "GUIDELINE 1.1 1 Text Alternatives 1.1.1 "
+       4 cards hold only text: no picture, icon, UI fragment or effect in any of them  [1440-36-card-visual.jpg]
+       fix: give the cards a visual: an inset panel with a UI fragment, a photograph or real icons
+  WARN cta             section#specimens  "Six criteria, broken and fixed."
+       a section over 1.5 screens long with no link or button in it  [1440-39-cta.jpg]
+       fix: add the action: a button in the hero, one on every priced item, one in the closing section
+  WARN copy-headline   h1#h1  "Shows how it jo@example.com ✕ fail break"
+       the h1 has 13 words (2 to 8 read at a glance)  [1440-10-copy-headline.jpg]
+       fix: put the category noun in the h1 (and who it is for, or where), in 2 to 8 words
+  WARN copy-headings   div#cards > article.card:nth-of-type(1) > div.card-h > h3  "Contrast (Minimum)"
+       the card title "Contrast (Minimum)" names no product, part, place or section (3 card titles like it) (and 2 more like it: "Use of Color", "Target Size (Minimum)")  [1440-40-copy-headings.jpg]
+       fix: name the thing in every heading: the product, a part, the place or a section noun
+  WARN copy-buttons    nav.top > ul.links > li:nth-of-type(5) > a  "Index"
+       "Index" does not start with a verb (book, buy, try, start, get, see...) (and 1 more like it: "Tweaks \")  [1440-11-copy-buttons.jpg]
+       fix: label buttons with a verb and what the visitor gets ("Book a room", "Start free trial")
+  WARN copy-actions    nav.top > ul.links > li:nth-of-type(5) > a  "Index"
+       3 labels for one target /c-bureau.html#index: "Index", "Find a criterion", "Read the standard"  [1440-12-copy-actions.jpg]
+       fix: few actions, one wording: at most 2 in the hero, the main action word for word in nav, hero and close
+  WARN copy-actions    (the page)
+       the main action "Find a criterion" does not read word for word the same in the closing section
+       fix: few actions, one wording: at most 2 in the hero, the main action word for word in nav, hero and close
+  WARN heading-scale   div#top > div.tech > div.stat:nth-of-type(1) > span.num  "55"
+       figures in 3 sizes, 28, 72, 80px ("11.4.11" at 28px, "55" at 80px)  [1440-26-heading-scale.jpg]
+       fix: set the page's figures (stats, measures, prices) in one or two sizes
+  WARN off-grid        section#demos > div.sec-head > div.eyebrow.label > span.num  "04"
+       two common left edges of one section 16px apart: 124px (3 elements, like this one) and 140px (24)  [1440-43-off-grid.jpg]
+       fix: move it onto the page margin, or the column edge its section uses
+  WARN off-grid        div:nth-of-type(2) > details.row:nth-of-type(4) > summary > span.badge  "AA"
+       two common left edges of one section 21px apart: 1215px (24 elements, like this one) and 1236px (31)  [1440-51-off-grid.jpg]
+       fix: move it onto the page margin, or the column edge its section uses
+  WARN off-grid        section#audit > div.spl > div:nth-of-type(2) > div.eyebrow.label  "07 SELF-AUDIT"
+       left edge at 786px, 2px off a common edge of its section at 784px (6 elements, like span:nth-of-type(2))  [1440-55-off-grid.jpg]
+       fix: move it onto the page margin, or the column edge its section uses
+  WARN off-grid        h2#au-h  "A reference that passes its own test."
+       the section's heading starts at 744px, 298px off the page margin (446px), and no other section starts there  [1440-56-off-grid.jpg]
+       fix: move it onto the page margin, or the column edge its section uses
+  WARN col-edge        section#demos > div.demo-wrap > div  "2.4.7 · FOCUS STYLES REMOVED ✕ Fail Full"
+       the second column starts at 3 places: 446px (section#demos, section#index), 744px (section#audit), 839px (section#read)  [1440-47-col-edge.jpg]
+       fix: start the second column of every split on the same one or two grid columns
+  WARN section-gaps    div#top > section.hero / div#top > div.tech
+       93px between these sections, -53% against the median 196px  [1440-27-section-gaps.jpg]
+       fix: use one gap between sections (all within 25% of each other)
+  WARN section-gaps    div#top > div.tech / section#read
+       96px between these sections, -51% against the median 196px  [1440-28-section-gaps.jpg]
+       fix: use one gap between sections (all within 25% of each other)
+  WARN links           a#today-a  "Open the card"
+       "Open the card" goes to #ix-2.4.5, a closed answer that stays shut when the link is followed
+       fix: open the target when its hash is followed (details.open = true on hashchange), or link to the section
+  WARN links           article.g:nth-of-type(1) > ul > li > a  "1.1.1 Non-text Content"
+       "1.1.1 Non-text Content" goes to #ix-1.1.1, a closed answer that stays shut when the link is followed
+       fix: open the target when its hash is followed (details.open = true on hashchange), or link to the section
+  WARN links           article.g:nth-of-type(2) > ul > li:nth-of-type(1) > a  "1.2.1 Audio-only and Video-only (Prereco"
+       "1.2.1 Audio-only and Video-only (Prereco" goes to #ix-1.2.1, a closed answer that stays shut when the link is followed
+       fix: open the target when its hash is followed (details.open = true on hashchange), or link to the section
+  WARN links           article.g:nth-of-type(2) > ul > li:nth-of-type(2) > a  "1.2.2 Captions (Prerecorded)"
+       "1.2.2 Captions (Prerecorded)" goes to #ix-1.2.2, a closed answer that stays shut when the link is followed
+       fix: open the target when its hash is followed (details.open = true on hashchange), or link to the section
+  WARN links           article.g:nth-of-type(2) > ul > li:nth-of-type(3) > a  "1.2.3 Audio Description or Media Alterna"
+       "1.2.3 Audio Description or Media Alterna" goes to #ix-1.2.3, a closed answer that stays shut when the link is followed
+       fix: open the target when its hash is followed (details.open = true on hashchange), or link to the section
+  WARN links           article.g:nth-of-type(2) > ul > li:nth-of-type(4) > a  "1.2.4 Captions (Live)"
+       "1.2.4 Captions (Live)" goes to #ix-1.2.4, a closed answer that stays shut when the link is followed
+       fix: open the target when its hash is followed (details.open = true on hashchange), or link to the section
+  WARN photo-credit    (the page text)
+       1 library source (placehold): the page credits placehold; confirm each shows the client's own product, place or people
+       fix: confirm the library photograph shows the client's own product, place or people; otherwise replace it
+  WARN nav-family      div.navbar
+       the nav's links and actions use 2 type families (Funnel Sans, Arial)  [1440-13-nav-family.jpg]
+       fix: keep one nav on every screen: the same bar, fill, links and type
+  WARN nav-family      div.navbar
+       the nav's links come in 2 sizes (15, 13px)  [1440-14-nav-family.jpg]
+       fix: keep one nav on every screen: the same bar, fill, links and type
+  WARN nav-labels      nav.top > ul.links > li:nth-of-type(1) > a  "How to read"
+       "How to read" opens a section headed "Every card has the same eight parts."  [1440-15-nav-labels.jpg]
+       fix: name each nav link after the heading of the section it opens
+  WARN nav-labels      nav.top > ul.links > li:nth-of-type(2) > a  "Principles"
+       "Principles" opens a section headed "Four questions every interface has to answer."  [1440-16-nav-labels.jpg]
+       fix: name each nav link after the heading of the section it opens
+  WARN nav-labels      nav.top > ul.links > li:nth-of-type(3) > a  "Specimens"
+       "Specimens" opens a section headed "Six criteria, broken and fixed."  [1440-17-nav-labels.jpg]
+       fix: name each nav link after the heading of the section it opens
+  WARN nav-labels      nav.top > ul.links > li:nth-of-type(4) > a  "Demos"
+       "Demos" opens a section headed "Some failures only show up over time."  [1440-18-nav-labels.jpg]
+       fix: name each nav link after the heading of the section it opens
+  WARN link-styles     div.announce > a  "See the full index →"
+       text links in 3 looks: underline, regular (1, like "See the full index →"); underline, bold (1, like "Open the card"); no line, regular (20, like "1.1.1 Non-text Conte")  [1440-19-link-styles.jpg]
+       fix: give text links one look wherever they sit: one underline, one weight
+  WARN fake-button     div.pair > figure.frame.fail > div.screen > div.sr  "Screen reader: “Image, chart”"
+       "Screen reader: “Image, chart”" looks like a button (soft, fill #1b1712, the same look as the page's buttons) but is not a link or a button  [1440-41-fake-button.jpg]
+       fix: make it a real link or button, or drop its button look
+  WARN copy-length     h1#h1  "Shows how it jo@example.com ✕ fail break"
+       a headline of 10 words on 4 lines at 118.1px: a paragraph set in display type  [1440-20-copy-length.jpg]
+       fix: cut the heading to one short line (2 to 12 words) and move the rest into the text under it
+  WARN copy-length     section#index  "All 55, by number or by name."
+       5 sections over 90 words a screen outside the UI mocks ("All 55, by number or by " 701, "Six criteria, broken and" 203, "Every card has the same " 155); 291 words a screen across the page (4631 words in 15.9 screens): a tech page says it in about 80 or fewer  [1440-52-copy-length.jpg]
+       fix: cut every section to its heading, one line and the product UI: the UI says the rest; no second paragraph, no list of feature sentences
+  WARN nav-current     div.navbar
+       the nav stays on screen with 4 links to the page's sections, but never marks the one you are in (no link changes as the page scrolls)  [1440-29-nav-current.jpg]
+       fix: mark the link of the section on screen (a colour, a weight or a line under it) as the visitor scrolls
+  WARN split-align     section#audit > div.spl  "A reference that passes its own test."
+       the picture beside "A reference that passes its ow" sits centred on a text column 361px taller: its top and bottom line up with nothing  [1440-58-split-align.jpg]
+       fix: set the picture's top on the heading's top (align-items: start), or let it run the column's full height
+  WARN hero-enter      div#top > section.hero
+       the hero does not enter on load: no data-enter on the hero and no head line setting html.m-enter (motion.md, The hero's entrance)  [1440-21-hero-enter.jpg]
+       fix: put data-enter on the hero <section> and keep the head line from starter.html that sets html.m-enter
+  WARN moment-none     (the page)
+       a software page (--type) deals no moment: every kind carries one, two on a long page (moments.md)
+       fix: deal one (moments.mjs pick --page software) and mount it in its own section
+  WARN section-tile    section#levels  "A is the floor. AA is the target."
+       the section is 768px tall (0.85 screens at 1440x900), shorter than the screen: its tile (the screen from its top) shows 768px of it and only 132px of the next section's ground ("All 55, by number or by name."), none of its content  [1440-64-section-tile.jpg]
+       fix: set every section after the hero to one screen or two (height: calc(var(--h,1) * 100vh)) and fit its content above --padb
+  WARN page-meta       head  "Bureau — WCAG Encyclopedia mockup C"
+       no <meta name="description">: a search result and a shared link show a scrap of the page instead
+       fix: write a <title> "Name: what it is for whom or where" and a one-sentence description in other words (starter.html)
+  WARN share-meta      head
+       the head lacks og:title, og:description, og:image, twitter:card, an icon, theme-color: a shared link shows no picture or title of its own
+       fix: copy the head block of starter.html: og tags, twitter:card, the icon and theme-color (references/system.md, Head)
+  FAIL hero-screen     div#top  "Shows how it jo@example.com✕ fail breaks"
+       the hero ends at 13495px on a 900px screen, 12595px below the fold: it ends at the fold, 1px either way (SR-1)  [1440-rhythm-01-hero-screen.jpg]
+       fix: make the hero exactly one screen (height: 100svh, its content fitted inside), never taller or shorter
+  FAIL section-height  div.wrap > footer  "Bureau — mockup C, round 2Set in Gloock,"
+       the section is 166px tall (0.2 screens), 734px short of one screen (900px): every section after the hero is one screen or two, 2px either way (SR-2)  [1440-rhythm-02-section-height.jpg]
+       fix: set the section to one screen or two (height: calc(var(--h,1) * 100vh), --h 1 or 2) and cut or split its content to fit
+  FAIL section-height  div#top  "Shows how it jo@example.com✕ fail breaks"
+       the section starts at 116px, 116px below the screen grid (0 x 900px): sections start on whole screens (SR-2)
+       fix: make every section above it exactly one or two screens tall, so this one starts on a whole screen
+  WARN section-height  div.wrap > footer  "Bureau — mockup C, round 2Set in Gloock,"
+       the section starts at 13495px, 5px above the screen grid (15 x 900px): sections start on whole screens (SR-2)
+       fix: make every section above it exactly one or two screens tall, so this one starts on a whole screen
+  FAIL one-section     div.wrap > footer  "Bureau — mockup C, round 2Set in Gloock,"
+       the screen at scroll 12761px (the top of section 2) shows 166px of section 2 beside section 1: a screen shows one section (another may peek 8px, 24px WARN) (SR-4)  [1440-rhythm-03-one-section.jpg]
+       fix: make each section exactly one screen or two, so a screen shows one section and no neighbour peeks
+  FAIL one-section     div#top  "Shows how it jo@example.com✕ fail breaks"
+       a <div> sits directly in <main>: every part of <main> is a <section> (SR-4)
+       fix: put every block of <main> in a <section>, and give a band its own section instead of a ground inside one
+  FAIL one-heading     h2#read-h  "Every card has the same eight parts."
+       the hero holds an h2 (7): its heading is the h1, and an h2 opens the next section (SR-5)  [1440-rhythm-04-one-heading.jpg]
+       fix: give each section one h2, first in its .wrap, and the hero only its h1
+  FAIL container-edges div#top  "Shows how it jo@example.com✕ fail breaks"
+       the content of section 1 runs -9999px from the left and 124px from the right (read from its outermost blocks: no .wrap): -9999 and 124px are not one margin; the margin is 64-120px at 1440px (one container, equal margins, 2px either way) (SR-6)  [1440-rhythm-05-container-edges.jpg]
+       fix: use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone
+  FAIL container-edges div.wrap > footer  "Bureau — mockup C, round 2Set in Gloock,"
+       the content of section 2 runs -9999px from the left and 124px from the right (read from its outermost blocks: no .wrap): -9999 and 124px are not one margin; the margin is 64-120px at 1440px (one container, equal margins, 2px either way) (SR-6)
+       fix: use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone
+  FAIL container-edges a.skip  "Skip to content"
+       a <a> at the top of the page, outside header.nav, main, footer.closing and nav.actionbar (SR-6)
+       fix: build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing
+  FAIL container-edges div.announce  "WCAG 2.2 is now complete here: all 55 Le"
+       a <div> at the top of the page, outside header.nav, main, footer.closing and nav.actionbar (and 5 more like it: "Bureau How to read Princ", "Bureau — mockup C, round", "Tweaks 0\") (SR-6)
+       fix: build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing
+  FAIL container-edges div#top > div.tech > span.tick.tr
+       a box runs 1311-1319px, outside the container lines of section 1 at -9999-1316px: full width is for background layers and grounds only (SR-6)
+       fix: keep it inside the container lines (.wrap): full width is for background layers and grounds only
+  FAIL container-edges div#top > div.tech > span.tick.br
+       a box runs 1311-1319px, outside the container lines of section 1 at -9999-1316px: full width is for background layers and grounds only (SR-6)
+       fix: keep it inside the container lines (.wrap): full width is for background layers and grounds only
+  FAIL container-edges div.spl > div:nth-of-type(2) > div.eyebrow.label > span.num  "07"
+       2 text blocks start on a left line at x 744, 10743px from the container's left: text starts on the container's left, or on one split line (x -5274, -4329, -3385) (also "If a design choice would fail a ") (SR-6)
+       fix: start the text on the container's left, or on the one split line every split shares
+  FAIL container-edges h2#au-h  "A reference that passes its own test."
+       the h2 starts 10743px right of the container's left: every h1 and h2 starts on it, 2px either way (and 9 more like it: x 266, x 124, "Shows how it jo@example.") (SR-6)
+       fix: start the text on the container's left, or on the one split line every split shares
+
+390x844  36 screens  31 FAIL  24 WARN
+  FAIL flush           div#top > div.tech > span.tick.tl
+       its first line sits -3px under the top edge of div.tech, where the ground changes  [390-06-flush.jpg]
+       fix: give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)
+  FAIL flush           div#top > div.tech > span.tick.bl
+       its last line sits -3px above the lower edge of div.tech, where the ground changes to section#read  [390-16-flush.jpg]
+       fix: give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)
+  FAIL nav-covers      button#tw-toggle  "Tweaks \"
+       sits on top of the text "Learn the layout once and you can scan a" while the page scrolls: part of the line shows beside it  [390-17-nav-covers.jpg]
+       fix: make the fixed nav one opaque band across the whole screen, or let it scroll away with the page
+  FAIL overlap-text    a#today-a  "Open the card"
+       lies over the text "A shortcut bound to a single letter, num" (p#today-p)  [390-07-overlap-text.jpg]
+       fix: move the box off the text (or the text off the box)
+  FAIL collide         p#today-p  "A shortcut bound to a single letter, num"
+       the words "A shortcut bound to a single let" lie over "Open the card": two lines in one place  [390-08-collide.jpg]
+       fix: on a phone nothing lies on anything else: let the section grow with its content (min-height for its screens, never a fixed height; --hm: 2 when it needs two) or cut what it holds; keep pictures and cards off the buttons; pad the page under a fixed bar by the bar's height (top: the first section; end: the footer)
+  FAIL tap-size        article.g:nth-of-type(2) > ul > li:nth-of-type(2) > a  "1.2.2 Captions (Prerecorded)"
+       a 226x29px tap target (and 1 more like it on this screen): 4px from the next one ("1.2.1 Audio-only and Vid"), so a thumb lands on the wrong one  [390-27-tap-size.jpg]
+       fix: make every link and control outside running text 44px tall on a phone: display: inline-flex; align-items: center; min-height: 44px (a footer list then needs no gap), a 44px small button, or a transparent ::before laid past the box
+  FAIL cut-text        p#today-p  "A shortcut bound to a single letter, num"
+       runs past the edge of its box div#top > section.hero > div.hero-side > article.today  [390-09-cut-text.jpg]
+       fix: give the text room: no overflow clipping a line, no line past its box
+  FAIL cut-text        div#anat-card > article.card > pre.diff > span.del  "- .field { border: 1.5px solid #DDD8CE; "
+       runs past the edge of its box div#anat-card > article.card > pre.diff (and 1 more like it: "+ .field { border: 1.5px")  [390-22-cut-text.jpg]
+       fix: give the text room: no overflow clipping a line, no line past its box
+  FAIL cut-text        div#cards > article.card:nth-of-type(2) > pre.diff > span.add:nth-of-type(3)  "+ alt="Sign-ups doubled in March, from 1"
+       runs past the edge of its box div#cards > article.card:nth-of-type(2) > pre.diff (and 5 more like it: "- .field { border: 1.5px", "+ .field { border: 1.5px", "+ <input id="email" aria", "+ aria-describedby="emai", ...)  [390-34-cut-text.jpg]
+       fix: give the text room: no overflow clipping a line, no line past its box
+  FAIL cut-text        div.demo-wrap > div > div.transport > label.label  "PLAYHEAD"
+       runs past the edge of its box section#demos > div.demo-wrap > div > div.transport  [390-40-cut-text.jpg]
+       fix: give the text room: no overflow clipping a line, no line past its box
+  FAIL cut-text        section#index > div.toolbar > label.search > span  "Search criteria"
+       runs past the edge of its box section#index > div.toolbar > label.search  [390-45-cut-text.jpg]
+       fix: give the text room: no overflow clipping a line, no line past its box
+  FAIL no-visual       div#top > div.tech  "55 success criteria, every one at Level "
+       no picture, effect or mock in this section; a feature section needs a visual  [390-18-no-visual.jpg]
+       fix: give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits
+  FAIL no-visual       section#read  "Every card has the same eight parts."
+       no picture, effect or mock in this section; a feature section needs a visual  [390-20-no-visual.jpg]
+       fix: give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits
+  FAIL no-visual       section#specimens  "Six criteria, broken and fixed."
+       no picture, effect or mock in this section; a feature section needs a visual  [390-30-no-visual.jpg]
+       fix: give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits
+  FAIL no-visual       section#demos  "Some failures only show up over time."
+       no picture, effect or mock in this section; a feature section needs a visual  [390-37-no-visual.jpg]
+       fix: give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits
+  FAIL no-visual       section#levels  "A is the floor. AA is the target."
+       no picture, effect or mock in this section; a feature section needs a visual  [390-42-no-visual.jpg]
+       fix: give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits
+  FAIL text-only       section#principles  "Four questions every interface has to an"
+       the section is only text: no picture, icon, mock or effect in it (2 sections like it at this width)  [390-24-text-only.jpg]
+       fix: give the section a visual: a photograph that fits, the real icons, or a UI fragment on a ground
+  FAIL text-only       section#index  "All 55, by number or by name."
+       the section is only text: no picture, icon, mock or effect in it (2 sections like it at this width)  [390-48-text-only.jpg]
+       fix: give the section a visual: a photograph that fits, the real icons, or a UI fragment on a ground
+  FAIL card-visual     div#lvls  "31 A Level A The floor. Fail one of thes"
+       3 cards hold only text: no picture, icon, UI fragment or effect in any of them  [390-43-card-visual.jpg]
+       fix: give the cards a visual: an inset panel with a UI fragment, a photograph or real icons
+  FAIL nesting         article.card:nth-of-type(3) > div.pair > figure.frame.fail > div.screen  "Your order ships in two days. See the de"
+       3 boxes deep: article.card:nth-of-type(3) > figure.frame.fail > div.screen (text in a box in a box)  [390-36-nesting.jpg]
+       fix: two levels at most: a card holds a lit picture (no lines, dots or plain box behind the UI), the picture holds the UI
+  FAIL cta             div#top > section.hero
+       the hero has no button (the nav's does not count)  [390-01-cta.jpg]
+       fix: add the action: a button in the hero, one on every priced item, one in the closing section
+  FAIL heading-scale   button#tab-3 > h3  "Robust"
+       the text under this h3 reads larger: its letters are 16.3px tall (x-height, 32px) against the heading's 14.2px (x-height, 28px)  [390-25-heading-scale.jpg]
+       fix: set the heading larger than the text under it, or that text smaller: the heading reads first
+  FAIL heading-scale   div#top > div.tech > div.stat:nth-of-type(1) > span.num  "55"
+       the figure "55" is set at 80px, larger than the h1 (52px) (and 1 more like it: "13")  [390-10-heading-scale.jpg]
+       fix: set figures below the h1: a stat reads as data, not as the headline
+  FAIL stagger         h1#h1  "Shows how it jo@example.com ✕ fail break"
+       the 6 lines of this heading start at 24, 139, 33, 33, 24, 24px: a headline broken across columns, read in a zigzag  [390-02-stagger.jpg]
+       fix: start every row of the list on one left edge
+  FAIL stagger         ul#audit-list  "✓ Ink on paper needs 4.5:1 16.81:1 , pas"
+       6 rows start at 2 different left offsets (+0, +0, +0, +0, +10023, +10023px)  [390-52-stagger.jpg]
+       fix: start every row of the list on one left edge
+  FAIL off-grid        ol#anat-list > li:nth-of-type(1) > button > span.pin  "1"
+       left edge at 40px, 16px off the page margin at 24px (136 elements); 7 more in this section off the grid too (span.pin at 40px, span.pin at 40px, span.pin at 40px, span.pin at 40px, ...)  [390-23-off-grid.jpg]
+       fix: move it onto the page margin, or the column edge its section uses
+  FAIL off-grid        ul#demo-list > li:nth-of-type(2) > button > span.num  "4.1.2"
+       left edge at 40px, 16px off the page margin at 24px (136 elements, like button); 23 more in this section off the grid too (b at 40px, span:nth-of-type(2) at 40px, span.num at 40px, b at 40px, ...)  [390-38-off-grid.jpg]
+       fix: move it onto the page margin, or the column edge its section uses
+  FAIL off-grid        ul#audit-list > li:nth-of-type(1) > span.num  "16.81:1 , passes"
+       left edge at 303px, 9px off a common edge of its section at 312px (3 elements, like span.num); 1 more in this section off the grid too (span.num at 330px)  [390-53-off-grid.jpg]
+       fix: move it onto the page margin, or the column edge its section uses
+  FAIL contrast        ul#demo-list > li:nth-of-type(7) > button > span:nth-of-type(2)  "A live region announcing a basket update"
+       body text over a effect reads at 1.1:1 at its worst tenth (needs 4.5:1), on a busy ground (and 12 more like it: "A", "AA", "1.4.5", "Images of Text", ...)  [390-39-contrast.jpg]
+       fix: put the text on a calm part of the picture, or on a solid panel
+  FAIL contrast        div:nth-of-type(2) > details.row:nth-of-type(5) > summary > span.badge  "AA"
+       body text over a effect reads at 2.9:1 at its worst tenth (needs 4.5:1) (and 2 more like it: "AA", "A")  [390-51-contrast.jpg]
+       fix: put the text on a calm part of the picture, or on a solid panel
+  FAIL text-contrast   div#c143  "Your order has shipped"
+       a caption, label or muted line in #b8b4ae on #ffffff reads 2.06:1 (needs 4.5:1); 2 like it, like "Track it from your acc"  [390-31-text-contrast.jpg]
+       fix: body text in the ink at 7:1 or more; grey (4.5:1 or more) only for captions and labels
+  WARN tap-size        div.navbar > div.wrap > nav.top > a.mark  "Bureau"
+       a 122x40px tap target: under the 44px a phone needs  [390-03-tap-size.jpg]
+       fix: make every link and control outside running text 44px tall on a phone: display: inline-flex; align-items: center; min-height: 44px (a footer list then needs no gap), a 44px small button, or a transparent ::before laid past the box
+  WARN tap-size        button#shuffle  "Another"
+       a 52x24px tap target: under the 44px a phone needs  [390-11-tap-size.jpg]
+       fix: make every link and control outside running text 44px tall on a phone: display: inline-flex; align-items: center; min-height: 44px (a footer list then needs no gap), a 44px small button, or a transparent ::before laid past the box
+  WARN tap-size        a#today-a  "Open the card"
+       a 90x24px tap target: under the 44px a phone needs  [390-12-tap-size.jpg]
+       fix: make every link and control outside running text 44px tall on a phone: display: inline-flex; align-items: center; min-height: 44px (a footer list then needs no gap), a 44px small button, or a transparent ::before laid past the box
+  WARN tap-size        article.g:nth-of-type(1) > ul > li > a  "1.1.1 Non-text Content"
+       a 226x29px tap target: under the 44px a phone needs  [390-28-tap-size.jpg]
+       fix: make every link and control outside running text 44px tall on a phone: display: inline-flex; align-items: center; min-height: 44px (a footer list then needs no gap), a 44px small button, or a transparent ::before laid past the box
+  WARN tap-size        input#c143r
+       a 240x28px tap target: under the 44px a phone needs  [390-32-tap-size.jpg]
+       fix: make every link and control outside running text 44px tall on a phone: display: inline-flex; align-items: center; min-height: 44px (a footer list then needs no gap), a 44px small button, or a transparent ::before laid past the box
+  WARN tap-size        input#scrub
+       a 164x28px tap target: under the 44px a phone needs  [390-41-tap-size.jpg]
+       fix: make every link and control outside running text 44px tall on a phone: display: inline-flex; align-items: center; min-height: 44px (a footer list then needs no gap), a 44px small button, or a transparent ::before laid past the box
+  WARN tap-size        div#ixl > button:nth-of-type(1)  "All"
+       a 40x38px tap target (and 7 more like it on this screen): under the 44px a phone needs  [390-46-tap-size.jpg]
+       fix: make every link and control outside running text 44px tall on a phone: display: inline-flex; align-items: center; min-height: 44px (a footer list then needs no gap), a 44px small button, or a transparent ::before laid past the box
+  WARN cut-text        p#today-p  "A shortcut bound to a single letter, num"
+       clamped to 3 lines  [390-13-cut-text.jpg]
+       fix: give the text room: no overflow clipping a line, no line past its box
+  WARN no-visual       div#top > section.hero  "Shows how it jo@example.com ✕ fail break"
+       pictures, effects and mocks cover 23% of this section; a feature section needs a visual (about 25% or more)  [390-04-no-visual.jpg]
+       fix: give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits
+  WARN card-visual     div#panel > div.gl  "GUIDELINE 1.1 1 Text Alternatives 1.1.1 "
+       4 cards hold only text: no picture, icon, UI fragment or effect in any of them  [390-29-card-visual.jpg]
+       fix: give the cards a visual: an inset panel with a UI fragment, a photograph or real icons
+  WARN cta             section#specimens  "Six criteria, broken and fixed."
+       a section over 1.5 screens long with no link or button in it  [390-33-cta.jpg]
+       fix: add the action: a button in the hero, one on every priced item, one in the closing section
+  WARN cta             section#levels  "A is the floor. AA is the target."
+       a section over 1.5 screens long with no link or button in it  [390-44-cta.jpg]
+       fix: add the action: a button in the hero, one on every priced item, one in the closing section
+  WARN heading-scale   div#anat-card > article.card > div.card-h > h3  "2Non-text Contrast"
+       h3 headings in 4 sizes, 24px ("Text Alternatives") to 30px (x1.25)  [390-21-heading-scale.jpg]
+       fix: size headings by level: the h1 largest, one size per level, each level below the one above
+  WARN heading-scale   div#top > div.tech > div.stat:nth-of-type(1) > span.num  "55"
+       figures in 3 sizes, 28, 72, 80px ("11.4.11" at 28px, "55" at 80px)  [390-14-heading-scale.jpg]
+       fix: set the page's figures (stats, measures, prices) in one or two sizes
+  WARN off-grid        div:nth-of-type(2) > details.row:nth-of-type(4) > summary > span.badge  "AA"
+       two common left edges of one section 21px apart: 269px (24 elements, like this one) and 290px (31)  [390-49-off-grid.jpg]
+       fix: move it onto the page margin, or the column edge its section uses
+  WARN off-grid        section#audit > div.spl > div:nth-of-type(2) > div.eyebrow.label  "07 SELF-AUDIT"
+       left edge at 66px, 2px off a common edge of its section at 64px (6 elements, like span:nth-of-type(2))  [390-54-off-grid.jpg]
+       fix: move it onto the page margin, or the column edge its section uses
+  WARN busy-ground     div:nth-of-type(2) > details.row:nth-of-type(1) > summary > span.nm  "Audio-only and Video-only (Prerecorded)"
+       text over a busy part of a effect (its luminance varies by 0.22 under the words) (and 2 more like it: "Meaningful Sequence", "Input Assistance")  [390-50-busy-ground.jpg]
+       fix: move the text to a calm part of the picture, or put it on a panel
+  WARN section-gaps    div#top > section.hero / div#top > div.tech
+       83px between these sections, -58% against the median 196px  [390-15-section-gaps.jpg]
+       fix: use one gap between sections (all within 25% of each other)
+  WARN section-gaps    div#top > div.tech / section#read
+       96px between these sections, -51% against the median 196px  [390-19-section-gaps.jpg]
+       fix: use one gap between sections (all within 25% of each other)
+  WARN nav-family      section#index > div.toolbar
+       the nav changes form as the page scrolls: div.navbar gives way to div.toolbar  [390-47-nav-family.jpg]
+       fix: keep one nav on every screen: the same bar, fill, links and type
+  WARN link-styles     div.announce > a  "See the full index →"
+       text links in 3 looks: underline, regular (1, like "See the full index →"); underline, bold (1, like "Open the card"); no line, regular (20, like "1.1.1 Non-text Conte")  [390-05-link-styles.jpg]
+       fix: give text links one look wherever they sit: one underline, one weight
+  WARN fake-button     div.pair > figure.frame.fail > div.screen > div.sr  "Screen reader: “Image, chart”"
+       "Screen reader: “Image, chart”" looks like a button (soft, fill #1b1712) but is not a link or a button  [390-35-fake-button.jpg]
+       fix: make it a real link or button, or drop its button look
+  WARN tab-wrap        button#tab-3  "04 Robust Can the tools read it? · 2 cri"
+       the row of 4 tabs wraps onto 4 lines and leaves "04 Robust Can the tools read i" alone on the last  [390-26-tab-wrap.jpg]
+       fix: fit the tabs on one line at this width (shorter labels, a scrolling row), or let them stack evenly
+  WARN section-tile    div#top > div.tech  "55 success criteria, every one at Level "
+       the section is 690px tall (0.82 screens at 390x844), shorter than the screen: its tile (the screen from its top) shows 690px of it and only 154px of the next section's ground ("Every card has the same eight "), none of its content  [390-55-section-tile.jpg]
+       fix: set every section after the hero to one screen or two (height: calc(var(--h,1) * 100vh)) and fit its content above --padb
+
+first screen at 1280, 1152, 1024, 896, 768  1 FAIL  0 WARN
+  FAIL hero-fill       [1152] div#top > div.tech  "55 success criteria, every one at Level "
+       the next section shows on the first screen: it starts at 840px on a 864px screen (the hero ends at 843px)  [sweep-1152-01-hero-fill.jpg]
+       fix: let the hero fill the first screen alone (min-height: 100svh, less above it): nothing of the next section on load
+
+the page at 320x640, walked for what runs past the screen's edge  13 FAIL
+  WARN fold-cut        [320] button#qgo
+       the hero's button "" is cut by the bottom of the first screen (28px of its 44px below the fold)  [narrow-320-01-fold-cut.jpg]
+       fix: size the hero so the heading ends above the fold, or starts below it
+  WARN tap-size        [320] div.navbar > div.wrap > nav.top > a.mark  "Bureau"
+       a 122x40px tap target: under the 44px a phone needs  [narrow-320-02-tap-size.jpg]
+       fix: make every link and control outside running text 44px tall on a phone: display: inline-flex; align-items: center; min-height: 44px (a footer list then needs no gap), a 44px small button, or a transparent ::before laid past the box
+  FAIL collide         [320] p#today-p  "When the order of the content matters, t"
+       the words "When the order of the content ma" lie over "Open the card": two lines in one place  [narrow-320-03-collide.jpg]
+       fix: on a phone nothing lies on anything else: let the section grow with its content (min-height for its screens, never a fixed height; --hm: 2 when it needs two) or cut what it holds; keep pictures and cards off the buttons; pad the page under a fixed bar by the bar's height (top: the first section; end: the footer)
+  WARN tap-size        [320] button#shuffle  "Another"
+       a 52x24px tap target: under the 44px a phone needs  [narrow-320-04-tap-size.jpg]
+       fix: make every link and control outside running text 44px tall on a phone: display: inline-flex; align-items: center; min-height: 44px (a footer list then needs no gap), a 44px small button, or a transparent ::before laid past the box
+  WARN tap-size        [320] a#today-a  "Open the card"
+       a 90x24px tap target: under the 44px a phone needs  [narrow-320-05-tap-size.jpg]
+       fix: make every link and control outside running text 44px tall on a phone: display: inline-flex; align-items: center; min-height: 44px (a footer list then needs no gap), a 44px small button, or a transparent ::before laid past the box
+  WARN tap-size        [320] article.g:nth-of-type(1) > ul > li > a  "1.1.1 Non-text Content"
+       a 210x29px tap target: under the 44px a phone needs  [narrow-320-06-tap-size.jpg]
+       fix: make every link and control outside running text 44px tall on a phone: display: inline-flex; align-items: center; min-height: 44px (a footer list then needs no gap), a 44px small button, or a transparent ::before laid past the box
+  FAIL tap-size        [320] article.g:nth-of-type(2) > ul > li:nth-of-type(4) > a  "1.2.4 Captions (Live)"
+       a 210x29px tap target: 0px from the next one ("Tweaks \"), so a thumb lands on the wrong one
+       fix: make every link and control outside running text 44px tall on a phone: display: inline-flex; align-items: center; min-height: 44px (a footer list then needs no gap), a 44px small button, or a transparent ::before laid past the box
+  WARN tap-size        [320] input#c143r
+       a 170x28px tap target: under the 44px a phone needs
+       fix: make every link and control outside running text 44px tall on a phone: display: inline-flex; align-items: center; min-height: 44px (a footer list then needs no gap), a 44px small button, or a transparent ::before laid past the box
+  WARN tap-size        [320] input#scrub
+       a 94x28px tap target: under the 44px a phone needs
+       fix: make every link and control outside running text 44px tall on a phone: display: inline-flex; align-items: center; min-height: 44px (a footer list then needs no gap), a 44px small button, or a transparent ::before laid past the box
+  WARN tap-size        [320] div#ixl > button:nth-of-type(1)  "All"
+       a 40x38px tap target (and 7 more like it on this screen): under the 44px a phone needs
+       fix: make every link and control outside running text 44px tall on a phone: display: inline-flex; align-items: center; min-height: 44px (a footer list then needs no gap), a 44px small button, or a transparent ::before laid past the box
+  FAIL collide         [320] div#ixl > button:nth-of-type(3)  "AA"
+       the words "AA" lie over "Audio-only and Video-only (Prere": two lines in one place
+       fix: on a phone nothing lies on anything else: let the section grow with its content (min-height for its screens, never a fixed height; --hm: 2 when it needs two) or cut what it holds; keep pictures and cards off the buttons; pad the page under a fixed bar by the bar's height (top: the first section; end: the footer)
+  FAIL collide         [320] div#ixl > button:nth-of-type(1)  "All"
+       the words "All" lie over "1.3.1": two lines in one place
+       fix: on a phone nothing lies on anything else: let the section grow with its content (min-height for its screens, never a fixed height; --hm: 2 when it needs two) or cut what it holds; keep pictures and cards off the buttons; pad the page under a fixed bar by the bar's height (top: the first section; end: the footer)
+  FAIL collide         [320] div#ixl > button:nth-of-type(2)  "A"
+       the words "A" lie over "Keyboard Accessible": two lines in one place
+       fix: on a phone nothing lies on anything else: let the section grow with its content (min-height for its screens, never a fixed height; --hm: 2 when it needs two) or cut what it holds; keep pictures and cards off the buttons; pad the page under a fixed bar by the bar's height (top: the first section; end: the footer)
+  FAIL collide         [320] div#ixp > button:nth-of-type(1)  "All"
+       the words "All" lie over "Seizures & Physical Reactions": two lines in one place
+       fix: on a phone nothing lies on anything else: let the section grow with its content (min-height for its screens, never a fixed height; --hm: 2 when it needs two) or cut what it holds; keep pictures and cards off the buttons; pad the page under a fixed bar by the bar's height (top: the first section; end: the footer)
+  FAIL collide         [320] span#ixc  "Showing 55 of 55"
+       the words "Showing 55 of 55" lie over "AA": two lines in one place
+       fix: on a phone nothing lies on anything else: let the section grow with its content (min-height for its screens, never a fixed height; --hm: 2 when it needs two) or cut what it holds; keep pictures and cards off the buttons; pad the page under a fixed bar by the bar's height (top: the first section; end: the footer)
+  FAIL off-viewport    [320] div > div.transport > label.label  "PLAYHEAD"
+       at 320px wide it runs 9999px past the screen's left edge (the page is 334px wide and scrolls sideways)
+       fix: keep it inside the screen at this width: let it shrink, wrap or stack
+  FAIL off-viewport    [320] div.toolbar > label.search > span  "Search criteria"
+       at 320px wide it runs 9975px past the screen's left edge (the page is 334px wide and scrolls sideways)
+       fix: keep it inside the screen at this width: let it shrink, wrap or stack
+  FAIL off-viewport    [320] li > span.num > span  ", passes"
+       at 320px wide it runs 9999px past the screen's left edge (the page is 334px wide and scrolls sideways)
+       fix: keep it inside the screen at this width: let it shrink, wrap or stack
+  FAIL off-viewport    [320] li > span.num > span  ", passes"
+       at 320px wide it runs 9999px past the screen's left edge (the page is 334px wide and scrolls sideways)
+       fix: keep it inside the screen at this width: let it shrink, wrap or stack
+  FAIL off-viewport    [320] li > span.num > span  ", passes"
+       at 320px wide it runs 9999px past the screen's left edge (the page is 334px wide and scrolls sideways)
+       fix: keep it inside the screen at this width: let it shrink, wrap or stack
+  FAIL off-viewport    [320] li > span.num > span  ", passes"
+       at 320px wide it runs 9999px past the screen's left edge (the page is 334px wide and scrolls sideways)
+       fix: keep it inside the screen at this width: let it shrink, wrap or stack
+
+checks
+  PASS assets                 PASS shader-lint            PASS gl-fallback            
+  PASS empty-visual           FAIL hero-fill              FAIL flush                  
+  FAIL placeholder            PASS sample-label           PASS caption                
+  PASS credit-wall            PASS nav                    FAIL nav-covers             
+  PASS spill                  FAIL off-viewport           PASS fold-card              
+  SKIP hover-spill            FAIL overlap-text           FAIL collide                
+  FAIL tap-size               PASS row-gap                FAIL cut-text               
+  WARN fold-cut               PASS marquee                SKIP scroll-linked          
+  SKIP scroll-reveal          PASS pinned                 SKIP loop-pause             
+  SKIP reduced-motion         PASS hidden-content         PASS webgl                  
+  FAIL no-visual              FAIL text-only              FAIL card-visual            
+  SKIP hidden-visual          PASS card-family            PASS card-layout            
+  FAIL nesting                PASS effect-repeat          PASS ui-fit                 
+  PASS ui-centre              PASS dark-ground            FAIL button-styles          
+  PASS button-shape           PASS same-action            PASS button-picture         
+  FAIL cta                    PASS pricing-tiers          FAIL copy-headline          
+  PASS copy-fact              FAIL copy-headings          WARN copy-buttons           
+  WARN copy-actions           FAIL heading-scale          FAIL stagger                
+  PASS top-stagger            FAIL off-grid               WARN col-edge               
+  PASS right-edge             PASS centre-axis            PASS tilt                   
+  FAIL contrast               FAIL text-contrast          PASS body-size              
+  WARN busy-ground            WARN section-gaps           PASS proximity              
+  PASS hole                   WARN links                  SKIP forms                  
+  PASS photo-upscale          PASS photo-set              WARN photo-credit           
+  WARN nav-family             WARN nav-labels             WARN link-styles            
+  PASS heading-align          PASS label-centre           WARN fake-button            
+  PASS stranded-action        PASS orphan                 PASS unit-break             
+  WARN tab-wrap               PASS effects-fit            PASS fade-cut               
+  PASS photo-weight           WARN copy-length            WARN nav-current            
+  PASS progress-bar           PASS photo-repeat           PASS button-contrast        
+  PASS photo-print            PASS grounds                WARN split-align            
+  PASS fact-agree             PASS fold-action            PASS action-count           
+  PASS one-screen             SKIP hover                  SKIP hover-move             
+  PASS product-shown          PASS same-object            PASS font-load              
+  PASS visual-caption         PASS visual-empty           PASS effect-kind            
+  WARN hero-enter             WARN moment-none            PASS street-number          
+  PASS postcode               PASS coordinates            PASS company-number         
+  PASS phone-number           FAIL hero-screen            FAIL section-height         
+  PASS section-air            FAIL one-section            FAIL one-heading            
+  FAIL container-edges        PASS row-lines              PASS split-pair             
+  PASS motion-layer           PASS count-text             PASS loop-cycle             
+  FAIL section-tile           PASS empty-area             PASS a11y-name              
+  PASS img-alt                PASS field-label            FAIL heading-order          
+  PASS tabindex               PASS focus-ring             FAIL focus-visible          
+  PASS focus-hidden           PASS skip-link              PASS menu-toggle            
+  PASS lang                   WARN page-meta              WARN share-meta             
+  PASS action-repeat          PASS map-link               PASS open-now               
+  PASS assumed                PASS run-on                 PASS form-fields            
+  PASS form-send              
+
+total  99 FAIL  73 WARN  (crops and report.json in /Users/kane/Documents/1_Personal/5_programming projects/wcag encylopedia/design/mockups/.taste-skill/consistency-c-bureau)

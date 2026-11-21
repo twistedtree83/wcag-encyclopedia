@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WCAG Encyclopedia — every criterion, shown broken then fixed</title>
+<meta name="description" content="All 55 Level A and AA success criteria of WCAG 2.2, each explained in plain language with a working demo.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gabarito:wght@500;700;800&family=Golos+Text:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#2A2B2D;--deep:#1A1C1C;--raise:#323336;--sky:#9CCADE;--sun:#F8D17D;--rose:#FFB3A9;--white:#FFFFFF;--ink:#F3F3F0;--ink-2:#C3C3BE;--line:#4A4B4F;--line-2:#6A6B70}
+*{box-sizing:border-box}
+html{background:var(--bg);scroll-behavior:smooth}
+body{margin:0;color:var(--ink);font:400 18px/1.6 "Golos Text",system-ui,sans-serif}
+a{color:inherit}
+button,input,select{font:inherit}
+:focus-visible{outline:3px solid var(--sun);outline-offset:3px;border-radius:6px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:16px;top:-60px;background:var(--sun);color:var(--deep);padding:10px 14px;border-radius:8px;z-index:9;font-weight:600}
+.skip:focus{top:12px}
+.wrap{max-width:1280px;margin:0 auto;padding:0 56px}
+h1,h2,h3{font-family:"Gabarito",sans-serif;margin:0}
+
+/* header */
+header.top{display:flex;align-items:center;justify-content:space-between;padding:28px 0}
+.brand{display:flex;align-items:center;gap:12px;font:700 20px/1 "Gabarito";text-decoration:none}
+.brand i{display:flex;gap:3px}.brand b{width:12px;height:12px;border-radius:50%;display:block}
+nav ul{display:flex;gap:6px;list-style:none;margin:0;padding:0}
+nav a{display:block;padding:10px 16px;border-radius:999px;text-decoration:none;font-weight:500}
+nav a:hover{background:#3A3B3E}
+nav [aria-current]{background:var(--ink);color:var(--deep)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:0 24px;border-radius:999px;font-weight:600;text-decoration:none;border:2px solid transparent;cursor:pointer;transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(0)}
+.btn.p{background:var(--sun);color:var(--deep)}
+.btn.o{border-color:var(--line-2);color:var(--ink);background:transparent}
+
+/* hero */
+.hero{position:relative;padding:56px 0 40px}
+.eyebrow{font-size:16px;color:var(--ink-2);margin:0 0 18px;font-weight:500}
+h1{font-weight:800;font-size:clamp(48px,7vw,104px);line-height:.98;letter-spacing:-.025em;max-width:12ch}
+h1 em{font-style:normal;color:var(--sky)}
+.lede{max-width:52ch;color:var(--ink-2);margin:28px 0 0;font-size:20px}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin:34px 0 0}
+.loop{position:absolute;inset:0;pointer-events:none;z-index:0}
+.loop path{fill:none;stroke:#8E8F93;stroke-width:1.6;stroke-dasharray:10 9}
+.set{position:relative;z-index:1}
+.set h2{font:500 22px/1.2 "Golos Text";color:var(--ink);margin:0 0 30px}
+.swatches{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;list-style:none;margin:0;padding:0}
+.swatches li{display:flex;flex-direction:column;align-items:center;text-align:center}
+.dot{width:min(190px,100%);aspect-ratio:1;border-radius:50%;margin:0 0 22px}
+.dot.d{box-shadow:inset 0 0 0 1.5px #55565A}
+.hex{font:700 32px/1 "Gabarito";letter-spacing:.01em}
+.use{font-size:16px;color:var(--ink-2);margin:10px 0 12px}
+.ratio{display:inline-flex;gap:8px;align-items:center;border:1.5px solid var(--line);border-radius:999px;padding:6px 12px;font-size:15px;font-weight:600}
+.ratio b{background:var(--ink);color:var(--deep);border-radius:999px;padding:1px 7px;font-size:12px;letter-spacing:.04em}
+.row2{display:grid;grid-template-columns:1fr 1fr 2fr;gap:24px;margin:72px 0 0;align-items:start}
+
+/* tester */
+.tester{background:var(--deep);border-radius:28px;padding:32px;grid-column:3;position:relative;z-index:1;scroll-margin-top:24px}
+.tester h2{font:700 28px/1.1 "Gabarito";margin:0 0 6px}
+.tester p.s{margin:0 0 22px;color:var(--ink-2);font-size:16px}
+.pick{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:0 0 20px}
+.pick label{display:block;font-size:15px;font-weight:600;margin:0 0 6px}
+.pick select{width:100%;min-height:48px;border-radius:12px;border:1.5px solid var(--line-2);background:var(--bg);color:var(--ink);font-weight:500;font-size:16px;padding:0 12px}
+.sample{border-radius:18px;padding:22px 24px;display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:96px}
+.sample span{font:700 26px/1.1 "Gabarito"}
+.out{font:800 40px/1 "Gabarito";white-space:nowrap}
+.verdict{margin:14px 0 0;font-weight:600}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;list-style:none;margin:110px 0 0;padding:0;border-top:1.5px solid var(--line);border-bottom:1.5px solid var(--line)}
+.stats li{padding:30px 28px;border-left:1.5px solid var(--line)}
+.stats li:first-child{border-left:0;padding-left:0}
+.stats b{display:block;font:800 64px/1 "Gabarito";letter-spacing:-.02em}
+.stats span{color:var(--ink-2);font-size:16px}
+
+/* bands */
+section.band{padding:110px 0 0;scroll-margin-top:12px}
+.band>h2,.bh h2{font-weight:800;font-size:clamp(36px,4.6vw,64px);letter-spacing:-.02em;margin:0 0 14px;line-height:1}
+.band>p,.bh p{color:var(--ink-2);max-width:56ch;margin:0 0 44px}
+.bh{display:flex;justify-content:space-between;align-items:end;gap:32px;flex-wrap:wrap}
+
+/* principles */
+.princ{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;list-style:none;margin:0;padding:0}
+.princ button{all:unset;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;gap:40px;width:100%;min-height:330px;border-radius:28px;padding:28px;color:var(--deep);cursor:pointer;transition:transform .2s}
+.princ button:hover{transform:translateY(-3px)}
+.princ button:focus-visible{outline:3px solid var(--sun);outline-offset:4px}
+.princ .n{font:800 18px/1 "Gabarito"}
+.princ h3{font-weight:800;font-size:34px;line-height:1;margin:0 0 12px;letter-spacing:-.01em}
+.princ p{margin:0;font-size:16px;line-height:1.5}
+.princ .ct{font-weight:600;font-size:15px;margin-top:16px;display:block;text-decoration:underline;text-underline-offset:4px}
+.shape{width:44px;height:44px;background:var(--deep);margin-bottom:22px}
+.mk{display:inline-block;width:14px;height:14px;flex:none}
+.mk.p1{background:var(--sky)}
+.mk.p2{background:var(--sun);border-radius:50%}
+.mk.p3{background:var(--rose);clip-path:polygon(50% 0,100% 100%,0 100%)}
+.mk.p4{background:var(--white);transform:rotate(45deg) scale(.78)}
+
+/* index */
+.filters{display:grid;grid-template-columns:auto auto;justify-content:start;gap:28px;align-items:end;background:var(--deep);border-radius:28px;padding:24px 28px;margin:0 0 22px}
+.filters label,.filters .gl{display:block;font-size:15px;font-weight:600;margin:0 0 8px}
+.filters>div:first-child{grid-column:1/-1}
+.filters input{width:100%;min-height:48px;border-radius:12px;border:1.5px solid var(--line-2);background:var(--bg);color:var(--ink);padding:0 16px;font-size:17px}
+.filters input::placeholder{color:#A9A9A4}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips button{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid var(--line-2);background:transparent;color:var(--ink);font-weight:500;font-size:15px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--deep);border-color:var(--ink)}
+.chips button[aria-pressed="true"] .mk.p4{background:var(--deep)}
+.count{color:var(--ink-2);font-size:16px;margin:0 0 18px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;list-style:none;margin:0;padding:0}
+.grid a{display:flex;flex-direction:column;gap:10px;height:100%;padding:24px;border-radius:22px;background:var(--raise);text-decoration:none;border:1.5px solid transparent;transition:transform .15s,border-color .15s}
+.grid a:hover{transform:translateY(-2px);border-color:var(--line-2)}
+.grid .top{display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px;color:var(--ink-2)}
+.grid .top .lv{margin-left:auto}
+.lv{font:700 12px/1 "Golos Text";letter-spacing:.06em;border:1.5px solid var(--ink-2);color:var(--ink);border-radius:6px;padding:5px 7px}
+.lv.aa{background:var(--ink);color:var(--deep);border-color:var(--ink)}
+.grid h3{font:700 22px/1.15 "Gabarito"}
+.grid p{margin:auto 0 0;color:var(--ink-2);font-size:15px;line-height:1.5}
+.grid p b{color:var(--rose);font-weight:600}
+.more{display:flex;justify-content:center;margin:28px 0 0}
+.empty{padding:40px;text-align:center;border:1.5px dashed var(--line-2);border-radius:22px;color:var(--ink-2)}
+
+/* spotlight */
+.spot{display:grid;grid-template-columns:5fr 7fr;gap:40px;align-items:stretch}
+.spot .info .k{font-weight:600;color:var(--ink-2);font-size:15px}
+.spot .info h3{font:800 44px/1 "Gabarito";letter-spacing:-.015em;margin:8px 0 18px}
+.spot .info p{color:var(--ink-2);margin:0 0 18px}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:26px 0 0}
+.pair div{border-radius:18px;padding:18px;background:var(--deep);font-size:15px;line-height:1.45}
+.pair b{display:flex;align-items:center;gap:8px;font:700 14px "Gabarito";letter-spacing:.04em;text-transform:uppercase;margin:0 0 6px}
+.pair .no b{color:var(--rose)}.pair .yes b{color:var(--sky)}
+.lab{background:var(--deep);border-radius:28px;padding:32px;display:flex;flex-direction:column;gap:24px}
+.lab .demo{border-radius:18px;background:#121313;padding:28px;box-shadow:inset 0 0 0 1.5px #3A3B3E}
+.lab .demo h4{font:700 26px/1.15 "Gabarito";margin:0 0 10px;color:var(--ink)}
+.lab .demo p{margin:0;font-size:17px}
+.slide label{display:flex;justify-content:space-between;font-weight:600;font-size:15px;margin:0 0 10px}
+.slide input{width:100%;accent-color:var(--sun);height:32px}
+.scale{position:relative;height:56px;margin:4px 0 0}
+.scale .track{position:absolute;left:0;right:0;top:12px;height:10px;border-radius:99px;background:#3A3B3E}
+.scale .fill{position:absolute;left:0;top:12px;height:10px;border-radius:99px;background:var(--sun)}
+.scale .t{position:absolute;top:0;width:2px;height:34px;background:var(--ink-2)}
+.scale .t span{position:absolute;top:36px;left:50%;transform:translateX(-50%);font-size:13px;color:var(--ink-2);white-space:nowrap}
+.checks{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;list-style:none;margin:0;padding:0}
+.checks li{border-radius:14px;padding:12px 14px;border:1.5px solid var(--line);font-size:15px;display:flex;flex-direction:column;gap:2px}
+.checks li strong{font:700 16px "Gabarito";display:flex;align-items:center;gap:8px}
+.checks .ok strong{color:var(--sky)}.checks .bad strong{color:var(--rose)}
+.labout{display:flex;align-items:baseline;justify-content:space-between;gap:16px}
+.labout output{font:800 48px/1 "Gabarito"}
+
+/* rules */
+.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;list-style:none;margin:0;padding:0}
+.rules li{border:1.5px solid var(--line);border-radius:28px;padding:28px}
+.rules .k{font-weight:600;color:var(--ink-2);font-size:15px}
+.rules h3{font-weight:700;font-size:28px;margin:6px 0 10px}
+.rules .big{font:800 64px/1 "Gabarito";letter-spacing:-.02em;margin:18px 0 12px}
+.bar{height:10px;border-radius:99px;background:#45464A;overflow:hidden}.bar i{display:block;height:100%;border-radius:99px}
+.rules p{color:var(--ink-2);font-size:16px;margin:14px 0 0}
+
+/* new in 2.2 */
+.news{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;list-style:none;margin:0;padding:0}
+.news a{display:grid;grid-template-columns:auto 1fr;gap:6px 18px;padding:26px;border-radius:28px;background:var(--sun);color:var(--deep);text-decoration:none;height:100%;transition:transform .15s}
+.news li:nth-child(3n+2) a{background:var(--sky)}
+.news li:nth-child(3n) a{background:var(--rose)}
+.news a:hover{transform:translateY(-2px)}
+.news .num{grid-row:span 2;font:800 30px/1 "Gabarito";letter-spacing:-.01em;padding-top:2px}
+.news h3{font:700 22px/1.15 "Gabarito"}
+.news p{margin:0;font-size:15px;line-height:1.45}
+
+/* pledge */
+.pledge{display:grid;grid-template-columns:5fr 7fr;gap:56px;background:var(--ink);color:var(--deep);border-radius:36px;padding:56px}
+.pledge h2{font-weight:800;font-size:clamp(34px,4vw,56px);line-height:1;letter-spacing:-.02em;margin:0 0 18px}
+.pledge>div>p{margin:0;font-size:18px;color:#3C3D40}
+.pledge ul{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.pledge li{display:grid;grid-template-columns:36px 1fr;gap:14px;padding:18px 0;border-bottom:1.5px solid #D4D4CF}
+.pledge li:first-child{padding-top:0}
+.pledge li svg{margin-top:3px}
+.pledge li b{display:block;font:700 19px/1.2 "Gabarito";margin:0 0 4px}
+.pledge li span{font-size:16px;color:#3C3D40}
+
+/* footer */
+footer{margin-top:110px;border-top:1.5px solid var(--line);padding:44px 0 48px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;color:var(--ink-2);font-size:15px}
+footer h2{font:600 15px "Golos Text";color:var(--ink);margin:0 0 12px}
+footer ul{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+footer ul a{display:inline-block;padding:6px 0;text-decoration:none}
+footer ul a:hover{text-decoration:underline;text-underline-offset:4px;color:var(--ink)}
+footer .brand{margin:0 0 14px;color:var(--ink)}
+footer p{margin:0;max-width:36ch}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+@media (max-width:1100px){
+  .grid,.news{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .filters{grid-template-columns:minmax(0,1fr)}
+  .spot,.pledge{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:900px){
+  .wrap{padding:0 20px}
+  header.top{flex-wrap:wrap;gap:12px}
+  nav ul{flex-wrap:wrap}
+  nav a{padding:10px 12px}
+  .swatches{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:40px}
+  .dot{width:140px}
+  .hex{font-size:24px}
+  .row2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .row2>.set{grid-column:1/-1!important}
+  .tester{grid-column:1/-1;padding:22px}
+  .pick{grid-template-columns:minmax(0,1fr)}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:72px}
+  .stats li{padding:22px 0 22px 18px}
+  .stats li:nth-child(3){border-left:0;padding-left:0}
+  .stats li:nth-child(n+3){border-top:1.5px solid var(--line)}
+  .stats b{font-size:48px}
+  section.band{padding-top:80px}
+  .princ,.rules,.grid,.news,.checks,.pair{grid-template-columns:minmax(0,1fr)}
+  .princ button{min-height:220px}
+  .filters,.lab{padding:22px}
+  .spot .info h3{font-size:36px}
+  .pledge{padding:30px 22px;border-radius:28px;gap:30px}
+  .loop{display:none}
+  footer{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  footer>div:first-child{grid-column:1/-1}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="wrap">
+<header class="top">
+  <a class="brand" href="#"><i aria-hidden="true"><b style="background:var(--sky)"></b><b style="background:var(--sun)"></b><b style="background:var(--rose)"></b></i>WCAG Encyclopedia</a>
+  <nav aria-label="Main"><ul><li><a href="#" aria-current="page">Home</a></li><li><a href="#index">Criteria</a></li><li><a href="#spotlight">Demos</a></li><li><a href="#pledge">About</a></li></ul></nav>
+</header>
+<main id="main">
+<section class="hero" aria-labelledby="h1">
+  <svg class="loop" viewBox="0 0 1168 1100" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M700 150 C 820 120, 900 220, 840 300 S 640 360, 620 450 S 760 520, 900 470 S 1120 430, 1100 560 S 980 760, 760 800 S 560 900, 470 1000"/>
+    <path d="M1160 120 C 1000 140, 900 240, 960 330 S 1140 380, 1120 470"/>
+  </svg>
+  <p class="eyebrow">WCAG 2.2, Levels A and AA, in plain language</p>
+  <h1 id="h1">Accessibility that holds up for <em>everyone.</em></h1>
+  <p class="lede">Every success criterion, explained in a sentence and shown twice: once broken, once fixed. Start with the palette this page is built from. Every number on it is measured live.</p>
+  <div class="cta"><a class="btn p" href="#index">Browse all 55 criteria <span aria-hidden="true">→</span></a><a class="btn o" href="#tester">Check a colour pair</a></div>
+
+  <div class="set" style="margin-top:96px">
+    <h2>Main colours</h2>
+    <ul class="swatches" id="main-set"></ul>
+  </div>
+  <div class="row2">
+    <div class="set" style="grid-column:1/3"><h2>Supporting colours</h2><ul class="swatches" id="sup-set" style="grid-template-columns:repeat(2,1fr)"></ul></div>
+    <form class="tester" id="tester" aria-labelledby="t-h" onsubmit="return false">
+      <h2 id="t-h">Try a pair</h2>
+      <p class="s">Text needs 4.5 : 1. Large text and controls need 3 : 1.</p>
+      <div class="pick">
+        <div><label for="fg">Text colour</label><select id="fg"></select></div>
+        <div><label for="bgc">Background</label><select id="bgc"></select></div>
+      </div>
+      <div class="sample" id="sample"><span>Read me easily</span><output class="out" id="out" for="fg bgc"></output></div>
+      <p class="verdict" id="verdict" aria-live="polite"></p>
+    </form>
+  </div>
+
+  <ul class="stats" id="stats" aria-label="The encyclopedia in numbers"></ul>
+</section>
+
+<section class="band" aria-labelledby="p-h">
+  <h2 id="p-h">Four principles</h2>
+  <p>Each principle has a colour and a shape, so the grouping survives greyscale. Colour never carries meaning on its own here. Choose one to filter the index.</p>
+  <ul class="princ" id="princ"></ul>
+</section>
+
+<section class="band" id="index" aria-labelledby="i-h">
+  <div class="bh"><div><h2 id="i-h">The index</h2><p>Every Level A and AA criterion in WCAG 2.2. Search by number, name, or the way it usually goes wrong.</p></div></div>
+  <form class="filters" role="search" onsubmit="return false">
+    <div><label for="q">Search criteria</label><input id="q" type="search" placeholder="Try “focus”, “1.4” or “captions”" autocomplete="off"></div>
+    <div><span class="gl" id="fp-l">Principle</span><div class="chips" role="group" aria-labelledby="fp-l" id="fp"></div></div>
+    <div><span class="gl" id="fl-l">Level</span><div class="chips" role="group" aria-labelledby="fl-l" id="fl"></div></div>
+  </form>
+  <p class="count" id="count" aria-live="polite"></p>
+  <ul class="grid" id="grid"></ul>
+  <div class="more"><button class="btn o" type="button" id="more" aria-controls="grid" aria-expanded="false"></button></div>
+</section>
+
+<section class="band" id="spotlight" aria-labelledby="s-h">
+  <h2 id="s-h">Demo of the week</h2>
+  <p>Each criterion page has a live exhibit you can break yourself. This one is about grey text.</p>
+  <div class="spot">
+    <div class="info">
+      <span class="k">1.4.3 · Level AA · Perceivable</span>
+      <h3>Contrast (Minimum)</h3>
+      <p id="sp-plain"></p>
+      <div class="pair">
+        <div class="no"><b><svg width="14" height="14" aria-hidden="true"><path d="M2 2l10 10M12 2 2 12" stroke="currentColor" stroke-width="2.4"/></svg>Fails</b><span id="sp-fail"></span></div>
+        <div class="yes"><b><svg width="14" height="14" aria-hidden="true"><path d="M1.5 7.5 5.5 11.5 12.5 2.5" stroke="currentColor" stroke-width="2.4" fill="none"/></svg>Passes</b><span id="sp-pass"></span></div>
+      </div>
+    </div>
+    <div class="lab">
+      <div class="demo" id="demo"><h4>Opening hours</h4><p>Monday to Friday, nine until five. Closed on public holidays.</p></div>
+      <div class="slide">
+        <label for="fade"><span>Fade the text</span><span id="fade-v"></span></label>
+        <input type="range" id="fade" min="0" max="100" value="18" aria-describedby="fade-d">
+        <span class="sr" id="fade-d">Lower the slider to make the text darker and less readable. The ratio and results update as you move it.</span>
+      </div>
+      <div class="labout"><span style="font-weight:600">Contrast ratio</span><output id="lab-r" for="fade"></output></div>
+      <div class="scale" aria-hidden="true"><div class="track"></div><div class="fill" id="lab-fill"></div><div id="ticks"></div></div>
+      <ul class="checks" id="checks" aria-live="polite"></ul>
+    </div>
+  </div>
+</section>
+
+<section class="band" aria-labelledby="r-h">
+  <h2 id="r-h">Three contrast rules</h2>
+  <p>People often treat contrast as one number. WCAG has three, and they measure different things.</p>
+  <ul class="rules">
+    <li><span class="k">1.4.3 · Level AA</span><h3>Text</h3><div class="big">4.5 : 1</div><div class="bar" aria-hidden="true"><i style="width:21%;background:var(--sky)"></i></div><p>Body text against its background. Large text, 24px or 19px bold, needs 3 : 1.</p></li>
+    <li><span class="k">1.4.6 · Level AAA</span><h3>Enhanced text</h3><div class="big">7 : 1</div><div class="bar" aria-hidden="true"><i style="width:33%;background:var(--sun)"></i></div><p>The stricter version, for people with moderately low vision who don't use magnification.</p></li>
+    <li><span class="k">1.4.11 · Level AA</span><h3>Controls &amp; graphics</h3><div class="big">3 : 1</div><div class="bar" aria-hidden="true"><i style="width:14%;background:var(--rose)"></i></div><p>Field borders, focus rings, icons and chart lines against whatever is next to them.</p></li>
+  </ul>
+</section>
+
+<section class="band" aria-labelledby="n-h">
+  <h2 id="n-h">New in 2.2</h2>
+  <p>Six criteria at Levels A and AA arrived with WCAG 2.2. Most are about focus, pointers and forms that ask too much.</p>
+  <ul class="news" id="news"></ul>
+</section>
+
+<section class="band" id="pledge" aria-labelledby="pl-h">
+  <div class="pledge">
+    <div><h2 id="pl-h">This site follows its own rules.</h2><p>A site about accessibility that fails it would be worse than no site at all. Every page is checked before it ships, and the broken examples are fenced off so they cannot trip anyone up.</p></div>
+    <ul>
+      <li><svg width="22" height="22" aria-hidden="true"><rect x="2" y="2" width="18" height="18" fill="#1F6E92"/></svg><div><b>Checked on every release</b><span>Each page is scanned against WCAG 2.2 AA before deploy. A failure blocks the release.</span></div></li>
+      <li><svg width="22" height="22" aria-hidden="true"><circle cx="11" cy="11" r="9.5" fill="#8A6411"/></svg><div><b>Keyboard first</b><span>Every demo works without a mouse, and focus is always visible.</span></div></li>
+      <li><svg width="22" height="22" aria-hidden="true"><path d="M11 1.5 21 20H1Z" fill="#B23A2A"/></svg><div><b>Broken examples are labelled</b><span>Each failing exhibit is described in text, so a screen reader hears what is wrong instead of the mess itself.</span></div></li>
+      <li><svg width="22" height="22" aria-hidden="true"><path d="M11 1 21 11 11 21 1 11Z" fill="#2A2B2D"/></svg><div><b>Motion is optional</b><span>Animations stop when your system asks for reduced motion.</span></div></li>
+    </ul>
+  </div>
+</section>
+</main>
+<footer>
+  <div><a class="brand" href="#"><i aria-hidden="true"><b style="background:var(--sky)"></b><b style="background:var(--sun)"></b><b style="background:var(--rose)"></b></i>WCAG Encyclopedia</a><p>Every criterion of WCAG 2.2, shown working and broken. Bars on this page show each ratio out of the maximum, 21 : 1.</p></div>
+  <div><h2>Principles</h2><ul><li><a href="#index">Perceivable</a></li><li><a href="#index">Operable</a></li><li><a href="#index">Understandable</a></li><li><a href="#index">Robust</a></li></ul></div>
+  <div><h2>Tools</h2><ul><li><a href="#tester">Contrast pair</a></li><li><a href="#spotlight">Demo of the week</a></li><li><a href="#index">Search</a></li></ul></div>
+  <div><h2>About</h2><ul><li><a href="#pledge">How we test</a></li><li><a href="#">Accessibility statement</a></li><li><a href="#">Source code</a></li></ul></div>
+</footer>
+</div>
+<script src="../corpus.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const C={"#2A2B2D":"Page","#9CCADE":"Sky","#F8D17D":"Sun","#FFB3A9":"Rose","#FFFFFF":"White","#1A1C1C":"Night"};
+const lum=h=>{const c=[1,3,5].map(i=>parseInt(h.substr(i,2),16)/255).map(v=>v<=.03928?v/12.92:((v+.055)/1.055)**2.4);return .2126*c[0]+.7152*c[1]+.0722*c[2]};
+const ratio=(a,b)=>{const x=lum(a),y=lum(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)};
+const page="#2A2B2D";
+const card=(hex,use,surf)=>{const r=surf?ratio('#FFFFFF',hex):ratio(hex,page);const tag=r>=7?'AAA':r>=4.5?'AA':r>=3?'AA large':'Fails';
+ return `<li><div class="dot ${surf?'d':''}" style="background:${hex}" aria-hidden="true"></div><span class="hex">${hex}</span><span class="use">${use}</span><span class="ratio">${r.toFixed(1)} : 1 ${surf?'with white text':'on this page'} <b>${tag}</b></span></li>`};
+$('main-set').innerHTML=card('#1A1C1C','Night, for panels',1)+card('#9CCADE','Sky, for links')+card('#F8D17D','Sun, for focus')+card('#FFB3A9','Rose, for errors');
+$('sup-set').innerHTML=card('#FFFFFF','White, for text')+card('#2A2B2D','Page background',1);
+const fg=$('fg'),bg=$('bgc');
+for(const [h,n] of Object.entries(C)){fg.add(new Option(`${n} ${h}`,h));bg.add(new Option(`${n} ${h}`,h))}
+fg.value='#F8D17D';bg.value='#2A2B2D';
+function upd(){const r=ratio(fg.value,bg.value);const s=$('sample');s.style.background=bg.value;s.style.color=fg.value;s.style.boxShadow=bg.value==='#1A1C1C'||bg.value==='#2A2B2D'?'inset 0 0 0 1.5px #55565A':'none';
+ $('out').textContent=r.toFixed(2)+' : 1';
+ $('verdict').textContent=r.toFixed(2)+' : 1. '+(r>=7?'Passes for all text, even AAA.':r>=4.5?'Passes for all text at AA.':r>=3?'Passes only for large text and controls.':'Fails. Nobody should have to read this.')}
+fg.onchange=bg.onchange=upd;upd();
+
+/* corpus */
+const P=[null,{n:'Perceivable',t:'If you can’t perceive it, it isn’t there for you.',c:'var(--sky)',s:''},{n:'Operable',t:'Every control has to be reachable by whatever you drive it with.',c:'var(--sun)',s:'border-radius:50%'},{n:'Understandable',t:'A thing you can perceive and operate can still make no sense.',c:'var(--rose)',s:'clip-path:polygon(50% 0,100% 100%,0 100%)'},{n:'Robust',t:'Assistive technology can only relay what the markup says.',c:'var(--white)',s:'transform:rotate(45deg) scale(.8)'}];
+const D=window.CORPUS.map(([num,name,level,plain,fail,pass])=>({num,name,level,plain,fail,pass,p:+num[0]}))
+ .sort((a,b)=>{const x=a.num.split('.').map(Number),y=b.num.split('.').map(Number);return x[0]-y[0]||x[1]-y[1]||x[2]-y[2]});
+const NEW=['2.4.11','2.5.7','2.5.8','3.2.6','3.3.7','3.3.8'];
+const nA=D.filter(d=>d.level==='A').length;
+$('stats').innerHTML=[[D.length,'success criteria'],[nA,'at Level A'],[D.length-nA,'at Level AA'],[NEW.length,'new in WCAG 2.2']].map(([b,s])=>`<li><b>${b}</b><span>${s}</span></li>`).join('');
+$('princ').innerHTML=[1,2,3,4].map(i=>`<li><button type="button" data-p="${i}" style="background:${P[i].c}"><span class="n">${i}</span><div><div class="shape" aria-hidden="true" style="${P[i].s}"></div><h3>${P[i].n}</h3><p>${P[i].t}</p><span class="ct">${D.filter(d=>d.p===i).length} criteria, show in index</span></div></button></li>`).join('');
+
+let fP=0,fL='all',open=false;const LIM=9;
+$('fp').innerHTML=`<button type="button" data-p="0" aria-pressed="true">All</button>`+[1,2,3,4].map(i=>`<button type="button" data-p="${i}" aria-pressed="false"><span class="mk p${i}" aria-hidden="true"></span>${P[i].n}</button>`).join('');
+$('fl').innerHTML=['all','A','AA'].map(l=>`<button type="button" data-l="${l}" aria-pressed="${l==='all'}">${l==='all'?'All':l}</button>`).join('');
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function render(){
+ const q=$('q').value.trim().toLowerCase();
+ const list=D.filter(d=>(!fP||d.p===fP)&&(fL==='all'||d.level===fL)&&(!q||(d.num+' '+d.name+' '+d.plain+' '+d.fail).toLowerCase().includes(q)));
+ const filtered=q||fP||fL!=='all';
+ const shown=(open||filtered)?list:list.slice(0,LIM);
+ $('grid').innerHTML=shown.length?shown.map(d=>`<li><a href="#c-${d.num}"><span class="top"><span class="mk p${d.p}" aria-hidden="true"></span>${d.num}<span class="sr">,</span> <span class="lv ${d.level==='AA'?'aa':''}"><span class="sr">Level </span>${d.level}</span></span><h3>${esc(d.name)}</h3><p><b>Fails when:</b> ${esc(d.fail)}</p></a></li>`).join(''):`<li class="empty">Nothing matches. Try a number such as 2.4, or clear the filters.</li>`;
+ $('count').textContent=`Showing ${shown.length} of ${list.length} ${list.length===1?'criterion':'criteria'}${filtered?' that match':''}.`;
+ const m=$('more');m.hidden=filtered||list.length<=LIM;m.textContent=open?'Show fewer':`Show all ${list.length}`;m.setAttribute('aria-expanded',open);
+}
+function setP(p){fP=p;$('fp').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.p===p));render()}
+$('fp').onclick=e=>{const b=e.target.closest('button');if(b)setP(+b.dataset.p)};
+$('fl').onclick=e=>{const b=e.target.closest('button');if(!b)return;fL=b.dataset.l;$('fl').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));render()};
+$('q').oninput=render;
+$('more').onclick=()=>{open=!open;render()};
+$('princ').onclick=e=>{const b=e.target.closest('button');if(!b)return;setP(+b.dataset.p);$('index').scrollIntoView();$('q').focus({preventScroll:true})};
+render();
+
+/* spotlight */
+const c143=D.find(d=>d.num==='1.4.3');$('sp-plain').textContent=c143.plain;$('sp-fail').textContent=c143.fail;$('sp-pass').textContent=c143.pass;
+const BG='#121313';const L=v=>{const n=Math.round(0x2a+(0xf3-0x2a)*v/100).toString(16).padStart(2,'0');return '#'+n+n+n};
+const pos=r=>Math.log(r)/Math.log(21)*100;
+$('ticks').innerHTML=[[3,'3'],[4.5,'4.5'],[7,'7'],[21,'21']].map(([r,l])=>`<div class="t" style="left:calc(${pos(r)}% - 1px)"><span>${l}</span></div>`).join('');
+function lab(){const v=+$('fade').value;const col=L(100-v);const r=ratio(col,BG);
+ $('demo').style.color=col;$('demo').querySelector('h4').style.color=col;
+ $('fade-v').textContent=v+'% faded';$('lab-r').textContent=r.toFixed(2)+' : 1';$('lab-fill').style.width=pos(r)+'%';
+ $('checks').innerHTML=[[4.5,'Body text','AA'],[3,'Large text','AA'],[7,'Body text','AAA']].map(([t,n,l])=>{const ok=r>=t;return `<li class="${ok?'ok':'bad'}"><strong>${ok?'✓ Passes':'✗ Fails'}</strong><span>${n}, ${l} (${t} : 1)</span></li>`}).join('')}
+$('fade').oninput=lab;lab();
+
+/* new */
+$('news').innerHTML=NEW.map(n=>D.find(d=>d.num===n)).map(d=>`<li><a href="#c-${d.num}"><span class="num">${d.num}</span><h3>${esc(d.name)}</h3><p>Level ${d.level}. ${esc(d.pass)}</p></a></li>`).join('');
+</script>
+</body>
+</html>

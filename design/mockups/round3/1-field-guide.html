@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Non-text Contrast — WCAG Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prata&family=Sofia+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap">
+<style>
+:root{--paper:#FBFBF8;--ink:#141414;--ink-2:#4A4A46;--rule:#141414;--hair:#D6D5CF;--blue:#1C67A0;--wash:#A8D4EE;--grey:#D9D9D6}
+*{box-sizing:border-box}
+html{background:var(--paper)}
+body{margin:0;color:var(--ink);font:400 18px/1.65 "Sofia Sans",system-ui,sans-serif;letter-spacing:.01em}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px;border-radius:2px}
+.skip{position:absolute;left:16px;top:-60px;background:var(--ink);color:var(--paper);padding:10px 14px;z-index:9}
+.skip:focus{top:12px}
+.wrap{max-width:1320px;margin:0 auto;padding:0 64px}
+.cap{font-weight:500;font-size:14px;letter-spacing:.14em;text-transform:uppercase}
+/* running head */
+.run{display:grid;grid-template-columns:1fr 1fr auto;gap:24px;padding:32px 0 0}
+.run nav ul{list-style:none;margin:0;padding:0;display:flex;gap:28px}
+.run a{text-decoration:none}
+.run a:hover{text-decoration:underline;text-underline-offset:4px}
+.run [aria-current]{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:6px}
+/* spread */
+.spread{display:grid;grid-template-columns:1.1fr 1fr;gap:72px;padding:72px 0 88px}
+.plate{margin:0}
+.row{display:grid;grid-template-columns:minmax(0,1fr) 170px;column-gap:30px;align-items:end;margin:0 0 22px}
+.row .ctl{max-width:340px}
+.spec-l{display:block;font-size:15px;font-weight:500;margin:0 0 6px}
+.in{height:52px;border:1px solid #CFCFCB;border-radius:6px;background:#fff;padding:0 14px;display:flex;align-items:center;color:#6E6E69;font-size:16px}
+.in.ok{border-color:#6B6B66}
+.btn{height:52px;border-radius:6px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;outline:3px solid var(--blue);outline-offset:4px;margin:8px 0 6px}
+.note{margin:0;font-style:italic;font-size:16px;line-height:1.45;position:relative}
+.row .note{padding-bottom:4px}
+.row .note::after{content:"";position:absolute;bottom:18px;height:1px;width:22px;background:var(--ink)}
+.row .l{text-align:right}.row .l::after{right:-26px}
+.row .r::after{left:-26px}
+.zoom{display:grid;grid-template-columns:220px minmax(0,1fr);gap:28px;align-items:center;margin:56px 0 0;padding-top:32px;border-top:1px solid var(--hair)}
+.lens{width:220px;height:220px;border-radius:50%;border:1px solid var(--ink);overflow:hidden;background:#fff;position:relative;margin:0}
+.lens .px{position:absolute;inset:0;background-image:linear-gradient(#ECECEA 1px,transparent 1px),linear-gradient(90deg,#ECECEA 1px,transparent 1px);background-size:24.4px 24.4px}
+.lens .edge{position:absolute;left:0;right:0;top:46%;height:24px;background:#CFCFCB}
+.lens span{position:absolute;left:0;right:0;bottom:34px;text-align:center;font-style:italic;font-size:14px}
+.zoom .note::after{display:none}
+.plate h2{margin:40px 0 0;font:700 15px/1.3 "Sofia Sans";letter-spacing:.12em;text-transform:uppercase}
+.plate .cap-s{margin:10px 0 0;color:var(--ink-2);max-width:46ch}
+/* text side */
+h1{font:400 clamp(56px,7.4vw,112px)/.92 "Prata",serif;letter-spacing:-.01em;margin:0;text-transform:uppercase}
+.latin{font:italic 400 30px/1.2 "Sofia Sans";margin:22px 0 26px}
+.dbl{border:0;border-top:3px solid var(--rule);height:5px;border-bottom:1px solid var(--rule);margin:0 0 36px}
+.lede::first-letter{float:left;font:400 92px/.8 "Prata",serif;margin:8px 10px 0 0}
+.lede{margin:0 0 36px}
+.range{display:grid;grid-template-columns:200px 1fr;gap:36px;align-items:start;margin:0 0 40px}
+.range svg{width:200px;height:auto;display:block}
+.range p{margin:0 0 16px;color:var(--ink-2)}
+.range strong{color:var(--ink)}
+.tax{border-top:3px solid var(--rule);border-bottom:1px solid var(--rule);display:grid;grid-template-columns:1fr 1fr;padding:12px 0}
+.tax dl{margin:0;padding:6px 28px 6px 0;display:grid;grid-template-columns:auto 1fr;row-gap:10px;column-gap:16px}
+.tax dl+dl{border-left:1px solid var(--rule);padding-left:28px}
+.tax dt{font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
+.tax dd{margin:0;text-align:right;font-weight:700;font-size:15px;letter-spacing:.12em;text-transform:uppercase}
+/* more plates */
+.more{border-top:1px solid var(--hair);padding:56px 0 80px}
+.more header{display:flex;justify-content:space-between;align-items:baseline;margin:0 0 36px}
+.more h2{font:400 44px/1 "Prata";margin:0}
+.more header a{font-weight:500}
+.plates{display:grid;grid-template-columns:repeat(4,1fr);gap:0;list-style:none;margin:0;padding:0;border-top:1px solid var(--ink)}
+.plates li{border-right:1px solid var(--hair);padding:24px 24px 28px}
+.plates li:last-child{border-right:0}
+.plates a{text-decoration:none;display:block}
+.plates a:hover h3{text-decoration:underline;text-underline-offset:4px}
+.mini{height:150px;display:flex;align-items:center;justify-content:center;margin:0 0 18px}
+.num{font-weight:500;font-size:14px;letter-spacing:.14em;color:var(--ink-2)}
+.plates h3{font:400 26px/1.15 "Prata";margin:6px 0 8px}
+.plates p{margin:0;font-style:italic;color:var(--ink-2);font-size:16px}
+.lvl{display:inline-block;font:700 12px/1 "Sofia Sans";letter-spacing:.1em;border:1px solid var(--ink);padding:5px 7px;margin-top:14px}
+footer{border-top:3px solid var(--rule);padding:22px 0 40px;display:flex;justify-content:space-between;font-size:15px;color:var(--ink-2)}
+@media (max-width:900px){
+  .wrap{padding:0 20px}
+  .run{grid-template-columns:1fr auto;padding-top:20px}.run .mid{display:none}
+  .run nav ul{gap:16px;flex-wrap:wrap}
+  .spread{grid-template-columns:minmax(0,1fr);gap:40px;padding:36px 0 56px}
+  .text{order:-1}
+  
+  .row{grid-template-columns:minmax(0,1fr);row-gap:10px}
+  .row>span:empty{display:none}
+  .row .l{order:2}
+  .row .note{text-align:left;padding-left:14px;border-left:2px solid var(--ink)}
+  .row .note::after{display:none}
+  .zoom{grid-template-columns:minmax(0,1fr);justify-items:start}
+  .latin{font-size:24px}
+  .range{grid-template-columns:minmax(0,1fr)}
+  .tax{grid-template-columns:minmax(0,1fr)}.tax dl+dl{border-left:0;padding-left:0;border-top:1px solid var(--rule)}
+  .plates{grid-template-columns:minmax(0,1fr)}.plates li{border-right:0;border-bottom:1px solid var(--hair)}
+  .more header{flex-direction:column;gap:12px}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="wrap">
+<header class="run">
+  <a class="cap" href="#">/ Field Guide to WCAG 2.2</a>
+  <span class="cap mid" aria-hidden="true">/ Perceivable</span>
+  <nav aria-label="Main"><ul class="cap"><li><a href="#">Index</a></li><li><a href="#" aria-current="page">Specimens</a></li><li><a href="#">Demos</a></li><li><a href="#">About</a></li></ul></nav>
+</header>
+<main id="main">
+<article class="spread">
+  <figure class="plate" aria-labelledby="plate-h">
+    <div aria-hidden="true">
+    <div class="row"><div class="ctl"><span class="spec-l">Email</span><div class="in">name@example.com</div></div><p class="note r">Border at 1.3 : 1. The field is there; few can find its edge.</p></div>
+    <div class="row"><div class="ctl"><span class="spec-l">Password</span><div class="in ok">••••••••</div></div><p class="note r">Darkened to 4.9 : 1. The edge reads at a glance.</p></div>
+    <div class="row"><div class="ctl"><div class="btn">Create account</div></div><p class="note r">Focus ring at 3 : 1 against the button <em>and</em> the page.</p></div>
+    </div>
+    <div class="zoom">
+      <div class="lens" aria-hidden="true"><div class="px"></div><div class="edge"></div><span>#CFCFCB on #FFFFFF</span></div>
+      <p class="note">At 800%, the failing border is one grey pixel that the eye merges with white.</p>
+    </div>
+    <h2 id="plate-h">A boundary you can't see is not a boundary</h2>
+    <p class="cap-s">Most people with low vision use no assistive technology at all. They just look harder. A pale border asks them to look harder at every field.</p>
+  </figure>
+
+  <div class="text">
+    <p class="cap" style="color:var(--blue);margin:0 0 18px">Specimen 1.4.11</p>
+    <h1>Non-text contrast</h1>
+    <p class="latin">Success Criterion 1.4.11, Level AA</p>
+    <hr class="dbl">
+    <p class="lede">With a minimum of 3 : 1 against whatever sits next to it, every part of a control you need to see must stand apart: the edge of a text field, the state of a checkbox, the ring that shows where focus is. Text has its own rule. This one covers everything else that carries meaning, including the lines and wedges of a chart.</p>
+    <div class="range">
+      <svg viewBox="0 0 200 250" role="img" aria-labelledby="map-t">
+        <title id="map-t">Where it fails most: form fields and icon buttons, highlighted in a page outline</title>
+        <rect x="1" y="1" width="198" height="248" rx="6" fill="#F1F1EE" stroke="#8A8A85"/>
+        <rect x="14" y="14" width="172" height="20" rx="3" fill="#D9D9D6"/>
+        <rect x="14" y="48" width="110" height="12" rx="2" fill="#D9D9D6"/>
+        <rect x="14" y="68" width="150" height="8" rx="2" fill="#D9D9D6"/>
+        <rect x="14" y="96" width="172" height="24" rx="3" fill="#A8D4EE" stroke="#1C67A0" stroke-width="1.5"/>
+        <rect x="14" y="128" width="172" height="24" rx="3" fill="#A8D4EE" stroke="#1C67A0" stroke-width="1.5"/>
+        <rect x="14" y="164" width="80" height="24" rx="3" fill="#A8D4EE" stroke="#1C67A0" stroke-width="1.5"/>
+        <circle cx="168" cy="176" r="12" fill="#A8D4EE" stroke="#1C67A0" stroke-width="1.5"/>
+        <rect x="14" y="210" width="172" height="24" rx="3" fill="#D9D9D6"/>
+      </svg>
+      <div>
+        <p><strong>Most often found in forms.</strong> Text fields drawn with pale hairlines, checkboxes that turn a slightly different grey when ticked, and icon-only buttons.</p>
+        <p>Also common in charts, where two lines are told apart by colour alone.</p>
+      </div>
+    </div>
+    <div class="tax">
+      <dl><dt>Principle</dt><dd>Perceivable</dd><dt>Guideline</dt><dd>Distinguishable</dd><dt>Level</dt><dd>AA</dd></dl>
+      <dl><dt>Minimum</dt><dd>3 : 1</dd><dt>Since</dt><dd>WCAG 2.1</dd><dt>Applies to</dt><dd>Controls, graphics</dd></dl>
+    </div>
+  </div>
+</article>
+
+<section class="more" aria-labelledby="more-h">
+  <header><h2 id="more-h">Neighbouring specimens</h2><a href="#">All 55 criteria in the index →</a></header>
+  <ul class="plates">
+    <li><a href="#"><div class="mini" aria-hidden="true"><svg width="170" height="110" viewBox="0 0 170 110"><rect x="20" y="30" width="130" height="44" rx="6" fill="#141414"/><rect x="14" y="24" width="142" height="56" rx="9" fill="none" stroke="#1C67A0" stroke-width="3"/><text x="85" y="58" text-anchor="middle" fill="#fff" font-family="Sofia Sans" font-weight="700" font-size="15">Continue</text></svg></div><span class="num">2.4.7</span><h3>Focus Visible</h3><p>You should always know where you are.</p><span class="lvl">AA</span></a></li>
+    <li><a href="#"><div class="mini" aria-hidden="true"><svg width="170" height="110" viewBox="0 0 170 110"><rect x="30" y="14" width="110" height="70" rx="4" fill="#D9D9D6"/><path d="M40 74l26-30 20 20 14-12 30 22z" fill="#8A8A85"/><text x="85" y="102" text-anchor="middle" font-family="Sofia Sans" font-style="italic" font-size="13" fill="#4A4A46">alt="Q3 sales up 12%"</text></svg></div><span class="num">1.1.1</span><h3>Non-text Content</h3><p>Describe what an image is for.</p><span class="lvl">A</span></a></li>
+    <li><a href="#"><div class="mini" aria-hidden="true"><svg width="170" height="110" viewBox="0 0 170 110"><rect x="35" y="25" width="44" height="44" rx="6" fill="none" stroke="#141414" stroke-width="2"/><rect x="95" y="37" width="20" height="20" rx="4" fill="none" stroke="#141414" stroke-width="2" stroke-dasharray="3 3"/><text x="57" y="92" text-anchor="middle" font-family="Sofia Sans" font-size="13" fill="#4A4A46">24 px</text><text x="105" y="92" text-anchor="middle" font-family="Sofia Sans" font-size="13" fill="#4A4A46">16 px</text></svg></div><span class="num">2.5.8</span><h3>Target Size</h3><p>Big enough to hit, far enough apart.</p><span class="lvl">AA</span></a></li>
+    <li><a href="#"><div class="mini" aria-hidden="true"><svg width="170" height="110" viewBox="0 0 170 110"><rect x="20" y="24" width="130" height="34" rx="5" fill="#fff" stroke="#A3261B" stroke-width="2"/><text x="20" y="80" font-family="Sofia Sans" font-size="13" font-weight="700" fill="#A3261B">⚠ Use a date like 21/03/26</text></svg></div><span class="num">3.3.1</span><h3>Error Identification</h3><p>Say what went wrong, in words.</p><span class="lvl">A</span></a></li>
+  </ul>
+</section>
+</main>
+<footer><span>Field Guide to WCAG 2.2 · Plate 1.4.11 of 55</span><span>This page meets every criterion it describes.</span></footer>
+</div>
+</body>
+</html>

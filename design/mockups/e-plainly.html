@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plainly — WCAG Encyclopedia mockup E</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hedvig+Letters+Serif:opsz@12..24&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hedvig+Letters+Sans&display=swap">
+<script src="corpus.js"></script>
+<style>
+/* Mockup E — "Plainly". After Town: a warm cream page, a big editorial serif with a live
+   picture set inside the headline, a highlighted phrase, a friendly character, and an
+   "ask anything" bar in orange. Fonts: Hedvig Letters Serif + Hedvig Letters Sans (one
+   family, two voices, rarely used). */
+:root{--cream:#FFFBF2;--cream-2:#F6F0E2;--ink:#171411;--ink-2:#5E574C;--line:#E7DFCF;--orange:#F26A1B;--orange-ink:#B44708;--hi:#FFE08A;--fail:#B3261E;--pass:#1E6B3C;
+ --serif:"Hedvig Letters Serif",Georgia,serif;--sans:"Hedvig Letters Sans",system-ui,sans-serif}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans);font-size:18px;line-height:1.55}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--orange);outline-offset:3px;border-radius:4px}
+.skip{position:absolute;left:16px;top:-80px;background:var(--ink);color:var(--cream);padding:10px 14px;z-index:99}.skip:focus{top:44px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{width:min(1280px,calc(100% - 40px));margin:0 auto}
+.announce{background:var(--ink);color:#F4EEE2;font-size:14px}
+.announce .wrap{display:flex;justify-content:center;position:relative;padding:9px 0;gap:16px}
+.announce a{position:absolute;right:0;text-decoration:underline;text-underline-offset:3px}
+nav.top{display:flex;align-items:center;gap:8px;padding:14px 0}
+.box{border:1px solid var(--line);border-radius:10px;background:var(--cream);display:flex;align-items:center}
+.logo{padding:8px 14px;font:700 15px var(--sans);letter-spacing:.14em;text-decoration:none;gap:8px}
+.logo svg{width:16px;height:16px}
+.links{padding:4px;gap:2px;list-style:none;margin:0}
+.links a{display:block;padding:7px 12px;border-radius:7px;font-size:15px;text-decoration:none}
+.links a:hover{background:var(--cream-2)}
+nav .sp{flex:1}
+.btn{font:600 15px var(--sans);border-radius:9px;padding:10px 16px;min-height:44px;display:inline-flex;align-items:center;gap:8px;border:1px solid var(--ink);background:var(--ink);color:var(--cream);text-decoration:none;cursor:pointer;transition:transform .15s}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn:hover{transform:translateY(-1px)}.btn:active{transform:scale(.98)}
+
+/* hero */
+.hero{position:relative;min-height:calc(100svh - 110px);padding:48px 0 40px;display:grid;grid-template-rows:auto 1fr auto;align-items:end}
+h1{font-family:var(--serif);font-weight:400;font-size:clamp(56px,9.4vw,150px);line-height:.96;letter-spacing:-.025em;margin:0}
+h1 .l2{display:block}
+.pic{display:inline-block;vertical-align:-.12em;width:1.24em;height:1.24em;border-radius:.06em;overflow:hidden;position:relative;margin:0 .04em;background:#fff;box-shadow:0 0 0 1px var(--line),0 20px 40px -20px rgba(80,50,10,.35)}
+.pic .ui{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;gap:.06em;padding:.1em;font:600 .1em/1.2 var(--sans);letter-spacing:0;color:#222}
+.pic .ui .lab{font-weight:700;font-size:.9em;transition:opacity .4s}
+.pic .ui .fld{border:2px solid #9A9182;border-radius:.4em;padding:.5em .6em;background:#fff;transition:outline-color .4s,border-color .4s;outline:3px solid transparent;outline-offset:2px}
+.pic .ui .msg{border-radius:99px;padding:.3em .8em;font-weight:700;color:#fff;align-self:flex-start;transition:background .4s}
+.pic.bad .lab{opacity:0}.pic.bad .fld{border-color:#E8E2D6}.pic.bad .msg{background:var(--fail)}
+.pic.good .fld{outline-color:var(--orange)}.pic.good .msg{background:var(--pass)}
+.row2{display:flex;justify-content:space-between;align-items:flex-end;gap:32px;flex-wrap:wrap;padding:20px 0 28px}
+.mid{text-align:left;display:grid;gap:18px;justify-items:start;padding-bottom:12px}
+.mid p{font-family:var(--serif);font-size:clamp(20px,1.9vw,26px);margin:0}
+.hl{background:var(--hi);padding:0 .2em;border-radius:2px}
+.fix{text-align:right;margin-left:auto}
+.fix h1{font-size:clamp(56px,9.4vw,150px)}
+.ask{justify-self:center;width:min(560px,100%);position:relative;z-index:3}
+.ask label{display:block;text-align:center;font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.ask label b{color:var(--orange-ink);font-weight:600}
+.askbox{display:flex;align-items:center;gap:8px;border:1.5px solid var(--orange);border-radius:10px;background:#fff;padding:5px 5px 5px 14px;box-shadow:0 10px 30px -18px rgba(242,106,27,.6)}
+.askbox input{flex:1;border:0;font:16px var(--sans);padding:10px 0;background:transparent;min-width:0;color:var(--ink)}
+.askbox input:focus{outline:none}
+.askbox:focus-within{box-shadow:0 0 0 4px rgba(242,106,27,.25)}
+.askbox button{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--orange);background:#fff;color:var(--orange-ink);cursor:pointer;display:grid;place-items:center;flex:none}
+.sugg{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+.sugg button{font:14px var(--sans);border:1px solid var(--line);background:var(--cream);border-radius:99px;padding:6px 12px;cursor:pointer;color:var(--ink-2);min-height:32px}
+.sugg button:hover{border-color:var(--ink);color:var(--ink)}
+.answer{position:absolute;bottom:calc(100% + 12px);left:0;right:0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px;box-shadow:0 30px 60px -30px rgba(60,40,10,.45);text-align:left}
+.answer[hidden]{display:none}
+.answer .n{font-size:13px;color:var(--orange-ink);font-weight:700}
+.answer h3{font:400 28px/1.1 var(--serif);margin:4px 0 8px}
+.answer p{margin:0 0 10px;font-size:15px;color:var(--ink-2)}
+.answer .cap{display:flex;gap:8px;font-size:14px;margin:4px 0}
+.answer .cap b{flex:none}.answer .f b{color:var(--fail)}.answer .p b{color:var(--pass)}
+/* character: Rive slot */
+.loupe{position:absolute;right:5%;top:12%;width:clamp(120px,13vw,190px);z-index:2}
+.loupe svg{width:100%;height:auto;overflow:visible}
+.loupe .name{position:absolute;right:-6px;top:6%;font:700 12px var(--sans);letter-spacing:.12em;color:var(--orange-ink);transform:rotate(8deg)}
+.loupe .tag{position:absolute;left:50%;bottom:-26px;transform:translateX(-50%);white-space:nowrap;font:700 10px ui-monospace,Menlo,monospace;letter-spacing:.06em;color:var(--orange-ink);border:1px dashed var(--orange);border-radius:99px;padding:2px 8px;background:var(--cream)}
+.loupe .bob{animation:bob 3.2s ease-in-out infinite;transform-origin:50% 100%}
+@keyframes bob{50%{transform:translateY(-6px) rotate(-2deg)}}
+
+/* statements */
+section{padding:110px 0;border-top:1px solid var(--line)}
+.kicker{font-size:14px;color:var(--ink-2);margin:0 0 28px}
+h2{font:400 clamp(44px,6vw,92px)/1 var(--serif);letter-spacing:-.02em;margin:0 0 48px;max-width:16ch}
+.stmt{display:grid;grid-template-columns:140px 1fr 170px;gap:32px;align-items:center;padding:36px 0;border-top:1px solid var(--line)}
+.stmt:last-child{border-bottom:1px solid var(--line)}
+.stmt .crit{font-size:14px;color:var(--ink-2)}
+.stmt .crit b{display:block;font:400 26px var(--serif);color:var(--ink)}
+.stmt p{font:400 clamp(28px,3.4vw,48px)/1.15 var(--serif);letter-spacing:-.015em;margin:0;max-width:24ch}
+.chip{display:inline-flex;align-items:center;gap:.25em;vertical-align:.08em;font:500 .55em/1 var(--sans);padding:.45em .7em;border-radius:.5em;background:#fff;box-shadow:0 0 0 1px var(--line);transition:all .35s;white-space:nowrap}
+.tog{justify-self:end;font:600 15px var(--sans);border-radius:99px;padding:10px 18px;min-height:44px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;display:inline-flex;gap:8px;align-items:center}
+.tog[aria-pressed="true"]{background:var(--pass);border-color:var(--pass);color:#fff}
+.tog .d{width:10px;height:10px;border-radius:50%;background:var(--fail)}
+.tog[aria-pressed="true"] .d{background:#fff}
+/* principles */
+.toc{border-top:1px solid var(--ink)}
+.toc details{border-bottom:1px solid var(--line)}
+.toc summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:120px 1fr 1fr 60px;gap:24px;align-items:baseline;padding:26px 0}
+.toc summary::-webkit-details-marker{display:none}
+.toc .rn{font:400 40px var(--serif);color:var(--orange-ink)}
+.toc .nm{font:400 clamp(36px,4.6vw,68px)/1 var(--serif);letter-spacing:-.02em}
+.toc .tg{color:var(--ink-2);font-size:17px}
+.toc .ct{text-align:right;font-size:14px;color:var(--ink-2)}
+.toc summary:hover .nm{font-style:italic}
+.toc .gl{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px 32px;padding:0 0 32px 144px}
+.toc .gl h3{font:400 22px var(--serif);margin:0 0 6px}
+.toc .gl ul{list-style:none;margin:0;padding:0;font-size:15px}
+.toc .gl li{display:flex;gap:10px;padding:3px 0}
+.toc .gl li span:first-child{color:var(--ink-2);min-width:44px;font-variant-numeric:tabular-nums}
+/* index */
+.ixbar{display:flex;flex-wrap:wrap;gap:16px 24px;align-items:center;margin-bottom:28px}
+.ixbar .askbox{flex:1 1 320px;max-width:520px}
+.lv{display:flex;gap:18px;font-size:16px}
+.lv button{background:none;border:0;font:inherit;color:var(--ink-2);cursor:pointer;padding:8px 0;min-height:44px;text-decoration:none}
+.lv button[aria-pressed="true"]{color:var(--ink);text-decoration:underline;text-decoration-color:var(--orange);text-decoration-thickness:3px;text-underline-offset:6px}
+.cols{columns:3 300px;column-gap:48px}
+.grp{break-inside:avoid;margin-bottom:32px}
+.grp h3{font:400 24px var(--serif);margin:0 0 6px;padding-bottom:6px;border-bottom:1px solid var(--ink)}
+.grp a{display:grid;grid-template-columns:52px 1fr auto;gap:8px;padding:7px 0;border-bottom:1px solid var(--line);text-decoration:none;font-size:16px}
+.grp a:hover .t{text-decoration:underline;text-underline-offset:3px}
+.grp .num{color:var(--ink-2);font-variant-numeric:tabular-nums}
+.grp .l{font-size:12px;font-weight:700;color:var(--ink-2)}
+.grp .l.aa{color:var(--orange-ink)}
+.closing{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.slot{border:1.5px dashed var(--orange);border-radius:16px;min-height:380px;display:grid;place-items:center;position:relative;background:#FFF4E6}
+.slot .tag{position:absolute;top:12px;left:12px;font:700 10px ui-monospace,Menlo,monospace;color:var(--orange-ink)}
+footer{border-top:1px solid var(--line);padding:28px 0 60px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:14px;color:var(--ink-2)}
+@media (max-width:980px){.links{display:none}.loupe{right:2%;top:8%;width:100px}.fix{margin-left:0;text-align:left}.stmt{grid-template-columns:1fr;gap:12px}.stmt .tog{justify-self:start}.toc summary{grid-template-columns:48px minmax(0,1fr) 36px;gap:12px}.toc .nm{font-size:clamp(30px,9vw,68px);overflow-wrap:anywhere}.toc .tg{display:none}.toc .gl{padding-left:0}.closing{grid-template-columns:1fr}.announce a{position:static}}
+@media (max-width:600px){.announce .wrap{flex-direction:column;align-items:center;text-align:center;gap:2px}nav .btn.ghost{display:none}.loupe{display:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="announce"><div class="wrap"><span>A plainer way to learn WCAG 2.2: all 55 Level A and AA criteria, drawn.</span><a href="#index">See the index →</a></div></div>
+<div class="wrap">
+<nav class="top" aria-label="Primary">
+  <a class="box logo" href="#"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1v18M1 10h18M3.6 3.6l12.8 12.8M16.4 3.6L3.6 16.4" stroke="currentColor" stroke-width="2.6"/></svg>PLAINLY</a>
+  <ul class="box links"><li><a href="#read">How it reads</a></li><li><a href="#principles">Principles</a></li><li><a href="#index">Index</a></li><li><a href="#about">About</a></li></ul>
+  <span class="sp"></span>
+  <a class="btn ghost" href="#index">Index</a><a class="btn" href="#read">Start reading</a>
+</nav>
+
+<main id="main">
+<section class="hero" aria-labelledby="h1" style="border-top:0">
+  <h1 id="h1">Shows how<span class="l2">it <span class="pic bad" id="pic" aria-hidden="true"><span class="ui"><span class="lab">Email</span><span class="fld">jo@example.com</span><span class="msg" id="pmsg">✕ fail</span></span></span> breaks,</span></h1>
+  <div class="row2">
+  <div class="mid">
+    <p>The <span class="hl">unusually visual</span> guide to WCAG 2.2.</p>
+    <a class="btn" href="#read">Start with the basics</a>
+  </div>
+  <div class="loupe" id="loupe" aria-hidden="true">
+    <span class="name">LOUPE</span>
+    <svg viewBox="0 0 160 200"><g class="bob">
+      <rect x="92" y="120" width="22" height="70" rx="11" fill="#B44708" transform="rotate(-28 103 155)"/>
+      <circle cx="70" cy="76" r="62" fill="#F26A1B"/><circle cx="70" cy="76" r="48" fill="#FFF7E8"/>
+      <circle cx="70" cy="76" r="48" fill="url(#gl)" opacity=".6"/>
+      <g id="eyes"><ellipse cx="54" cy="74" rx="7" ry="10" fill="#171411"/><ellipse cx="86" cy="74" rx="7" ry="10" fill="#171411"/></g>
+      <path d="M58 98q12 10 24 0" stroke="#171411" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <ellipse cx="44" cy="52" rx="10" ry="6" fill="#fff" opacity=".7" transform="rotate(-30 44 52)"/>
+    </g><defs><radialGradient id="gl" cx=".3" cy=".25"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#FFE3BE"/></radialGradient></defs></svg>
+    <span class="tag">RIVE · loupe.riv</span>
+  </div>
+  <div class="fix"><p class="sr">then how it's fixed.</p><div aria-hidden="true" style="font-family:var(--serif);font-size:clamp(56px,9.4vw,150px);line-height:.96;letter-spacing:-.025em">then how<br>it’s fixed.</div></div>
+  </div>
+  <div class="ask">
+    <div class="answer" id="answer" hidden aria-live="polite"></div>
+    <label for="q">Ask <b>Loupe</b> anything</label>
+    <div class="askbox"><input id="q" placeholder="Why can’t I see where I am on the page?" autocomplete="off"><button id="go" aria-label="Ask"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7" stroke="currentColor" stroke-width="2.4" fill="none"/></svg></button></div>
+    <div class="sugg"><button>my focus ring disappeared</button><button>grey text</button><button>captcha</button></div>
+  </div>
+</section>
+
+<section id="read" aria-labelledby="read-h">
+  <p class="kicker">How it reads</p>
+  <h2 id="read-h">One rule, one sentence, one thing to fix.</h2>
+  <div id="stmts"></div>
+</section>
+
+<section id="principles" aria-labelledby="pr-h">
+  <p class="kicker">The four principles</p>
+  <h2 id="pr-h">Four questions every page has to answer.</h2>
+  <div class="toc" id="toc"></div>
+</section>
+
+<section id="index" aria-labelledby="ix-h">
+  <p class="kicker">The index</p>
+  <h2 id="ix-h">All fifty-five, by name.</h2>
+  <div class="ixbar">
+    <label class="sr" for="ixq">Search the index</label>
+    <div class="askbox"><input id="ixq" type="search" placeholder="Search a number or a name"><span style="width:8px"></span></div>
+    <div class="lv" role="group" aria-label="Level" id="lv"><button aria-pressed="true" data-v="all">Everything</button><button aria-pressed="false" data-v="A">Level A</button><button aria-pressed="false" data-v="AA">Level AA</button></div>
+    <span id="ixc" style="margin-left:auto;font-size:14px;color:var(--ink-2)" aria-live="polite"></span>
+  </div>
+  <div class="cols" id="cols"></div>
+</section>
+
+<section id="about" aria-labelledby="ab-h">
+  <div class="closing">
+    <div><p class="kicker">About</p><h2 id="ab-h" style="margin-bottom:24px">A guide that passes its own test.</h2><p style="color:var(--ink-2);max-width:44ch">If a design choice would fail a criterion on this page, the design changes. Every ratio here is measured from the colours on screen.</p><a class="btn" href="#index">Open the index</a></div>
+    <div class="slot" role="img" aria-label="Placeholder for a Spline scene: Loupe on a desk of index cards"><span class="tag">SPLINE · reading-room.splinecode</span><svg width="220" height="160" viewBox="0 0 220 160" aria-hidden="true"><rect x="20" y="60" width="120" height="80" rx="6" fill="#fff" stroke="#E7DFCF" transform="rotate(-8 80 100)"/><rect x="60" y="50" width="120" height="80" rx="6" fill="#fff" stroke="#E7DFCF" transform="rotate(5 120 90)"/><circle cx="150" cy="56" r="30" fill="#F26A1B"/><circle cx="150" cy="56" r="22" fill="#FFF7E8"/></svg></div>
+  </div>
+</section>
+</main>
+<footer><span>Plainly — mockup E</span><span>Hedvig Letters Serif + Hedvig Letters Sans</span></footer>
+</div>
+
+<script>
+const C=window.CORPUS||[];const by=Object.fromEntries(C.map(c=>[c[0],c]));
+const esc=s=>String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* headline picture: fail -> pass a few times, then rests on pass; hover replays */
+const pic=document.getElementById('pic'),pmsg=document.getElementById('pmsg');
+function setPic(good){pic.className='pic '+(good?'good':'bad');pmsg.textContent=good?'✓ pass':'✕ fail'}
+function playPic(){if(reduce){setPic(true);return}let n=0;setPic(false);const t=setInterval(()=>{setPic(n%2===0);if(++n>=3)clearInterval(t)},1500)}
+playPic();document.getElementById('h1').addEventListener('mouseenter',playPic);
+
+/* Loupe watches the pointer, and looks down at the bar while you type */
+const eyes=document.getElementById('eyes'),lo=document.getElementById('loupe');let typing=false;
+addEventListener('pointermove',e=>{if(typing)return;const r=lo.getBoundingClientRect();const dx=e.clientX-(r.left+r.width*.45),dy=e.clientY-(r.top+r.height*.38);const d=Math.min(1,Math.hypot(dx,dy)/500),a=Math.atan2(dy,dx);eyes.setAttribute('transform',`translate(${Math.cos(a)*6*d} ${Math.sin(a)*6*d})`)});
+
+/* ask */
+const SYN={'1.1.1':'alt image picture chart','1.4.1':'link colour color','1.4.3':'grey gray faint light text contrast','2.4.7':'focus ring outline disappeared where am i','2.4.11':'sticky header hidden','2.5.8':'tiny small button tap','3.3.1':'error red border form','3.3.8':'captcha password puzzle login','4.1.2':'screen reader button label icon','1.4.10':'zoom mobile sideways scroll'};
+function search(s){s=s.toLowerCase().trim();if(!s)return[];const w=s.split(/\s+/).filter(x=>x.length>2||/\d/.test(x));return C.map(c=>{const hay=(c[0]+' '+c[1]+' '+(SYN[c[0]]||'')+' '+c[3]).toLowerCase();let sc=0;w.forEach(x=>{if(c[0].startsWith(x))sc+=5;if(c[1].toLowerCase().includes(x))sc+=3;if((SYN[c[0]]||'').includes(x))sc+=4;if(hay.includes(x))sc+=1});return[c,sc]}).filter(x=>x[1]).sort((a,b)=>b[1]-a[1]).map(x=>x[0])}
+const q=document.getElementById('q'),ans=document.getElementById('answer');
+function ask(){const r=search(q.value)[0];if(!q.value.trim()){ans.hidden=true;return}
+ ans.hidden=false;ans.innerHTML=r?`<span class="n">${r[0]} · Level ${r[2]}</span><h3>${esc(r[1])}</h3><p>${esc(r[3].split('. ')[0])}.</p><div class="cap f"><b>✕ Fail</b><span>${esc(r[4])}</span></div><div class="cap p"><b>✓ Pass</b><span>${esc(r[5])}</span></div><a href="#ix-${r[0]}" style="font-size:14px;font-weight:600;color:var(--orange-ink)">Open in the index →</a>`:'<p>Nothing yet. Try a number, like 1.4.3, or a word like “contrast”.</p>'}
+q.addEventListener('focus',()=>{typing=true;eyes.setAttribute('transform','translate(-2 8)')});
+q.addEventListener('blur',()=>{typing=false});
+q.addEventListener('keydown',e=>{if(e.key==='Enter')ask();if(e.key==='Escape'){ans.hidden=true}});
+q.addEventListener('input',()=>{clearTimeout(q.t);q.t=setTimeout(ask,250)});
+document.getElementById('go').onclick=ask;
+document.querySelectorAll('.sugg button').forEach(b=>b.onclick=()=>{q.value=b.textContent;ask();q.focus()});
+document.addEventListener('click',e=>{if(!e.target.closest('.ask'))ans.hidden=true});
+
+/* statements: each sentence carries a live example that the button fixes */
+const ST=[
+ {n:'1.4.1',html:'A link that’s only <span class="chip" data-k="link"><span style="color:#2A6BE0">blue</span></span> isn’t a link to everyone.',
+  fix:c=>c.innerHTML='<span style="color:#1A55C4;text-decoration:underline;text-underline-offset:3px">underlined</span>',undo:c=>c.innerHTML='<span style="color:#2A6BE0">blue</span>'},
+ {n:'1.4.3',html:'Grey text <span class="chip"><span style="color:#BDB7AB">reads fine</span><small style="color:#8a8378">1.9:1</small></span> to you. Not to the person in bright sun.',
+  fix:c=>c.innerHTML='<span style="color:#3A3530">reads fine</span><small style="color:#1E6B3C">11.2:1</small>',undo:c=>c.innerHTML='<span style="color:#BDB7AB">reads fine</span><small style="color:#8a8378">1.9:1</small>'},
+ {n:'3.3.1',html:'If the error is only <span class="chip" style="box-shadow:0 0 0 2px #E25C5C">a red border</span>, nobody knows what went wrong.',
+  fix:c=>{c.style.boxShadow='0 0 0 2px #E25C5C';c.innerHTML='a red border <span style="color:#A3101F;font-weight:700">· Email needs a domain</span>'},undo:c=>c.innerHTML='a red border'},
+ {n:'4.1.2',html:'To a screen reader, an icon with no name is just <span class="chip" style="background:#171411;color:#FFB37A;font-family:ui-monospace,Menlo,monospace">“button”</span>.',
+  fix:c=>c.textContent='“Remove item, button”',undo:c=>c.textContent='“button”'},
+ {n:'2.4.7',html:'Take away the <span class="chip">focus ring</span> and the keyboard user is lost.',
+  fix:c=>{c.style.outline='3px solid #F26A1B';c.style.outlineOffset='3px'},undo:c=>{c.style.outline=''}}];
+document.getElementById('stmts').innerHTML=ST.map((s,i)=>`<div class="stmt"><div class="crit"><b>${s.n}</b>${esc(by[s.n][1])}</div><p id="st-${i}">${s.html}</p><button class="tog" aria-pressed="false" data-i="${i}" aria-describedby="st-${i}"><span class="d" aria-hidden="true"></span><span class="tl">Fix it</span></button></div>`).join('');
+document.querySelectorAll('.stmt .tog').forEach(b=>b.onclick=()=>{const s=ST[b.dataset.i],c=document.querySelector(`#st-${b.dataset.i} .chip`);const on=b.getAttribute('aria-pressed')!=='true';b.setAttribute('aria-pressed',on);b.querySelector('.tl').textContent=on?'Fixed':'Fix it';on?s.fix(c):s.undo(c)});
+
+/* principles */
+const P=[['I','Perceivable',"If you can't perceive it, it isn't there for you."],['II','Operable','Every control has to be reachable by whatever you drive it with.'],['III','Understandable','A thing you can perceive and operate can still be incomprehensible.'],['IV','Robust','Assistive technology can only relay what the markup actually says.']];
+const G=[['1.1','Text Alternatives'],['1.2','Time-based Media'],['1.3','Adaptable'],['1.4','Distinguishable'],['2.1','Keyboard Accessible'],['2.2','Enough Time'],['2.3','Seizures & Physical Reactions'],['2.4','Navigable'],['2.5','Input Modalities'],['3.1','Readable'],['3.2','Predictable'],['3.3','Input Assistance'],['4.1','Compatible']];
+const inG=g=>C.filter(c=>c[0].split('.').slice(0,2).join('.')===g);
+document.getElementById('toc').innerHTML=P.map((p,i)=>`<details><summary><span class="rn">${p[0]}.</span><span class="nm">${p[1]}</span><span class="tg">${esc(p[2])}</span><span class="ct">${C.filter(c=>c[0][0]==i+1).length}</span></summary><div class="gl">${G.filter(g=>g[0][0]==i+1).map(g=>`<div><h3>${g[0]} ${esc(g[1])}</h3><ul>${inG(g[0]).map(c=>`<li><span>${c[0]}</span><a href="#ix-${c[0]}">${esc(c[1])}</a></li>`).join('')}</ul></div>`).join('')}</div></details>`).join('');
+
+/* index */
+let lvl='all';const ixq=document.getElementById('ixq');
+function render(){const s=ixq.value.trim().toLowerCase();let n=0;
+ document.getElementById('cols').innerHTML=G.map(g=>{const rows=inG(g[0]).filter(c=>(lvl==='all'||c[2]===lvl)&&(!s||(c[0]+' '+c[1]).toLowerCase().includes(s)));n+=rows.length;return rows.length?`<div class="grp"><h3>${g[0]} ${esc(g[1])}</h3>${rows.map(c=>`<a id="ix-${c[0]}" href="#ix-${c[0]}"><span class="num">${c[0]}</span><span class="t">${esc(c[1])}</span><span class="l ${c[2]==='AA'?'aa':''}">${c[2]}</span></a>`).join('')}</div>`:''}).join('')||'<p>No criteria match.</p>';
+ document.getElementById('ixc').textContent=`${n} of ${C.length}`}
+ixq.oninput=render;
+document.querySelectorAll('#lv button').forEach(b=>b.onclick=()=>{lvl=b.dataset.v;document.querySelectorAll('#lv button').forEach(x=>x.setAttribute('aria-pressed',x===b));render()});
+render();
+</script>
+</body>
+</html>

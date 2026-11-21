@@ -1,0 +1,444 @@
+consistency  /Users/kane/Documents/1_Personal/5_programming projects/wcag encylopedia/design/mockups/c-bureau.html
+--quick: not checked: scroll-linked (stepping), scroll-reveal (the reveal walk; IntersectionObserver reveals are read), hover-spill, hidden-visual, loop-pause, forms, reduced-motion, the dead-IntersectionObserver walk (hidden content is read with scripts off and under reduced motion), hover-move. Still told: IntersectionObserver reveals (scroll-reveal), held sections (pinned) and CSS scroll timelines (scroll-linked); faults inside held or [data-big-scene] sections are WARNs
+
+1440x900  10 screens  59 FAIL  38 WARN
+  FAIL placeholder     article.card > div.pair > figure.frame.fail > figcaption  "7The field and checkbox edges vanish; on"
+       "placeholder" is a placeholder left on the page  [1440-16-placeholder.jpg]
+       fix: write the real words: take the name or figure from the brief, or remove the claim; no bracketed placeholder ships
+  FAIL placeholder     div.pair > figure.frame.fail > div.screen > span.ex-field  "jo@example.com"
+       a stand-in contact printed on the page ("jo@example.com"): no visitor can use it (and 1 more like it: "jo@example.com")  [1440-17-placeholder.jpg]
+       fix: print the real address and number, or a form or a button that names the action: never an example.com address or a number of zeros
+  FAIL scroll-reveal   section#specimens  "Six criterion cards to try Ratios are me"
+       starts "color" (0.1 s) the moment it is scrolled into view (an IntersectionObserver) on button#pk-0  [1440-27-scroll-reveal.jpg]
+       fix: show it at rest: no fade, rise or unmask when it is scrolled into view
+  FAIL scroll-reveal   section#demos  "Demos for the criteria that move The sam"
+       starts "color" (0.1 s) the moment it is scrolled into view (an IntersectionObserver) on button  [1440-36-scroll-reveal.jpg]
+       fix: show it at rest: no fade, rise or unmask when it is scrolled into view
+  FAIL no-visual       section#top  "Every WCAG 2.2 rule, jo@example.com ✓ pa"
+       pictures, effects and mocks cover 8% of this section; a feature section needs a visual (about 25% or more)  [1440-01-no-visual.jpg]
+       fix: give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits
+  FAIL no-visual       section#read  "The anatomy of a criterion card"
+       no picture, effect or mock in this section; a feature section needs a visual  [1440-18-no-visual.jpg]
+       fix: give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits
+  FAIL no-visual       section#principles  "The four principles of WCAG"
+       no picture, effect or mock in this section; a feature section needs a visual  [1440-25-no-visual.jpg]
+       fix: give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits
+  FAIL no-visual       section#specimens  "Six criterion cards to try"
+       no picture, effect or mock in this section; a feature section needs a visual  [1440-28-no-visual.jpg]
+       fix: give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits
+  FAIL no-visual       section#demos  "Demos for the criteria that move"
+       no picture, effect or mock in this section; a feature section needs a visual  [1440-37-no-visual.jpg]
+       fix: give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits
+  FAIL card-visual     div#lvls  "55 Every level A and AA together: the us"
+       3 cards hold only text: no picture, icon, UI fragment or effect in any of them  [1440-42-card-visual.jpg]
+       fix: give the cards a visual: an inset panel with a UI fragment, a photograph or real icons
+  FAIL button-styles   (one screen)
+       4 button styles on one screen: soft, fill #f0ede6 ("Index"); soft, fill #1b1712, outline #1b1712 ("Find a criterion"); soft, outline #1b1712 ("See how a card works"); pill, fill #111111 ("Tweaks \"); the odd ones out: "See how a card works", "Tweaks \"  [1440-02-button-styles.jpg]
+       fix: one primary and one secondary button: one shape, one height per size, one label size
+  FAIL button-styles   (the page)
+       4 button styles on the page: soft, fill #f0ede6 x5 ("Index"); soft, fill #1b1712, outline #1b1712 x3 ("Find a criterion"); soft, outline #1b1712 x1 ("See how a card works"); pill, fill #111111 x1 ("Tweaks \")  [1440-03-button-styles.jpg]
+       fix: one primary and one secondary button: one shape, one height per size, one label size
+  FAIL copy-headings   div#spec > article.card > div.card-h > h3  "Contrast (Minimum)"
+       "Contrast (Minimum)" names no product, part, place or section (15 headings like it; at most one brand line per page) (and 14 more like it: "Text Alternatives", "Time-based Media", "Adaptable", "Distinguishable", ...)  [1440-29-copy-headings.jpg]
+       fix: name the thing in every heading: the product, a part, the place or a section noun
+  FAIL heading-scale   div#spec > article.card > div.card-h > h3  "Contrast (Minimum)"
+       h3 headings in 2 sizes, 22px ("Text Alternatives") to 30px (x1.36)  [1440-30-heading-scale.jpg]
+       fix: size headings by level: the h1 largest, one size per level, each level below the one above
+  FAIL stagger         h1#h1  "Every WCAG 2.2 rule, jo@example.com ✓ pa"
+       the 5 lines of this heading start at 124, 124, 360, 361, 124px: a headline broken across columns, read in a zigzag  [1440-04-stagger.jpg]
+       fix: start every row of the list on one left edge
+  FAIL top-stagger     div#panel > div.gl  "GUIDELINE 1.1 1 Text Alternatives 1.1.1 "
+       2 boxes side by side start at different heights (+0, +128px)  [1440-26-top-stagger.jpg]
+       fix: align the tops of the boxes in the row (one floor, one ceiling)
+  FAIL top-stagger     div#ix  "GUIDELINE 1.1 Text Alternatives 1.1.1 No"
+       2 boxes side by side start at different heights (+0, +186px)  [1440-46-top-stagger.jpg]
+       fix: align the tops of the boxes in the row (one floor, one ceiling)
+  FAIL off-grid        section#read > div.wrap > div.sec-head > p  "Every card has the same eight parts. Pic"
+       left edge at 839.5px, 16.5px off a common edge of its section at 856px (8 elements, like span.pin)  [1440-19-off-grid.jpg]
+       fix: move it onto the page margin, or the column edge its section uses
+  FAIL off-grid        button#pk-1 > span.num  "1.1.1"
+       left edge at 140px, 16px off the page margin at 124px (43 elements, like button#pk-0); 5 more in this section off the grid too (span.num at 140px, span.num at 140px, b at 206.5px, span.num at 140px, ...)  [1440-31-off-grid.jpg]
+       fix: move it onto the page margin, or the column edge its section uses
+  FAIL off-grid        ul#demo-list > li:nth-of-type(2) > button > span.num  "4.1.2"
+       left edge at 140px, 16px off the page margin at 124px (43 elements, like button); 7 more in this section off the grid too (span.num at 140px, span.num at 140px, span.num at 140px, span.num at 140px, ...)  [1440-38-off-grid.jpg]
+       fix: move it onto the page margin, or the column edge its section uses
+  FAIL off-grid        div#lvls > button.lvcard:nth-of-type(3)  "24 AA Level AA The usual target in law a"
+       left edge at 932px, 19px off a common edge of its section at 951px (23 elements, like span.label); 1 more in this section off the grid too (p at 839.5px)  [1440-43-off-grid.jpg]
+       fix: move it onto the page margin, or the column edge its section uses
+  FAIL contrast        div.ix-g:nth-of-type(10) > details.row:nth-of-type(2) > summary > span.num  "3.1.2"
+       body text over a effect reads at 1.0:1 at its worst tenth (needs 4.5:1), on a busy ground (and 1 more like it: "GUIDELINE 4.1")  [1440-47-contrast.jpg]
+       fix: put the text on a calm part of the picture, or on a solid panel
+  FAIL text-contrast   div.pair > figure.frame.fail > div.screen > div.c143:nth-of-type(1)  "Your order has shipped"
+       a caption, label or muted line in #b8b4ae on #ffffff reads 2.06:1 (needs 4.5:1); 2 like it, like "Track it from your acc"  [1440-32-text-contrast.jpg]
+       fix: body text in the ink at 7:1 or more; grey (4.5:1 or more) only for captions and labels
+  FAIL field-label     input#q
+       a input[type=text] without a label you can see: its <label> is hidden  [1440-05-field-label.jpg]
+       fix: put a <label for> with the field's name above it (references/system.md, Forms); a placeholder is no label
+  FAIL field-label     input#scrub
+       a input[type=range] without a label you can see: its <label> is hidden  [1440-39-field-label.jpg]
+       fix: put a <label for> with the field's name above it (references/system.md, Forms); a placeholder is no label
+  FAIL focus-ring      .ask-box input:focus
+       ".ask-box input:focus" in the page removes the focus outline and sets nothing in its place
+       fix: keep the kit's :focus-visible ring, or put a change of the same strength (a 2px line in --action) in the rule that removes it
+  FAIL focus-ring      .search input:focus
+       ".search input:focus" in the page removes the focus outline and sets nothing in its place
+       fix: keep the kit's :focus-visible ring, or put a change of the same strength (a 2px line in --action) in the rule that removes it
+  FAIL focus-visible   input#q
+       Tab stop 13, input "": it shows no change when focused  [1440-57-focus-visible.jpg]
+       fix: keep the kit's ring (system.css :focus-visible, 2px in --action, there at once); a control that hides itself shows on focus
+  FAIL focus-visible   ol#anat-list > li:nth-of-type(1) > button  "Number The criterion’s dotted triple, an"
+       Tab stop 16, button "Number The criterion’s dotted triple, and its link": the focus lands on something you cannot see
+       fix: keep the kit's ring (system.css :focus-visible, 2px in --action, there at once); a control that hides itself shows on focus
+  WARN text-only       section#index  "The index of all 55 criteria"
+       the section is only text: no picture, icon, mock or effect in it  [1440-49-text-only.jpg]
+       fix: give the section a visual: a photograph that fits, the real icons, or a UI fragment on a ground
+  WARN copy-headline   h1#h1  "Every WCAG 2.2 rule, jo@example.com ✓ pa"
+       the h1 has 12 words (2 to 8 read at a glance)  [1440-06-copy-headline.jpg]
+       fix: put the category noun in the h1 (and who it is for, or where), in 2 to 8 words
+  WARN copy-buttons    nav.top > ul.links > li:nth-of-type(5) > a  "Index"
+       "Index" does not start with a verb (book, buy, try, start, get, see...) (and 2 more like it: "Browse all 55 criteria", "Tweaks \")  [1440-07-copy-buttons.jpg]
+       fix: label buttons with a verb and what the visitor gets ("Book a room", "Start free trial")
+  WARN copy-actions    nav.top > ul.links > li:nth-of-type(5) > a  "Index"
+       3 labels for one target /c-bureau.html#index: "Index", "Find a criterion", "Browse all 55 criteria"  [1440-08-copy-actions.jpg]
+       fix: few actions, one wording: at most 2 in the hero, the main action word for word in nav, hero and close
+  WARN heading-scale   div.wrap > div.stats.e > div:nth-of-type(1) > span.num  "55"
+       figures in 2 sizes, 26, 40px ("11.4.11" at 26px, "55" at 40px)  [1440-09-heading-scale.jpg]
+       fix: set the page's figures (stats, measures, prices) in one or two sizes
+  WARN off-grid        ul#demo-list > li:nth-of-type(3) > button.soon > b  "Reflow"
+       two common left edges of one section 9px apart: 207px (4 elements, like this one) and 198px (12)  [1440-40-off-grid.jpg]
+       fix: move it onto the page margin, or the column edge its section uses
+  WARN off-grid        div.ix-g:nth-of-type(1) > details.row > summary > span.badge  "A"
+       two common left edges of one section 20px apart: 452px (9 elements, like this one) and 432px (11)  [1440-44-off-grid.jpg]
+       fix: move it onto the page margin, or the column edge its section uses
+  WARN off-grid        div.ix-g:nth-of-type(8) > details.row:nth-of-type(5) > summary > span.badge.aa  "AA"
+       two common left edges of one section 20px apart: 845px (6 elements, like this one) and 865px (14)  [1440-50-off-grid.jpg]
+       fix: move it onto the page margin, or the column edge its section uses
+  WARN off-grid        div.ix-g:nth-of-type(10) > details.row:nth-of-type(2) > summary > span.badge.aa  "AA"
+       two common left edges of one section 19px apart: 1259px (7 elements, like this one) and 1278px (8)  [1440-51-off-grid.jpg]
+       fix: move it onto the page margin, or the column edge its section uses
+  WARN off-grid        h2#au-h  "This page’s own accessibility audit"
+       the section's heading starts at 744px, 620px off the page margin (124px), and no other section starts there  [1440-53-off-grid.jpg]
+       fix: move it onto the page margin, or the column edge its section uses
+  WARN col-edge        div#spec  "1.4.3 Contrast (Minimum) AA Body text ne"
+       the second column starts at 4 places: 446px (section#specimens), 744px (section#audit), 839px (section#read, section#principles, section#demos, section#index), 935px (section#top)  [1440-33-col-edge.jpg]
+       fix: start the second column of every split on the same one or two grid columns
+  WARN section-gaps    section#top / section#read
+       97px between these sections, -47% against the median 182px  [1440-20-section-gaps.jpg]
+       fix: use one gap between sections (all within 25% of each other)
+  WARN section-gaps    section#read / section#principles
+       129px between these sections, -29% against the median 182px  [1440-23-section-gaps.jpg]
+       fix: use one gap between sections (all within 25% of each other)
+  WARN section-gaps    section#demos / section#index
+       135px between these sections, -26% against the median 182px  [1440-45-section-gaps.jpg]
+       fix: use one gap between sections (all within 25% of each other)
+  WARN links           a#today-a  "3.2.3 AA CRITERION OF THE DAY Consistent"
+       "3.2.3 AA CRITERION OF THE DAY Consistent" goes to #ix-3.2.3, a closed answer that stays shut when the link is followed
+       fix: open the target when its hash is followed (details.open = true on hashchange), or link to the section
+  WARN links           article.g:nth-of-type(1) > ul > li > a  "1.1.1 Non-text Content"
+       "1.1.1 Non-text Content" goes to #ix-1.1.1, a closed answer that stays shut when the link is followed
+       fix: open the target when its hash is followed (details.open = true on hashchange), or link to the section
+  WARN links           article.g:nth-of-type(2) > ul > li:nth-of-type(1) > a  "1.2.1 Audio-only and Video-only (Prereco"
+       "1.2.1 Audio-only and Video-only (Prereco" goes to #ix-1.2.1, a closed answer that stays shut when the link is followed
+       fix: open the target when its hash is followed (details.open = true on hashchange), or link to the section
+  WARN links           article.g:nth-of-type(2) > ul > li:nth-of-type(2) > a  "1.2.2 Captions (Prerecorded)"
+       "1.2.2 Captions (Prerecorded)" goes to #ix-1.2.2, a closed answer that stays shut when the link is followed
+       fix: open the target when its hash is followed (details.open = true on hashchange), or link to the section
+  WARN links           article.g:nth-of-type(2) > ul > li:nth-of-type(3) > a  "1.2.3 Audio Description or Media Alterna"
+       "1.2.3 Audio Description or Media Alterna" goes to #ix-1.2.3, a closed answer that stays shut when the link is followed
+       fix: open the target when its hash is followed (details.open = true on hashchange), or link to the section
+  WARN links           article.g:nth-of-type(2) > ul > li:nth-of-type(4) > a  "1.2.4 Captions (Live)"
+       "1.2.4 Captions (Live)" goes to #ix-1.2.4, a closed answer that stays shut when the link is followed
+       fix: open the target when its hash is followed (details.open = true on hashchange), or link to the section
+  WARN photo-credit    (the page text)
+       1 library source (placehold): the page credits placehold; confirm each shows the client's own product, place or people
+       fix: confirm the library photograph shows the client's own product, place or people; otherwise replace it
+  WARN nav-family      header.navbar
+       the nav's links and actions use 2 type families (Funnel Sans, Arial)  [1440-10-nav-family.jpg]
+       fix: keep one nav on every screen: the same bar, fill, links and type
+  WARN nav-family      header.navbar
+       the nav's links come in 2 sizes (15, 13px)  [1440-11-nav-family.jpg]
+       fix: keep one nav on every screen: the same bar, fill, links and type
+  WARN nav-labels      nav.top > ul.links > li:nth-of-type(3) > a  "Specimens"
+       "Specimens" opens a section headed "Six criterion cards to try"  [1440-12-nav-labels.jpg]
+       fix: name each nav link after the heading of the section it opens
+  WARN tab-wrap        button#pk-5  "3.3.1 Error Identification"
+       the row of 6 tabs wraps onto 6 lines and leaves "3.3.1 Error Identification" alone on the last  [1440-34-tab-wrap.jpg]
+       fix: fit the tabs on one line at this width (shorter labels, a scrolling row), or let them stack evenly
+  WARN copy-length     h1#h1  "Every WCAG 2.2 rule, jo@example.com ✓ pa"
+       a headline of 9 words on 4 lines at 100.8px: a paragraph set in display type  [1440-13-copy-length.jpg]
+       fix: cut the heading to one short line (2 to 12 words) and move the rest into the text under it
+  WARN copy-length     section#index  "The index of all 55 criteria"
+       6 sections over 90 words a screen outside the UI mocks ("The index of all 55 crit" 1634, "The anatomy of a criteri" 182, "The four principles of W" 148); 484 words a screen across the page (4114 words in 8.5 screens): a tech page says it in about 80 or fewer  [1440-52-copy-length.jpg]
+       fix: cut every section to its heading, one line and the product UI: the UI says the rest; no second paragraph, no list of feature sentences
+  WARN nav-current     header.navbar
+       the nav stays on screen with 4 links to the page's sections, but never marks the one you are in (no link changes as the page scrolls)  [1440-21-nav-current.jpg]
+       fix: mark the link of the section on screen (a colour, a weight or a line under it) as the visitor scrolls
+  WARN button-contrast nav.top > ul.links > li:nth-of-type(5) > a  "Index"
+       the button "Index" (#f0ede6) stands only 1.07:1 off the ground around it: it reads as part of the ground, or as switched off  [1440-14-button-contrast.jpg]
+       fix: give the button a fill that stands at least 1.5:1 off what is around it, or an outline in the ink
+  WARN button-contrast nav.top > ul.links > li:nth-of-type(1) > a  "Card anatomy"
+       the button "Card anatomy" (#f0ede6) stands only 1.07:1 off the ground around it: it reads as part of the ground, or as switched off  [1440-22-button-contrast.jpg]
+       fix: give the button a fill that stands at least 1.5:1 off what is around it, or an outline in the ink
+  WARN button-contrast nav.top > ul.links > li:nth-of-type(2) > a  "Principles"
+       the button "Principles" (#f0ede6) stands only 1.08:1 off the ground around it: it reads as part of the ground, or as switched off  [1440-24-button-contrast.jpg]
+       fix: give the button a fill that stands at least 1.5:1 off what is around it, or an outline in the ink
+  WARN button-contrast nav.top > ul.links > li:nth-of-type(3) > a  "Specimens"
+       the button "Specimens" (#f0ede6) stands only 1.07:1 off the ground around it: it reads as part of the ground, or as switched off  [1440-35-button-contrast.jpg]
+       fix: give the button a fill that stands at least 1.5:1 off what is around it, or an outline in the ink
+  WARN button-contrast nav.top > ul.links > li:nth-of-type(4) > a  "Demos"
+       the button "Demos" (#f0ede6) stands only 1.08:1 off the ground around it: it reads as part of the ground, or as switched off  [1440-41-button-contrast.jpg]
+       fix: give the button a fill that stands at least 1.5:1 off what is around it, or an outline in the ink
+  WARN split-align     section#audit > div.wrap > div.spl  "This page’s own accessibility audit"
+       the picture beside "This page’s own accessibility " sits centred on a text column 148px taller: its top and bottom line up with nothing  [1440-54-split-align.jpg]
+       fix: set the picture's top on the heading's top (align-items: start), or let it run the column's full height
+  WARN hero-enter      section#top
+       the hero does not enter on load: no head line setting html.m-enter (motion.md, The hero's entrance)  [1440-15-hero-enter.jpg]
+       fix: put data-enter on the hero <section> and keep the head line from starter.html that sets html.m-enter
+  WARN moment-none     (the page)
+       a software page (--type) deals no moment: every kind carries one, two on a long page (moments.md)
+       fix: deal one (moments.mjs pick --page software) and mount it in its own section
+  WARN share-meta      head
+       the head lacks og:image, twitter:card, an icon: a shared link shows no picture or title of its own
+       fix: copy the head block of starter.html: og tags, twitter:card, the icon and theme-color (references/system.md, Head)
+  FAIL hero-screen     section#top  "Every WCAG 2.2 rule, jo@example.com✓ pas"
+       the hero ends at 917px on a 900px screen, 17px below the fold: it ends at the fold, 1px either way (SR-1)  [1440-rhythm-01-hero-screen.jpg]
+       fix: make the hero exactly one screen (height: 100svh, its content fitted inside), never taller or shorter
+  FAIL section-height  footer  "Bureau — mockup C, round 3Set in Gloock,"
+       the section is 118px tall (0.1 screens), 782px short of one screen (900px): every section after the hero is one screen or two, 2px either way (SR-2)  [1440-rhythm-02-section-height.jpg]
+       fix: set the section to one screen or two (height: calc(var(--h,1) * 100vh), --h 1 or 2) and cut or split its content to fit
+  FAIL section-height  section#principles  "The four principles of WCAG Each princip"
+       the section is 1126px tall (1.3 screens), 226px over one screen (900px): every section after the hero is one screen or two, 2px either way (SR-2)
+       fix: set the section to one screen or two (height: calc(var(--h,1) * 100vh), --h 1 or 2) and cut or split its content to fit
+  FAIL section-height  section#demos  "Demos for the criteria that move The sam"
+       the section is 1060px tall (1.2 screens), 160px over one screen (900px): every section after the hero is one screen or two, 2px either way (and 1 more like it: "The index of all 55 crit") (SR-2)
+       fix: set the section to one screen or two (height: calc(var(--h,1) * 100vh), --h 1 or 2) and cut or split its content to fit
+  FAIL section-height  section#audit  "Spline · gyroscope.splinecode This page’"
+       the section starts at 6734px, 434px below the screen grid (7 x 900px): sections start on whole screens (SR-2)
+       fix: make every section above it exactly one or two screens tall, so this one starts on a whole screen
+  FAIL section-height  footer  "Bureau — mockup C, round 3Set in Gloock,"
+       the section starts at 7634px, 434px below the screen grid (8 x 900px): sections start on whole screens (SR-2)
+       fix: make every section above it exactly one or two screens tall, so this one starts on a whole screen
+  FAIL section-height  section#index  "The index of all 55 criteria Level A is "
+       the section starts at 4903px, 403px below the screen grid (5 x 900px): sections start on whole screens (and 5 more like it: "Six criterion cards to t", "Demos for the criteria t", "Every WCAG 2.2 rule, jo@") (SR-2)
+       fix: make every section above it exactly one or two screens tall, so this one starts on a whole screen
+  FAIL section-height  section#demos  "Demos for the criteria that move The sam"
+       the section's content does not fit it: its lowest content ends 995px below its top, past 988px (the section less 72px of bottom padding) (SR-2)
+       fix: fit the content above the section's bottom padding (--padb), or make it two screens (.g2) in two groups
+  FAIL section-height  footer  "Bureau — mockup C, round 3Set in Gloock,"
+       the section's content does not fit it: its lowest content ends 51px below its top, past 46px (the section less 72px of bottom padding) (SR-2)
+       fix: fit the content above the section's bottom padding (--padb), or make it two screens (.g2) in two groups
+  WARN section-air     section#demos / section#index
+       123px of air between the content of these two sections: 128-480px (64-600px WARN) (SR-3)  [1440-rhythm-07-section-air.jpg]
+       fix: keep 128-480px of air between the content of neighbouring sections (112-420px on a phone): the sections' padding (--padt, --padb)
+  FAIL one-section     section#index  "The index of all 55 criteria Level A is "
+       the screen at scroll 6300px (stride 7) shows 434px of section 6 and the content of 2 sections, over 24px each beside section 7: a screen shows one section (another may peek 8px, 24px WARN) (SR-4)  [1440-rhythm-03-one-section.jpg]
+       fix: make each section exactly one screen or two, so a screen shows one section and no neighbour peeks
+  FAIL one-section     section#demos  "Demos for the criteria that move The sam"
+       the screen at scroll 4500px (stride 5) shows 403px of section 5 and the content of 2 sections, over 24px each beside section 6: a screen shows one section (another may peek 8px, 24px WARN) (SR-4)
+       fix: make each section exactly one screen or two, so a screen shows one section and no neighbour peeks
+  FAIL one-section     section#principles  "The four principles of WCAG Each princip"
+       the screen at scroll 2700px (stride 3) shows 244px of section 3 and the content of 2 sections, over 24px each beside section 4: a screen shows one section (another may peek 8px, 24px WARN) (and 5 more like it: scroll 3600px, scroll 6851px, scroll 116px) (SR-4)
+       fix: make each section exactly one screen or two, so a screen shows one section and no neighbour peeks
+  FAIL container-edges header.navbar  "Bureau Card anatomy Principles Specimens"
+       the nav's first box starts at 124px and its last ends at 1316px, not on its .wrap at 100-1340px (SR-6)  [1440-rhythm-04-container-edges.jpg]
+       fix: use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone
+  FAIL container-edges a.skip  "Skip to content"
+       a <a> at the top of the page, outside header.nav, main, footer.closing and nav.actionbar (SR-6)
+       fix: build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing
+  FAIL container-edges div.announce  "WCAG 2.2 is now complete here: all 55 Le"
+       a <div> at the top of the page, outside header.nav, main, footer.closing and nav.actionbar (SR-6)
+       fix: build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing
+  FAIL container-edges header.navbar  "Bureau Card anatomy Principles Specimens"
+       a <header> at the top of the page, outside header.nav, main, footer.closing and nav.actionbar (and 3 more like it: "Bureau — mockup C, round", "Tweaks 0\", "Every WCAG 2.2 rule, jo@") (SR-6)
+       fix: build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing
+  FAIL container-edges div#ix > div.ix-g:nth-of-type(11) > span.label  "Guideline 3.2"
+       1 text block starts on a left line at x 951, 851px from the container's left: text starts on the container's left, or on one split line (x 627, 732, 837) (SR-6)
+       fix: start the text on the container's left, or on the one split line every split shares
+  FAIL container-edges div.pair > figure.frame.pass > span.v > span  "✓"
+       2 text blocks start on a left line at x 893, 793px from the container's left: text starts on the container's left, or on one split line (x 627, 732, 837) (also "Hierarchy moved from lightness t") (and 13 more like it: x 744, "This page’s own accessib", x 537) (SR-6)
+       fix: start the text on the container's left, or on the one split line every split shares
+  FAIL container-edges div#anat-card > article.card  "11.4.112Non-text Contrast3AA 4The parts "
+       a box over half the container wide runs 124-791px, not on the container's lines at 100-1340px (SR-6)
+       fix: run the picture or box from the container's left line to its right line, or put it in a row or a split
+  FAIL container-edges div#spec > article.card  "1.4.3Contrast (Minimum)AA Body text need"
+       a box over half the container wide runs 446-1316px, not on the container's lines at 100-1340px (and 5 more like it: "Playhead 0:00", "55success criteria at Le", "01PerceivableCan people ") (SR-6)
+       fix: run the picture or box from the container's left line to its right line, or put it in a row or a split
+  FAIL row-lines       div#player  "2.4.7 · Focus styles removed✕ FailFull n"
+       a row of 2 items: its first item starts at 446px, the container's left line at 100px; its last item ends at 1316px, the container's right line at 1340px (2px either way) (SR-7)  [1440-rhythm-05-row-lines.jpg]
+       fix: start the row's first item on the container's left line and end its last on the right line, every item one height
+  FAIL row-lines       section#top > div.wrap > div.stats.e  "55success criteria at Level A and AA 13g"
+       a row of 4 items: its first item starts at 125px, the container's left line at 100px; its last item ends at 1315px, the container's right line at 1340px (2px either way) (SR-7)
+       fix: start the row's first item on the container's left line and end its last on the right line, every item one height
+  FAIL split-pair      section#top > div.wrap > div.hero-grid  "Every WCAG 2.2 rule, jo@example.com✓ pas"
+       the two columns of the split start 160px apart at the top: a split's columns are top-aligned, 8px either way (SR-8)  [1440-rhythm-06-split-pair.jpg]
+       fix: top-align both columns of the split (align-items: start)
+  FAIL split-pair      section#read > div.wrap > div.sec-head  "The anatomy of a criterion card Every ca"
+       the two columns of the split start 73px apart at the top: a split's columns are top-aligned, 8px either way (SR-8)
+       fix: top-align both columns of the split (align-items: start)
+  FAIL split-pair      section#demos > div.wrap > div.sec-head  "Demos for the criteria that move The sam"
+       the two columns of the split start 73px apart at the top: a split's columns are top-aligned, 8px either way (and 3 more like it: "Spline · gyroscope.splin", "The four principles of W", "The index of all 55 crit") (SR-8)
+       fix: top-align both columns of the split (align-items: start)
+  FAIL split-pair      section#top > div.wrap > div.hero-grid  "Every WCAG 2.2 rule, jo@example.com✓ pas"
+       the split's columns are off the page's one pair of lines: its right column starts at x 935, on none of the split lines 627 (k=5), 732 (k=6), 837 (k=7) (SR-8)
+       fix: start every split's right column on one shared line (wrap.left + k x (width + 24) / 12, k 5, 6 or 7; 6 on a place page) and end the left one 24px before it
+  FAIL split-pair      div#panel  "If you can't perceive it, it isn't there"
+       the split's columns are off the page's one pair of lines: its right column starts at x 564, the first split's at 935; its right column starts at x 564, on none of the split lines 627 (k=5), 732 (k=6), 837 (k=7) (SR-8)
+       fix: start every split's right column on one shared line (wrap.left + k x (width + 24) / 12, k 5, 6 or 7; 6 on a place page) and end the left one 24px before it
+  FAIL split-pair      div#spec > article.card > div.pair  "✕ FailYour order has shippedTrack it fro"
+       the split's columns are off the page's one pair of lines: its right column starts at x 893, the first split's at 935; its right column starts at x 893, on none of the split lines 627 (k=5), 732 (k=6), 837 (k=7) (and 5 more like it: "Spline · gyroscope.splin", "The anatomy of a criteri", "The four principles of W") (SR-8)
+       fix: start every split's right column on one shared line (wrap.left + k x (width + 24) / 12, k 5, 6 or 7; 6 on a place page) and end the left one 24px before it
+  FAIL split-pair      div#spec > article.card > div.pair  "✕ FailYour order has shippedTrack it fro"
+       the split does not run edge to edge on the container: its left column starts at 479px, the container's left at 100px; its right column ends at 1283px, the container's right at 1340px (SR-8)
+       fix: run the split from the container's left line to its right line
+  FAIL split-pair      div#panel  "If you can't perceive it, it isn't there"
+       the split does not run edge to edge on the container: its left column starts at 157px, the container's left at 100px; its right column ends at 1283px, the container's right at 1340px (and 6 more like it: "Every WCAG 2.2 rule, jo@", "The anatomy of a criteri", "The four principles of W") (SR-8)
+       fix: run the split from the container's left line to its right line
+
+390x844  22 screens  20 FAIL  10 WARN
+  FAIL nav-covers      button#tw-toggle  "Tweaks \"
+       sits on top of the text "axe violations on this site, checked on " while the page scrolls: part of the line shows beside it  [390-04-nav-covers.jpg]
+       fix: make the fixed nav one opaque band across the whole screen, or let it scroll away with the page
+  FAIL scroll-reveal   section#principles  "The four principles of WCAG Each princip"
+       starts "color" (0.1 s) the moment it is scrolled into view (an IntersectionObserver) on button#tab-0  [390-13-scroll-reveal.jpg]
+       fix: show it at rest: no fade, rise or unmask when it is scrolled into view
+  FAIL scroll-reveal   section#specimens  "Six criterion cards to try Ratios are me"
+       starts "color" (0.1 s) the moment it is scrolled into view (an IntersectionObserver) on button#pk-0  [390-16-scroll-reveal.jpg]
+       fix: show it at rest: no fade, rise or unmask when it is scrolled into view
+  FAIL scroll-reveal   section#demos  "Demos for the criteria that move The sam"
+       starts "color" (0.1 s) the moment it is scrolled into view (an IntersectionObserver) on button  [390-20-scroll-reveal.jpg]
+       fix: show it at rest: no fade, rise or unmask when it is scrolled into view
+  FAIL no-visual       section#top  "Every WCAG 2.2 rule, jo@example.com ✓ pa"
+       pictures, effects and mocks cover 13% of this section; a feature section needs a visual (about 25% or more)  [390-05-no-visual.jpg]
+       fix: give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits
+  FAIL no-visual       section#read  "The anatomy of a criterion card"
+       no picture, effect or mock in this section; a feature section needs a visual  [390-10-no-visual.jpg]
+       fix: give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits
+  FAIL no-visual       section#principles  "The four principles of WCAG"
+       no picture, effect or mock in this section; a feature section needs a visual  [390-14-no-visual.jpg]
+       fix: give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits
+  FAIL no-visual       section#specimens  "Six criterion cards to try"
+       no picture, effect or mock in this section; a feature section needs a visual  [390-17-no-visual.jpg]
+       fix: give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits
+  FAIL no-visual       section#demos  "Demos for the criteria that move"
+       no picture, effect or mock in this section; a feature section needs a visual  [390-21-no-visual.jpg]
+       fix: give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits
+  FAIL card-visual     div#lvls  "55 Every level A and AA together: the us"
+       3 cards hold only text: no picture, icon, UI fragment or effect in any of them  [390-24-card-visual.jpg]
+       fix: give the cards a visual: an inset panel with a UI fragment, a photograph or real icons
+  FAIL button-styles   (one screen)
+       3 button styles on one screen: soft, fill #1b1712, outline #1b1712 ("Browse all 55 criteria"); soft, outline #1b1712 ("See how a card works"); pill, fill #111111 ("Tweaks \"); the odd one out: "Tweaks \"  [390-01-button-styles.jpg]
+       fix: one primary and one secondary button: one shape, one height per size, one label size
+  FAIL button-styles   (the page)
+       3 button styles on the page: soft, fill #1b1712, outline #1b1712 x2 ("Browse all 55 criteria"); soft, outline #1b1712 x1 ("See how a card works"); pill, fill #111111 x1 ("Tweaks \")  [390-02-button-styles.jpg]
+       fix: one primary and one secondary button: one shape, one height per size, one label size
+  FAIL heading-scale   div#anat-card > article.card > div.card-h > h3  "2Non-text Contrast"
+       h3 headings in 2 sizes, 22px ("Text Alternatives") to 30px (x1.36)  [390-08-heading-scale.jpg]
+       fix: size headings by level: the h1 largest, one size per level, each level below the one above
+  FAIL heading-scale   div.wrap > div.stats.e > div:nth-of-type(1) > span.num  "55"
+       the figure "55" is set at 40px, larger than the section headings (h2 34px); 3 more like it  [390-06-heading-scale.jpg]
+       fix: set figures at the h2 size or under: a stat reads as data, not as the heading
+  FAIL stagger         h1#h1  "Every WCAG 2.2 rule, jo@example.com ✓ pa"
+       the 6 lines of this heading start at 24, 24, 137, 137, 24, 24px: a headline broken across columns, read in a zigzag  [390-03-stagger.jpg]
+       fix: start every row of the list on one left edge
+  FAIL off-grid        ol#anat-list > li:nth-of-type(1) > button > span.pin  "1"
+       left edge at 40px, 16px off the page margin at 24px (124 elements); 7 more in this section off the grid too (span.pin at 40px, span.pin at 40px, span.pin at 40px, span.pin at 40px, ...)  [390-11-off-grid.jpg]
+       fix: move it onto the page margin, or the column edge its section uses
+  FAIL off-grid        button#pk-1 > span.num  "1.1.1"
+       left edge at 40px, 16px off the page margin at 24px (124 elements, like button#pk-0); 5 more in this section off the grid too (span.num at 40px, span.num at 40px, b at 106.5px, span.num at 40px, ...)  [390-15-off-grid.jpg]
+       fix: move it onto the page margin, or the column edge its section uses
+  FAIL off-grid        ul#demo-list > li:nth-of-type(2) > button > span.num  "4.1.2"
+       left edge at 40px, 16px off the page margin at 24px (124 elements, like button); 7 more in this section off the grid too (span.num at 40px, span.num at 40px, span.num at 40px, span.num at 40px, ...)  [390-22-off-grid.jpg]
+       fix: move it onto the page margin, or the column edge its section uses
+  FAIL contrast        div.ix-g:nth-of-type(2) > details.row:nth-of-type(4) > summary > span.badge.aa  "AA"
+       body text over a effect reads at 2.8:1 at its worst tenth (needs 4.5:1) (and 4 more like it: "AA", "AA", "A", "6.06:1 , passes")  [390-25-contrast.jpg]
+       fix: put the text on a calm part of the picture, or on a solid panel
+  FAIL text-contrast   div.pair > figure.frame.fail > div.screen > div.c143:nth-of-type(1)  "Your order has shipped"
+       a caption, label or muted line in #b8b4ae on #ffffff reads 2.06:1 (needs 4.5:1); 2 like it, like "Track it from your acc"  [390-18-text-contrast.jpg]
+       fix: body text in the ink at 7:1 or more; grey (4.5:1 or more) only for captions and labels
+  WARN text-only       section#index  "The index of all 55 criteria"
+       the section is only text: no picture, icon, mock or effect in it  [390-26-text-only.jpg]
+       fix: give the section a visual: a photograph that fits, the real icons, or a UI fragment on a ground
+  WARN button-styles   a.skip  "Skip to content"
+       on the phone 2 buttons run the full width of their column, but 2 keep their own width, like "Skip to content" is 150px of 390px: one action in two sizes
+       fix: give every button the same width rule on the phone: all full width, or all at their own width
+  WARN heading-scale   div.wrap > div.stats.e > div:nth-of-type(1) > span.num  "55"
+       figures in 2 sizes, 26, 40px ("11.4.11" at 26px, "55" at 40px)  [390-07-heading-scale.jpg]
+       fix: set the page's figures (stats, measures, prices) in one or two sizes
+  WARN off-grid        ul#demo-list > li:nth-of-type(3) > button.soon > b  "Reflow"
+       two common left edges of one section 9px apart: 107px (4 elements, like this one) and 98px (12)  [390-23-off-grid.jpg]
+       fix: move it onto the page margin, or the column edge its section uses
+  WARN off-grid        div.ix-g:nth-of-type(2) > details.row:nth-of-type(4) > summary > span.badge.aa  "AA"
+       two common left edges of one section 19px apart: 309px (24 elements, like this one) and 328px (31)  [390-27-off-grid.jpg]
+       fix: move it onto the page margin, or the column edge its section uses
+  WARN section-gaps    section#top / section#read
+       93px between these sections, -26% against the median 125px  [390-09-section-gaps.jpg]
+       fix: use one gap between sections (all within 25% of each other)
+  WARN section-gaps    section#index / section#audit
+       168px between these sections, +34% against the median 125px of gaps at a change of ground  [390-28-section-gaps.jpg]
+       fix: use one gap between sections (all within 25% of each other)
+  WARN orphan          div.wrap > div.spl > div.copy > p.muted  "If a design choice would fail a criterio"
+       its last line holds only "now."  [390-29-orphan.jpg]
+       fix: rebalance the text (text-wrap: pretty, or a shorter line) so the last line holds more than one short word
+  WARN tab-wrap        button#tab-3  "04 Robust Can the tools read it? · 2 cri"
+       the row of 4 tabs wraps onto 4 lines and leaves "04 Robust Can the tools read i" alone on the last  [390-12-tab-wrap.jpg]
+       fix: fit the tabs on one line at this width (shorter labels, a scrolling row), or let them stack evenly
+  WARN tab-wrap        button#pk-5  "3.3.1 Error Identification"
+       the row of 6 tabs wraps onto 6 lines and leaves "3.3.1 Error Identification" alone on the last  [390-19-tab-wrap.jpg]
+       fix: fit the tabs on one line at this width (shorter labels, a scrolling row), or let them stack evenly
+
+first screen at 1280, 1152, 1024, 896, 768  0 FAIL  0 WARN
+
+the page at 320x640, walked for what runs past the screen's edge  0 FAIL
+
+checks
+  PASS assets                 PASS shader-lint            PASS gl-fallback            
+  PASS empty-visual           PASS hero-fill              PASS flush                  
+  FAIL placeholder            PASS sample-label           PASS caption                
+  PASS credit-wall            PASS nav                    FAIL nav-covers             
+  PASS spill                  PASS off-viewport           PASS fold-card              
+  SKIP hover-spill            PASS overlap-text           PASS collide                
+  PASS tap-size               PASS row-gap                PASS cut-text               
+  PASS fold-cut               PASS marquee                SKIP scroll-linked          
+  FAIL scroll-reveal          PASS pinned                 SKIP loop-pause             
+  SKIP reduced-motion         PASS hidden-content         PASS webgl                  
+  FAIL no-visual              WARN text-only              FAIL card-visual            
+  SKIP hidden-visual          PASS card-family            PASS card-layout            
+  PASS nesting                PASS effect-repeat          PASS ui-fit                 
+  PASS ui-centre              PASS dark-ground            FAIL button-styles          
+  PASS button-shape           PASS same-action            PASS button-picture         
+  PASS cta                    PASS pricing-tiers          WARN copy-headline          
+  PASS copy-fact              FAIL copy-headings          WARN copy-buttons           
+  WARN copy-actions           FAIL heading-scale          FAIL stagger                
+  FAIL top-stagger            FAIL off-grid               WARN col-edge               
+  PASS right-edge             PASS centre-axis            PASS tilt                   
+  FAIL contrast               FAIL text-contrast          PASS body-size              
+  PASS busy-ground            WARN section-gaps           PASS proximity              
+  PASS hole                   WARN links                  SKIP forms                  
+  PASS photo-upscale          PASS photo-set              WARN photo-credit           
+  WARN nav-family             WARN nav-labels             PASS link-styles            
+  PASS heading-align          PASS label-centre           PASS fake-button            
+  PASS stranded-action        WARN orphan                 PASS unit-break             
+  WARN tab-wrap               PASS effects-fit            PASS fade-cut               
+  PASS photo-weight           WARN copy-length            WARN nav-current            
+  PASS progress-bar           PASS photo-repeat           WARN button-contrast        
+  PASS photo-print            PASS grounds                WARN split-align            
+  PASS fact-agree             PASS fold-action            PASS action-count           
+  PASS one-screen             SKIP hover                  SKIP hover-move             
+  PASS product-shown          PASS same-object            PASS font-load              
+  PASS visual-caption         PASS visual-empty           PASS effect-kind            
+  WARN hero-enter             WARN moment-none            PASS street-number          
+  PASS postcode               PASS coordinates            PASS company-number         
+  PASS phone-number           FAIL hero-screen            FAIL section-height         
+  WARN section-air            FAIL one-section            PASS one-heading            
+  FAIL container-edges        FAIL row-lines              FAIL split-pair             
+  PASS motion-layer           PASS count-text             PASS loop-cycle             
+  PASS section-tile           PASS empty-area             PASS a11y-name              
+  PASS img-alt                FAIL field-label            PASS heading-order          
+  PASS tabindex               FAIL focus-ring             FAIL focus-visible          
+  PASS focus-hidden           PASS skip-link              PASS menu-toggle            
+  PASS lang                   PASS page-meta              WARN share-meta             
+  PASS action-repeat          PASS map-link               PASS open-now               
+  PASS assumed                PASS run-on                 PASS form-fields            
+  PASS form-send              
+
+total  79 FAIL  48 WARN  (crops and report.json in /Users/kane/Documents/1_Personal/5_programming projects/wcag encylopedia/design/mockups/.taste-skill/consistency-c-bureau)
