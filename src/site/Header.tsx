@@ -5,6 +5,7 @@ import { PATHS, type PageKind } from './routes';
 
 /** Which nav item each page sits under. */
 const SECTION: Record<PageKind, string> = {
+  about: PATHS.about,
   criterion: PATHS.criteria,
 };
 

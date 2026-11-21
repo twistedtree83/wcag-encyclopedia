@@ -12,7 +12,7 @@
 
 import { EXPECTED } from '../criteria/manifest';
 
-export type PageKind = 'criterion';
+export type PageKind = 'about' | 'criterion';
 
 export type Route = {
   readonly path: string;
@@ -29,6 +29,9 @@ export const PATHS = {
   about: 'about/',
 } as const;
 
+/** The site's source repository. The About page links to it. */
+export const SOURCE_CODE = 'https://github.com/twistedtree83/wcag-encyclopedia';
+
 export function criterionPath(num: string): string {
   return `criteria/${num}/`;
 }
@@ -42,7 +45,7 @@ const PUBLISHED_CRITERIA: readonly string[] = EXPECTED.filter((c) => c.num === '
 );
 
 /** Pages that are not criterion pages (home, colour check, all criteria, about) go here. */
-const FIXED_ROUTES: readonly Route[] = [];
+const FIXED_ROUTES: readonly Route[] = [{ path: PATHS.about, page: 'about' }];
 
 const CRITERION_ROUTES: readonly Route[] = PUBLISHED_CRITERIA.map((num) => ({
   path: criterionPath(num),

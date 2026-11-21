@@ -447,6 +447,128 @@ footer.foot p {
   margin: 0;
 }
 
+/* --- Sub-page head ---------------------------------------------------------------------- */
+
+.ph {
+  padding: 48px 0 0;
+}
+.eyebrow {
+  margin: 0 0 18px;
+  color: var(--ink-2);
+  font-size: var(--eye);
+  font-weight: 500;
+}
+.lede {
+  max-width: 52ch;
+  margin: 28px 0 0;
+  color: var(--ink-2);
+  font-size: calc(var(--lede) * var(--ts));
+}
+.prose {
+  max-width: 64ch;
+  margin: 28px 0 0;
+}
+.prose p {
+  margin: 0 0 16px;
+}
+
+/* --- Pledge panel ----------------------------------------------------------------------- */
+
+.pledge {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 56px;
+  padding: calc(var(--pad) * 2);
+  border-radius: calc(var(--rad) * 1.25);
+  background: var(--pledge-bg);
+  color: var(--pledge-fg);
+}
+.pledge :is(h2, h3) {
+  margin: 0 0 18px;
+  font-weight: var(--hw);
+  font-size: calc(var(--ts) * max(34px, min(calc(var(--h2) * 0.875), 5vw)));
+  line-height: var(--hlh);
+  letter-spacing: var(--hls);
+}
+.pledge > div > p {
+  margin: 0;
+  font-size: 18px;
+}
+.pledge ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.pledge li {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: 14px;
+  padding: 18px 0;
+  border-bottom: var(--bwid) solid rgba(128, 128, 128, 0.35);
+}
+.pledge li:first-child {
+  padding-top: 0;
+}
+.pledge li b {
+  display: block;
+  margin: 0 0 4px;
+  font: var(--hw2) 19px/1.2 var(--fh), sans-serif;
+}
+.pledge li span:not(.mk) {
+  font-size: 16px;
+}
+.pledge .mk {
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+}
+
+/* --- About page: how we test ------------------------------------------------------------ */
+
+.checks {
+  margin: 56px 0 0;
+  scroll-margin-top: 12px;
+}
+.checks h3 {
+  margin: 0 0 14px;
+  font-size: calc(var(--ts) * 34px);
+  font-weight: var(--hw);
+  letter-spacing: var(--hls);
+}
+.checks__intro {
+  max-width: 64ch;
+  margin: 0 0 28px;
+}
+.checks ul {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--gap);
+  list-style: none;
+  margin: 0 0 28px;
+  padding: 0;
+}
+.checks li {
+  padding: var(--pad);
+  border-radius: var(--rad);
+  background: var(--card-bg);
+}
+.checks h4 {
+  margin: 0 0 10px;
+  font-size: calc(var(--h3) * var(--ts));
+  font-weight: var(--hw2);
+}
+.checks li p {
+  margin: 0 0 12px;
+  color: var(--ink-2);
+}
+.checks li p:last-child {
+  margin: 0;
+}
+.checks code {
+  font-family: ui-monospace, monospace;
+  font-size: 0.92em;
+}
+
 /* --- Breakpoints ------------------------------------------------------------------------ */
 
 @media (max-width: 1100px) {
@@ -483,6 +605,17 @@ footer.foot p {
   .stage {
     padding: 24px;
     min-height: 200px;
+  }
+  .pledge {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+    padding: var(--pad) 22px;
+  }
+  .checks ul {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .checks li {
+    padding: 22px;
   }
   footer.foot {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
