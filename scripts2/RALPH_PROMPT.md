@@ -13,13 +13,17 @@ Read these before your first task, and re-read the relevant part whenever a task
 1. **`CONTEXT.md`** — the domain model and vocabulary. Use its terms exactly. If you need a
    noun the project does not yet have a word for, that is a signal to stop and ask, not to
    invent one silently.
-2. **The PRD, GitHub issue #1** — problem statement, user stories, implementation decisions,
-   testing decisions, out-of-scope. It is the authority on *what* and *why*.
+2. **The PRD, `docs/PRD.md`** (the redesign, issue #27; the original single-page PRD, issue #1,
+   is archived at `docs/archive/PRD-single-page.md`) — problem statement, user stories,
+   implementation decisions, testing decisions, out-of-scope. It is the authority on *what* and
+   *why*. Decisions with lasting consequences are in `docs/adr/`.
 3. **The task's own GitHub issue** — the acceptance criteria there are the definition of done.
    Read the full body before writing code.
-4. **The design file** — `design/WCAG Encyclopedia.dc.html`, imported from Claude Design. It is
-   the **visual source of truth**: token palettes, type scale, card anatomy, and one composed
-   instance of each card variant. When the design and your instinct disagree, the design wins.
+4. **The design guide** — `design/new-design/DESIGN-GUIDE.md` and the Swatch prototype it points
+   to. It is the **visual source of truth**: tokens, measured-contrast table, type and page
+   anatomy. When the design and your instinct disagree, the design wins.
+5. **`docs/CONVENTIONS.md`** — how the build, routes, tokens, labs and e2e fit together, and the
+   gotchas earlier tasks hit.
 
 ---
 
@@ -35,7 +39,7 @@ Read these before your first task, and re-read the relevant part whenever a task
 - **One ledger per task, one commit per task.** Do not batch commits across tasks.
 - **Do not edit another task's scope.** If you find work that belongs to a different issue, note
   it in your ledger and leave it. Do not opportunistically fix it.
-- **Do not close or modify issue #1** (the PRD).
+- **Do not close or modify the PRD issues** (#1, #27).
 - **The page obeys the criteria it documents.** This is the project's central promise. If a
   change you are about to make would fail a WCAG criterion the site documents, choose
   differently. This outranks visual fidelity to the design.
