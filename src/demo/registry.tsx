@@ -5,8 +5,7 @@
  * at the boundary — so the registry stays a flat list while `frameAt` stays generic and
  * type-safe inside each demo.
  *
- * A criterion card looks its demo up by the `demo` field on its record; the demo library (T-10)
- * indexes the same list. One source, two consumers.
+ * A criterion page looks its demos up by the `demos` field on its record.
  */
 
 import type { ReactNode } from 'react';

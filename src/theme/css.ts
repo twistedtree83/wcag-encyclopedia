@@ -1,7 +1,7 @@
 /**
  * Turns the palettes into CSS custom properties.
  *
- * Injected into every page template (`index.html`, `site.html`) at build time by a Vite
+ * Injected into the page template (`site.html`) at build time by a Vite
  * plugin, so there is no flash of an unstyled or wrong-themed page and no runtime cost.
  * `tokens.ts` stays the only place a colour is written down.
  *

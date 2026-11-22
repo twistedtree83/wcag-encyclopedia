@@ -79,10 +79,3 @@ export type Counts = { readonly shown: number; readonly total: number };
 export function countMatches(criteria: readonly CriterionRecord[], query: Query): Counts {
   return { shown: filterCriteria(criteria, query).length, total: criteria.length };
 }
-
-/** The line under the controls. Says nothing when nothing is filtered. */
-export function summarise(counts: Counts, query: Query): string {
-  if (!isFiltering(query)) return `${counts.total} criteria documented`;
-  if (counts.shown === 0) return 'No criteria match';
-  return `Showing ${counts.shown} of ${counts.total} criteria`;
-}

@@ -26,8 +26,7 @@ export default defineConfig({
     sourcemap: false,
     rollupOptions: {
       // site.html is the template the prerender step fills once per route, Home included
-      // (dist/index.html). The old single page (index.html, src/main.tsx) is no longer built;
-      // R-10 deletes it.
+      // (dist/index.html).
       input: { site: 'site.html' },
     },
   },

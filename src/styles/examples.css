@@ -1,6 +1,5 @@
 /*
- * Styles the corpus examples and the demos need, wherever they are mounted: the old single
- * page (until R-10) and the pre-rendered criterion pages. Split out of global.css in R-01.
+ * Styles the corpus examples and the demos need. Loaded on every page.
  *
  * Colour only ever comes from a token (see theme/tokens.ts).
  */

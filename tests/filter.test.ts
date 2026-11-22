@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest';
 import {
   filterCriteria,
   countMatches,
-  summarise,
   isFiltering,
   EMPTY_QUERY,
   type Query,
@@ -176,27 +175,13 @@ describe('level and text compose', () => {
   });
 });
 
-describe('counts and summary', () => {
+describe('counts', () => {
   it('reports a count that matches the list actually returned', () => {
     for (const query of [q(), q({ level: 'A' }), q({ text: 'contrast' })]) {
       const counts = countMatches(CRITERIA, query);
       expect(counts.shown).toBe(filterCriteria(CRITERIA, query).length);
       expect(counts.total).toBe(CRITERIA.length);
     }
-  });
-
-  it('says nothing about filtering when nothing is filtered', () => {
-    expect(summarise(countMatches(CRITERIA, q()), q())).toBe('4 criteria documented');
-  });
-
-  it('names both numbers when a filter is active', () => {
-    const query = q({ level: 'A' });
-    expect(summarise(countMatches(CRITERIA, query), query)).toBe('Showing 2 of 4 criteria');
-  });
-
-  it('says so plainly when a filter matches nothing', () => {
-    const query = q({ text: 'zzzz' });
-    expect(summarise(countMatches(CRITERIA, query), query)).toBe('No criteria match');
   });
 });
 

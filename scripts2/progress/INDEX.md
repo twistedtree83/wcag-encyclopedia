@@ -47,5 +47,5 @@ Graph: `scripts2/prd-redesign.json` · Parent: #27 · Branch: `redesign`
 - [x] **R-09** #36 — About page with the accessibility statement (needs R-01)
 - [x] **R-05** #32 — All criteria page (needs R-03, R-04)
 - [x] **R-08** #35 — Home page (needs R-05, R-06, R-07)
-- [ ] **R-10** #37 — Delete the retired single-page modules (needs R-08)
+- [x] **R-10** #37 — Delete the retired single-page modules (needs R-08)
 - [ ] **R-11** #38 — Cutover: owner's visual sign-off, then merge the redesign and deploy (needs R-10)
