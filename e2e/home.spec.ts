@@ -30,7 +30,7 @@ test.describe('before any script runs', () => {
 
   test('the eight sections are in the markup, in order', async ({ page }) => {
     await page.goto('/');
-    await expect(page.locator('h1')).toHaveText('Accessibility that holds up for everyone.');
+    await expect(page.locator('h1')).toHaveText('Every WCAG criterion, shown.');
     await expect(page.locator('main h2')).toHaveText(SECTIONS);
   });
 });

@@ -82,7 +82,7 @@ export function pageMeta(route: Route): { title: string; description: string } {
     case 'home':
       return {
         title: 'WCAG Encyclopedia: every criterion, shown broken then fixed',
-        description: `All ${EXPECTED_TOTAL} Level A and AA success criteria of WCAG 2.2, explained in plain language and shown broken then fixed, with a live colour check.`,
+        description: `All ${EXPECTED_TOTAL} Level A and AA success criteria of WCAG 2.2, explained in plain language, shown broken then fixed, and grouped under WCAG's four principles.`,
       };
     case 'criterion': {
       const record = recordFor(route);

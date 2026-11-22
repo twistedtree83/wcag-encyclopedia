@@ -296,7 +296,7 @@ Each component lists its tokens and behaviour. All screenshots are in `screensho
 
 - Left column:
   - eyebrow
-  - h1 ("Accessibility that holds up for *everyone.*", at most 11 characters wide per line)
+  - h1 ("Every WCAG criterion, *shown.*", at most 11 characters wide per line), with an eyebrow and lede that say this is an encyclopedia of WCAG 2.2
   - lede
   - primary and secondary buttons
   - stats row: 55 criteria / 31 at Level A / 24 at Level AA / 6 new in 2.2

@@ -43,9 +43,14 @@ describe('the home page', () => {
   it('has one h1, the hero headline', () => {
     const html = main(home().html);
     expect(html.match(/<h1/g)).toHaveLength(1);
-    expect(text(html.match(/<h1[^>]*>(.*?)<\/h1>/)![1]!)).toBe(
-      'Accessibility that holds up for everyone.',
-    );
+    expect(text(html.match(/<h1[^>]*>(.*?)<\/h1>/)![1]!)).toBe('Every WCAG criterion, shown.');
+  });
+
+  it('says up front that this is an encyclopedia of WCAG 2.2, not a colour tool', () => {
+    const hero = text(main(home().html).match(/<div class="txt">(.*?)<\/div>/)![1]!);
+    expect(hero).toContain('The WCAG 2.2 encyclopedia');
+    expect(hero).toContain('Web Content Accessibility Guidelines');
+    expect(hero).toContain('all 55 Level A and AA success criteria');
   });
 
   it('renders the eight sections in order, the lab retitled', () => {
@@ -66,10 +71,11 @@ describe('the home page', () => {
     expect(stats).toBe('55criteria31at Level A24at Level AA6new in 2.2');
   });
 
-  it('links the primary call to action to All criteria and the secondary to the pairs', () => {
+  it('links the primary call to action to All criteria and the secondary to the principles', () => {
     const html = main(home().html);
     expect(html).toMatch(/<a class="btn p" href="criteria\/">Browse all 55 criteria/);
-    expect(html).toMatch(/<a class="btn o" href="#pairs">See it done badly<\/a>/);
+    expect(html).toMatch(/<a class="btn o" href="#principles">Start with the four principles<\/a>/);
+    expect(html).toMatch(/<section class="band" id="principles"/);
   });
 
   it('makes each principle card one link to All criteria filtered to it, with its shape', () => {

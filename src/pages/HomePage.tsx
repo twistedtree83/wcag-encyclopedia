@@ -76,22 +76,20 @@ function Hero({ children }: { children: ReactNode }) {
         <path d="M560 20 C 600 80, 520 140, 600 180" />
       </svg>
       <div className="txt">
-        <p className="eyebrow">WCAG 2.2, Levels A and AA, in plain language</p>
+        <p className="eyebrow">The WCAG 2.2 encyclopedia</p>
         <h1 id="home-title">
-          Accessibility that holds up for <em>everyone.</em>
+          Every WCAG criterion, <em>shown.</em>
         </h1>
         <p className="lede">
-          Every success criterion, explained in a sentence and shown twice: once broken, once
-          fixed. Start with the colour check. Pick any two colours and see whether people can
-          read them.
+          {`The Web Content Accessibility Guidelines are the standard most accessibility laws and audits point to. This encyclopedia covers all ${TOTAL} Level A and AA success criteria: each one restated in plain language, shown failing and then passing, and filed under the principle it belongs to.`}
         </p>
         <div className="cta">
           <a className="btn p" href={href(PATHS.criteria)}>
             {`Browse all ${TOTAL} criteria `}
             <span aria-hidden="true">→</span>
           </a>
-          <a className="btn o" href="#pairs">
-            See it done badly
+          <a className="btn o" href="#principles">
+            Start with the four principles
           </a>
         </div>
         <ul className="mini" aria-label="The encyclopedia in numbers">
@@ -116,8 +114,9 @@ function Pairs({ onTry }: { onTry: (pair: ColourPair) => void }) {
         <div>
           <h2 id="pairs-title">Done well, done badly</h2>
           <p>
-            The same message in the same place, twice. The usual mistakes on the left, the fix
-            on the right. Load any pair into the checker to try your own fix.
+            Colour contrast is one of the failures audits find most often, so it gets the
+            checker above. Each pair shows the same message twice: the usual mistake on the
+            left, the fix on the right. Load any pair into the checker to try your own fix.
           </p>
         </div>
         <a className="btn o" href={href(PATHS.colourCheck)}>
@@ -136,13 +135,14 @@ function Pairs({ onTry }: { onTry: (pair: ColourPair) => void }) {
 function Principles() {
   const { href } = useRoute();
   return (
-    <section className="band" aria-labelledby="principles-title">
+    <section className="band" id="principles" aria-labelledby="principles-title">
       <div className="bh">
         <div>
           <h2 id="principles-title">Four principles</h2>
           <p>
-            Each principle has a colour and a shape, so the grouping survives greyscale. Colour
-            never carries meaning on its own here.
+            WCAG groups every success criterion under four principles: content has to be
+            perceivable, operable, understandable and robust. Each principle has a colour and a
+            shape here, so the grouping survives greyscale.
           </p>
         </div>
       </div>
@@ -182,7 +182,10 @@ function Index() {
       <div className="bh">
         <div>
           <h2 id="index-title">The index</h2>
-          <p>Search by number, name, or the way it usually goes wrong.</p>
+          <p>
+            Every Level A and AA success criterion in WCAG 2.2. Search by number, name, or the
+            way it usually goes wrong.
+          </p>
         </div>
       </div>
       <Filters id="home" query={query} onChange={(over) => setQuery({ ...query, ...over })} />
