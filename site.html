@@ -7,6 +7,8 @@
       The template for every pre-rendered page (ADR 0001). scripts/prerender.mjs fills the
       title, description, route and app markup per route, then removes this file from dist/.
     -->
+    <!-- Extra head markup per route: Home's old #1.4.3 redirect (src/site/legacyRedirect.ts). -->
+    <!--@legacy-redirect-->
     <title><!--@title--></title>
     <meta name="description" content="<!--@description-->" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />

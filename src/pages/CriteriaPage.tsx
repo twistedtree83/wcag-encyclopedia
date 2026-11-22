@@ -1,19 +1,11 @@
-import { useEffect, useState, type ReactNode } from 'react';
-import {
-  EMPTY_QUERY,
-  countMatches,
-  filterCriteria,
-  type LevelFilter,
-  type PrincipleFilter,
-  type Query,
-} from '../catalog/filter';
+import { useEffect, useState } from 'react';
+import { EMPTY_QUERY, countMatches, filterCriteria, type Query } from '../catalog/filter';
 import { queryFromSearch, resultsLine, searchFromQuery } from '../catalog/urlQuery';
 import { CORPUS } from '../criteria/corpus';
 import { PRINCIPLES } from '../criteria/structure';
+import { Filters } from '../components/Filters';
 import { IndexCard } from '../components/IndexCard';
 import { Marker } from '../components/Tags';
-
-const LEVELS: readonly LevelFilter[] = ['All', 'A', 'AA'];
 
 /**
  * The All criteria page (design guide 9.3): the page head with the split by principle, then
@@ -56,44 +48,7 @@ export function CriteriaPage() {
       </section>
 
       <section className="index" aria-label="Search and filter criteria">
-        <form className="filters" role="search" onSubmit={(e) => e.preventDefault()}>
-          <div>
-            <label htmlFor="criteria-search">Search criteria</label>
-            <input
-              id="criteria-search"
-              type="search"
-              placeholder="Try “focus”, “1.4” or “captions”"
-              autoComplete="off"
-              value={query.text}
-              onChange={(e) => update({ text: e.target.value })}
-            />
-          </div>
-          <ChipGroup id="filter-principle" label="Principle">
-            <Chip pressed={query.principle === 'All'} onClick={() => update({ principle: 'All' })}>
-              All
-            </Chip>
-            {PRINCIPLES.map((p) => (
-              <Chip
-                key={p.num}
-                pressed={query.principle === p.num}
-                onClick={() => update({ principle: p.num as PrincipleFilter })}
-              >
-                <Marker principle={p.num as 1 | 2 | 3 | 4} />
-                {p.name}
-              </Chip>
-            ))}
-          </ChipGroup>
-          <ChipGroup id="filter-level" label="Level">
-            {LEVELS.map((level) => (
-              <Chip key={level} pressed={query.level === level} onClick={() => update({ level })}>
-                {level}
-              </Chip>
-            ))}
-            <Chip pressed={query.newIn22} onClick={() => update({ newIn22: !query.newIn22 })}>
-              New in 2.2
-            </Chip>
-          </ChipGroup>
-        </form>
+        <Filters id="criteria" query={query} onChange={update} />
 
         <p className="count" aria-live="polite">
           {resultsLine(counts)}
@@ -137,34 +92,5 @@ function Split() {
         })}
       </ul>
     </div>
-  );
-}
-
-function ChipGroup({ id, label, children }: { id: string; label: string; children: ReactNode }) {
-  return (
-    <div>
-      <span className="gl" id={id}>
-        {label}
-      </span>
-      <div className="chips" role="group" aria-labelledby={id}>
-        {children}
-      </div>
-    </div>
-  );
-}
-
-function Chip({
-  pressed,
-  onClick,
-  children,
-}: {
-  pressed: boolean;
-  onClick: () => void;
-  children: ReactNode;
-}) {
-  return (
-    <button type="button" aria-pressed={pressed} onClick={onClick}>
-      {children}
-    </button>
   );
 }

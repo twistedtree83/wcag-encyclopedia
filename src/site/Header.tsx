@@ -9,6 +9,7 @@ const SECTION: Record<PageKind, string> = {
   'colour-check': PATHS.colourCheck,
   criteria: PATHS.criteria,
   criterion: PATHS.criteria,
+  home: PATHS.home,
 };
 
 const LINKS = [

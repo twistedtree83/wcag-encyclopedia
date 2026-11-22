@@ -100,9 +100,10 @@ test('is keyboard operable with a visible focus ring', async ({ page }) => {
   expect(await attr(page)).toBe('dark');
 });
 
-test('the old single page uses the same toggle', async ({ page }) => {
+test('Home uses the same toggle', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'light' });
   await page.goto('/');
+  await page.waitForFunction(() => document.documentElement.dataset.hydrated === 'true');
   const button = toggle(page);
   await expect(button).toHaveAttribute('aria-pressed', 'false');
   await button.click();

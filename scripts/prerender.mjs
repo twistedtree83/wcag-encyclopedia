@@ -22,7 +22,7 @@ const dist = join(root, 'dist');
 const { render, ROUTES } = await import(pathToFileURL(join(root, 'dist-ssr/entry-server.js')).href);
 const template = await readFile(join(dist, 'site.html'), 'utf8');
 
-for (const marker of ['<!--@title-->', '<!--@description-->', '<!--@app-->', '<div id="root">']) {
+for (const marker of ['<!--@legacy-redirect-->', '<!--@title-->', '<!--@description-->', '<!--@app-->', '<div id="root">']) {
   if (!template.includes(marker)) throw new Error(`prerender: site.html has no ${marker}`);
 }
 
@@ -31,16 +31,14 @@ const escape = (text) =>
 
 let written = 0;
 for (const route of ROUTES) {
-  // The home page still belongs to the old single page (dist/index.html) until R-08.
-  if (route.path === '') continue;
-
-  const { html, title, description } = render(route);
+  const { html, title, description, head } = render(route);
   if (!html.includes('<main')) throw new Error(`prerender: ${route.path} rendered no <main>`);
 
   const depth = route.path.split('/').filter(Boolean).length;
   const prefix = depth ? '../'.repeat(depth) : './';
   const page = template
     .replaceAll('"./assets/', `"${prefix}assets/`)
+    .replace('<!--@legacy-redirect-->', () => head)
     .replace('<!--@title-->', escape(title))
     .replace('<!--@description-->', escape(description))
     .replace('<div id="root">', `<div id="root" data-route="${escape(route.path)}">`)

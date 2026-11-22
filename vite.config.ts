@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { tokensCss } from './src/theme/css';
-import { legacyRedirectScript } from './src/site/legacyRedirect';
 
 /**
  * The token palettes are emitted into every HTML template at transform time, so the custom properties
@@ -12,9 +11,7 @@ function injectTokens() {
   return {
     name: 'inject-theme-tokens',
     transformIndexHtml(html: string) {
-      return html
-        .replace('<!--@tokens-->', `<style id="theme-tokens">\n${tokensCss()}\n</style>`)
-        .replace('<!--@legacy-redirect-->', legacyRedirectScript());
+      return html.replace('<!--@tokens-->', `<style id="theme-tokens">\n${tokensCss()}\n</style>`);
     },
   };
 }
@@ -28,9 +25,10 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: false,
     rollupOptions: {
-      // index.html is the old single page until R-08/R-10; site.html is the template the
-      // prerender step fills once per route.
-      input: { main: 'index.html', site: 'site.html' },
+      // site.html is the template the prerender step fills once per route, Home included
+      // (dist/index.html). The old single page (index.html, src/main.tsx) is no longer built;
+      // R-10 deletes it.
+      input: { site: 'site.html' },
     },
   },
   test: {

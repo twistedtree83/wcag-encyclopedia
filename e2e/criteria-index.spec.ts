@@ -133,3 +133,36 @@ test('a query with no matches shows the dashed suggestion box', async ({ page })
   await expect(empty).toContainText('Nothing matches. Try a number such as 2.4');
   await expect(empty).toHaveCSS('border-top-style', 'dashed');
 });
+
+// Ported from the retired e2e/filter.spec.ts (R-08 merge): the old page's search and level
+// filter checks, against the All criteria page.
+test('search finds a criterion by name and by number', async ({ page }) => {
+  await open(page);
+  const search = page.getByRole('searchbox', { name: 'Search criteria' });
+  const card = (num: string) => cards(page).and(page.locator(`[href="${num}/"]`));
+
+  await search.fill('reflow');
+  await expect(card('1.4.10')).toHaveCount(1);
+  await expect(card('1.4.1')).toHaveCount(0);
+
+  await search.fill('1.4.11');
+  await expect(card('1.4.11')).toHaveCount(1);
+  await expect(card('1.4.10')).toHaveCount(0);
+});
+
+test('Level A removes the AA criteria from the page and the accessibility tree', async ({
+  page,
+}) => {
+  await open(page);
+  const card = (num: string) => cards(page).and(page.locator(`[href="${num}/"]`));
+  await expect(card('1.4.1')).toBeVisible();
+  await expect(card('1.4.11')).toBeVisible();
+
+  await chip(page, 'Level', 'A').click();
+  await expect(card('1.4.1')).toBeVisible();
+  // Gone from the DOM, not just hidden, so a screen reader user sees the same set.
+  await expect(card('1.4.11')).toHaveCount(0);
+  const levelA = EXPECTED.filter((c) => c.level === 'A').length;
+  await expect(cards(page)).toHaveCount(levelA);
+  await expect(results(page)).toHaveText(`Showing ${levelA} of ${TOTAL} criteria.`);
+});
