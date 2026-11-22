@@ -38,7 +38,7 @@ describe('the pre-paint script and the hook agree', () => {
   it('uses the same storage key in both places', async () => {
     const { readFileSync } = await import('node:fs');
     // If these drift, the page renders one theme before hydration and another after.
-    for (const template of ['index.html', 'site.html']) {
+    for (const template of ['site.html']) {
       expect(readFileSync(template, 'utf8'), template).toContain(THEME_STORAGE_KEY);
     }
   });

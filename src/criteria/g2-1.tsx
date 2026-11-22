@@ -102,8 +102,7 @@ export const G2_1: readonly CriterionRecord[] = [
           <p className="example-note">
             Trapping focus inside a modal is correct — the requirement is that the trap has a
             documented exit. Native <span className="alt-code">&lt;dialog&gt;</span> with{' '}
-            <span className="alt-code">showModal()</span> provides one for free, which is why
-            this page uses it for its own navigation drawer.
+            <span className="alt-code">showModal()</span> provides one for free.
           </p>
         </>
       ),

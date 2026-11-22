@@ -2,8 +2,8 @@
  * Guideline 2.4 — Navigable.
  *
  * The largest guideline in the standard at Level A and AA, and the one this site's own chrome
- * leans on hardest: the skip link, the rail, the headings, the focus ring, and the
- * scroll-margin that keeps a deep-linked card clear of the masthead are all 2.4 in practice.
+ * leans on hardest: the skip link, the headings, the breadcrumb, the focus ring and the page
+ * titles are all 2.4 in practice.
  */
 
 import type { CriterionRecord } from './types';
@@ -238,8 +238,8 @@ export const G2_4: readonly CriterionRecord[] = [
             <span>Search · A–Z index · "VAT" linked from three related articles</span>
           </div>
           <p className="example-note">
-            This page offers the rail, the principle openers, in-page search, and deep links
-            per criterion — four routes to the same card.
+            This site offers the main navigation, the All criteria index with search and
+            filters, and links between related criteria: three routes to the same page.
           </p>
         </>
       ),
@@ -389,8 +389,7 @@ export const G2_4: readonly CriterionRecord[] = [
           </div>
           <p className="example-note">
             <span className="alt-code">scroll-padding-top</span> equal to the header height,
-            set once on the root. This page does exactly that, which is why a deep link to a
-            criterion lands below the masthead rather than under it.
+            set once on the root.
           </p>
         </>
       ),
@@ -399,7 +398,7 @@ export const G2_4: readonly CriterionRecord[] = [
       title: 'app.css',
       lines: [
         { kind: 'context', text: 'html {' },
-        { kind: 'add', text: '  scroll-padding-top: 5.5rem;  /* the sticky masthead */' },
+        { kind: 'add', text: '  scroll-padding-top: 5.5rem;  /* the sticky header */' },
         { kind: 'context', text: '}' },
       ],
       note:

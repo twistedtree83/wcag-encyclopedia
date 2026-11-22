@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { CORPUS, criterion, criteriaFor, populatedGuidelines } from '../src/criteria/corpus';
 import { EXPECTED, EXPECTED_TOTAL, expectedFor } from '../src/criteria/manifest';
-import { GUIDELINES, PRINCIPLES, PRINCIPLE_MARKS, guidelineFor } from '../src/criteria/structure';
+import { GUIDELINES, PRINCIPLES, guidelineFor } from '../src/criteria/structure';
 import { LABS, unresolvedLabs } from '../src/labs/registry';
 
 /**
@@ -52,13 +52,6 @@ describe('the structure', () => {
   it('has four principles and thirteen guidelines', () => {
     expect(PRINCIPLES).toHaveLength(4);
     expect(GUIDELINES).toHaveLength(13);
-  });
-
-  it('gives every principle a distinct accent *and* a distinct marker shape', () => {
-    const marks = Object.values(PRINCIPLE_MARKS);
-    // Hue alone must never carry the grouping — 1.4.1, applied to the site itself.
-    expect(new Set(marks.map((m) => m.shape)).size).toBe(4);
-    expect(new Set(marks.map((m) => m.token)).size).toBe(4);
   });
 
   it('assigns every guideline to a real principle', () => {

@@ -76,7 +76,6 @@ export type Guideline = {
 export type Principle = {
   readonly num: 1 | 2 | 3 | 4;
   readonly name: string;
-  /** The one-sentence definition shown on the chapter opener. */
+  /** The one-line idea shown on the principle's card on Home. */
   readonly tagline: string;
-  readonly blurb: string;
 };
