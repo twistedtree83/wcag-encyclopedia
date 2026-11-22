@@ -63,7 +63,7 @@ test.describe('before any script runs', () => {
     await expect(statement.getByRole('heading', { level: 2 }).first()).toHaveText(
       'Accessibility statement',
     );
-    await expect(statement).toContainText('This site follows its own rules.');
+    await expect(statement).toContainText('This site meets the criteria it explains.');
 
     const howWeTest = page.locator('#how-we-test');
     for (const commitment of [

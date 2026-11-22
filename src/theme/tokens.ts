@@ -34,6 +34,9 @@ const darkBase = {
   'pledge-bg': '#F3F3F0',
   'pledge-fg': '#1A1C1C',
   loop: '#8E8F93',
+  /** The Passes/Fails badge on the pair tiles: the same ink-on-white chip in both themes. */
+  'tag-bg': '#1A1C1C',
+  'tag-fg': '#FFFFFF',
 
   /**
    * Colours used *inside* examples to depict some other product's interface. They are tokens
@@ -168,6 +171,7 @@ export const TOKEN_PAIRS: readonly TokenPair[] = [
   { fg: 'nav-on-fg', bg: 'nav-on-bg', kind: 'body', where: 'current page in the nav' },
   { fg: 'chip-on-fg', bg: 'chip-on-bg', kind: 'body', where: 'pressed chip' },
   { fg: 'badge-fg', bg: 'badge-bg', kind: 'body', where: 'Level AA badge' },
+  { fg: 'tag-fg', bg: 'tag-bg', kind: 'body', where: 'Passes/Fails badge on the pair tiles' },
 
   // Non-text: control borders and the focus ring must clear 3:1 (1.4.11).
   { fg: 'line-2', bg: 'bg', kind: 'ui', where: 'control borders on the page' },

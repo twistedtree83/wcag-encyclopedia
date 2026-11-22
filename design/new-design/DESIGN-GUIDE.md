@@ -430,7 +430,7 @@ Six link cards in rotating sun, sky and rose. Each has the number in Figtree 800
 ![Pledge](screenshots/components/pledge-dark.png)
 
 - An inverted panel: light in the dark theme, dark in the light theme.
-- The heading "This site follows its own rules.", a paragraph, and four commitments, each marked with a principle shape:
+- The heading "This site meets the criteria it explains.", a paragraph, and four commitments, each marked with a principle shape:
   - checked on every release
   - keyboard first
   - broken examples are labelled

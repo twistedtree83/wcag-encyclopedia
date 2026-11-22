@@ -1,8 +1,16 @@
+import { readFileSync } from 'node:fs';
 import { describe, it, expect } from 'vitest';
-import { CORPUS, criterion, criteriaFor, populatedGuidelines } from '../src/criteria/corpus';
+import {
+  CORPUS,
+  criterion,
+  criteriaFor,
+  criteriaInPrinciple,
+  populatedGuidelines,
+} from '../src/criteria/corpus';
 import { EXPECTED, EXPECTED_TOTAL, expectedFor } from '../src/criteria/manifest';
 import { GUIDELINES, PRINCIPLES, guidelineFor } from '../src/criteria/structure';
 import { LABS, unresolvedLabs } from '../src/labs/registry';
+import { palettes, THEMES, type Token } from '../src/theme/tokens';
 
 /**
  * Data integrity.
@@ -52,6 +60,36 @@ describe('the structure', () => {
   it('has four principles and thirteen guidelines', () => {
     expect(PRINCIPLES).toHaveLength(4);
     expect(GUIDELINES).toHaveLength(13);
+  });
+
+  it('gives every principle a distinct accent *and* a distinct marker shape', () => {
+    // Hue alone must never carry the grouping (CONTEXT.md; 1.4.1 applied to the site itself).
+    // Principle marks live in swatch.css: `.mk.pN` (inline markers) and `.princ .pN .shape`.
+    const css = readFileSync('src/styles/swatch.css', 'utf8');
+    const block = (selector: string) => {
+      const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const m = new RegExp(`(?:^|\\n)${escaped}\\s*\\{([^}]*)\\}`).exec(css);
+      return m ? m[1]! : '';
+    };
+    const shapeOf = (body: string) =>
+      body
+        .split(';')
+        .map((d) => d.trim())
+        .filter((d) => /^(border-radius|clip-path|transform)\s*:/.test(d))
+        .join('; ');
+    const nums = PRINCIPLES.map((p) => p.num);
+
+    const marks = nums.map((n) => block(`.mk.p${n}`));
+    const accents = marks.map((b) => /background:\s*var\(--(a\d)\)/.exec(b)?.[1]);
+    expect(accents).toEqual(['a1', 'a2', 'a3', 'a4']);
+    expect(new Set(marks.map(shapeOf)).size).toBe(4);
+
+    const cardShapes = nums.map((n) => shapeOf(block(`.princ .p${n} .shape`)));
+    expect(new Set(cardShapes).size).toBe(4);
+    for (const theme of THEMES) {
+      const hexes = accents.map((a) => palettes[theme][a as Token]);
+      expect(new Set(hexes).size, theme).toBe(4);
+    }
   });
 
   it('assigns every guideline to a real principle', () => {
@@ -113,6 +151,13 @@ describe('corpus lookups', () => {
   it('groups criteria by guideline', () => {
     for (const record of criteriaFor('1.4')) {
       expect(record.guideline).toBe('1.4');
+    }
+  });
+
+  it('counts criteria per principle, 20 / 20 / 13 / 2', () => {
+    expect(PRINCIPLES.map((p) => criteriaInPrinciple(p.num).length)).toEqual([20, 20, 13, 2]);
+    for (const record of criteriaInPrinciple(3)) {
+      expect(record.num.startsWith('3.'), record.num).toBe(true);
     }
   });
 

@@ -57,7 +57,7 @@ describe('the home page', () => {
       'Try it: fade the text',
       'Three contrast thresholds',
       'New in 2.2',
-      'This site follows its own rules.',
+      'This site meets the criteria it explains.',
     ]);
   });
 
@@ -112,6 +112,12 @@ describe('the home page', () => {
     expect(html).toContain('Three contrast thresholds');
     expect(html).not.toMatch(/contrast rules/i);
     for (const ratio of ['4.5 : 1', '7 : 1', '3 : 1']) expect(html).toContain(ratio);
+  });
+
+  it('labels the 1.4.6 threshold AAA and outside the index, and never links to it', () => {
+    const t = text(main(home().html));
+    expect(t).toContain('1.4.6 · Level AAA, not in the index');
+    expect(home().html).not.toContain('criteria/1.4.6/');
   });
 
   it('marks Home current in the main nav', () => {
