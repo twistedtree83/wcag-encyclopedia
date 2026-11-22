@@ -10,4 +10,4 @@ The site began as one long scrolling page with a rail, a "You are in" strip, a m
 ## Consequences
 
 - The viewport preview is retired, so layout uses media queries at the design's 1100px and 900px breakpoints rather than container queries.
-- The build gains a pre-render step that writes 58 HTML files.
+- The build gains a pre-render step that writes 59 HTML files: Home, All criteria, Colour check, About and the 55 criterion pages.

@@ -47,7 +47,7 @@ The binding constraint is unchanged: **the site obeys every criterion it documen
 8. As a reader, I want to show only criteria new in 2.2, together with the level and principle filters, so that I can answer "what AA work did 2.2 add?".
 9. As a reader who has filtered, I want a count of how many criteria are showing out of 55, announced politely, so that I know the filter is active.
 10. As a reader whose filter matches nothing, I want a suggestion of what to try, so that I'm not left with a blank page.
-11. As a reader, I want filter state in the URL (`?p=`, `?q=`, `?new`), so that I can share a filtered view.
+11. As a reader, I want filter state in the URL (`?p=`, `?q=`, `?new`, and `?l=A` or `?l=AA` for a level), so that I can share a filtered view.
 12. As a reader arriving from a principle card on Home, I want the index already filtered to that principle, so that the card took me where it promised.
 
 ### Understanding a criterion
@@ -149,7 +149,7 @@ Each lab announces changes through a polite live region. The colour check delays
 4. **What changed in the code**: the diff at full width, when present
 5. **Watch it happen**: the demo, when present
 6. **Try it yourself**: the lab, when present
-7. **Also in guideline X.Y**: up to six index cards
+7. **Also in guideline X.Y**: up to six index cards. A criterion that is alone in its guideline gets "More from {principle}" instead: up to six cards from the same principle
 8. Pager: previous and next by number
 
 Labs never replace the fail and pass examples. Every criterion keeps both.

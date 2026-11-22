@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
-import { AA_BODY, AA_LARGE, AA_UI, AAA_BODY, normaliseHex } from '../color/contrast';
+import { AA_BODY, AA_LARGE, AA_UI, AAA_BODY } from '../color/contrast';
 import { PairCard } from '../components/PairCard';
 import { ColourCheck, useColourPair } from '../labs/ColourCheck';
+import { pairFromSearch } from '../labs/pairQuery';
 import { PAIRS, PRESETS, type ColourPair } from '../labs/pairs';
 
 /** The id of the wide check, and of its text-colour hex field (`cc-fg`). */
@@ -18,10 +19,8 @@ export function ColourCheckPage() {
 
   // The URL is read after hydration, so the static HTML always shows the default pair.
   useEffect(() => {
-    const query = new URLSearchParams(window.location.search);
-    const fg = normaliseHex(query.get('fg') ?? '');
-    const bg = normaliseHex(query.get('bg') ?? '');
-    if (fg || bg) set(fg ?? state.fg, bg ?? state.bg, { announce: false });
+    const pair = pairFromSearch(window.location.search, state);
+    if (pair) set(pair.fg, pair.bg, { announce: false });
     // Once, on load: later changes are the reader's.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -35,7 +34,7 @@ export function ColourCheckPage() {
   return (
     <>
       <section className="ph" aria-labelledby="cc-title">
-        <p className="eyebrow">Tool · Success criteria 1.4.3, 1.4.6 and 1.4.11</p>
+        <p className="eyebrow">Tool · Success criteria 1.4.3 and 1.4.11, plus the AAA result for 1.4.6</p>
         <h1 id="cc-title">
           Colour check. <em>Will people read it?</em>
         </h1>

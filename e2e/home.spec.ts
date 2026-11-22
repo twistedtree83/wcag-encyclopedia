@@ -13,7 +13,7 @@ const SECTIONS = [
   'Try it: fade the text',
   'Three contrast thresholds',
   'New in 2.2',
-  'This site follows its own rules.',
+  'This site meets the criteria it explains.',
 ];
 
 async function open(page: Page, url = '/') {
@@ -189,7 +189,7 @@ test.describe('layout, per the design guide', () => {
       const text = (await page.locator('.hero .txt').boundingBox())!;
       const check = (await page.locator('#hc').boundingBox())!;
       expect(check.y).toBeGreaterThan(text.y + text.height - 1);
-      for (const list of ['.princ', '.rules', '.news', '.pairs']) {
+      for (const list of ['.princ', '.thresholds', '.news', '.pairs']) {
         const lefts = await page
           .locator(`${list} > li`)
           .evaluateAll((els) => els.map((el) => Math.round(el.getBoundingClientRect().left)));

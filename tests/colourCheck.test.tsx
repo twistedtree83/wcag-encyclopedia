@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, ROUTES } from '../src/entry-server';
 import { criterionPath, PATHS } from '../src/site/routes';
+import { initialPairModel, nextPairModel } from '../src/labs/ColourCheck';
 
 /**
  * The colour check as the build writes it: the Colour check page and the lab on the contrast
@@ -92,6 +93,11 @@ describe('the Colour check page', () => {
     // The AAA result is shown as a result, never as a link to 1.4.6.
     expect(main(pageAt(PATHS.colourCheck).html)).not.toContain(criterionPath('1.4.6'));
   });
+
+  it('names 1.4.3 and 1.4.11 as its criteria, and 1.4.6 only as the AAA result', () => {
+    const eyebrow = /<p class="eyebrow">(.*?)<\/p>/.exec(main(pageAt(PATHS.colourCheck).html))![1]!;
+    expect(text(eyebrow)).toBe('Tool · Success criteria 1.4.3 and 1.4.11, plus the AAA result for 1.4.6');
+  });
 });
 
 describe('the colour check lab', () => {
@@ -107,5 +113,34 @@ describe('the colour check lab', () => {
 
   it('is not on criteria about something else', () => {
     expect(main(pageAt(criterionPath('2.4.7')).html)).not.toContain('Text colour hex code');
+  });
+});
+
+describe('what the colour check announces', () => {
+  const start = initialPairModel({ fg: '#1A1C1C', bg: '#F8D17D' });
+
+  it('announces nothing before the reader changes anything', () => {
+    expect(start.heard).toBeNull();
+    expect(start.changes).toBe(0);
+  });
+
+  it('never announces a load the reader did not make (a ?fg=/?bg= preload), even after a change of theirs', () => {
+    const mine = nextPairModel(start, '#999999', '#FFFFFF', true);
+    expect(mine.changes).toBe(1);
+    expect(mine.heard).toEqual({ fg: '#999999', bg: '#FFFFFF' });
+
+    const preloaded = nextPairModel(mine, '#B5B5B5', '#FFFFFF', false);
+    expect(preloaded.pair).toEqual({ fg: '#B5B5B5', bg: '#FFFFFF' });
+    // Nothing the announcement keys on has moved, so no new verdict is spoken.
+    expect(preloaded.changes).toBe(1);
+    expect(preloaded.heard).toBe(mine.heard);
+  });
+
+  it('announces each change the reader makes', () => {
+    const preloaded = nextPairModel(start, '#B5B5B5', '#FFFFFF', false);
+    expect(preloaded.heard).toBeNull();
+    const mine = nextPairModel(preloaded, '#777777', '#FFFFFF', true);
+    expect(mine.changes).toBe(1);
+    expect(mine.heard).toEqual({ fg: '#777777', bg: '#FFFFFF' });
   });
 });

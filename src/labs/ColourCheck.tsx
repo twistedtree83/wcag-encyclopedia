@@ -2,7 +2,6 @@ import { useCallback, useEffect, useId, useState } from 'react';
 import {
   AA_BODY,
   AA_LARGE,
-  AA_UI,
   AAA_BODY,
   contrastRatio,
   formatScore,
@@ -14,6 +13,8 @@ import { FailIcon, PassIcon } from '../components/Icons';
 import { useRoute } from '../site/RouteContext';
 import { PATHS } from '../site/routes';
 import { DEFAULT_PAIR, type ColourPair } from './pairs';
+import { searchFromPair } from './pairQuery';
+import { THRESHOLD_CHECKS } from './thresholds';
 
 /**
  * The colour check, the site's signature lab (design guide §8.4). Built once, mounted on the
@@ -24,30 +25,47 @@ import { DEFAULT_PAIR, type ColourPair } from './pairs';
  * pair into it (quick-start chips, "Try it in the checker", `?fg=`/`?bg=`).
  */
 
-export type ColourPairState = ColourPair & {
+/**
+ * The pair on screen, and what the live region may speak. Only the reader's own changes move
+ * `changes` and `heard`; a load they did not make (a `?fg=`/`?bg=` preload) moves `pair` alone,
+ * so it is never announced, whatever the reader did before it.
+ */
+export type PairModel = {
+  readonly pair: ColourPair;
   /** Counts the reader's changes; the verdict is announced after each one. */
   readonly changes: number;
+  /** The pair as of the reader's last change, or `null` before they made one. */
+  readonly heard: ColourPair | null;
+};
+
+export function initialPairModel(pair: ColourPair): PairModel {
+  return { pair, changes: 0, heard: null };
+}
+
+export function nextPairModel(
+  model: PairModel,
+  fg: string,
+  bg: string,
+  announce: boolean,
+): PairModel {
+  const pair = { fg, bg };
+  return announce ? { pair, changes: model.changes + 1, heard: pair } : { ...model, pair };
+}
+
+export type ColourPairState = ColourPair & {
+  readonly changes: number;
+  readonly heard: ColourPair | null;
   /** Load a pair. `announce: false` for loads the reader did not make (URL preload). */
   readonly set: (fg: string, bg: string, options?: { announce?: boolean }) => void;
 };
 
 export function useColourPair(initial: ColourPair = DEFAULT_PAIR): ColourPairState {
-  const [pair, setPair] = useState<ColourPair>(initial);
-  const [changes, setChanges] = useState(0);
+  const [model, setModel] = useState<PairModel>(() => initialPairModel(initial));
   const set = useCallback<ColourPairState['set']>((fg, bg, { announce = true } = {}) => {
-    setPair({ fg, bg });
-    if (announce) setChanges((c) => c + 1);
+    setModel((m) => nextPairModel(m, fg, bg, announce));
   }, []);
-  return { ...pair, changes, set };
+  return { ...model.pair, changes: model.changes, heard: model.heard, set };
 }
-
-/** The four results, in the design's order. */
-const CHECKS = [
-  { threshold: AA_BODY, rule: 'Body text', level: 'AA · 1.4.3' },
-  { threshold: AA_LARGE, rule: 'Large text', level: 'AA · 1.4.3' },
-  { threshold: AAA_BODY, rule: 'Body text', level: 'AAA · 1.4.6' },
-  { threshold: AA_UI, rule: 'Borders and icons', level: 'AA · 1.4.11' },
-] as const;
 
 /** How long the verdict waits after the last change before it is announced. Deliberate. */
 export const ANNOUNCE_DELAY_MS = 500;
@@ -76,7 +94,7 @@ type Props = {
 export function ColourCheck({ state, id: given, wide = false, title }: Props) {
   const generated = useId();
   const id = given ?? `cc${generated.replace(/[^a-zA-Z0-9]/g, '')}`;
-  const { fg, bg, changes, set } = state;
+  const { fg, bg, heard, set } = state;
   const [grey, setGrey] = useState(false);
   const [live, setLive] = useState('');
 
@@ -84,11 +102,13 @@ export function ColourCheck({ state, id: given, wide = false, title }: Props) {
   const bodyFails = !passesThreshold(ratio, AA_BODY);
   const fix = bodyFails ? nearestPass(fg, bg) : null;
 
+  // Keyed on the reader's changes only: a preload leaves `heard` alone, so it is never spoken.
   useEffect(() => {
-    if (changes === 0) return;
-    const timer = setTimeout(() => setLive(verdict(contrastRatio(fg, bg))), ANNOUNCE_DELAY_MS);
+    if (!heard) return;
+    const said = verdict(contrastRatio(heard.fg, heard.bg));
+    const timer = setTimeout(() => setLive(said), ANNOUNCE_DELAY_MS);
     return () => clearTimeout(timer);
-  }, [changes, fg, bg]);
+  }, [heard]);
 
   return (
     <form
@@ -166,15 +186,15 @@ export function ColourCheck({ state, id: given, wide = false, title }: Props) {
       </div>
 
       <ul className="res">
-        {CHECKS.map(({ threshold, rule, level }) => {
+        {THRESHOLD_CHECKS.map(({ threshold, appliesTo, level }) => {
           const ok = passesThreshold(ratio, threshold);
           return (
-            <li className={ok ? 'ok' : 'bad'} key={`${rule} ${level}`}>
+            <li className={ok ? 'ok' : 'bad'} key={`${appliesTo} ${level}`}>
               <strong>
                 {ok ? <PassIcon /> : <FailIcon />}
                 {ok ? 'Passes' : 'Fails'}
               </strong>
-              <span>{`${rule}, ${level}`}</span>
+              <span>{`${appliesTo}, ${level}`}</span>
               <span>{`Threshold ${threshold} : 1`}</span>
             </li>
           );
@@ -269,7 +289,7 @@ function ColourField({
 export function ColourCheckLab() {
   const state = useColourPair();
   const { href } = useRoute();
-  const query = `?fg=${state.fg.slice(1)}&bg=${state.bg.slice(1)}`;
+  const query = searchFromPair(state);
   return (
     <>
       <ColourCheck state={state} />

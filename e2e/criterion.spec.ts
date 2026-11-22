@@ -59,6 +59,25 @@ test('hydrates the demo pages without errors, with and without reduced motion', 
   expect(errors).toEqual([]);
 });
 
+test('reduced motion stops animations as well as transitions', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await open(page, '1.4.3');
+  // A probe with an animation and a transition, as any future component might add.
+  const motion = await page.evaluate(() => {
+    const style = document.createElement('style');
+    style.textContent =
+      '@keyframes probe { to { transform: translateX(10px) } }' +
+      '#motion-probe { animation: probe 2s infinite; transition: color 1s; }';
+    document.head.append(style);
+    const probe = document.createElement('div');
+    probe.id = 'motion-probe';
+    document.body.append(probe);
+    const cs = getComputedStyle(probe);
+    return { animation: cs.animationName, transition: cs.transitionDuration };
+  });
+  expect(motion).toEqual({ animation: 'none', transition: '0s' });
+});
+
 test('the breadcrumb leads home and to the criteria, and marks the current page', async ({
   page,
 }) => {

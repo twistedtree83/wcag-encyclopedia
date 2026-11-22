@@ -178,6 +178,17 @@ describe('the stylesheets do not defeat their own audit', () => {
     }
   });
 
+  it('write no literal hex colour in the site stylesheet, so every pairing can be audited', () => {
+    // examples.css depicts other products and is audited through its own ex-* tokens.
+    const swatch = readFileSync('src/styles/swatch.css', 'utf8');
+    const literals = swatch.match(/:\s*[^;{}]*#[0-9a-f]{3,8}\b/gi) ?? [];
+    expect(literals, 'swatch.css: use a token from tokens.ts').toEqual([]);
+  });
+
+  it('audits the pair tiles’ Passes/Fails badge', () => {
+    expect(TOKEN_PAIRS.some((p) => p.fg === 'tag-fg' && p.bg === 'tag-bg')).toBe(true);
+  });
+
   it('use no colour token that tokens.ts does not define', () => {
     const known = new Set<string>(Object.keys(light));
     for (const { file, css } of sheets) {

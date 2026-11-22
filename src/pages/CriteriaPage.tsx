@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { EMPTY_QUERY, countMatches, filterCriteria, type Query } from '../catalog/filter';
-import { queryFromSearch, resultsLine, searchFromQuery } from '../catalog/urlQuery';
-import { CORPUS } from '../criteria/corpus';
+import { queryFromSearch, searchFromQuery } from '../catalog/urlQuery';
+import { CORPUS, criteriaInPrinciple } from '../criteria/corpus';
 import { PRINCIPLES } from '../criteria/structure';
+import { CriteriaResults } from '../components/CriteriaResults';
 import { Filters } from '../components/Filters';
-import { IndexCard } from '../components/IndexCard';
 import { Marker } from '../components/Tags';
 
 /**
@@ -50,19 +50,7 @@ export function CriteriaPage() {
       <section className="index" aria-label="Search and filter criteria">
         <Filters id="criteria" query={query} onChange={update} />
 
-        <p className="count" aria-live="polite">
-          {resultsLine(counts)}
-        </p>
-
-        {shown.length > 0 ? (
-          <ul className="grid">
-            {shown.map((record) => (
-              <IndexCard key={record.num} record={record} />
-            ))}
-          </ul>
-        ) : (
-          <p className="empty">Nothing matches. Try a number such as 2.4, or clear the filters.</p>
-        )}
+        <CriteriaResults records={shown} counts={counts} />
       </section>
     </>
   );
@@ -75,10 +63,10 @@ function Split() {
       <h2 className="split-title">How they split by principle</h2>
       <ul className="split">
         {PRINCIPLES.map((p) => {
-          const n = CORPUS.filter((c) => c.num.startsWith(`${p.num}.`)).length;
+          const n = criteriaInPrinciple(p.num).length;
           return (
             <li key={p.num}>
-              <Marker principle={p.num as 1 | 2 | 3 | 4} />
+              <Marker principle={p.num} />
               <strong>{p.name}</strong>
               <span>
                 {n}

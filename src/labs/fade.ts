@@ -4,10 +4,21 @@
  *
  * The exhibit sits on `--exhibit` (the same near-black in both themes). Its text is a grey that
  * runs from #F3F3F3 at 0% faded to #2A2A2A at 100%, as in the design prototype.
+ *
+ * Thresholds come from the table the colour check uses (`thresholds.ts`), and scores are judged
+ * and written by the contrast engine, so the two labs always agree on a pair.
  */
 
-import { contrastRatio } from '../color/contrast';
+import {
+  AA_BODY,
+  AA_LARGE,
+  AAA_BODY,
+  contrastRatio,
+  formatScore,
+  passesThreshold,
+} from '../color/contrast';
 import { dark } from '../theme/tokens';
+import { TEXT_CHECKS } from './thresholds';
 
 export const FADE_DEFAULT = 18;
 export const EXHIBIT_BG = dark.exhibit;
@@ -15,30 +26,8 @@ export const EXHIBIT_BG = dark.exhibit;
 const LIGHTEST = 0xf3;
 const DARKEST = 0x2a;
 
-/** The ticks on the scale bar: the three thresholds and the maximum. */
-export const SCALE_TICKS = [3, 4.5, 7, 21] as const;
-
-/** The three thresholds the lab checks, in the design's order. */
-const CHECKS = [
-  {
-    needs: 4.5,
-    name: 'Body text',
-    level: 'AA · 1.4.3',
-    spoken: 'body text AA',
-  },
-  {
-    needs: 3,
-    name: 'Large text',
-    level: 'AA · 1.4.3',
-    spoken: 'large text AA',
-  },
-  {
-    needs: 7,
-    name: 'Body text',
-    level: 'AAA · 1.4.6',
-    spoken: 'body text AAA',
-  },
-] as const;
+/** The ticks on the scale bar: the three text thresholds and the maximum. */
+export const SCALE_TICKS = [AA_LARGE, AA_BODY, AAA_BODY, 21] as const;
 
 export type FadeResult = {
   readonly name: string;
@@ -70,14 +59,15 @@ export function fadeState(faded: number): FadeState {
   const hex = level.toString(16).padStart(2, '0');
   const colour = `#${hex}${hex}${hex}`;
   const ratio = contrastRatio(colour, EXHIBIT_BG);
-  const truncated = Math.floor(ratio * 100) / 100;
-  const ratioText = `${truncated.toFixed(2)} : 1`;
-  const results = CHECKS.map((c) => ({
-    name: c.name,
+  const ratioText = `${formatScore(ratio)} : 1`;
+  const results = TEXT_CHECKS.map((c) => ({
+    name: c.appliesTo,
     level: c.level,
-    passes: truncated >= c.needs,
+    passes: passesThreshold(ratio, c.threshold),
   }));
-  const verdicts = CHECKS.map((c, i) => `${results[i]!.passes ? 'passes' : 'fails'} ${c.spoken}`);
+  const verdicts = TEXT_CHECKS.map(
+    (c, i) => `${results[i]!.passes ? 'passes' : 'fails'} ${c.spoken}`,
+  );
   const sentence = verdicts.join(', ');
   return {
     faded,

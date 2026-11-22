@@ -1,12 +1,12 @@
 import { useState, type ReactNode } from 'react';
 import { EMPTY_QUERY, filterCriteria, isFiltering, type Query } from '../catalog/filter';
-import { resultsLine, searchFromQuery } from '../catalog/urlQuery';
+import { searchFromQuery } from '../catalog/urlQuery';
 import { AA_BODY, AA_LARGE, AA_UI, AAA_BODY } from '../color/contrast';
 import { Filters } from '../components/Filters';
-import { IndexCard } from '../components/IndexCard';
+import { CriteriaResults } from '../components/CriteriaResults';
 import { PairCard } from '../components/PairCard';
 import { Pledge } from '../components/Pledge';
-import { CORPUS, criterion } from '../criteria/corpus';
+import { CORPUS, criteriaInPrinciple, criterion } from '../criteria/corpus';
 import { PRINCIPLES, principleFor } from '../criteria/structure';
 import { ColourCheck, useColourPair } from '../labs/ColourCheck';
 import { FadeLab } from '../labs/FadeLab';
@@ -148,7 +148,7 @@ function Principles() {
       </div>
       <ul className="princ">
         {PRINCIPLES.map((p) => {
-          const count = CORPUS.filter((c) => principleFor(c.guideline)?.num === p.num).length;
+          const count = criteriaInPrinciple(p.num).length;
           return (
             <li key={p.num}>
               <a href={href(`${PATHS.criteria}?p=${p.num}`)} className={`pc p${p.num}`}>
@@ -186,18 +186,7 @@ function Index() {
         </div>
       </div>
       <Filters id="home" query={query} onChange={(over) => setQuery({ ...query, ...over })} />
-      <p className="count" aria-live="polite">
-        {resultsLine({ shown: shown.length, total: TOTAL })}
-      </p>
-      {shown.length > 0 ? (
-        <ul className="grid">
-          {shown.map((record) => (
-            <IndexCard key={record.num} record={record} />
-          ))}
-        </ul>
-      ) : (
-        <p className="empty">Nothing matches. Try a number such as 2.4, or clear the filters.</p>
-      )}
+      <CriteriaResults records={shown} counts={{ shown: shown.length, total: TOTAL }} />
       <p className="more">
         <a className="btn o" href={href(PATHS.criteria + searchFromQuery(query))}>
           {`See all ${TOTAL} criteria`}
@@ -247,7 +236,7 @@ const THRESHOLDS = [
     body: `Body text against its background. Large text, 24px or 18.66px bold, needs ${AA_LARGE} : 1.`,
   },
   {
-    ref: '1.4.6 · Level AAA',
+    ref: '1.4.6 · Level AAA, not in the index',
     name: 'Enhanced text',
     ratio: AAA_BODY,
     fill: 'a2',
@@ -274,7 +263,7 @@ function Thresholds() {
           </p>
         </div>
       </div>
-      <ul className="rules">
+      <ul className="thresholds">
         {THRESHOLDS.map((t) => (
           <li key={t.name}>
             <p className="k">{t.ref}</p>

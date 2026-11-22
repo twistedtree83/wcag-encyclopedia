@@ -1,6 +1,6 @@
 /**
- * The pledge panel (design guide §8.13): an inverted panel with the heading "This site follows
- * its own rules.", a paragraph, and four commitments, each marked with a principle shape.
+ * The pledge panel (design guide §8.13): an inverted panel with the heading "This site meets
+ * the criteria it explains.", a paragraph, and four commitments, each marked with a principle shape.
  *
  * Used in full on the About page's accessibility statement, and by the home page's last
  * section. `level` is the heading level where it sits, so the outline stays in order.
@@ -34,7 +34,7 @@ export function Pledge({ level = 2, id }: { level?: 2 | 3; id?: string }) {
   return (
     <div className="pledge">
       <div>
-        <Heading id={id}>This site follows its own rules.</Heading>
+        <Heading id={id}>This site meets the criteria it explains.</Heading>
         <p>
           A site about accessibility that fails it would be worse than no site at all. Every
           page is checked before it ships, and the broken examples are fenced off so they

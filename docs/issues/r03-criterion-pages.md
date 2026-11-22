@@ -10,7 +10,7 @@ Every criterion gets its own pre-rendered **criterion page** at `/criteria/<numb
 2. Head: meta line with principle marker, number, principle, level and an optional New tag; h1; restatement; facts card (principle, guideline, level, In WCAG since, number)
 3. **Broken, then fixed**: the fail example and the pass example in the two stages, with their captions
 4. **What changed in the code**: the diff at full width, only when the criterion has one
-5. **Watch it happen**: the existing demo **player**, unchanged, only on the nine criteria that have a **demo**
+5. **Watch it happen**: the existing demo **player**, unchanged, only on the eight criteria that have a **demo** (nine demos: one criterion has two)
 6. **Try it yourself**: the lab, only when the record has one (none yet)
 7. **Also in guideline X.Y**: up to six **index cards** from the same guideline, or from the same principle if the guideline has no others
 8. Pager: previous and next criterion in number order

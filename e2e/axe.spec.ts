@@ -32,7 +32,8 @@ const SITE_PAGES = ROUTES.map((r) => `/${r.path}`);
 const MODES = [
   { name: 'light theme', colorScheme: 'light', width: 1280 },
   { name: 'dark theme', colorScheme: 'dark', width: 1280 },
-  { name: '320px', colorScheme: 'light', width: 320 },
+  { name: 'light theme at 320px', colorScheme: 'light', width: 320 },
+  { name: 'dark theme at 320px', colorScheme: 'dark', width: 320 },
 ] as const;
 
 async function openSitePage(page: import('@playwright/test').Page, url: string) {

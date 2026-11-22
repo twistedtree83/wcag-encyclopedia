@@ -1205,8 +1205,8 @@ footer.foot p {
   gap: 6px;
   padding: 3px 10px 3px 8px;
   border-radius: var(--rad-chip);
-  background: #1a1c1c;
-  color: #ffffff;
+  background: var(--tag-bg);
+  color: var(--tag-fg);
   font-size: 13px;
   font-weight: 600;
 }
@@ -1595,7 +1595,7 @@ footer.foot p {
 }
 
 /* Three contrast thresholds. The bars are decorative; the numbers carry the meaning. */
-.rules {
+.thresholds {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--gap);
@@ -1603,33 +1603,33 @@ footer.foot p {
   padding: 0;
   list-style: none;
 }
-.rules li {
+.thresholds li {
   padding: var(--pad);
   border: var(--bwid) solid var(--line);
   border-radius: var(--rad);
 }
-.rules h3 {
+.thresholds h3 {
   margin: 6px 0 10px;
   font: var(--hw2) calc(var(--h3) * 1.2 * var(--ts)) / 1.15 var(--fh), sans-serif;
 }
-.rules .big {
+.thresholds .big {
   margin: 18px 0 12px;
   color: var(--ink);
   font: var(--hw) calc(var(--num) * var(--ts)) / 1 var(--fh), sans-serif;
   letter-spacing: var(--hls);
 }
-.rules .bar {
+.thresholds .bar {
   height: 10px;
   overflow: hidden;
   border-radius: 99px;
   background: var(--line);
 }
-.rules .bar i {
+.thresholds .bar i {
   display: block;
   height: 100%;
   border-radius: 99px;
 }
-.rules p:last-child {
+.thresholds p:last-child {
   margin: 14px 0 0;
   color: var(--ink-2);
   font-size: 16px;
@@ -1780,7 +1780,7 @@ footer.foot p {
   }
   .pairs,
   .princ,
-  .rules,
+  .thresholds,
   .news {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -1818,9 +1818,13 @@ footer.foot p {
   }
 }
 
+/* Reduced motion stops everything that moves: transitions, animations, smooth scrolling. */
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *,
+  *::before,
+  *::after {
     transition: none !important;
+    animation: none !important;
     scroll-behavior: auto !important;
   }
 }

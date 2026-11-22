@@ -144,6 +144,16 @@ test('?fg= and ?bg= preload a pair', async ({ page }) => {
   await expect(score(page)).toHaveText('2.05 : 1');
 });
 
+test('a ?fg= / ?bg= preload is not announced; the reader’s next change is', async ({ page }) => {
+  await open(page, `${PAGE}?fg=B5B5B5&bg=FFFFFF`);
+  const live = check(page).locator('[aria-live="polite"]');
+  await expect(textHex(page)).toHaveValue('#B5B5B5');
+  await page.waitForTimeout(800);
+  await expect(live).toHaveText('');
+  await textHex(page).fill('999');
+  await expect(live).toHaveText('2.84 to 1. Fails for text and for controls.');
+});
+
 for (const num of ['1.4.1', '1.4.3', '1.4.11']) {
   test(`${num} has a working colour check under Try it yourself`, async ({ page }) => {
     await open(page, `/criteria/${num}/`);
