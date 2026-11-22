@@ -6,6 +6,12 @@
       "runtimeExecutable": "python3",
       "runtimeArgs": ["-m", "http.server", "4321", "--directory", "design/mockups"],
       "port": 4321
+    },
+    {
+      "name": "site",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": ["-c", "npm run build && npx vite preview --port 4173 --strictPort"],
+      "port": 4173
     }
   ]
 }
