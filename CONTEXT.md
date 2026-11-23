@@ -49,6 +49,18 @@ text copied across.
 **fail example** and a **pass example**. On screen these are labelled "Broken" / "Fixed" on
 criterion pages and "Badly" / "Well" on colour pairs; those words are copy, not terms.
 
+**Live example** — an example the reader can operate: tab through it, hover it, submit it. It
+lets the reader *experience* the failure or the fix as a user would, but not change how it is
+built — changing it is a lab's job. A live example reads fully as a static example before any
+script runs, and its caption is true in both states. The fail and pass examples stay side by side;
+neither turns into the other in place. In a live fail example the reader operates the failure
+through simulated input; in a live pass example they operate it for real.
+
+**Simulated input** — how a reader operates a depicted failure: buttons such as "Press Tab",
+"Hover" or "Read it aloud" that move a drawn focus ring or cursor and write to the instruments,
+while the broken interface itself stays inert and hidden from assistive technology. The failure is
+experienced without ever being committed against a real keyboard or screen-reader user.
+
 **Colour check** — the tool that measures one text colour against one background against every
 contrast threshold, shown in a realistic preview drawn in the two colours. It checks a pair, not
 a site.
@@ -87,8 +99,33 @@ line, and transport row. One player, nine timelines.
 **Lab** — an interactive exhibit the reader controls directly, such as dragging a slider that
 fades text until it fails 1.4.3. Distinct from a demo: a demo plays a timeline, a lab responds
 to the reader. A lab adds to a criterion's fail and pass examples and never replaces them. The
-colour check is a lab. Labs are the site's long-term direction: the aim is for readers to see each
-criterion pass and fail by changing it themselves.
+colour check is a lab. Every criterion has at least one lab: readers see each criterion pass and
+fail by changing it themselves. The motion a lab shows is the reader's change taking effect —
+never something that plays on its own.
+
+**Verdict** — the line in a lab stating whether the lab's current state passes or fails, naming
+the criterion by number and carrying a glyph as well as colour: "1.4.3 fails". Every lab has
+exactly one, and it is announced politely after the reader stops changing things.
+
+**Flagship lab** — a lab with more depth than crossing the pass/fail line once: several
+thresholds, presets, or markup the reader edits. A handful of criteria have one; every other lab
+only has to let the reader cross the line at least once.
+
+**Instrument** — a reusable part that labs are built from and that readers learn to recognise
+across criteria: the announcement log, the focus tracker, the zoom frame, the vision filter, the
+clock, the gesture pad, the mock player and the mock site. One instrument, many labs.
+
+**Announcement log** — the instrument showing what a screen reader would say. Like a measured
+ratio, it is computed from the markup actually rendered, never typed in, so it cannot drift from
+what it describes.
+
+**Mock site** — a miniature site of a few pages, inside a lab, that the reader moves between. For
+the criteria that are only visible across pages: consistent navigation, identification and help,
+and multiple ways.
+
+**Mock player** — the stand-in for a video in the media criteria (1.2.x): a scene drawn by a
+timeline, with captions, a transcript or description cues the reader switches on and off.
+Silent, so audio description appears as on-screen cues. Not a video file.
 
 ---
 
@@ -127,5 +164,12 @@ commit red.
 - **The page obeys every criterion it documents.** Where a design choice would fail a criterion
   on the page, the design changes. This outranks visual fidelity.
 - **Nothing is carried by hue alone**, anywhere, including in the site's own chrome.
+- **Failures are depicted, never committed.** A lab or example may show a failure inside its own
+  mock — a drawn keyboard trap with an always-available, labelled escape; a flash-rate graph
+  instead of flashing; a countdown that never really expires the reader's session — but the real
+  page never fails a criterion. 2.3.1 never flashes, not even when broken.
+- **Motion never carries meaning on its own.** Every animated change ends in a readable state and
+  a text verdict. Under reduced motion, or with motion switched off, changes are instant and
+  nothing is lost.
 - **No backend.** Static build. The only persisted state is the theme preference.
 - **English only.** No i18n layer.

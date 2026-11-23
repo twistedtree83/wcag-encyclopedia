@@ -1,0 +1,332 @@
+{
+  "name": "WCAG Encyclopedia — every criterion interactive",
+  "repoUrl": "https://github.com/twistedtree83/wcag-encyclopedia",
+  "branchName": "redesign",
+  "prdIssue": 40,
+  "verifyCommand": "npm run verify",
+  "bibles": [
+    "CONTEXT.md",
+    "docs/PRD.md",
+    "docs/CONVENTIONS.md",
+    "docs/adr/0002-broken-live-examples-use-simulated-input.md"
+  ],
+  "tasks": [
+    {
+      "id": "L-01",
+      "issue": 41,
+      "title": "Lab shell, verdict and motion tokens",
+      "depends": [],
+      "importance": 1,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "L-02",
+      "issue": 42,
+      "title": "Announcement log and the 4.1.2 flagship lab",
+      "depends": [
+        "L-01"
+      ],
+      "importance": 2,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "L-03",
+      "issue": 43,
+      "title": "Live examples and simulated input, piloted on 4.1.2",
+      "depends": [
+        "L-02"
+      ],
+      "importance": 3,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "L-04",
+      "issue": 44,
+      "title": "Focus tracker and 2.4.7: flagship lab and live examples",
+      "depends": [
+        "L-03"
+      ],
+      "importance": 4,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "L-05",
+      "issue": 45,
+      "title": "Keyboard: 2.1.1, 2.1.2 and 2.1.4",
+      "depends": [
+        "L-04"
+      ],
+      "importance": 5,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "L-06",
+      "issue": 46,
+      "title": "Focus order and bypass: 2.4.1, 2.4.3 (flagship) and 2.4.11",
+      "depends": [
+        "L-04"
+      ],
+      "importance": 6,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "L-07",
+      "issue": 47,
+      "title": "Focus and hover behaviour: 3.2.1 and 1.4.13",
+      "depends": [
+        "L-04"
+      ],
+      "importance": 7,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "L-08",
+      "issue": 48,
+      "title": "Semantics flagships: 1.1.1 and 1.3.1",
+      "depends": [
+        "L-03"
+      ],
+      "importance": 8,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "L-09",
+      "issue": 49,
+      "title": "Sequence, input purpose and label in name: 1.3.2, 1.3.5 and 2.5.3",
+      "depends": [
+        "L-03"
+      ],
+      "importance": 9,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "L-10",
+      "issue": 50,
+      "title": "Titles, link purpose and headings: 2.4.2, 2.4.4 and 2.4.6",
+      "depends": [
+        "L-03"
+      ],
+      "importance": 10,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "L-11",
+      "issue": 51,
+      "title": "Language and status messages: 3.1.1, 3.1.2 and 4.1.3",
+      "depends": [
+        "L-03"
+      ],
+      "importance": 11,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "L-12",
+      "issue": 52,
+      "title": "Form errors and labels: 3.3.1 and 3.3.2",
+      "depends": [
+        "L-03"
+      ],
+      "importance": 12,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "L-13",
+      "issue": 53,
+      "title": "Zoom frame and the 1.4.10 flagship",
+      "depends": [
+        "L-03"
+      ],
+      "importance": 13,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "L-14",
+      "issue": 54,
+      "title": "Text sizing and spacing: 1.4.12 (flagship) and 1.4.4",
+      "depends": [
+        "L-13"
+      ],
+      "importance": 14,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "L-15",
+      "issue": 55,
+      "title": "Orientation and images of text: 1.3.4 and 1.4.5",
+      "depends": [
+        "L-13"
+      ],
+      "importance": 15,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "L-16",
+      "issue": 56,
+      "title": "Vision filter, with 1.4.1, 1.4.11, 1.3.3 and the 1.4.3 live examples",
+      "depends": [
+        "L-03"
+      ],
+      "importance": 16,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "L-17",
+      "issue": 57,
+      "title": "Gesture pad and the 2.5.8 flagship",
+      "depends": [
+        "L-03"
+      ],
+      "importance": 17,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "L-18",
+      "issue": 58,
+      "title": "Pointer: 2.5.1, 2.5.2, 2.5.4 and 2.5.7",
+      "depends": [
+        "L-17"
+      ],
+      "importance": 18,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "L-19",
+      "issue": 59,
+      "title": "Forms: 3.2.2, 3.3.3 and 3.3.4",
+      "depends": [
+        "L-03"
+      ],
+      "importance": 19,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "L-20",
+      "issue": 60,
+      "title": "Forms: 3.3.7 and 3.3.8",
+      "depends": [
+        "L-03"
+      ],
+      "importance": 20,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "L-21",
+      "issue": 61,
+      "title": "Clock and the 2.2.1 flagship",
+      "depends": [
+        "L-03"
+      ],
+      "importance": 21,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "L-22",
+      "issue": 62,
+      "title": "Timing, audio and flashing: 2.2.2, 1.4.2 and 2.3.1",
+      "depends": [
+        "L-21"
+      ],
+      "importance": 22,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "L-23",
+      "issue": 63,
+      "title": "Mock site, with 2.4.5 and 3.2.3",
+      "depends": [
+        "L-03"
+      ],
+      "importance": 23,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "L-24",
+      "issue": 64,
+      "title": "Consistency: 3.2.4 and 3.2.6",
+      "depends": [
+        "L-23"
+      ],
+      "importance": 24,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "L-25",
+      "issue": 65,
+      "title": "Mock player, with 1.2.2 and 1.2.4",
+      "depends": [
+        "L-03"
+      ],
+      "importance": 25,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "L-26",
+      "issue": 66,
+      "title": "Media alternatives: 1.2.1, 1.2.3 and 1.2.5",
+      "depends": [
+        "L-25"
+      ],
+      "importance": 26,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "L-27",
+      "issue": 67,
+      "title": "Close out coverage: every criterion has a lab",
+      "depends": [
+        "L-04",
+        "L-05",
+        "L-06",
+        "L-07",
+        "L-08",
+        "L-09",
+        "L-10",
+        "L-11",
+        "L-12",
+        "L-13",
+        "L-14",
+        "L-15",
+        "L-16",
+        "L-17",
+        "L-18",
+        "L-19",
+        "L-20",
+        "L-21",
+        "L-22",
+        "L-23",
+        "L-24",
+        "L-25",
+        "L-26"
+      ],
+      "importance": 27,
+      "afk": true,
+      "passes": false
+    }
+  ]
+}
