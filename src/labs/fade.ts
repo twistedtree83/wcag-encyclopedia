@@ -18,6 +18,7 @@ import {
   passesThreshold,
 } from '../color/contrast';
 import { dark } from '../theme/tokens';
+import type { Verdict } from './LabShell';
 import { TEXT_CHECKS } from './thresholds';
 
 export const FADE_DEFAULT = 18;
@@ -45,6 +46,8 @@ export type FadeState = {
   /** Where the ratio sits on the log-scale bar, 0..100 (percent of its width). */
   readonly position: number;
   readonly results: readonly FadeResult[];
+  /** The lab's verdict: 1.4.3, judged on body text (4.5 : 1). */
+  readonly verdict: Verdict;
   /** One sentence for the polite live region. */
   readonly announcement: string;
 };
@@ -76,6 +79,7 @@ export function fadeState(faded: number): FadeState {
     ratioText,
     position: scalePosition(ratio),
     results,
+    verdict: { criterion: '1.4.3', passes: passesThreshold(ratio, AA_BODY) },
     announcement: `${faded}% faded. Contrast ratio ${ratioText}. ${sentence[0]!.toUpperCase()}${sentence.slice(1)}.`,
   };
 }

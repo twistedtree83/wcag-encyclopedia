@@ -71,6 +71,29 @@ To add a page:
   `.sr` region, set 500 ms after the reader's last change. Changes the reader didn't make, such
   as a URL preload, must not announce.
 
+## Labs
+
+Every lab renders inside `LabShell` (`src/labs/LabShell.tsx`), which adds the verdict line, the
+Reset button and the one polite region. To add a lab:
+
+1. Write the lab in `src/labs/`. Keep its pure model (state → ratio, results, verdict,
+   announcement) in a separate `.ts` file, as `fade.ts` does, and unit-test that.
+2. Render `<LabShell className verdict said onReset>` with the mock first, then the controls row.
+   Mark the mock `data-lab-mock`. Ids come from `useId`, since a page may show a lab twice.
+3. `verdict` is `{ criterion, passes }` for what's on screen. `said` is a new `{ text }` object
+   for each change the reader makes, and `null` (or unchanged) otherwise. Reset sets it to
+   `null`, so it is never announced. Don't add a live region of your own.
+4. Register it in `LABS` (`src/labs/registry.ts`), with `flagshipFor: '<num>'` if it is that
+   criterion's flagship, then add its id to the record's `labs`.
+5. Delete the criterion's line from `tests/labsToCome.ts`. The data-integrity test fails until
+   you do.
+6. Add a case to `LABS` in `e2e/labs.spec.ts`. It covers both verdicts by keyboard, axe in the
+   failing state, Reset and the motion rules.
+
+Motion follows design guide §7: `--speed-state` and `--ease-out` for state changes; only
+opacity, transform and colour animate. Reduced motion and `data-motion="off"` are handled
+globally at the end of `swatch.css`.
+
 ## URL contracts
 
 - All criteria and Home: `?p=1..4`, `?l=A|AA`, `?new`, `?q=`, handled only in

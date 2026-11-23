@@ -9,7 +9,13 @@ import {
 } from '../src/criteria/corpus';
 import { EXPECTED, EXPECTED_TOTAL, expectedFor } from '../src/criteria/manifest';
 import { GUIDELINES, PRINCIPLES, guidelineFor } from '../src/criteria/structure';
-import { LABS, unresolvedLabs } from '../src/labs/registry';
+import {
+  flagshipCriteria,
+  LABS,
+  uncoveredCriteria,
+  unresolvedLabs,
+} from '../src/labs/registry';
+import { LABS_TO_COME } from './labsToCome';
 import { palettes, THEMES, type Token } from '../src/theme/tokens';
 
 /**
@@ -370,4 +376,56 @@ describe('lab references', () => {
       expect(typeof record.pass.render).toBe('function');
     },
   );
+});
+
+/**
+ * Lab coverage (#41): every criterion has at least one lab, except those still to come in
+ * `labsToCome.ts`, a list that only shrinks. The ten flagships are fixed by the PRD (#40).
+ */
+describe('lab coverage', () => {
+  const nums = EXPECTED.map((e) => e.num);
+
+  it('flags a criterion with no lab that is not still to come', () => {
+    const records = [{ num: '9.9.9' }, { num: '9.9.8', labs: ['fade-text'] }];
+    expect(uncoveredCriteria(records, [])).toEqual(['9.9.9']);
+    expect(uncoveredCriteria(records, ['9.9.9'])).toEqual([]);
+  });
+
+  it('gives every criterion a lab, except those still to come', () => {
+    expect(uncoveredCriteria(CORPUS, LABS_TO_COME)).toEqual([]);
+  });
+
+  it('lists only real criteria as still to come, each once', () => {
+    for (const num of LABS_TO_COME) expect(nums, num).toContain(num);
+    expect(LABS_TO_COME.length).toBe(new Set(LABS_TO_COME).size);
+  });
+
+  it('shrinks the to-come list as labs arrive', () => {
+    const arrived = LABS_TO_COME.filter((num) => (criterion(num)?.labs ?? []).length > 0);
+    expect(arrived, 'these have a lab now: delete them from tests/labsToCome.ts').toEqual([]);
+  });
+
+  const FLAGSHIPS = [
+    '1.1.1',
+    '1.3.1',
+    '1.4.3',
+    '1.4.10',
+    '1.4.12',
+    '2.2.1',
+    '2.4.3',
+    '2.4.7',
+    '2.5.8',
+    '4.1.2',
+  ];
+
+  it('has exactly the ten flagships, skipping those still to come', () => {
+    const toCome = FLAGSHIPS.filter((num) => LABS_TO_COME.includes(num));
+    expect([...flagshipCriteria(), ...toCome].sort()).toEqual([...FLAGSHIPS].sort());
+  });
+
+  it('shows each flagship lab on the criterion it is the flagship for', () => {
+    for (const lab of LABS.filter((l) => l.flagshipFor)) {
+      expect(criterion(lab.flagshipFor!)?.labs ?? [], lab.id).toContain(lab.id);
+    }
+  });
 });

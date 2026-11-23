@@ -120,7 +120,7 @@ export function CriterionPage({ record }: { record: CriterionRecord }) {
           {labs.map(({ id, title, Lab }) => (
             <div className="lab-slot" key={id}>
               <h3>{title}</h3>
-              <Lab />
+              <Lab criterion={record.num} />
             </div>
           ))}
         </section>

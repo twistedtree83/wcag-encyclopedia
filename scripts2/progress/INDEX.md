@@ -49,3 +49,9 @@ Graph: `scripts2/prd-redesign.json` · Parent: #27 · Branch: `redesign`
 - [x] **R-08** #35 — Home page (needs R-05, R-06, R-07)
 - [x] **R-10** #37 — Delete the retired single-page modules (needs R-08)
 - [ ] **R-11** #38 — Cutover: owner's visual sign-off, then merge the redesign and deploy (needs R-10)
+
+## Labs
+
+Graph: `scripts2/prd-labs.json` · Parent: #40 · Integration branch: `labs`
+
+- [x] **L-01** #41 — Lab shell, verdict and motion tokens (no deps)
