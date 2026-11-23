@@ -102,9 +102,18 @@ test('the deliberate-failure exclusion is in use', async ({ page }) => {
 
 /**
  * Pages whose content changes after load: scan the states too, not only the first paint.
- * The All criteria index filtered to one principle, and with nothing matching.
+ * The All criteria index filtered to one principle, and with nothing matching. The 4.1.2 lab's
+ * URL states (#42): passing, a native toggle button, and broken markup (a state the role doesn't
+ * support, and no name); its start is the page itself, scanned above.
  */
-const STATE_PAGES = ['/criteria/?p=2', '/criteria/?q=zzzz'];
+const STATE_PAGES = [
+  '/criteria/?p=2',
+  '/criteria/?q=zzzz',
+  '/criteria/4.1.2/?el=switch&name=aria-label&state=aria-checked&on=1',
+  '/criteria/4.1.2/?el=button&name=content&state=aria-pressed&on=0',
+  '/criteria/4.1.2/?el=role-button&name=labelledby&state=aria-checked&on=1',
+  '/criteria/4.1.2/?el=switch&name=none&state=aria-pressed&on=0',
+];
 
 for (const url of STATE_PAGES) {
   for (const mode of MODES) {

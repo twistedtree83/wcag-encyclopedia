@@ -109,7 +109,5 @@ export const LABS_TO_COME: readonly string[] = [
 
   '3.3.8',
 
-  '4.1.2',
-
   '4.1.3',
 ];

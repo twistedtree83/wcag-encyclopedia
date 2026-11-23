@@ -16,6 +16,7 @@ export const G4_1: readonly CriterionRecord[] = [
     since: '2.0',
     guideline: '4.1',
     demos: ['name-4-1-2'],
+    labs: ['name-role-value'],
     plain:
       'Every control has to expose three things programmatically: what it is called, what kind ' +
       'of thing it is, and what state it is in — and it has to update as that state changes. ' +
