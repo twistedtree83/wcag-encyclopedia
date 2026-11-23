@@ -1,4 +1,6 @@
+import { useEffect, useState } from 'react';
 import type { CriterionRecord, Example } from '../criteria/types';
+import { LiveStage } from '../live/LiveStage';
 import { principleFor } from '../criteria/structure';
 import { demoById } from '../demo/registry';
 import { labById } from '../labs/registry';
@@ -69,10 +71,7 @@ export function CriterionPage({ record }: { record: CriterionRecord }) {
             </p>
           </div>
         </div>
-        <div className="ex">
-          <Stage kind="bad" example={record.fail} />
-          <Stage kind="good" example={record.pass} />
-        </div>
+        <Examples fail={record.fail} pass={record.pass} />
       </section>
 
       {record.diff ? (
@@ -149,7 +148,23 @@ export function CriterionPage({ record }: { record: CriterionRecord }) {
   );
 }
 
-function Stage({ kind, example }: { kind: 'bad' | 'good'; example: Example }) {
+/**
+ * Broken then Fixed, side by side. A record whose examples have live versions pre-renders the
+ * static ones, then swaps the live ones in after hydration (#43); the rest never change.
+ */
+function Examples({ fail, pass }: { fail: Example; pass: Example }) {
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => setHydrated(true), []);
+  const live = hydrated && !!fail.live && !!pass.live;
+  return (
+    <div className={live ? 'ex ex--live' : 'ex'}>
+      <Stage kind="bad" example={fail} live={live} />
+      <Stage kind="good" example={pass} live={live} />
+    </div>
+  );
+}
+
+function Stage({ kind, example, live }: { kind: 'bad' | 'good'; example: Example; live: boolean }) {
   const broken = kind === 'bad';
   return (
     <figure className={`stage ${kind}`}>
@@ -161,7 +176,11 @@ function Stage({ kind, example }: { kind: 'bad' | 'good'; example: Example }) {
         <span className="sr">: </span>
         <q>{example.caption}</q>
       </figcaption>
-      <div className="stage__example">{example.render()}</div>
+      {live && example.live ? (
+        <LiveStage kind={kind} live={example.live} />
+      ) : (
+        <div className="stage__example">{example.render()}</div>
+      )}
     </figure>
   );
 }

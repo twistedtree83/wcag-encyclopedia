@@ -201,7 +201,9 @@ function voiced(node: AxNode, role: string): { word: string; states: string[] } 
     states.push(pressed === 'true' ? 'pressed' : pressed === 'mixed' ? 'half pressed' : 'not pressed');
   }
   if (role === 'checkbox' || role === 'radio' || role === 'switch') {
-    const native = tag === 'input' && !attrs.role;
+    // A native checkbox keeps its own checked state under role="switch" (HTML-AAM).
+    const type = (attrs.type ?? '').toLowerCase();
+    const native = tag === 'input' && (type === 'checkbox' || type === 'radio');
     const checked = native ? (node.checked ?? 'checked' in attrs) : attrs['aria-checked'];
     const on = checked === true || checked === 'true';
     const known = native || checked === 'true' || checked === 'false';
@@ -263,6 +265,23 @@ export function announce(root: AxNode): Announcement[] {
   walk(root, undefined, true);
   flush();
   return lines;
+}
+
+/**
+ * What a screen reader says when focus lands on `node`: its own line (name, role, states,
+ * description). A focused element with no role is said by its text, which is empty for a bare
+ * `div tabindex="0"`: the "blank" a screen reader gives an unnamed, roleless control. Pass the
+ * example's root as `within` so a wrapping label or aria-labelledby elsewhere in it resolves.
+ */
+export function focusLine(node: AxNode, within: AxNode = node): Announcement {
+  // Labels and ids resolve within `within`, which must contain `node` (the same object).
+  const index = indexOf(within);
+  const role = roleOf(node);
+  const lang = node.attrs.lang ? { lang: node.attrs.lang } : {};
+  const description = referenced(node.attrs['aria-describedby'], index);
+  if (!role) return { name: textOf(node), role: null, states: [], description, ...lang };
+  const { word, states } = voiced(node, role);
+  return { name: nameOf(node, role, index), role: word, states, description, ...lang };
 }
 
 /** One line as it is said: "Email notifications, switch, on". */

@@ -36,24 +36,36 @@ export function AnnouncementLog({
   id,
   lines,
   title = 'Screen reader says',
+  empty,
 }: {
   /** Prefix for the heading's id. */
   readonly id: string;
   readonly lines: readonly Announcement[];
   readonly title?: string;
+  /** Shown in place of the list while there are no lines. */
+  readonly empty?: string;
 }) {
   return (
     <div className="alog">
       <p className="alog__h" id={`${id}-alog`}>
         {title}
       </p>
-      <ol aria-labelledby={`${id}-alog`}>
-        {lines.map((line, i) => (
-          <li key={i} className={line.role ? undefined : 'alog__text'}>
-            {spoken(line)}
-          </li>
-        ))}
-      </ol>
+      {lines.length === 0 && empty ? (
+        <p className="alog__empty">{empty}</p>
+      ) : (
+        <ol aria-labelledby={`${id}-alog`}>
+          {lines.map((line, i) => {
+            // Nothing to say (an unnamed, roleless control): screen readers say "blank".
+            const said = spoken(line);
+            const cls = !said ? 'alog__blank' : line.role ? undefined : 'alog__text';
+            return (
+              <li key={i} className={cls}>
+                {said || 'blank'}
+              </li>
+            );
+          })}
+        </ol>
+      )}
     </div>
   );
 }

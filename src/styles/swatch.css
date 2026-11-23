@@ -1756,6 +1756,80 @@ footer.foot p {
   color: var(--ink-2);
 }
 
+/* --- Live examples (L-03) ---------------------------------------------------------------- */
+
+/* Side by side, the two stages share rows (caption, example, input bar, instruments), so the
+   broken and fixed logs line up row by row. Below 901px they stack in one column. */
+@media (min-width: 901px) {
+  .ex--live {
+    grid-template-rows: repeat(4, auto);
+    row-gap: 0;
+  }
+  .ex--live > .stage {
+    display: grid;
+    grid-row: span 4;
+    grid-template-rows: subgrid;
+    row-gap: 24px;
+  }
+}
+.live__frame {
+  position: relative;
+}
+.live__example {
+  padding: 16px;
+  border-radius: calc(var(--rad) * 0.65);
+  background: var(--card-bg);
+  color: var(--ink);
+}
+.live-toggle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  font-size: 17px;
+  font-weight: 600;
+}
+.live-toggle .toggle {
+  transform: scale(1.4);
+  transform-origin: left center;
+  margin-right: 14px;
+}
+.live-toggle input {
+  width: 24px;
+  height: 24px;
+  margin: 0;
+}
+/* The drawn focus ring: where simulated focus is. It moves by transform only. */
+.sim-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  outline: 3px solid transparent;
+  outline-offset: 3px;
+  border-radius: 4px;
+  pointer-events: none;
+  transition:
+    transform var(--speed-state) var(--ease-out),
+    outline-color var(--speed-state) var(--ease-out);
+}
+.sim-ring[data-on='true'] {
+  outline-color: var(--focus);
+}
+.inbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-self: start;
+}
+.alog li.alog__blank {
+  color: var(--ink-2);
+  font-style: italic;
+}
+.alog__empty {
+  margin: 0;
+  color: var(--ink-2);
+}
+
 /* The 4.1.2 lab: a depicted toggle, three choices, then the markup and the log. */
 .nrv-mock {
   padding: 24px;

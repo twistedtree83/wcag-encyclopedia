@@ -6,7 +6,7 @@
  * `criterion`, `restatement`, `example`, `caption`, `diff`, `demo`.
  */
 
-import type { ReactNode } from 'react';
+import type { ComponentType, ReactNode } from 'react';
 
 export type Level = 'A' | 'AA' | 'AAA';
 
@@ -18,6 +18,33 @@ export type Example = {
   /** Real interface, not a description of one. */
   readonly render: () => ReactNode;
   readonly caption: string;
+  /**
+   * A live version the reader can operate (#43, CONTEXT.md "Live example"). The page pre-renders
+   * `render` as always and swaps this in after hydration. Give both `fail` and `pass` one, or
+   * neither; the caption must be true of both versions.
+   */
+  readonly live?: LiveExample;
+};
+
+/** A button on a live example's input bar. Add a key on its own line, with its handler in `LiveStage`. */
+export type SimKey =
+  | 'tab'
+  | 'shift-tab'
+  | 'enter'
+  | 'space'
+  | 'read';
+
+export type LiveExample = {
+  /**
+   * The interface itself. On the fail stage it is rendered inert and hidden from assistive
+   * technology and operated only by simulated input (ADR 0002); on the pass stage it is real.
+   * It may keep its own state (a toggle that toggles). Ids from `useId`.
+   */
+  readonly Example: ComponentType;
+  /** The input bar's buttons, in order. The same on both stages. */
+  readonly keys: readonly SimKey[];
+  /** Ids of the instruments under the stage (`src/live/instruments.tsx`), in order. */
+  readonly instruments: readonly string[];
 };
 
 export type DiffLine = {
