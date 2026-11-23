@@ -97,6 +97,14 @@ with `<AnnouncementLog>`. The log reads the root even though it is hidden. Unit 
 React markup through `tests/markup.ts` (no DOM in vitest). A lab that starts failing sets
 `startsFailing` and `toPass` in its `e2e/labs.spec.ts` case.
 
+A **live example** (ADR 0002) is set on the record: `live: { Example, keys, instruments }` on
+both `fail` and `pass` (`src/criteria/types.ts`). The page pre-renders `render` and swaps the
+live one in after hydration. `src/live/LiveStage.tsx` wraps the fail `Example` in
+`aria-hidden inert` and drives it with the input bar; the pass `Example` is real. Instruments
+are pure views of the stage's `StageEvent`s (`src/live/events.ts`), registered one per line in
+`src/live/instruments.tsx`. Write the broken markup with its real `tabindex`: the focus model
+reads attributes. e2e pattern: `e2e/live-examples.spec.ts`.
+
 Motion follows design guide §7: `--speed-state` and `--ease-out` for state changes; only
 opacity, transform and colour animate. Reduced motion and `data-motion="off"` are handled
 globally at the end of `swatch.css`.

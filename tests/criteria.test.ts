@@ -16,6 +16,7 @@ import {
   unresolvedLabs,
 } from '../src/labs/registry';
 import { LABS_TO_COME } from './labsToCome';
+import { unresolvedInstruments } from '../src/live/instruments';
 import { palettes, THEMES, type Token } from '../src/theme/tokens';
 
 /**
@@ -428,4 +429,36 @@ describe('lab coverage', () => {
       expect(criterion(lab.flagshipFor!)?.labs ?? [], lab.id).toContain(lab.id);
     }
   });
+});
+
+/**
+ * Live examples (#43): a record may give its fail and pass examples a live version. Both or
+ * neither, with the same input bar, and every instrument it names is registered.
+ */
+describe('live-example references', () => {
+  it('flags an instrument that is not registered', () => {
+    expect(unresolvedInstruments(['announcement-log', 'no-such-instrument'])).toEqual([
+      'no-such-instrument',
+    ]);
+  });
+
+  it('has at least one record with live examples (4.1.2, the pilot)', () => {
+    expect(criterion('4.1.2')?.fail.live).toBeDefined();
+  });
+
+  it.each(CORPUS.filter((c) => c.fail.live || c.pass.live).map((c) => [c.num, c] as const))(
+    '%s makes both stages live, with one input bar and registered instruments',
+    (_num, record) => {
+      const fail = record.fail.live;
+      const pass = record.pass.live;
+      expect(fail, 'the fail example has no live version').toBeDefined();
+      expect(pass, 'the pass example has no live version').toBeDefined();
+      expect(pass!.keys, 'the two stages carry different input bars').toEqual(fail!.keys);
+      expect(fail!.keys.length).toBeGreaterThan(0);
+      for (const live of [fail!, pass!]) {
+        expect(unresolvedInstruments(live.instruments), 'unknown instruments').toEqual([]);
+        expect(live.instruments.length, 'a stage with no instrument').toBeGreaterThan(0);
+      }
+    },
+  );
 });

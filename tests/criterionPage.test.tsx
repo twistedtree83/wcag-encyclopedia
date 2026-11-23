@@ -159,6 +159,20 @@ describe('the anatomy', () => {
   });
 });
 
+describe('live examples before any script runs (#43)', () => {
+  const examples = (html: string) =>
+    html.slice(html.indexOf('id="examples-title"'), html.indexOf('</section>', html.indexOf('id="examples-title"')));
+
+  it('pre-renders 4.1.2’s static stages, with no input bar and no live example', () => {
+    const html = decode(examples(page('4.1.2')));
+    expect(html).toContain('"" — group');
+    expect(html).toContain('"Email notifications, switch, on"');
+    expect(html).not.toContain('inbar');
+    expect(html).not.toContain('Read it aloud');
+    expect(html).not.toContain('ex--live');
+  });
+});
+
 function escapeRe(s: string) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
