@@ -11,22 +11,42 @@ import AxeBuilder from '@axe-core/playwright';
  *   - a verdict flip animates with the state-change token, and is instant under reduced motion
  *     and under `data-motion="off"`
  *
- * `toFail` drives the lab to a failing verdict by keyboard; the starting state passes.
+ * Most labs start passing and `toFail` breaks them. A lab that starts failing (the 4.1.2 toggle
+ * starts as a bare div) sets `startsFailing` and gives `toPass` instead.
  */
+
+type Drive = (lab: Locator, page: Page) => Promise<void>;
 
 type LabCase = {
   name: string;
   url: string;
   /** A CSS selector for the lab's root element on that page. */
   lab: string;
-  /** The verdict line at the start, and after `toFail`. */
+  /** The verdict line when passing, and when failing. */
   passing: string;
   failing: string;
-  /** Drive the lab to the failing verdict using only the keyboard. */
-  toFail: (lab: Locator, page: Page) => Promise<void>;
-  /** What the live region says after `toFail`. */
+  /** What the live region says after the drive (`toFail` or `toPass`). */
   said: string;
-};
+} & (
+  | {
+      startsFailing?: false;
+      /** Drive the lab from its passing start to the failing verdict, keyboard only. */
+      toFail: Drive;
+    }
+  | {
+      startsFailing: true;
+      /** Drive the lab from its failing start to the passing verdict, keyboard only. */
+      toPass: Drive;
+    }
+);
+
+/** The verdict at the start, the one the drive reaches, and the drive. */
+const plan = (c: LabCase) =>
+  c.startsFailing
+    ? { start: c.failing, end: c.passing, drive: c.toPass }
+    : { start: c.passing, end: c.failing, drive: c.toFail };
+
+const radio = (lab: Locator, name: string) => lab.getByRole('radio', { name, exact: true });
 
 async function typeHex(lab: Locator, page: Page, label: string, hex: string) {
   await lab.getByLabel(label).focus();
@@ -113,6 +133,29 @@ const LABS: LabCase[] = [
     },
     said: '100% faded. Contrast ratio 1.29 : 1. Fails body text AA, fails large text AA, fails body text AAA.',
   },
+  {
+    name: 'the name, role and value lab on 4.1.2',
+    url: '/criteria/4.1.2/',
+    lab: '.lab-slot .nrv-lab',
+    passing: '4.1.2 passes',
+    failing: '4.1.2 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await radio(lab, 'A plain div').focus();
+      await page.keyboard.press('ArrowDown');
+      await page.keyboard.press('ArrowDown');
+      await page.keyboard.press('ArrowDown');
+      await radio(lab, 'None: the text sits beside it').focus();
+      await page.keyboard.press('ArrowDown');
+      await page.keyboard.press('ArrowDown');
+      await radio(lab, 'None').focus();
+      await page.keyboard.press('ArrowDown');
+      await page.keyboard.press('ArrowDown');
+    },
+    said:
+      'Screen reader says: Email notifications, switch, on; Email notifications. ' +
+      'Role, name and state all exposed.',
+  },
 ];
 
 async function open(page: Page, url: string) {
@@ -136,12 +179,13 @@ const snapshot = (lab: Locator) =>
   });
 
 for (const c of LABS) {
+  const { start, end, drive } = plan(c);
   test.describe(c.name, () => {
     test('has one verdict, a Reset button and one polite region', async ({ page }) => {
       await open(page, c.url);
       const lab = page.locator(c.lab);
       await expect(verdict(lab)).toHaveCount(1);
-      await expect(verdict(lab)).toHaveText(c.passing);
+      await expect(verdict(lab)).toHaveText(start);
       await expect(lab.getByRole('button', { name: 'Reset' })).toHaveCount(1);
       await expect(live(lab)).toHaveCount(1);
       await expect(live(lab)).toHaveText('');
@@ -150,36 +194,40 @@ for (const c of LABS) {
     test('reaches both verdicts by keyboard, and passes axe when failing', async ({ page }) => {
       await open(page, c.url);
       const lab = page.locator(c.lab);
-      await c.toFail(lab, page);
-      await expect(verdict(lab)).toHaveText(c.failing);
+      await drive(lab, page);
+      await expect(verdict(lab)).toHaveText(end);
       await expect(live(lab)).toHaveText(c.said);
 
-      // The mock (`data-lab-mock`) now shows the failure the reader made, on purpose: the
+      // In the failing state the mock (`data-lab-mock`) shows the failure, on purpose: the
       // contrast labs draw text in the reader's colours. Everything else in the lab must pass.
-      const results = await new AxeBuilder({ page })
-        .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'])
-        .include(c.lab)
-        .exclude(`${c.lab} [data-lab-mock]`)
-        .analyze();
+      const scan = () =>
+        new AxeBuilder({ page })
+          .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'])
+          .include(c.lab)
+          .exclude(`${c.lab} [data-lab-mock]`)
+          .analyze();
+      const results = await scan();
       expect(results.violations.map((v) => `${v.id}: ${v.help}`)).toEqual([]);
 
-      // Back to passing with the keyboard: Reset is a button in the tab order.
+      // Back to the start with the keyboard: Reset is a button in the tab order.
       await lab.getByRole('button', { name: 'Reset' }).focus();
       await page.keyboard.press('Enter');
-      await expect(verdict(lab)).toHaveText(c.passing);
+      await expect(verdict(lab)).toHaveText(start);
+      const again = await scan();
+      expect(again.violations.map((v) => `${v.id}: ${v.help}`)).toEqual([]);
     });
 
     test('Reset returns to the start, unannounced', async ({ page }) => {
       await open(page, c.url);
       const lab = page.locator(c.lab);
-      const start = await snapshot(lab);
-      await c.toFail(lab, page);
+      const before = await snapshot(lab);
+      await drive(lab, page);
       await expect(live(lab)).toHaveText(c.said);
-      expect(await snapshot(lab)).not.toEqual(start);
+      expect(await snapshot(lab)).not.toEqual(before);
 
       await lab.getByRole('button', { name: 'Reset' }).click();
-      await expect(verdict(lab)).toHaveText(c.passing);
-      expect(await snapshot(lab)).toEqual(start);
+      await expect(verdict(lab)).toHaveText(start);
+      expect(await snapshot(lab)).toEqual(before);
       // The live region still holds the reader's last change: Reset said nothing new.
       await page.waitForTimeout(800);
       await expect(live(lab)).toHaveText(c.said);
@@ -191,7 +239,7 @@ for (const c of LABS) {
       const line = verdict(lab).locator('span');
       // Nothing moves on load.
       await expect(line).toHaveCSS('animation-name', 'none');
-      await c.toFail(lab, page);
+      await drive(lab, page);
       await expect(line).toHaveCSS('animation-name', 'lab-settle');
       await expect(line).toHaveCSS('animation-duration', '0.3s');
       await expect(verdict(lab)).toHaveCSS('transition-duration', '0.3s');
@@ -205,8 +253,8 @@ for (const c of LABS) {
           await page.evaluate(() => document.documentElement.setAttribute('data-motion', 'off'));
         }
         const lab = page.locator(c.lab);
-        await c.toFail(lab, page);
-        await expect(verdict(lab)).toHaveText(c.failing);
+        await drive(lab, page);
+        await expect(verdict(lab)).toHaveText(end);
         await expect(verdict(lab).locator('span')).toHaveCSS('animation-name', 'none');
         await expect(verdict(lab)).toHaveCSS('transition-duration', '0s');
       });

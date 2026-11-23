@@ -90,6 +90,13 @@ Reset button and the one polite region. To add a lab:
 6. Add a case to `LABS` in `e2e/labs.spec.ts`. It covers both verdicts by keyboard, axe in the
    failing state, Reset and the motion rules.
 
+A lab that shows what a screen reader would say uses the announcement log
+(`src/labs/AnnouncementLog.tsx`, computation in `src/labs/announce.ts`): render the mock
+`aria-hidden="true" inert` into a ref, read it with `useAnnouncementLog(ref, state)` and draw it
+with `<AnnouncementLog>`. The log reads the root even though it is hidden. Unit tests feed it
+React markup through `tests/markup.ts` (no DOM in vitest). A lab that starts failing sets
+`startsFailing` and `toPass` in its `e2e/labs.spec.ts` case.
+
 Motion follows design guide §7: `--speed-state` and `--ease-out` for state changes; only
 opacity, transform and colour animate. Reduced motion and `data-motion="off"` are handled
 globally at the end of `swatch.css`.
@@ -99,6 +106,9 @@ globally at the end of `swatch.css`.
 - All criteria and Home: `?p=1..4`, `?l=A|AA`, `?new`, `?q=`, handled only in
   `src/catalog/urlQuery.ts`.
 - Colour check: `?fg=` and `?bg=`, handled only in `src/labs/pairQuery.ts`.
+- 4.1.2 flagship lab: `?el=`, `?name=`, `?state=`, `?on=`, handled only in `src/labs/nrvQuery.ts`.
+  A flagship lab pre-renders its start, applies the query in a mount effect without announcing
+  it, and writes changes back with `history.replaceState` (the start writes no query).
 
 ## Running e2e
 

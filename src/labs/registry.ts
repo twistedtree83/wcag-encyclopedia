@@ -13,6 +13,7 @@ import type { ReactNode } from 'react';
 import type { CriterionRecord } from '../criteria/types';
 import { ColourCheckLab } from './ColourCheck';
 import { FadeLab } from './FadeLab';
+import { NameRoleValueLab } from './NameRoleValueLab';
 
 export type LabProps = {
   /** The number of the criterion page showing the lab, e.g. "1.4.11". */
@@ -43,6 +44,12 @@ export const LABS: readonly LabEntry[] = [
     flagshipFor: '1.4.3',
   },
   { id: 'fade-text', title: 'Try it: fade the text', Lab: FadeLab },
+  {
+    id: 'name-role-value',
+    title: 'Try it: build the toggle',
+    Lab: NameRoleValueLab,
+    flagshipFor: '4.1.2',
+  },
 ];
 
 export function labById(id: string): LabEntry | undefined {

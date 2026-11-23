@@ -29,7 +29,7 @@
       ],
       "importance": 2,
       "afk": true,
-      "passes": false
+      "passes": true
     },
     {
       "id": "L-03",
