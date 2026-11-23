@@ -252,13 +252,21 @@ The mockup also loads Gabarito, Golos Text, Bricolage Grotesque, Familjen Grotes
 
 | Token | Value | Behaviour |
 |---|---|---|
-| `--speed` | 0.15s | Every transition |
+| `--speed` | 0.15s | Hover and press |
+| `--speed-state` | 0.3s | State changes in labs and stages, such as a verdict flip |
+| `--ease-out` | `cubic-bezier(0.2, 0.7, 0.3, 1)` | The easing for `--speed-state`: fast start, gentle stop |
 | `--lift` | 4px | Buttons and index cards rise by this on hover; principle cards by 1.5× |
 
-- Buttons return to rest when pressed.
+Motion only ever shows a change the reader caused, and never carries meaning on its own:
+
+- **Only opacity, transform and colour animate.** Never width, height, position or layout. (Two older transitions predate this rule: the fade lab's scale fill and the colour preview's greyscale filter.)
+- **Hover and press use `--speed`.** Buttons return to rest when pressed.
+- **State changes use `--speed-state` with `--ease-out`.** A lab or stage changing because the reader changed something.
+- **A verdict flip settles.** The verdict line changes colour and its text scales from 0.94 back to 1 (`.settle`, keyframes `lab-settle`). No shake, no bounce, no overshoot. The first render never animates.
+- **Every animated change ends in a readable state and a text verdict**, so missing the animation loses nothing.
+- **Banned:** scroll-triggered entrances, parallax, page transitions, loops, and anything that runs without the reader causing it. The dashed loop lines are static.
 - The colour preview fades to greyscale over 0.2s when that option is checked.
-- `prefers-reduced-motion: reduce` turns off every transition and smooth scrolling. `data-motion="off"` does the same and sets the lift to 0.
-- No auto-playing animation. The dashed loop lines are static.
+- **`prefers-reduced-motion: reduce` and `data-motion="off"` make every change instant**: no transitions, no animations, no smooth scrolling. `data-motion="off"` also sets the lift to 0.
 
 ---
 

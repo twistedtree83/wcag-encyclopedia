@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, ROUTES } from '../src/entry-server';
 import { criterionPath, PATHS } from '../src/site/routes';
-import { initialPairModel, nextPairModel } from '../src/labs/ColourCheck';
+import { initialPairModel, nextPairModel, resetPairModel } from '../src/labs/ColourCheck';
 
 /**
  * The colour check as the build writes it: the Colour check page and the lab on the contrast
@@ -142,5 +142,17 @@ describe('what the colour check announces', () => {
     const mine = nextPairModel(preloaded, '#777777', '#FFFFFF', true);
     expect(mine.changes).toBe(1);
     expect(mine.heard).toEqual({ fg: '#777777', bg: '#FFFFFF' });
+  });
+  it('Reset returns to the starting pair and announces nothing, even after a preload', () => {
+    const preloaded = nextPairModel(start, '#B5B5B5', '#FFFFFF', false);
+    const mine = nextPairModel(preloaded, '#777777', '#FFFFFF', true);
+    const reset = resetPairModel(mine);
+    expect(reset.pair).toEqual({ fg: '#1A1C1C', bg: '#F8D17D' });
+    expect(reset.heard).toBeNull();
+    // The next change of the reader's is still announced.
+    expect(nextPairModel(reset, '#999999', '#FFFFFF', true).heard).toEqual({
+      fg: '#999999',
+      bg: '#FFFFFF',
+    });
   });
 });

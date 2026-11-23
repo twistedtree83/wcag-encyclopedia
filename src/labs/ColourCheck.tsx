@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useId, useState } from 'react';
+import { useCallback, useId, useMemo, useState } from 'react';
 import {
   AA_BODY,
   AA_LARGE,
+  AA_UI,
   AAA_BODY,
   contrastRatio,
   formatScore,
@@ -12,6 +13,7 @@ import {
 import { FailIcon, PassIcon } from '../components/Icons';
 import { useRoute } from '../site/RouteContext';
 import { PATHS } from '../site/routes';
+import { LabShell, type Said, type Verdict } from './LabShell';
 import { DEFAULT_PAIR, type ColourPair } from './pairs';
 import { searchFromPair } from './pairQuery';
 import { THRESHOLD_CHECKS } from './thresholds';
@@ -22,15 +24,19 @@ import { THRESHOLD_CHECKS } from './thresholds';
  * in the Home hero. Every ratio it shows is measured from the two colours it is drawing with.
  *
  * State lives in `useColourPair`, owned by whoever mounts the check, so a page can load a
- * pair into it (quick-start chips, "Try it in the checker", `?fg=`/`?bg=`).
+ * pair into it (quick-start chips, "Try it in the checker", `?fg=`/`?bg=`). It renders in the
+ * lab shell, so it has a verdict, a Reset button and the shell's polite region.
  */
 
 /**
  * The pair on screen, and what the live region may speak. Only the reader's own changes move
  * `changes` and `heard`; a load they did not make (a `?fg=`/`?bg=` preload) moves `pair` alone,
- * so it is never announced, whatever the reader did before it.
+ * so it is never announced, whatever the reader did before it. Reset goes back to `start` and
+ * clears `heard`, so it is not announced either.
  */
 export type PairModel = {
+  /** The pair the check started with, which Reset returns to. */
+  readonly start: ColourPair;
   readonly pair: ColourPair;
   /** Counts the reader's changes; the verdict is announced after each one. */
   readonly changes: number;
@@ -39,7 +45,7 @@ export type PairModel = {
 };
 
 export function initialPairModel(pair: ColourPair): PairModel {
-  return { pair, changes: 0, heard: null };
+  return { start: pair, pair, changes: 0, heard: null };
 }
 
 export function nextPairModel(
@@ -49,7 +55,13 @@ export function nextPairModel(
   announce: boolean,
 ): PairModel {
   const pair = { fg, bg };
-  return announce ? { pair, changes: model.changes + 1, heard: pair } : { ...model, pair };
+  return announce
+    ? { ...model, pair, changes: model.changes + 1, heard: pair }
+    : { ...model, pair };
+}
+
+export function resetPairModel(model: PairModel): PairModel {
+  return { ...model, pair: model.start, heard: null };
 }
 
 export type ColourPairState = ColourPair & {
@@ -57,6 +69,8 @@ export type ColourPairState = ColourPair & {
   readonly heard: ColourPair | null;
   /** Load a pair. `announce: false` for loads the reader did not make (URL preload). */
   readonly set: (fg: string, bg: string, options?: { announce?: boolean }) => void;
+  /** Back to the starting pair, unannounced. */
+  readonly reset: () => void;
 };
 
 export function useColourPair(initial: ColourPair = DEFAULT_PAIR): ColourPairState {
@@ -64,14 +78,12 @@ export function useColourPair(initial: ColourPair = DEFAULT_PAIR): ColourPairSta
   const set = useCallback<ColourPairState['set']>((fg, bg, { announce = true } = {}) => {
     setModel((m) => nextPairModel(m, fg, bg, announce));
   }, []);
-  return { ...model.pair, changes: model.changes, heard: model.heard, set };
+  const reset = useCallback(() => setModel(resetPairModel), []);
+  return { ...model.pair, changes: model.changes, heard: model.heard, set, reset };
 }
 
-/** How long the verdict waits after the last change before it is announced. Deliberate. */
-export const ANNOUNCE_DELAY_MS = 500;
-
 /** The sentence the live region reads, e.g. "2.84 to 1. Fails for text and for controls." */
-export function verdict(ratio: number): string {
+export function announcement(ratio: number): string {
   const said = `${formatScore(ratio)} to 1.`;
   if (passesThreshold(ratio, AAA_BODY)) return `${said} Passes for all text, even AAA.`;
   if (passesThreshold(ratio, AA_BODY)) return `${said} Passes for all text at AA.`;
@@ -79,6 +91,17 @@ export function verdict(ratio: number): string {
     return `${said} Passes only for large text, borders and icons.`;
   }
   return `${said} Fails for text and for controls.`;
+}
+
+/**
+ * The check's verdict on the criterion page it is shown on: 1.4.11 needs 3 : 1 for borders and
+ * icons; everywhere else (1.4.3, and 1.4.1, which has no ratio of its own) it judges body text.
+ */
+export function pairVerdict({ fg, bg }: ColourPair, criterion: string): Verdict {
+  const ratio = contrastRatio(fg, bg);
+  return criterion === '1.4.11'
+    ? { criterion, passes: passesThreshold(ratio, AA_UI) }
+    : { criterion: '1.4.3', passes: passesThreshold(ratio, AA_BODY) };
 }
 
 type Props = {
@@ -89,33 +112,38 @@ type Props = {
   readonly wide?: boolean;
   /** An h2 heading for the check. Without one the form is named "Colour check". */
   readonly title?: string;
+  /** The criterion the verdict judges (see `pairVerdict`). */
+  readonly criterion?: string;
 };
 
-export function ColourCheck({ state, id: given, wide = false, title }: Props) {
+export function ColourCheck({ state, id: given, wide = false, title, criterion = '1.4.3' }: Props) {
   const generated = useId();
   const id = given ?? `cc${generated.replace(/[^a-zA-Z0-9]/g, '')}`;
-  const { fg, bg, heard, set } = state;
+  const { fg, bg, heard, set, reset } = state;
   const [grey, setGrey] = useState(false);
-  const [live, setLive] = useState('');
 
   const ratio = contrastRatio(fg, bg);
   const bodyFails = !passesThreshold(ratio, AA_BODY);
   const fix = bodyFails ? nearestPass(fg, bg) : null;
 
-  // Keyed on the reader's changes only: a preload leaves `heard` alone, so it is never spoken.
-  useEffect(() => {
-    if (!heard) return;
-    const said = verdict(contrastRatio(heard.fg, heard.bg));
-    const timer = setTimeout(() => setLive(said), ANNOUNCE_DELAY_MS);
-    return () => clearTimeout(timer);
-  }, [heard]);
+  // Keyed on the reader's changes only: a preload or Reset leaves no new `heard`, so is unspoken.
+  const said = useMemo<Said | null>(
+    () => (heard ? { text: announcement(contrastRatio(heard.fg, heard.bg)) } : null),
+    [heard],
+  );
 
   return (
-    <form
+    <LabShell
+      as="form"
       className={wide ? 'chk wide' : 'chk'}
       id={id}
-      onSubmit={(e) => e.preventDefault()}
       {...(title ? { 'aria-labelledby': `${id}-h` } : { 'aria-label': 'Colour check' })}
+      verdict={pairVerdict({ fg, bg }, criterion)}
+      said={said}
+      onReset={() => {
+        setGrey(false);
+        reset();
+      }}
     >
       {title ? (
         <h2 className="t" id={`${id}-h`}>
@@ -162,6 +190,7 @@ export function ColourCheck({ state, id: given, wide = false, title }: Props) {
 
       <div
         className={grey ? 'prev grey' : 'prev'}
+        data-lab-mock
         role="group"
         aria-label="Preview in the chosen colours"
         style={{ color: fg, background: bg }}
@@ -217,11 +246,7 @@ export function ColourCheck({ state, id: given, wide = false, title }: Props) {
         <input type="checkbox" checked={grey} onChange={(e) => setGrey(e.target.checked)} />
         Preview in greyscale
       </label>
-
-      <p className="sr" aria-live="polite">
-        {live}
-      </p>
-    </form>
+    </LabShell>
   );
 }
 
@@ -286,13 +311,13 @@ function ColourField({
 }
 
 /** The colour check as a lab on a criterion page, with a way into the full page. */
-export function ColourCheckLab() {
+export function ColourCheckLab({ criterion }: { readonly criterion: string }) {
   const state = useColourPair();
   const { href } = useRoute();
   const query = searchFromPair(state);
   return (
     <>
-      <ColourCheck state={state} />
+      <ColourCheck state={state} criterion={criterion} />
       <p className="lab-more">
         <a className="btn o" href={href(PATHS.colourCheck + query)}>
           Open the full colour check

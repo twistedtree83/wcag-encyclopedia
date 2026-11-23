@@ -1,37 +1,38 @@
-import { useEffect, useId, useRef, useState } from 'react';
+import { useId, useState } from 'react';
 import { FailIcon, PassIcon } from '../components/Icons';
 import { FADE_DEFAULT, SCALE_TICKS, fadeState, scalePosition } from './fade';
-
-/** How long the slider must rest before the live region speaks, so a drag is announced once. */
-export const ANNOUNCE_DELAY_MS = 500;
+import { LabShell, type Said } from './LabShell';
 
 /**
  * The fade-the-text lab (design guide §8.10): the reader drags "Fade the text" and the exhibit
  * text really fades, crossing the contrast thresholds. Nothing moves unless the reader moves it.
  *
- * The visible ratio and results are not live regions; one visually hidden polite region speaks
- * a summary once the slider has rested, so dragging does not flood it. Ids come from `useId`,
- * since Home (R-08) shows this lab too.
+ * It sits in the lab shell, which owns the verdict, Reset and the polite region. Each slider
+ * change hands the shell a new `said`, so a drag is announced once it rests; Reset hands it
+ * `null`, so going back to the start is not announced. Ids come from `useId`, since Home shows
+ * this lab too.
  */
+
+type Model = { readonly faded: number; readonly said: Said | null };
+
+const START: Model = { faded: FADE_DEFAULT, said: null };
+
 export function FadeLab() {
   const id = useId();
-  const [faded, setFaded] = useState(FADE_DEFAULT);
-  const [announcement, setAnnouncement] = useState('');
-  const moved = useRef(false);
+  const [{ faded, said }, setModel] = useState<Model>(START);
   const s = fadeState(faded);
-
-  useEffect(() => {
-    if (!moved.current) return;
-    const timer = window.setTimeout(() => setAnnouncement(s.announcement), ANNOUNCE_DELAY_MS);
-    return () => window.clearTimeout(timer);
-  }, [s.announcement]);
 
   const slider = `${id}-fade`;
   const description = `${id}-fade-d`;
 
   return (
-    <div className="lab fade-lab">
-      <div className="lab__exhibit" style={{ color: s.colour }}>
+    <LabShell
+      className="lab fade-lab"
+      verdict={s.verdict}
+      said={said}
+      onReset={() => setModel(START)}
+    >
+      <div className="lab__exhibit" data-lab-mock style={{ color: s.colour }}>
         <h4>Opening hours</h4>
         <p>Monday to Friday, nine until five. Closed on public holidays.</p>
       </div>
@@ -50,8 +51,8 @@ export function FadeLab() {
           aria-valuetext={`${faded}% faded`}
           aria-describedby={description}
           onChange={(e) => {
-            moved.current = true;
-            setFaded(Number(e.currentTarget.value));
+            const next = Number(e.currentTarget.value);
+            setModel({ faded: next, said: { text: fadeState(next).announcement } });
           }}
         />
         <span className="sr" id={description}>
@@ -90,10 +91,6 @@ export function FadeLab() {
           </li>
         ))}
       </ul>
-
-      <p className="sr" aria-live="polite">
-        {announcement}
-      </p>
-    </div>
+    </LabShell>
   );
 }

@@ -197,6 +197,25 @@ Tests check behaviour a reader or maintainer would notice, never internal struct
 
 - Every slice is AFK except R-11, the one human gate: a visual review of the whole site before cutover.
 
+## Every criterion interactive
+
+Issue #40 extends this PRD: every criterion gets at least one lab, and ten get a flagship lab
+(1.1.1, 1.3.1, 1.4.3, 1.4.10, 1.4.12, 2.2.1, 2.4.3, 2.4.7, 2.5.8 and 4.1.2). Its task graph is
+`scripts2/prd-labs.json`.
+
+- **One lab shell.** Every lab renders in the shell: the mock, a controls row, exactly one
+  verdict line ("1.4.3 fails", with a glyph and the criterion number), a Reset button, and one
+  polite live region set 500 ms after the reader's last change. Changes the reader didn't make,
+  including Reset and URL preloads, are never announced. The colour check and fade-the-text are
+  in it.
+- **Motion.** `--speed` (0.15s) stays for hover and press. `--speed-state` (0.3s, ease-out) is
+  for lab and stage state changes. Only opacity, transform and colour animate. A verdict flip
+  settles with a small scale and colour change, never a shake or bounce. Under
+  `prefers-reduced-motion: reduce` or `data-motion="off"` every change is instant. The design
+  guide's §7 holds the full rules.
+- **Coverage.** The data-integrity test fails when a criterion has no lab, except criteria on a
+  to-come list that only shrinks, and asserts the flagship set exactly.
+
 ## Out of Scope
 
 - **Auditing someone's site.** The colour check checks one pair; the site doesn't scan pages, generate VPATs or produce conformance reports.
@@ -204,7 +223,6 @@ Tests check behaviour a reader or maintainer would notice, never internal struct
 - **WCAG 2.0 and 2.1 version switching.** `since` is shown as a fact, not as a way to browse versions.
 - **The tweak bar, extra palettes and style switches.**
 - **The viewport preview and the demo library index.**
-- **More labs than the two above.** The slot is built now; further labs are future content work.
 - **A search results page.** Search filters the index in place.
 - **Video files, audio, a backend, analytics, i18n and a print stylesheet**, as before.
 - **Photography.** If it's added later, any text over it needs a solid backing.
