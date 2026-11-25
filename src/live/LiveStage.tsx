@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import type { LiveExample, SimKey } from '../criteria/types';
-import { announce, focusLine, fromDom, spoken } from '../labs/announce';
+import { announce, focusLine, fromDom, liveRegionLines, spoken } from '../labs/announce';
 import { autofillValue } from '../labs/inputPurpose';
 import { voiceMatches } from '../labs/labelInName';
 import {
@@ -14,6 +14,7 @@ import {
 import { mapOf, nodeAt, pathTo, step, tabStops } from './focus';
 import { INSTRUMENTS } from './instruments';
 import { contextOf, hoverStep, movePointer, popupText } from './pointer';
+import { listOf, tabSwitchLine } from './lists';
 
 /**
  * A live example on its stage (#43, ADR 0002): the example, the input bar, then the instruments.
@@ -38,6 +39,9 @@ const KEY_LABEL: Readonly<Record<SimKey, string>> = {
   voice: 'Say what you see',
   hover: 'Hover',
   escape: 'Escape',
+  'switch-tab': 'Switch tab',
+  links: 'List the links',
+  headings: 'List the headings',
 };
 
 /** Which keys activate which elements: Enter buttons and links, Space buttons and checkboxes. */
@@ -84,7 +88,10 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     // A change of page in a mock reaches no screen reader on its own: say it on both stages.
     else if (e.kind === 'context') {
       if (e.cause) setSaid(contextSaid(e));
-    } else if (e.kind === 'read' || ((e.kind === 'focus' || e.kind === 'change') && e.simulated)) {
+    } else if (
+      e.kind === 'read' ||
+      ((e.kind === 'focus' || e.kind === 'change' || e.kind === 'status') && e.simulated)
+    ) {
       const lines = e.kind === 'read' ? e.lines : [e.line];
       setSaid(`Screen reader says: ${lines.map((l) => spoken(l) || 'blank').join('; ')}`);
     }
@@ -119,6 +126,22 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     if (!root) return;
     if (key === 'read') {
       push({ kind: 'read', simulated, lines: announce(fromDom(root)) });
+      return;
+    }
+    // A screen reader's own lists (#50): the example's links or headings, out of context.
+    if (key === 'links' || key === 'headings') {
+      push({ kind: 'read', simulated, lines: listOf(announce(fromDom(root)), key) });
+      return;
+    }
+    // A simulated switch to the next browser tab drawn in the example (`[data-sim-tab]`), on
+    // either stage: the drawn cursor is `data-sim-on` on that tab, and its title is said.
+    if (key === 'switch-tab') {
+      const tabs = Array.from(root.querySelectorAll<HTMLElement>('[data-sim-tab]'));
+      const next = step(tabs.length, tabs.findIndex((t) => t.hasAttribute('data-sim-on')), false);
+      tabs.forEach((t, i) => t.toggleAttribute('data-sim-on', i === next));
+      if (next >= 0) {
+        push({ kind: 'read', simulated, lines: [tabSwitchLine(tabs[next]!.textContent ?? '', '')] });
+      }
       return;
     }
     if (key === 'autofill') {
@@ -204,8 +227,13 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     const target = simulated ? stops[simAt] : realAt.current;
     if (!target || !activates(key, target)) return;
     cause.current = 'action';
+    const before = spoken(lineFor(target));
     target.click();
-    if (simulated) push({ kind: 'change', simulated, line: lineFor(target) });
+    // A control whose name, role and states didn't change (a plain button) says nothing new.
+    // One that went with its page (#47) says nothing either.
+    if (!target.isConnected) return;
+    const after = lineFor(target);
+    if (simulated && spoken(after) !== before) push({ kind: 'change', simulated, line: after });
   };
 
   // The drawn ring follows the simulated focus, and the layout on resize.
@@ -341,6 +369,23 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     });
     return () => observer.disconnect();
     // lineFor and mapFor read refs only.
+  }, [simulated, push]);
+
+  // Status messages (4.1.3), on both stages: when a live region's text changes, it is announced
+  // wherever focus is. Read from attributes, so the inert fail stage is judged the same way.
+  useEffect(() => {
+    const root = example.current;
+    if (!root) return;
+    let heard = liveRegionLines(fromDom(root)).map(spoken);
+    const observer = new MutationObserver(() => {
+      const lines = liveRegionLines(fromDom(root));
+      lines.forEach((line, i) => {
+        if (line.name && spoken(line) !== heard[i]) push({ kind: 'status', simulated, line });
+      });
+      heard = lines.map(spoken);
+    });
+    observer.observe(root, { subtree: true, childList: true, characterData: true, attributes: true });
+    return () => observer.disconnect();
   }, [simulated, push]);
 
   const { Example } = live;

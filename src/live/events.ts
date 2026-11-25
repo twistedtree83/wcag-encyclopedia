@@ -25,8 +25,13 @@ export type StageEvent =
     }
   /** The focused control's state changed, e.g. a switch turned off. */
   | { readonly kind: 'change'; readonly simulated: boolean; readonly line: Announcement }
-  /** "Read it aloud": the whole example, said from the top. */
+  /**
+   * "Read it aloud": the whole example, said from the top. Also a screen reader's own reading out
+   * of context: a links or headings list, or a switch to a browser tab.
+   */
   | { readonly kind: 'read'; readonly simulated: boolean; readonly lines: readonly Announcement[] }
+  /** A live region's text changed and was announced, wherever focus was (4.1.3). */
+  | { readonly kind: 'status'; readonly simulated: boolean; readonly line: Announcement }
   /** "Autofill": what a browser put in each field, by the field's name ('' for nothing). */
   | { readonly kind: 'autofill'; readonly simulated: boolean; readonly fields: readonly AutofilledField[] }
   /** "Say what you see": a voice command, and the control it clicked, or null for none. */
@@ -52,7 +57,7 @@ export const LOG_LINES = 4;
 export function logOf(events: readonly StageEvent[], max = LOG_LINES): Announcement[] {
   const lines = events.flatMap((e) => {
     if (e.kind === 'read') return [...e.lines];
-    if (e.kind === 'focus' || e.kind === 'change') return [e.line];
+    if (e.kind === 'focus' || e.kind === 'change' || e.kind === 'status') return [e.line];
     return [];
   });
   return lines.slice(-max);

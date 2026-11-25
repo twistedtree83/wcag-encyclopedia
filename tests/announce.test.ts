@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { announce, spoken } from '../src/labs/announce';
+import { announce, liveRegionLines, spoken } from '../src/labs/announce';
 import { parseMarkup } from './markup';
 
 /**
@@ -48,6 +48,16 @@ describe('names', () => {
     expect(
       say('<button><img src="i.svg" alt="Search"/><span aria-hidden="true">🔍</span></button>'),
     ).toEqual(['Search, button']);
+  });
+
+  it('names a field from its placeholder only when nothing else names it', () => {
+    expect(say('<input type="text" placeholder="Date of birth"/>')).toEqual([
+      'Date of birth, edit text',
+    ]);
+    expect(say('<label for="d">Date</label><input id="d" placeholder="DD MM YYYY"/>')).toEqual([
+      'Date',
+      'Date, edit text',
+    ]);
   });
 
   it('says only the role when there is no name', () => {
@@ -151,6 +161,35 @@ describe('what is skipped, and language', () => {
     const [line] = announce(parseMarkup('<p lang="fr">Bonjour</p>'));
     expect(line).toMatchObject({ name: 'Bonjour', lang: 'fr' });
     expect(spoken(line!)).toBe('Bonjour (fr)');
+  });
+
+  it('switches voice for a phrase in another language, mid-sentence, and back', () => {
+    expect(
+      say('<div lang="en"><p>The sign read <em lang="fr">Défense d’afficher</em>, ignored.</p></div>'),
+    ).toEqual(['The sign read (en)', 'Défense d’afficher (fr)', ', ignored. (en)']);
+  });
+
+  it('keeps a sentence in one voice when nothing in it is marked', () => {
+    expect(say('<div lang="en"><p>The sign read <em>Défense d’afficher</em>, ignored.</p></div>')).toEqual([
+      'The sign read Défense d’afficher , ignored. (en)',
+    ]);
+  });
+});
+
+describe('status messages', () => {
+  const regions = (html: string) => liveRegionLines(parseMarkup(html)).map(spoken);
+
+  it('reads the text of each status region and live region', () => {
+    expect(
+      regions(
+        '<p>Basket (4)</p><p role="status">Added. 4 items in basket.</p>' +
+          '<div aria-live="assertive">Card declined</div><p role="alert"></p>',
+      ),
+    ).toEqual(['Added. 4 items in basket.', 'Card declined', '']);
+  });
+
+  it('finds none in a message that is plain text, and none that are switched off', () => {
+    expect(regions('<p>Added. 4 items in basket.</p><p aria-live="off">Saved</p>')).toEqual([]);
   });
 });
 

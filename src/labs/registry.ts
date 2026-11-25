@@ -15,10 +15,17 @@ import { AltTextLab } from './AltTextLab';
 import { ColourCheckLab } from './ColourCheck';
 import { FadeLab } from './FadeLab';
 import { FocusRingLab } from './FocusRingLab';
+import { FormErrorsLab } from './FormErrorsLab';
+import { FormLabelsLab } from './FormLabelsLab';
+import { HeadingsLab } from './HeadingsLab';
 import { InputPurposeLab } from './InputPurposeLab';
 import { LabelInNameLab } from './LabelInNameLab';
+import { LinkPurposeLab } from './LinkPurposeLab';
 import { NameRoleValueLab } from './NameRoleValueLab';
 import { OnFocusLab } from './OnFocusLab';
+import { PageTitleLab } from './PageTitleLab';
+import { PageLanguageLab, PartsLanguageLab } from './LanguageLabs';
+import { StatusLab } from './StatusLab';
 import { SequenceLab } from './SequenceLab';
 import { StructureLab } from './StructureLab';
 import { TooltipLab } from './TooltipLab';
@@ -71,6 +78,14 @@ export const LABS: readonly LabEntry[] = [
   { id: 'structure', title: 'Try it: build the structure', Lab: StructureLab, flagshipFor: '1.3.1' },
   { id: 'on-focus', title: 'Try it: what focus does', Lab: OnFocusLab },
   { id: 'tame-tooltip', title: 'Try it: tame the tooltip', Lab: TooltipLab },
+  { id: 'page-title', title: 'Try it: title the page', Lab: PageTitleLab },
+  { id: 'link-purpose', title: 'Try it: name the links', Lab: LinkPurposeLab },
+  { id: 'headings-labels', title: 'Try it: write the headings', Lab: HeadingsLab },
+  { id: 'page-language', title: 'Try it: declare the page’s language', Lab: PageLanguageLab },
+  { id: 'parts-language', title: 'Try it: mark the French phrase', Lab: PartsLanguageLab },
+  { id: 'status-message', title: 'Try it: announce the basket', Lab: StatusLab },
+  { id: 'form-errors', title: 'Try it: show the error', Lab: FormErrorsLab },
+  { id: 'form-labels', title: 'Try it: label the field', Lab: FormLabelsLab },
 ];
 
 export function labById(id: string): LabEntry | undefined {

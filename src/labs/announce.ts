@@ -13,13 +13,15 @@
  *           header with scope="row"). Everything else, td and li included, is plain text.
  *   names   aria-labelledby (every id, in order) > aria-label > native: <label for>, a wrapping
  *           <label>, img alt, an input button's value > the content, for the roles named from
- *           content (NAMED_FROM_CONTENT) > title. Content uses an image's alt and skips hidden
- *           parts. Ids resolve within the subtree passed in.
+ *           content (NAMED_FROM_CONTENT) > title > a text field's placeholder (HTML-AAM's last
+ *           resort). Content uses an image's alt and skips hidden parts. Ids resolve within the
+ *           subtree passed in.
  *   states  pressed (a button with aria-pressed is a "toggle button"), checked (from the input
  *           or aria-checked; a switch says on/off), expanded/collapsed, required, invalid entry,
  *           a heading's level, then a text field's value (what is typed in it). A state the role
  *           does not support is ignored, as screen readers ignore it.
- *   other   aria-describedby is said last. `lang` marks the language of a part. aria-hidden,
+ *   other   aria-describedby is said last. `lang` marks the language of a part, and a line of
+ *           text breaks where the language switches, as the voice does. aria-hidden,
  *           `hidden`, script and style are skipped, except on the root itself: a lab's mock is
  *           hidden from real assistive technology on purpose, and the log reads it anyway.
  *
@@ -195,7 +197,9 @@ function nameOf(node: AxNode, role: string, index: Index): string {
     const content = textOf(node);
     if (content) return content;
   }
-  return squash(attrs.title ?? '');
+  const title = squash(attrs.title ?? '');
+  if (title || (tag !== 'input' && tag !== 'textarea')) return title;
+  return squash(attrs.placeholder ?? '');
 }
 
 const elements = (node: AxNode): AxNode[] =>
@@ -289,6 +293,8 @@ export function announce(root: AxNode): Announcement[] {
     for (const c of node.children) {
       if (typeof c === 'string') {
         if (!c.trim()) continue;
+        // A part in another language is said in its own voice: the run breaks where it switches.
+        if (run && run.lang !== here) flush();
         run ??= here ? { text: [], lang: here } : { text: [] };
         run.text.push(c);
       } else {
@@ -318,6 +324,34 @@ export function focusLine(node: AxNode, within: AxNode = node): Announcement {
   if (!role) return { name: textOf(node), role: null, states: [], description, ...lang };
   const { word, states } = voiced(node, role);
   return { name: nameOf(node, role, index), role: word, states, description, ...lang };
+}
+
+/** Whether an element is a live region: its text changing is announced without focus moving. */
+function isLiveRegion({ attrs }: AxNode): boolean {
+  const role = (attrs.role ?? '').trim().split(/\s+/)[0];
+  if (role === 'status' || role === 'alert' || role === 'log') return true;
+  return attrs['aria-live'] === 'polite' || attrs['aria-live'] === 'assertive';
+}
+
+/**
+ * The status messages in `root` (4.1.3): one line per live region (role status, alert or log, or
+ * aria-live polite or assertive), holding its current text, in document order. A screen reader
+ * announces a region's text when it changes, wherever focus is. Hidden parts are skipped, except
+ * the root itself, as in `announce`.
+ */
+export function liveRegionLines(root: AxNode): Announcement[] {
+  const lines: Announcement[] = [];
+  const walk = (node: AxNode, lang: string | undefined, isRoot: boolean) => {
+    if (!isRoot && isHidden(node)) return;
+    const here = node.attrs.lang || lang;
+    if (isLiveRegion(node)) {
+      lines.push({ name: textOf(node), role: null, states: [], description: '', ...(here ? { lang: here } : {}) });
+      return;
+    }
+    for (const c of node.children) if (typeof c !== 'string') walk(c, here, false);
+  };
+  walk(root, undefined, true);
+  return lines;
 }
 
 /** One line as it is said: "Email notifications, switch, on". */

@@ -36,7 +36,10 @@ export type SimKey =
   | 'autofill'
   | 'voice'
   | 'hover'
-  | 'escape';
+  | 'escape'
+  | 'switch-tab'
+  | 'links'
+  | 'headings';
 
 export type LiveExample = {
   /**
