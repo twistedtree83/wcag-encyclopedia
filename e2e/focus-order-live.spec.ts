@@ -209,11 +209,15 @@ test.describe('the 2.4.3 lab', () => {
     await expect(l.locator('.fo-visits')).toHaveText('Name → Phone → Email → Postcode → Send');
     await expect(l.locator('.fo-part.is-off')).toHaveCount(2);
     // The grid keeps Email beside Name, above Phone, whatever the source says.
-    const name = (await l.locator('.fo-part--name').boundingBox())!;
-    const email = (await l.locator('.fo-part--email').boundingBox())!;
-    const phone = (await l.locator('.fo-part--phone').boundingBox())!;
-    expect(email.x).toBeGreaterThan(name.x);
-    expect(email.y + email.height).toBeLessThanOrEqual(phone.y);
+    // Measured in one go, so a page scroll can't land between the readings.
+    const [name, email, phone] = await l.locator('.fo-mock').evaluate((mock) =>
+      ['name', 'email', 'phone'].map((p) => {
+        const r = mock.querySelector(`.fo-part--${p}`)!.getBoundingClientRect();
+        return { x: r.x, top: r.top, bottom: r.bottom };
+      }),
+    );
+    expect(email!.x).toBeGreaterThan(name!.x);
+    expect(email!.bottom).toBeLessThanOrEqual(phone!.top);
   });
 
   test('state round-trips through the URL, and a preload is not announced', async ({ page }) => {
