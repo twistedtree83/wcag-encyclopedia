@@ -3,7 +3,9 @@ import type { LiveExample, SimKey } from '../criteria/types';
 import { announce, focusLine, fromDom, liveRegionLines, spoken } from '../labs/announce';
 import { autofillValue } from '../labs/inputPurpose';
 import { voiceMatches } from '../labs/labelInName';
-import { autofillSaid, voiceSaid, type StageEvent } from './events';
+import { autofillSaid, voiceSaid, zoomSaid, type StageEvent } from './events';
+import { ZOOMS, viewportAt, type Scrolls } from '../labs/zoom';
+import { ZoomFrame } from '../labs/ZoomFrame';
 import { mapOf, nodeAt, pathTo, step, tabStops } from './focus';
 import { INSTRUMENTS } from './instruments';
 import { listOf, tabSwitchLine } from './lists';
@@ -32,6 +34,7 @@ const KEY_LABEL: Readonly<Record<SimKey, string>> = {
   'switch-tab': 'Switch tab',
   links: 'List the links',
   headings: 'List the headings',
+  zoom: 'Zoom in',
 };
 
 /** Which keys activate which elements: Enter buttons and links, Space buttons and checkboxes. */
@@ -60,6 +63,9 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
   const realAt = useRef<HTMLElement | null>(null);
   const [ring, setRing] = useState<Ring | null>(null);
   const [said, setSaid] = useState('');
+  /** Zoom frame (#53): the index into ZOOMS, and whether a "Zoom in" waits to be measured. */
+  const [zoomAt, setZoomAt] = useState(0);
+  const zoomed = useRef(false);
 
   const push = useCallback((e: StageEvent) => {
     setEvents((es) => [...es, e].slice(-KEEP));
@@ -67,6 +73,7 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     // An autofill or a voice command is the bar's own doing, on either stage: say its outcome.
     if (e.kind === 'autofill') setSaid(autofillSaid(e));
     else if (e.kind === 'voice') setSaid(voiceSaid(e));
+    else if (e.kind === 'zoom') setSaid(zoomSaid(e));
     else if (e.simulated || e.kind === 'read') {
       const lines = e.kind === 'read' ? e.lines : [e.line];
       setSaid(`Screen reader says: ${lines.map((l) => spoken(l) || 'blank').join('; ')}`);
@@ -104,6 +111,13 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
       if (next >= 0) {
         push({ kind: 'read', simulated, lines: [tabSwitchLine(tabs[next]!.textContent ?? '', '')] });
       }
+      return;
+    }
+    // "Zoom in" steps the zoom frame through 100%, 200% and 400%, then back to 100%. The event
+    // is pushed once the frame has laid out at the new zoom and measured what scrolls.
+    if (key === 'zoom') {
+      zoomed.current = true;
+      setZoomAt((i) => (i + 1) % ZOOMS.length);
       return;
     }
     if (key === 'autofill') {
@@ -177,7 +191,7 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     place();
     window.addEventListener('resize', place);
     return () => window.removeEventListener('resize', place);
-  }, [simulated, simAt]);
+  }, [simulated, simAt, zoomAt]);
 
   // Real input on the pass stage.
   useEffect(() => {
@@ -226,17 +240,31 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     return () => observer.disconnect();
   }, [simulated, push]);
 
+  const onMeasure = (scrolls: Scrolls) => {
+    if (!zoomed.current || !live.zoomFrame) return;
+    zoomed.current = false;
+    const zoom = ZOOMS[zoomAt]!;
+    push({ kind: 'zoom', simulated, zoom, ...viewportAt(zoom, live.zoomFrame), ...scrolls });
+  };
+
   const { Example } = live;
+  const shown = live.zoomFrame ? (
+    <ZoomFrame zoom={ZOOMS[zoomAt]!} base={live.zoomFrame} focusable={!simulated} onMeasure={onMeasure}>
+      <Example />
+    </ZoomFrame>
+  ) : (
+    <Example />
+  );
   return (
     <>
       <div className="stage__example live__frame" ref={frame}>
         {simulated ? (
           <div className="live__example" ref={example} aria-hidden="true" inert>
-            <Example />
+            {shown}
           </div>
         ) : (
           <div className="live__example" ref={example}>
-            <Example />
+            {shown}
           </div>
         )}
         {simulated && !live.hideRing ? (

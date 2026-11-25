@@ -8,6 +8,17 @@
 
 import type { CriterionRecord } from './types';
 import { MeasuredRatio } from '../components/MeasuredRatio';
+import { CataloguePage } from '../labs/ReflowLab';
+import { DESKTOP } from '../labs/zoom';
+
+/** 1.4.10 live examples (#53): the catalogue in a zoom frame, fixed width or reflowing. */
+function FixedCatalogue() {
+  return <CataloguePage layout="fixed" />;
+}
+function ReflowingCatalogue() {
+  return <CataloguePage layout="reflow" />;
+}
+const REFLOW_LIVE = { keys: ['zoom'], instruments: ['zoom-meter'], zoomFrame: DESKTOP } as const;
 
 export const G1_4: readonly CriterionRecord[] = [
   {
@@ -132,11 +143,13 @@ export const G1_4: readonly CriterionRecord[] = [
     since: '2.1',
     guideline: '1.4',
     demos: ['reflow-1-4-10'],
+    labs: ['reflow'],
     plain:
       'At 320 CSS pixels wide, content must not require scrolling in two directions. Same ' +
       'content, one column, no horizontal scrollbar.',
     fail: {
-      caption: 'Fixed 110px columns force a horizontal scrollbar — two-direction scrolling.',
+      caption: 'Fixed-width columns: zoomed to 320px wide, the page scrolls sideways as well as down.',
+      live: { Example: FixedCatalogue, ...REFLOW_LIVE },
       render: () => (
         <div className="mini">
           <div className="mini__frame">
@@ -155,7 +168,8 @@ export const G1_4: readonly CriterionRecord[] = [
       ),
     },
     pass: {
-      caption: 'minmax(0, 1fr) replaced the fixed track width.',
+      caption: 'A track that can shrink replaced the fixed track width, so the columns reflow.',
+      live: { Example: ReflowingCatalogue, ...REFLOW_LIVE },
       render: () => (
         <div className="mini">
           <div className="mini__frame">
@@ -177,14 +191,14 @@ export const G1_4: readonly CriterionRecord[] = [
       lines: [
         { kind: 'context', text: '.catalogue {' },
         { kind: 'context', text: '  display: grid;' },
-        { kind: 'del', text: '  grid-template-columns: repeat(3, 110px);  /* never narrows */' },
-        { kind: 'add', text: '  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));' },
-        { kind: 'context', text: '  gap: 6px;' },
+        { kind: 'del', text: '  grid-template-columns: repeat(3, 18em);  /* never narrows */' },
+        { kind: 'add', text: '  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12em), 1fr));' },
+        { kind: 'context', text: '  gap: 1em;' },
         { kind: 'context', text: '}' },
       ],
       note:
-        'A fixed track cannot reflow. Letting the track shrink to zero and letting auto-fit ' +
-        'decide the count is what turns three columns into one.',
+        'A fixed track cannot reflow. Letting each track shrink to the width available, and ' +
+        'letting auto-fit decide the count, is what turns three columns into one.',
     },
   },
   {

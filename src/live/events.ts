@@ -1,5 +1,6 @@
 import { spoken, type Announcement } from '../labs/announce';
 import type { FocusMap } from './focusTrack';
+import { scrollLine } from '../labs/zoom';
 
 /**
  * What happens on a live example's stage (#43), as a list of events every instrument under the
@@ -35,7 +36,9 @@ export type StageEvent =
   /** "Autofill": what a browser put in each field, by the field's name ('' for nothing). */
   | { readonly kind: 'autofill'; readonly simulated: boolean; readonly fields: readonly AutofilledField[] }
   /** "Say what you see": a voice command, and the control it clicked, or null for none. */
-  | { readonly kind: 'voice'; readonly simulated: boolean; readonly phrase: string; readonly clicked: Announcement | null };
+  | { readonly kind: 'voice'; readonly simulated: boolean; readonly phrase: string; readonly clicked: Announcement | null }
+  /** "Zoom in": the zoom frame's new zoom and window size (CSS px), and what scrolls in it (#53). */
+  | { readonly kind: 'zoom'; readonly simulated: boolean; readonly zoom: number; readonly width: number; readonly height: number; readonly sideways: boolean; readonly down: boolean };
 
 export type AutofilledField = { readonly name: string; readonly value: string };
 
@@ -66,6 +69,11 @@ export function lastOf<K extends StageEvent['kind']>(
 export function autofillSaid({ fields }: Of<'autofill'>): string {
   const filled = fields.filter((f) => f.value !== '').length;
   return `Autofill filled ${filled} of ${fields.length} fields.`;
+}
+
+/** What is said after a zoom: the zoom, the window's width and what scrolls. */
+export function zoomSaid({ zoom, width, sideways, down }: Of<'zoom'>): string {
+  return `Zoomed to ${zoom}%, ${width} CSS pixels wide. ${scrollLine({ sideways, down })}.`;
 }
 
 /** What is said after a voice command: what it clicked, or that nothing matched. */
