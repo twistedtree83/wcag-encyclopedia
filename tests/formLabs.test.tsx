@@ -19,15 +19,15 @@ const labelsLog = (f: FormLabels) =>
 
 describe('3.3.1: how the error is shown', () => {
   it('starts unsubmitted, with a red-border-only error that fails', () => {
-    expect(errorsLog(FE_START)).toEqual(['Email', 'Email, edit text']);
+    expect(errorsLog(FE_START)).toEqual(['Email', 'Email, edit text, ada@example']);
     expect(feVerdict(FE_START)).toEqual({ criterion: '3.3.1', passes: false });
   });
 
   it('a red border says nothing more than before the form was submitted', () => {
     const f: FormErrors = { shown: 'border', submitted: true };
-    expect(errorsLog(f)).toEqual(['Email', 'Email, edit text']);
+    expect(errorsLog(f)).toEqual(['Email', 'Email, edit text, ada@example']);
     expect(feSaid(f, announce(parseMarkup(renderToStaticMarkup(<FormErrorsMock f={f} id="e" />))))).toBe(
-      'Screen reader says: Email; Email, edit text. The field turned red, and nothing says so in text.',
+      'Screen reader says: Email; Email, edit text, ada@example. The field turned red, and nothing says so in text.',
     );
   });
 
@@ -35,17 +35,17 @@ describe('3.3.1: how the error is shown', () => {
     const f: FormErrors = { shown: 'text', submitted: true };
     expect(errorsLog(f)).toEqual([
       'Email',
-      'Email, edit text, invalid entry, Enter an address that includes a domain',
+      'Email, edit text, invalid entry, ada@example, Enter an address that includes a domain',
       'Enter an address that includes a domain',
     ]);
     expect(feVerdict(f).passes).toBe(true);
   });
 
   it('shows no error text until the form is submitted', () => {
-    expect(errorsLog({ shown: 'text', submitted: false })).toEqual(['Email', 'Email, edit text']);
+    expect(errorsLog({ shown: 'text', submitted: false })).toEqual(['Email', 'Email, edit text, ada@example']);
     const f: FormErrors = { shown: 'text', submitted: false };
     const lines = announce(parseMarkup(renderToStaticMarkup(<FormErrorsMock f={f} id="e" />)));
-    expect(feSaid(f, lines)).toBe('Screen reader says: Email; Email, edit text. Not submitted yet.');
+    expect(feSaid(f, lines)).toBe('Screen reader says: Email; Email, edit text, ada@example. Not submitted yet.');
   });
 });
 
@@ -67,12 +67,12 @@ describe('3.3.2: placeholder or label', () => {
     expect(lines.map(spoken)).toEqual([
       'Date of birth',
       'For example, 27 3 1995',
-      'Date of birth, edit text, For example, 27 3 1995',
+      'Date of birth, edit text, 27 3 1995, For example, 27 3 1995',
     ]);
     expect(flVerdict(f).passes).toBe(true);
     expect(flSaid(f, lines)).toBe(
       'Screen reader says: Date of birth; For example, 27 3 1995; ' +
-        'Date of birth, edit text, For example, 27 3 1995. ' +
+        'Date of birth, edit text, 27 3 1995, For example, 27 3 1995. ' +
         'On screen: “Date of birth” and “For example, 27 3 1995”, above the field.',
     );
   });

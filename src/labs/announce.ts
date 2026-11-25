@@ -16,8 +16,8 @@
  *           subtree passed in.
  *   states  pressed (a button with aria-pressed is a "toggle button"), checked (from the input
  *           or aria-checked; a switch says on/off), expanded/collapsed, required, invalid entry,
- *           a heading's level. A state the role does not support is ignored, as screen readers
- *           ignore it.
+ *           a heading's level, then a text field's value (what is typed in it). A state the role
+ *           does not support is ignored, as screen readers ignore it.
  *   other   aria-describedby is said last. `lang` marks the language of a part. aria-hidden,
  *           `hidden`, script and style are skipped, except on the root itself: a lab's mock is
  *           hidden from real assistive technology on purpose, and the log reads it anyway.
@@ -32,6 +32,8 @@ export type AxNode = {
   readonly attrs: Readonly<Record<string, string>>;
   /** An input's live checked state (React sets the property, not the attribute). */
   readonly checked?: boolean;
+  /** A text field's live value (React sets the property; an autofill sets it too). */
+  readonly value?: string;
   readonly children: readonly (AxNode | string)[];
 };
 
@@ -217,6 +219,10 @@ function voiced(node: AxNode, role: string): { word: string; states: string[] } 
   if (attrs['aria-expanded'] === 'false') states.push('collapsed');
   if ('required' in attrs || attrs['aria-required'] === 'true') states.push('required');
   if (attrs['aria-invalid'] === 'true') states.push('invalid entry');
+  if (role === 'textbox' || role === 'searchbox') {
+    const value = squash(node.value ?? attrs.value ?? '');
+    if (value) states.push(value);
+  }
   return { word, states };
 }
 
@@ -303,6 +309,8 @@ export function fromDom(el: Element): AxNode {
     else if (c.nodeType === 1) children.push(fromDom(c as Element));
   }
   const tag = el.tagName.toLowerCase();
-  const checked = tag === 'input' ? (el as HTMLInputElement).checked : undefined;
-  return checked === undefined ? { tag, attrs, children } : { tag, attrs, checked, children };
+  const node: { -readonly [K in keyof AxNode]: AxNode[K] } = { tag, attrs, children };
+  if (tag === 'input') node.checked = (el as HTMLInputElement).checked;
+  if (tag === 'input' || tag === 'textarea') node.value = (el as HTMLInputElement).value;
+  return node;
 }

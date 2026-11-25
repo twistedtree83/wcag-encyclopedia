@@ -11,7 +11,7 @@ import AxeBuilder from '@axe-core/playwright';
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa', 'best-practice'];
 const ERRORS = '/criteria/3.3.1/';
 const LABELS = '/criteria/3.3.2/';
-const INVALID_EMAIL = 'Email, edit text, invalid entry, Enter an address that includes a domain';
+const INVALID_EMAIL = 'Email, edit text, invalid entry, ada@example, Enter an address that includes a domain';
 
 async function open(page: Page, url: string) {
   const response = await page.goto(url);
@@ -54,15 +54,15 @@ test.describe('3.3.1', () => {
 
     await key(stage, 'Press Tab').click();
     // The rejected field sounds exactly like a field that was never wrong.
-    await expect(log(stage)).toHaveText(['Email, edit text']);
+    await expect(log(stage)).toHaveText(['Email, edit text, ada@example']);
     await expect(stage.locator('.sim-ring')).toHaveAttribute('data-on', 'true');
     await key(stage, 'Press Tab').click();
     await key(stage, 'Press Tab').click();
     await expect(log(stage).last()).toHaveText('Continue, button');
     await key(stage, 'Enter').click();
     await expect(log(stage)).toHaveText([
-      'Email, edit text',
-      'Postcode, edit text',
+      'Email, edit text, ada@example',
+      'Postcode, edit text, SW1A 1AA',
       'Continue, button',
       'Continue, button',
     ]);
@@ -118,12 +118,12 @@ test.describe('3.3.2', () => {
 
     await key(stage, 'Press Tab').click();
     await key(stage, 'Press Tab').click();
-    await expect(log(stage)).toHaveText(['Date, edit text', 'Password, edit text']);
+    await expect(log(stage)).toHaveText(['Date, edit text, 03/27/95', 'Password, edit text']);
     await key(stage, 'Read it aloud').click();
     await expect(log(stage)).toHaveText([
-      'Date, edit text',
+      'Date, edit text, 03/27/95',
       'Password, edit text',
-      'Date, edit text',
+      'Date, edit text, 03/27/95',
       'Password, edit text',
     ]);
     expect(await focusInside(stage)).toBe(false);
@@ -169,12 +169,12 @@ test('in the 3.3.1 lab, a red border leaves the log as it was before the submit'
 }) => {
   await open(page, ERRORS);
   const lab = page.locator('.lab-slot .flab');
-  await expect(lab.locator('.alog li')).toHaveText(['Email', 'Email, edit text']);
+  await expect(lab.locator('.alog li')).toHaveText(['Email', 'Email, edit text, ada@example']);
   await lab.getByRole('button', { name: 'Submit the form' }).click();
   await expect(lab.locator('[data-lab-mock] .lform__field--bad')).toHaveCount(1);
-  await expect(lab.locator('.alog li')).toHaveText(['Email', 'Email, edit text']);
+  await expect(lab.locator('.alog li')).toHaveText(['Email', 'Email, edit text, ada@example']);
   await expect(lab.locator('[aria-live="polite"]')).toHaveText(
-    'Screen reader says: Email; Email, edit text. The field turned red, and nothing says so in text.',
+    'Screen reader says: Email; Email, edit text, ada@example. The field turned red, and nothing says so in text.',
   );
   await expect(lab.locator('.lab-verdict')).toHaveText('3.3.1 fails');
 });

@@ -76,7 +76,7 @@ export function FormErrorsLab() {
         <FormErrorsMock f={f} id={id} />
       </div>
 
-      <div className="flab__controls">
+      <div className="lab-controls">
         <Choice
           name={`${id}-shown`}
           legend="How the error is shown"

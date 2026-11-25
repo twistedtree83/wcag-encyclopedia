@@ -95,7 +95,7 @@ export function FormLabelsLab() {
         <FormLabelsMock f={f} id={id} />
       </div>
 
-      <div className="flab__controls">
+      <div className="lab-controls">
         <Choice
           name={`${id}-shown`}
           legend="What labels the field"
@@ -114,7 +114,7 @@ export function FormLabelsLab() {
         </label>
       </div>
 
-      <div className="flab__out">
+      <div className="lab-out">
         <output className="flab__screen" aria-live="off">
           {onScreen(f)}
         </output>
