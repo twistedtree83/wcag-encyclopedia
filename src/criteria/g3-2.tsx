@@ -6,7 +6,85 @@
  * screen magnifier or screen reader user their entire orientation.
  */
 
-import type { CriterionRecord } from './types';
+import { useEffect, useId, useRef, useState } from 'react';
+import type { CriterionRecord, LiveExample } from './types';
+
+type HelpPage = 'help' | 'delivery' | 'returns';
+type Section = Exclude<HelpPage, 'help'>;
+
+const SECTION: Readonly<Record<Section, { readonly title: string; readonly text: string }>> = {
+  delivery: { title: 'Delivery', text: 'Orders arrive in two to three working days.' },
+  returns: { title: 'Returns', text: 'Send anything back within 30 days, free.' },
+};
+
+/**
+ * 3.2.1's live examples (#47): a mock help page with its own address bar (`data-context`, read by
+ * the stage's "Where the example is" instrument). Its "Jump to section" select either changes
+ * the mock's page the moment it gets focus (broken) or waits for Go (fixed). The change of page
+ * happens inside the mock only; on the fixed stage focus then moves to the new page's button.
+ */
+function JumpToSection({ onFocusJumps }: { onFocusJumps: boolean }) {
+  const id = useId();
+  const [page, setPage] = useState<HelpPage>('help');
+  const [section, setSection] = useState<Section>('delivery');
+  const go = useRef<HTMLButtonElement>(null);
+  const back = useRef<HTMLButtonElement>(null);
+  const moved = useRef(false);
+  useEffect(() => {
+    if (!moved.current) return;
+    (page === 'help' ? go : back).current?.focus();
+  }, [page]);
+  const open = (to: HelpPage) => {
+    moved.current = true;
+    setPage(to);
+  };
+
+  return (
+    <div className="ctx">
+      <p className="ctx__bar">
+        <span data-context>{page === 'help' ? 'shop.example/help' : `shop.example/help/${page}`}</span>
+      </p>
+      {page === 'help' ? (
+        <div className="ctx__page">
+          <div className="ctx__row">
+            <label className="ctx__field" htmlFor={`${id}-jump`}>
+              Jump to section
+            </label>
+            <select
+              id={`${id}-jump`}
+              value={section}
+              onChange={(e) => setSection(e.target.value as Section)}
+              onFocus={onFocusJumps ? () => open(section) : undefined}
+            >
+              <option value="delivery">Delivery</option>
+              <option value="returns">Returns</option>
+            </select>
+            {onFocusJumps ? null : (
+              <button ref={go} type="button" className="btn o sm" onClick={() => open(section)}>
+                Go
+              </button>
+            )}
+          </div>
+          <label className="ctx__field">
+            Search help
+            <input type="search" />
+          </label>
+        </div>
+      ) : (
+        <div className="ctx__page">
+          <p className="ctx__title">{SECTION[page].title}</p>
+          <p className="ctx__text">{SECTION[page].text}</p>
+          <button ref={back} type="button" className="btn o sm" onClick={() => open('help')}>
+            Back to help
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+const JUMP_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'enter'];
+const JUMP_INSTRUMENTS = ['context', 'focus-tracker'];
 
 export const G3_2: readonly CriterionRecord[] = [
   {
@@ -19,8 +97,14 @@ export const G3_2: readonly CriterionRecord[] = [
       'Focusing something must not change the context — no navigating away, no opening a ' +
       'dialog, no submitting. Focus happens by accident all the time, because tabbing through ' +
       'a page focuses everything on the way past.',
+    labs: ['on-focus'],
     fail: {
       caption: 'Tabbing onto the select navigates immediately.',
+      live: {
+        Example: () => <JumpToSection onFocusJumps />,
+        keys: JUMP_KEYS,
+        instruments: JUMP_INSTRUMENTS,
+      },
       render: () => (
         <>
           <div className="press">
@@ -36,6 +120,11 @@ export const G3_2: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'Focus does nothing; an explicit action navigates.',
+      live: {
+        Example: () => <JumpToSection onFocusJumps={false} />,
+        keys: JUMP_KEYS,
+        instruments: JUMP_INSTRUMENTS,
+      },
       render: () => (
         <>
           <div className="press">

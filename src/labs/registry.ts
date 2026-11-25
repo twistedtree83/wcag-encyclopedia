@@ -18,8 +18,10 @@ import { FocusRingLab } from './FocusRingLab';
 import { InputPurposeLab } from './InputPurposeLab';
 import { LabelInNameLab } from './LabelInNameLab';
 import { NameRoleValueLab } from './NameRoleValueLab';
+import { OnFocusLab } from './OnFocusLab';
 import { SequenceLab } from './SequenceLab';
 import { StructureLab } from './StructureLab';
+import { TooltipLab } from './TooltipLab';
 
 export type LabProps = {
   /** The number of the criterion page showing the lab, e.g. "1.4.11". */
@@ -67,6 +69,8 @@ export const LABS: readonly LabEntry[] = [
   { id: 'label-in-name', title: 'Try it: say what you see', Lab: LabelInNameLab },
   { id: 'alt-text', title: 'Try it: write the alt text', Lab: AltTextLab, flagshipFor: '1.1.1' },
   { id: 'structure', title: 'Try it: build the structure', Lab: StructureLab, flagshipFor: '1.3.1' },
+  { id: 'on-focus', title: 'Try it: what focus does', Lab: OnFocusLab },
+  { id: 'tame-tooltip', title: 'Try it: tame the tooltip', Lab: TooltipLab },
 ];
 
 export function labById(id: string): LabEntry | undefined {

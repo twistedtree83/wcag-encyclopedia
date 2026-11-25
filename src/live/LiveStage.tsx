@@ -3,9 +3,17 @@ import type { LiveExample, SimKey } from '../criteria/types';
 import { announce, focusLine, fromDom, spoken } from '../labs/announce';
 import { autofillValue } from '../labs/inputPurpose';
 import { voiceMatches } from '../labs/labelInName';
-import { autofillSaid, voiceSaid, type StageEvent } from './events';
+import {
+  autofillSaid,
+  contextSaid,
+  pointerSaid,
+  voiceSaid,
+  type ContextCause,
+  type StageEvent,
+} from './events';
 import { mapOf, nodeAt, pathTo, step, tabStops } from './focus';
 import { INSTRUMENTS } from './instruments';
+import { contextOf, hoverStep, movePointer, popupText } from './pointer';
 
 /**
  * A live example on its stage (#43, ADR 0002): the example, the input bar, then the instruments.
@@ -28,6 +36,8 @@ const KEY_LABEL: Readonly<Record<SimKey, string>> = {
   read: 'Read it aloud',
   autofill: 'Autofill',
   voice: 'Say what you see',
+  hover: 'Hover',
+  escape: 'Escape',
 };
 
 /** Which keys activate which elements: Enter buttons and links, Space buttons and checkboxes. */
@@ -56,6 +66,14 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
   const realAt = useRef<HTMLElement | null>(null);
   const [ring, setRing] = useState<Ring | null>(null);
   const [said, setSaid] = useState('');
+  /** Fail stage: the element the drawn focus is on, so the next Tab can blur it (#47). */
+  const simEl = useRef<HTMLElement | null>(null);
+  /** Both stages: the hover target the pointer is on, or null for away (#47). */
+  const hoverEl = useRef<HTMLElement | null>(null);
+  /** The bar's drawn pointer, on either stage, or null when it is away (#47). */
+  const [cursor, setCursor] = useState<Ring | null>(null);
+  /** What the reader last did, so a change of page in the example can say what caused it. */
+  const cause = useRef<ContextCause | null>(null);
 
   const push = useCallback((e: StageEvent) => {
     setEvents((es) => [...es, e].slice(-KEEP));
@@ -63,11 +81,28 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     // An autofill or a voice command is the bar's own doing, on either stage: say its outcome.
     if (e.kind === 'autofill') setSaid(autofillSaid(e));
     else if (e.kind === 'voice') setSaid(voiceSaid(e));
-    else if (e.simulated || e.kind === 'read') {
+    // A change of page in a mock reaches no screen reader on its own: say it on both stages.
+    else if (e.kind === 'context') {
+      if (e.cause) setSaid(contextSaid(e));
+    } else if (e.kind === 'read' || ((e.kind === 'focus' || e.kind === 'change') && e.simulated)) {
       const lines = e.kind === 'read' ? e.lines : [e.line];
       setSaid(`Screen reader says: ${lines.map((l) => spoken(l) || 'blank').join('; ')}`);
     }
   }, []);
+
+  // The pointer and its tooltip (#47) are said on both stages, the move with what the tooltip
+  // did after it: a tooltip drawn for the eye reaches no screen reader on its own.
+  useEffect(() => {
+    const text = pointerSaid(events);
+    if (text) setSaid(text);
+  }, [events]);
+
+  /** A box relative to the frame, for the drawn ring and pointer. */
+  const boxOf = (el: Element): Ring => {
+    const a = el.getBoundingClientRect();
+    const b = frame.current!.getBoundingClientRect();
+    return { x: a.left - b.left, y: a.top - b.top, w: a.width, h: a.height };
+  };
 
   const lineFor = (el: Element) => {
     const root = example.current!;
@@ -98,6 +133,27 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
       push({ kind: 'autofill', simulated, fields });
       return;
     }
+    if (key === 'hover') {
+      // The pointer moves to the next hover target that is showing, or away (#47). On both
+      // stages: a touch reader has no pointer to hover with.
+      const from = hoverEl.current;
+      const to = hoverStep(root, from);
+      hoverEl.current = to;
+      cause.current = 'pointer';
+      setCursor(to ? boxOf(to) : null);
+      push({ kind: 'pointer', simulated, on: to ? (to.dataset.hover ?? '') : null });
+      movePointer(from, to);
+      return;
+    }
+    if (key === 'escape') {
+      // Escape goes where a real key would: the focused element, else what the pointer is on.
+      const target = (simulated ? simEl.current : realAt.current) ?? hoverEl.current ?? root;
+      push({ kind: 'key', simulated, key: 'Escape' });
+      target.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }),
+      );
+      return;
+    }
     const stops = tabStops(root);
     if (key === 'voice') {
       // The reader says "click" and the text they see on the first control (#49). Voice
@@ -113,18 +169,30 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     }
     if (key === 'tab' || key === 'shift-tab') {
       const back = key === 'shift-tab';
+      cause.current = 'focus';
       if (simulated) {
         const next = step(stops.length, simAt, back);
         setSimAt(next);
         if (next >= 0) {
+          const el = stops[next]!;
           push({
             kind: 'focus',
             simulated,
-            line: lineFor(stops[next]!),
+            line: lineFor(el),
             index: next,
             total: stops.length,
             map: mapFor(stops),
           });
+          // The example's own focus handlers run as they would for real focus (#47): a broken
+          // one that changes the page on focus does so here, inside the inert example.
+          const prev = simEl.current;
+          simEl.current = el;
+          if (prev && prev !== el) {
+            prev.dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget: el }));
+          }
+          if (prev !== el) {
+            el.dispatchEvent(new FocusEvent('focusin', { bubbles: true, relatedTarget: prev }));
+          }
         }
       } else {
         const next = step(stops.length, realAt.current ? stops.indexOf(realAt.current) : -1, back);
@@ -135,6 +203,7 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     }
     const target = simulated ? stops[simAt] : realAt.current;
     if (!target || !activates(key, target)) return;
+    cause.current = 'action';
     target.click();
     if (simulated) push({ kind: 'change', simulated, line: lineFor(target) });
   };
@@ -178,12 +247,100 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     const onChange = (e: Event) => {
       push({ kind: 'change', simulated: false, line: lineFor(e.target as Element) });
     };
+    // What the reader did last, for a change of page (#47). Focus the example moves itself
+    // (after Go, say) is not the reader's doing, so only a Tab key counts as focus.
+    const onKey = (e: KeyboardEvent) => {
+      if (!e.isTrusted) return;
+      if (e.key === 'Tab') cause.current = 'focus';
+      if (e.key === 'Escape') push({ kind: 'key', simulated: false, key: 'Escape' });
+    };
+    const onClick = () => {
+      cause.current = 'action';
+    };
+    // A real pointer: onto a hover target, between them, or out of the example (#47). The bar's
+    // own moves are untrusted events and are pushed by `press`.
+    const onOver = (e: MouseEvent) => {
+      if (!e.isTrusted) return;
+      const to = (e.target as Element).closest<HTMLElement>('[data-hover]');
+      if (to === hoverEl.current || (to && !root.contains(to))) return;
+      hoverEl.current = to;
+      cause.current = 'pointer';
+      setCursor(null);
+      push({ kind: 'pointer', simulated: false, on: to ? (to.dataset.hover ?? '') : null });
+    };
+    const onLeave = (e: MouseEvent) => {
+      if (!e.isTrusted || hoverEl.current === null) return;
+      hoverEl.current = null;
+      push({ kind: 'pointer', simulated: false, on: null });
+    };
     root.addEventListener('focusin', onFocus);
     root.addEventListener('change', onChange);
+    root.addEventListener('keydown', onKey);
+    root.addEventListener('click', onClick);
+    root.addEventListener('mouseover', onOver);
+    root.addEventListener('mouseleave', onLeave);
     return () => {
       root.removeEventListener('focusin', onFocus);
       root.removeEventListener('change', onChange);
+      root.removeEventListener('keydown', onKey);
+      root.removeEventListener('click', onClick);
+      root.removeEventListener('mouseover', onOver);
+      root.removeEventListener('mouseleave', onLeave);
     };
+  }, [simulated, push]);
+
+  // What the example shows (#47), on both stages: its tooltips and its own page. Read after any
+  // change in it, whatever caused the change, so instruments see the outcome, not the intent.
+  const started = useRef(false);
+  useEffect(() => {
+    const root = example.current;
+    if (!root) return;
+    let address = contextOf(root);
+    let popup = popupText(root);
+    if (address !== null && !started.current) {
+      push({ kind: 'context', simulated, address, cause: null });
+    }
+    started.current = true;
+    const observer = new MutationObserver(() => {
+      const nextAddress = contextOf(root);
+      if (nextAddress !== null && nextAddress !== address) {
+        address = nextAddress;
+        push({ kind: 'context', simulated, address, cause: cause.current });
+        // A new page restarts the focus tracker; where real focus is now goes back on it.
+        const active = document.activeElement;
+        const stops = tabStops(root);
+        if (!simulated && active instanceof HTMLElement && stops.includes(active)) {
+          push({
+            kind: 'focus',
+            simulated: false,
+            line: lineFor(active),
+            index: stops.indexOf(active),
+            total: stops.length,
+            map: mapFor(stops),
+          });
+        }
+      }
+      const nextPopup = popupText(root);
+      if (nextPopup !== popup) {
+        popup = nextPopup;
+        push({ kind: 'popup', simulated, text: popup });
+      }
+      // Simulated focus on something that went away goes nowhere, as real focus would.
+      const el = simEl.current;
+      if (simulated && el && (!el.isConnected || el.closest('[hidden]'))) {
+        simEl.current = null;
+        setSimAt(-1);
+      }
+    });
+    observer.observe(root, {
+      subtree: true,
+      childList: true,
+      characterData: true,
+      attributes: true,
+      attributeFilter: ['hidden'],
+    });
+    return () => observer.disconnect();
+    // lineFor and mapFor read refs only.
   }, [simulated, push]);
 
   const { Example } = live;
@@ -214,6 +371,25 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
                 : undefined
             }
           />
+        ) : null}
+        {live.keys.includes('hover') ? (
+          // The bar's pointer, drawn on either stage (#47): it moves by transform only.
+          <span
+            className="sim-cursor"
+            aria-hidden="true"
+            data-on={cursor ? 'true' : 'false'}
+            style={
+              cursor
+                ? {
+                    transform: `translate(${cursor.x + Math.min(cursor.w / 2, 24)}px, ${cursor.y + cursor.h / 2}px)`,
+                  }
+                : undefined
+            }
+          >
+            <svg viewBox="0 0 16 22" width="16" height="22" focusable="false">
+              <path d="M1 1 L1 17 L5 13 L8 20 L11 19 L8 12 L14 12 Z" />
+            </svg>
+          </span>
         ) : null}
       </div>
       <div

@@ -46,6 +46,13 @@ export function trackOf(events: readonly StageEvent[], steps = TRAIL_STEPS): Tra
   let map: FocusMap | null = null;
   const trail: number[] = [];
   for (const e of events) {
+    // A new page in the example (#47) has its own focus order: the tracker starts again.
+    if (e.kind === 'context') {
+      current = null;
+      map = null;
+      trail.length = 0;
+      continue;
+    }
     if (e.kind !== 'focus') continue;
     current = e.index;
     total = e.total;

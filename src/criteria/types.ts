@@ -34,7 +34,9 @@ export type SimKey =
   | 'space'
   | 'read'
   | 'autofill'
-  | 'voice';
+  | 'voice'
+  | 'hover'
+  | 'escape';
 
 export type LiveExample = {
   /**
