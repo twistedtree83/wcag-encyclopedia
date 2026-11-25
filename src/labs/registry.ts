@@ -28,11 +28,13 @@ import { ShortcutLab } from './ShortcutLab';
 import { LabelInNameLab } from './LabelInNameLab';
 import { LinkPurposeLab } from './LinkPurposeLab';
 import { NameRoleValueLab } from './NameRoleValueLab';
+import { OnFocusLab } from './OnFocusLab';
 import { PageTitleLab } from './PageTitleLab';
 import { PageLanguageLab, PartsLanguageLab } from './LanguageLabs';
 import { StatusLab } from './StatusLab';
 import { SequenceLab } from './SequenceLab';
 import { StructureLab } from './StructureLab';
+import { TooltipLab } from './TooltipLab';
 
 export type LabProps = {
   /** The number of the criterion page showing the lab, e.g. "1.4.11". */
@@ -86,6 +88,8 @@ export const LABS: readonly LabEntry[] = [
   { id: 'skip-link', title: 'Try it: count the Tab presses', Lab: BypassLab },
   { id: 'focus-order', title: 'Try it: break the focus order', Lab: FocusOrderLab, flagshipFor: '2.4.3' },
   { id: 'sticky-banner', title: 'Try it: move the sticky banner', Lab: ObscuredLab },
+  { id: 'on-focus', title: 'Try it: what focus does', Lab: OnFocusLab },
+  { id: 'tame-tooltip', title: 'Try it: tame the tooltip', Lab: TooltipLab },
   { id: 'page-title', title: 'Try it: title the page', Lab: PageTitleLab },
   { id: 'link-purpose', title: 'Try it: name the links', Lab: LinkPurposeLab },
   { id: 'headings-labels', title: 'Try it: write the headings', Lab: HeadingsLab },

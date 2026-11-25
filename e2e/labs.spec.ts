@@ -402,6 +402,35 @@ const LABS: LabCase[] = [
     said: 'Banner 160 pixels tall, at the top. The focused field is completely hidden.',
   },
   {
+    name: 'the what-focus-does lab on 3.2.1',
+    url: '/criteria/3.2.1/',
+    lab: '.lab-slot .focus-lab',
+    passing: '3.2.1 passes',
+    failing: '3.2.1 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await radio(lab, 'Sends the form').focus();
+      await page.keyboard.press('ArrowUp');
+    },
+    said: 'Focusing Email does nothing. Only Send sends.',
+  },
+  {
+    name: 'the tame-the-tooltip lab on 1.4.13',
+    url: '/criteria/1.4.13/',
+    lab: '.lab-slot .tip-lab',
+    passing: '1.4.13 passes',
+    failing: '1.4.13 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      const conditions = ['Escape closes it', 'The pointer can move into it', 'It stays until dismissed'];
+      for (const condition of conditions) {
+        await lab.getByRole('checkbox', { name: condition }).focus();
+        await page.keyboard.press('Space');
+      }
+    },
+    said: 'Escape closes it, the pointer can move into it, and it stays until dismissed.',
+  },
+  {
     name: 'the page language lab on 3.1.1',
     url: '/criteria/3.1.1/',
     lab: '.lab-slot .lang-lab',

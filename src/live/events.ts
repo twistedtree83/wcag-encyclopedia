@@ -47,7 +47,16 @@ export type StageEvent =
       readonly target: Announcement | null;
       /** What the example did in response, in order (`didAction` in `actions.ts`). */
       readonly actions: readonly string[];
-    };
+    }
+  /** "Hover": the pointer moved onto a `data-hover` target, named by it, or away (null) (#47). */
+  | { readonly kind: 'pointer'; readonly simulated: boolean; readonly on: string | null }
+  /** What the example's open tooltips (`role="tooltip"`) say now, or null for none (#47). */
+  | { readonly kind: 'popup'; readonly simulated: boolean; readonly text: string | null }
+  /** The example's own page (`data-context`) is now `address`, and what moved it there (#47). */
+  | { readonly kind: 'context'; readonly simulated: boolean; readonly address: string; readonly cause: ContextCause | null };
+
+/** What the reader last did before the example changed page: moved focus, acted, or hovered. */
+export type ContextCause = 'focus' | 'action' | 'pointer';
 
 export type AutofilledField = { readonly name: string; readonly value: string };
 
@@ -101,4 +110,54 @@ export function keysSaid(e: Of<'keys'>): string {
   const did = [...new Set(e.actions)];
   const where = `${e.dictated ? 'with focus on' : 'on'} ${focusPhrase(e)}`;
   return `${keysPhrase(e)} ${where}. ${did.length > 0 ? did.join('. ') : 'Nothing happened'}.`;
+}
+
+/** One line of the pointer and tooltip instrument, or null for an event that is not one. */
+function pointerLine(e: StageEvent): string | null {
+  if (e.kind === 'pointer') return e.on === null ? 'Pointer moves away' : `Pointer on ${e.on}`;
+  if (e.kind === 'keys') return keysPhrase(e);
+  if (e.kind === 'popup') return e.text === null ? 'Tooltip closes' : `Tooltip shows “${e.text}”`;
+  return null;
+}
+
+/** The pointer and tooltip instrument's lines (#47): the latest `max`, oldest first. */
+export function pointerLog(events: readonly StageEvent[], max = LOG_LINES): string[] {
+  return events.flatMap((e) => pointerLine(e) ?? []).slice(-max);
+}
+
+/**
+ * What is said on a stage with "Hover" after the pointer moves or a key is pressed (#47): that
+ * move or key, then what the tooltip did after it. Null when the latest event is not about the
+ * pointer. Stages without "Hover" say keys with `keysSaid`.
+ */
+export function pointerSaid(events: readonly StageEvent[]): string | null {
+  const last = events[events.length - 1];
+  if (!last || pointerLine(last) === null) return null;
+  let from = events.length - 1;
+  while (from > 0 && events[from]!.kind === 'popup' && pointerLine(events[from - 1]!) !== null) {
+    from -= 1;
+  }
+  // A tooltip's own text ends in its own full stop.
+  return events
+    .slice(from)
+    .map((e) => `${pointerLine(e)}${e.kind === 'popup' && e.text !== null ? '' : '.'}`)
+    .join(' ');
+}
+
+const CAUSE: Readonly<Record<ContextCause, string>> = {
+  focus: 'on focus alone',
+  action: 'after an action',
+  pointer: 'after a hover',
+};
+
+/** The context instrument's lines (#47): every page the example has shown, and what moved it. */
+export function contextLog(events: readonly StageEvent[]): string[] {
+  return events.flatMap((e) =>
+    e.kind === 'context' ? [e.cause ? `${e.address}, ${CAUSE[e.cause]}` : e.address] : [],
+  );
+}
+
+/** What is said when the example changes page (#47). Nothing for where it started. */
+export function contextSaid({ address, cause }: Of<'context'>): string {
+  return cause ? `The example moved to ${address}, ${CAUSE[cause]}.` : '';
 }

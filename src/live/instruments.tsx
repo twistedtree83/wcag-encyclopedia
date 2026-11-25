@@ -1,7 +1,7 @@
 import type { ComponentType } from 'react';
 import { AnnouncementLog } from '../labs/AnnouncementLog';
 import { spoken } from '../labs/announce';
-import { keyLines, lastOf, logOf, type StageEvent } from './events';
+import { contextLog, keyLines, lastOf, logOf, pointerLog, type StageEvent } from './events';
 import { trackOf } from './focusTrack';
 import { withVoices } from '../labs/language';
 
@@ -170,6 +170,60 @@ function KeyLog({ id, events }: InstrumentProps) {
   );
 }
 
+/**
+ * The simulated pointer and the tooltip (#47): where the pointer went, keys pressed, and what the
+ * tooltip did after each, then whether a tooltip is open now and what it says.
+ */
+function PointerInstrument({ id, events }: InstrumentProps) {
+  const lines = pointerLog(events);
+  const popup = lastOf(events, 'popup');
+  return (
+    <div className="alog plog">
+      <p className="alog__h" id={`${id}-h`}>
+        Pointer and tooltip
+      </p>
+      {lines.length > 0 ? (
+        <ol aria-labelledby={`${id}-h`}>
+          {lines.map((line, i) => (
+            <li key={i}>{line}</li>
+          ))}
+        </ol>
+      ) : (
+        <p className="alog__empty">The pointer has not moved yet.</p>
+      )}
+      <p className="plog__now">
+        {popup?.text ? `Open now: “${popup.text}”` : 'No tooltip is open.'}
+      </p>
+    </div>
+  );
+}
+
+/**
+ * The example's own page (#47): every page it has shown, oldest first, and what moved it there.
+ * A change on focus alone is the 3.2.1 failure; a change after an action is fine.
+ */
+function ContextInstrument({ id, events }: InstrumentProps) {
+  const lines = contextLog(events);
+  return (
+    <div className="alog clog">
+      <p className="alog__h" id={`${id}-h`}>
+        Where the example is
+      </p>
+      {lines.length > 0 ? (
+        <ol aria-labelledby={`${id}-h`}>
+          {lines.map((line, i) => (
+            <li key={i} aria-current={i === lines.length - 1 ? 'page' : undefined}>
+              {line}
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <p className="alog__empty">Not loaded yet.</p>
+      )}
+    </div>
+  );
+}
+
 export const INSTRUMENTS: Readonly<Record<string, ComponentType<InstrumentProps>>> = {
   'announcement-log': LogInstrument,
   'voice-log': VoiceLogInstrument,
@@ -177,6 +231,8 @@ export const INSTRUMENTS: Readonly<Record<string, ComponentType<InstrumentProps>
   autofill: AutofillInstrument,
   'voice-control': VoiceInstrument,
   'key-log': KeyLog,
+  'pointer-log': PointerInstrument,
+  context: ContextInstrument,
 };
 
 /** The ids in `ids` that no registered instrument answers to. Empty when all resolve. */
