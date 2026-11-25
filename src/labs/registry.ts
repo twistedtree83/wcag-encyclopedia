@@ -13,7 +13,10 @@ import type { ReactNode } from 'react';
 import type { CriterionRecord } from '../criteria/types';
 import { ColourCheckLab } from './ColourCheck';
 import { FadeLab } from './FadeLab';
+import { HeadingsLab } from './HeadingsLab';
+import { LinkPurposeLab } from './LinkPurposeLab';
 import { NameRoleValueLab } from './NameRoleValueLab';
+import { PageTitleLab } from './PageTitleLab';
 
 export type LabProps = {
   /** The number of the criterion page showing the lab, e.g. "1.4.11". */
@@ -50,6 +53,9 @@ export const LABS: readonly LabEntry[] = [
     Lab: NameRoleValueLab,
     flagshipFor: '4.1.2',
   },
+  { id: 'page-title', title: 'Try it: title the page', Lab: PageTitleLab },
+  { id: 'link-purpose', title: 'Try it: name the links', Lab: LinkPurposeLab },
+  { id: 'headings-labels', title: 'Try it: write the headings', Lab: HeadingsLab },
 ];
 
 export function labById(id: string): LabEntry | undefined {

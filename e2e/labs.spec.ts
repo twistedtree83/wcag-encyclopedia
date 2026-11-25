@@ -156,6 +156,53 @@ const LABS: LabCase[] = [
       'Screen reader says: Email notifications, switch, on; Email notifications. ' +
       'Role, name and state all exposed.',
   },
+  {
+    name: 'the page title lab on 2.4.2',
+    url: '/criteria/2.4.2/',
+    lab: '.lab-slot .title-lab',
+    passing: '2.4.2 passes',
+    failing: '2.4.2 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await radio(lab, 'Generic: “Acme”').focus();
+      await page.keyboard.press('ArrowDown');
+    },
+    said: 'Screen reader says: Delivery details — Acme. The title says which page this is.',
+  },
+  {
+    name: 'the link purpose lab on 2.4.4',
+    url: '/criteria/2.4.4/',
+    lab: '.lab-slot .link-lab',
+    passing: '2.4.4 passes',
+    failing: '2.4.4 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await radio(lab, '“Read more”').focus();
+      await page.keyboard.press('ArrowDown');
+      await page.keyboard.press('ArrowDown');
+    },
+    said:
+      'Links list says: Read the annual report 2025, link; Read the board minutes for March, ' +
+      'link; Read the sustainability update, link. Each link says where it goes, even out of context.',
+  },
+  {
+    name: 'the headings and labels lab on 2.4.6',
+    url: '/criteria/2.4.6/',
+    lab: '.lab-slot .headings-lab',
+    passing: '2.4.6 passes',
+    failing: '2.4.6 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await radio(lab, '“More”, “Information”, “Details”').focus();
+      await page.keyboard.press('ArrowDown');
+      await radio(lab, '“Enter your details here”').focus();
+      await page.keyboard.press('ArrowDown');
+    },
+    said:
+      'Headings and fields list says: Returns and refunds, heading, level 4; How long you have, ' +
+      'heading, level 5; What it costs, heading, level 5; Order number, edit text. ' +
+      'Every heading and the label say what they are for.',
+  },
 ];
 
 async function open(page: Page, url: string) {

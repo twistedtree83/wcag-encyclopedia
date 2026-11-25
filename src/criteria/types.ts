@@ -32,7 +32,10 @@ export type SimKey =
   | 'shift-tab'
   | 'enter'
   | 'space'
-  | 'read';
+  | 'read'
+  | 'switch-tab'
+  | 'links'
+  | 'headings';
 
 export type LiveExample = {
   /**

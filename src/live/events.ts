@@ -16,7 +16,10 @@ export type StageEvent =
   | { readonly kind: 'focus'; readonly simulated: boolean; readonly line: Announcement; readonly index: number; readonly total: number }
   /** The focused control's state changed, e.g. a switch turned off. */
   | { readonly kind: 'change'; readonly simulated: boolean; readonly line: Announcement }
-  /** "Read it aloud": the whole example, said from the top. */
+  /**
+   * "Read it aloud": the whole example, said from the top. Also a screen reader's own reading out
+   * of context: a links or headings list, or a switch to a browser tab.
+   */
   | { readonly kind: 'read'; readonly simulated: boolean; readonly lines: readonly Announcement[] };
 
 /** How many lines the announcement log keeps, so both stages' logs stay the same size. */
