@@ -8,7 +8,9 @@
  *
  *   roles   an ARIA `role` from ROLE_WORDS wins; otherwise the native role of button, a[href],
  *           input (checkbox, radio, range, button types, otherwise edit text), textarea, select,
- *           img (alt="" is decorative and skipped) and h1–h6. Everything else is plain text.
+ *           img (alt="" is decorative and skipped), h1–h6, ul/ol (a list, said with its item
+ *           count), table (said with its rows and columns) and th (a column header, or a row
+ *           header with scope="row"). Everything else, td and li included, is plain text.
  *   names   aria-labelledby (every id, in order) > aria-label > native: <label for>, a wrapping
  *           <label>, img alt, an input button's value > the content, for the roles named from
  *           content (NAMED_FROM_CONTENT) > title. Content uses an image's alt and skips hidden
@@ -60,6 +62,10 @@ const ROLE_WORDS: Readonly<Record<string, string>> = {
   img: 'image',
   tab: 'tab',
   menuitem: 'menu item',
+  list: 'list',
+  table: 'table',
+  columnheader: 'column header',
+  rowheader: 'row header',
 };
 
 /** Roles whose name comes from their content when nothing else names them. */
@@ -72,6 +78,8 @@ const NAMED_FROM_CONTENT = new Set([
   'heading',
   'tab',
   'menuitem',
+  'columnheader',
+  'rowheader',
 ]);
 
 /** Elements that start a new line of text. Anything else is inline and runs on. */
@@ -96,6 +104,9 @@ function nativeRole(node: AxNode): string | null {
   if (tag === 'select') return 'combobox';
   if (tag === 'img') return attrs.alt === '' ? null : 'img';
   if (/^h[1-6]$/.test(tag)) return 'heading';
+  if (tag === 'ul' || tag === 'ol') return 'list';
+  if (tag === 'table') return 'table';
+  if (tag === 'th') return attrs.scope === 'row' ? 'rowheader' : 'columnheader';
   if (tag === 'input') {
     const type = (attrs.type ?? 'text').toLowerCase();
     if (type === 'hidden') return null;
@@ -187,6 +198,16 @@ function nameOf(node: AxNode, role: string, index: Index): string {
   return squash(attrs.title ?? '');
 }
 
+const elements = (node: AxNode): AxNode[] =>
+  node.children.filter((c): c is AxNode => typeof c !== 'string');
+
+/** A table's rows, in its own sections, not in any table nested inside it. */
+function rowsOf(table: AxNode): AxNode[] {
+  return elements(table).flatMap((c) =>
+    c.tag === 'tr' ? [c] : ['thead', 'tbody', 'tfoot'].includes(c.tag) ? elements(c).filter((r) => r.tag === 'tr') : [],
+  );
+}
+
 /** The role word and states said for a node with `role`. */
 function voiced(node: AxNode, role: string): { word: string; states: string[] } {
   const { attrs, tag } = node;
@@ -196,6 +217,15 @@ function voiced(node: AxNode, role: string): { word: string; states: string[] } 
   if (role === 'heading') {
     const level = /^h([1-6])$/.exec(tag)?.[1] ?? attrs['aria-level'] ?? '2';
     states.push(`level ${level}`);
+  }
+  if (role === 'list') {
+    const items = elements(node).filter((c) => c.tag === 'li' || c.attrs.role === 'listitem').length;
+    states.push(items === 1 ? '1 item' : `${items} items`);
+  }
+  if (role === 'table') {
+    const rows = rowsOf(node);
+    const columns = Math.max(0, ...rows.map((r) => elements(r).filter((c) => c.tag === 'th' || c.tag === 'td').length));
+    states.push(`${rows.length} rows`, `${columns} columns`);
   }
   const pressed = attrs['aria-pressed'];
   if (role === 'button' && (pressed === 'true' || pressed === 'false' || pressed === 'mixed')) {

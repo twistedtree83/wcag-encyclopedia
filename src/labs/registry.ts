@@ -11,6 +11,7 @@
 
 import type { ReactNode } from 'react';
 import type { CriterionRecord } from '../criteria/types';
+import { AltTextLab } from './AltTextLab';
 import { ColourCheckLab } from './ColourCheck';
 import { FadeLab } from './FadeLab';
 import { FocusRingLab } from './FocusRingLab';
@@ -18,6 +19,7 @@ import { InputPurposeLab } from './InputPurposeLab';
 import { LabelInNameLab } from './LabelInNameLab';
 import { NameRoleValueLab } from './NameRoleValueLab';
 import { SequenceLab } from './SequenceLab';
+import { StructureLab } from './StructureLab';
 
 export type LabProps = {
   /** The number of the criterion page showing the lab, e.g. "1.4.11". */
@@ -63,6 +65,8 @@ export const LABS: readonly LabEntry[] = [
   { id: 'meaningful-sequence', title: 'Try it: reorder the steps', Lab: SequenceLab },
   { id: 'input-purpose', title: 'Try it: tag the fields', Lab: InputPurposeLab },
   { id: 'label-in-name', title: 'Try it: say what you see', Lab: LabelInNameLab },
+  { id: 'alt-text', title: 'Try it: write the alt text', Lab: AltTextLab, flagshipFor: '1.1.1' },
+  { id: 'structure', title: 'Try it: build the structure', Lab: StructureLab, flagshipFor: '1.3.1' },
 ];
 
 export function labById(id: string): LabEntry | undefined {

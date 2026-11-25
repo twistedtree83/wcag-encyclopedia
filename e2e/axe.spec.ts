@@ -116,6 +116,10 @@ const STATE_PAGES = [
   '/criteria/2.4.7/?w=0&off=2&c=blue',
   '/criteria/2.4.7/?w=6&off=0&c=yellow',
   '/criteria/2.4.7/?w=1&off=6&c=grey',
+  '/criteria/1.1.1/?img=photo&alt=',
+  '/criteria/1.1.1/?img=divider&alt=swirl-divider.svg',
+  '/criteria/1.3.1/?mock=table',
+  '/criteria/1.3.1/?mock=form&real=heading,list,labels',
 ];
 
 for (const url of STATE_PAGES) {

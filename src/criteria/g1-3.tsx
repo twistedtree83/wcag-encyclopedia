@@ -10,6 +10,35 @@ import { useId } from 'react';
 import type { CriterionRecord, LiveExample } from './types';
 
 /*
+ * 1.3.1's live examples (#48): the static examples' shipping note, live. Read aloud, the styled
+ * spans run together as one line of text; the real elements say a heading and a list of two.
+ */
+
+function StyledDoc() {
+  return (
+    <div className="fauxdoc">
+      <span className="fauxdoc__fake-h">Shipping and returns</span>
+      <span className="fauxdoc__line">— Orders leave the warehouse within two days</span>
+      <span className="fauxdoc__line">— Returns are free within thirty days</span>
+    </div>
+  );
+}
+
+function RealDoc() {
+  return (
+    <div className="fauxdoc">
+      <h3 className="fauxdoc__real-h">Shipping and returns</h3>
+      <ul className="fauxdoc__list">
+        <li>Orders leave the warehouse within two days</li>
+        <li>Returns are free within thirty days</li>
+      </ul>
+    </div>
+  );
+}
+
+const DOC_KEYS: LiveExample['keys'] = ['read'];
+
+/*
  * 1.3.2's live examples (#49): checkout steps as buttons. The broken row is sorted on screen by
  * CSS `order`; Tab and a read-aloud follow the source, Confirm first. The fixed row's source is
  * in the order it shows.
@@ -78,12 +107,14 @@ export const G1_3: readonly CriterionRecord[] = [
     level: 'A',
     since: '2.0',
     guideline: '1.3',
+    labs: ['structure'],
     plain:
       'Structure you can see has to exist in the markup too. Headings marked up as headings, ' +
       'lists as lists, table headers as table headers, labels tied to their fields. Strip the ' +
       'stylesheet: if the relationships vanish, they were never really there.',
     fail: {
       caption: 'Styling stands in for structure.',
+      live: { Example: StyledDoc, keys: DOC_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="fauxdoc">
@@ -101,6 +132,7 @@ export const G1_3: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'The same appearance, built from real elements.',
+      live: { Example: RealDoc, keys: DOC_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="fauxdoc">

@@ -212,6 +212,36 @@ const LABS: LabCase[] = [
     },
     said: 'You said “click Send”. It clicked “Send message to support”.',
   },
+  {
+    name: 'the alt text lab on 1.1.1',
+    url: '/criteria/1.1.1/',
+    lab: '.lab-slot .alt-lab',
+    passing: '1.1.1 passes',
+    failing: '1.1.1 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await radio(lab, 'Leave it out').focus();
+      await page.keyboard.press('ArrowDown');
+      await page.keyboard.press('ArrowDown');
+      await page.keyboard.press('ArrowDown');
+    },
+    said: 'Screen reader says: Wool overshirt in rust, worn open, image. The photo is named.',
+  },
+  {
+    name: 'the structure lab on 1.3.1',
+    url: '/criteria/1.3.1/',
+    lab: '.lab-slot .st-lab',
+    passing: '1.3.1 passes',
+    failing: '1.3.1 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      for (const part of ['The heading is an <h3>', 'The list is a <ul> of <li>', 'Each field has a <label for>']) {
+        await lab.getByRole('checkbox', { name: part }).focus();
+        await page.keyboard.press('Space');
+      }
+    },
+    said: 'In the markup: heading, list and labels. Nothing is only styled.',
+  },
 ];
 
 async function open(page: Page, url: string) {

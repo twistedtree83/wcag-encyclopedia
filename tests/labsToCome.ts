@@ -9,8 +9,6 @@
  * delete their own line without a merge conflict. Keep it that way.
  */
 export const LABS_TO_COME: readonly string[] = [
-  '1.1.1',
-
   '1.2.1',
 
   '1.2.2',
@@ -20,8 +18,6 @@ export const LABS_TO_COME: readonly string[] = [
   '1.2.4',
 
   '1.2.5',
-
-  '1.3.1',
 
   '1.3.3',
 
