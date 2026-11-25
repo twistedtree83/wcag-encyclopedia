@@ -6,7 +6,8 @@ import { voiceMatches } from '../labs/labelInName';
 import { ZOOMS, viewportAt, type Scrolls } from '../labs/zoom';
 import { ZoomFrame } from '../labs/ZoomFrame';
 import { ACTION_EVENT } from './actions';
-import { gestureSaid, hitAt, tapPlan, type Point } from './gesture';
+import { between, gestureSaid, hitAt, tapPlan, type Point } from './gesture';
+import { shakeWithin } from './motion';
 import {
   autofillSaid,
   contextSaid,
@@ -58,7 +59,44 @@ const KEY_LABEL: Readonly<Record<SimKey, string>> = {
   vision: 'Vision filter',
   zoom: 'Zoom in',
   tap: 'Tap',
+  pinch: 'Pinch',
+  'slide-off': 'Press and slide off',
+  drag: 'Drag the top row down',
+  shake: 'Shake the phone',
 };
+
+/**
+ * A pointer event from the bar (#58), at `p` relative to the example. Touch, and not primary, so
+ * the stage's recorder of the reader's own pointer leaves it alone; the example's handlers see it.
+ */
+function sendPointer(root: Element, el: Element, type: string, p: Point, pointerId = 1): void {
+  const r = root.getBoundingClientRect();
+  el.dispatchEvent(
+    new PointerEvent(type, {
+      bubbles: true,
+      cancelable: true,
+      pointerId,
+      pointerType: 'touch',
+      isPrimary: false,
+      clientX: r.left + p.x,
+      clientY: r.top + p.y,
+    }),
+  );
+}
+
+/** The innermost element of the example drawn at `p`: real layout, so it works inert too. */
+function elementAt(root: Element, p: Point): Element {
+  const r = root.getBoundingClientRect();
+  const x = r.left + p.x;
+  const y = r.top + p.y;
+  const all = Array.from(root.querySelectorAll('*')).reverse();
+  return (
+    all.find((el) => {
+      const b = el.getBoundingClientRect();
+      return x >= b.left && x < b.right && y >= b.top && y < b.bottom;
+    }) ?? root
+  );
+}
 
 /** Which keys activate which elements: Enter buttons and links, Space buttons and checkboxes. */
 function activates(key: 'enter' | 'space', el: Element): boolean {
@@ -91,6 +129,9 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
   /** "Tap" (#57): how many taps the bar has made, and where the last one landed in the frame. */
   const taps = useRef(0);
   const [tapMark, setTapMark] = useState<Point | null>(null);
+  /** "Pinch" and "Shake the phone" (#58) alternate: spread then pinch, right then left. */
+  const pinches = useRef(0);
+  const shakes = useRef(0);
   /** True from a real pointer down until just after its click, so its actions are a gesture's. */
   const pointing = useRef(false);
   /** The vision filter on the example (#56). */
@@ -122,7 +163,7 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     }
     // The bar's own taps are said on both stages; a real pointer is the reader's own doing.
     else if (e.kind === 'gesture') {
-      if (e.aim) setSaid(gestureSaid(e));
+      if (e.gesture !== 'pointer') setSaid(gestureSaid(e));
     }
     // A change of page in a mock reaches no screen reader on its own: say it on both stages.
     else if (e.kind === 'context') {
@@ -214,35 +255,119 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     if (key === 'tap') {
       // A fingertip tap from the bar (#57), on either stage: aimed at each target in turn, it
       // lands a little off and presses whatever is under it. No drag, no path (2.5.1, 2.5.7).
+      // The finger goes down and comes up (#58: an example acting on pointer down acts then),
+      // and a down and up on the same target is a click. With no target it lands mid-example.
       const targets = tabStops(root);
       const map = mapOf(root, targets, (el) => lineFor(el).name || 'blank');
       const plan = tapPlan(map, taps.current);
-      if (!plan) return;
-      taps.current += 1;
-      const hit = hitAt(map, plan.at);
+      if (plan) taps.current += 1;
+      const mid = { x: map.width / 2, y: map.height / 2 };
+      const at = plan?.at ?? mid;
+      const hit = plan ? hitAt(map, at) : null;
+      const under = hit !== null ? targets[hit]! : elementAt(root, at);
       const actions: string[] = [];
       const hear = (e: Event) => actions.push((e as CustomEvent<string>).detail);
       root.addEventListener(ACTION_EVENT, hear);
       fromBar.current = true;
+      sendPointer(root, under, 'pointerdown', at);
+      const early = actions.length;
+      sendPointer(root, under, 'pointerup', at);
       if (hit !== null) targets[hit]!.click();
       fromBar.current = false;
       root.removeEventListener(ACTION_EVENT, hear);
       const r = root.getBoundingClientRect();
       const f = frame.current!.getBoundingClientRect();
-      setTapMark({ x: plan.at.x + r.left - f.left, y: plan.at.y + r.top - f.top });
+      setTapMark({ x: at.x + r.left - f.left, y: at.y + r.top - f.top });
       push({
         kind: 'gesture',
         simulated,
         gesture: 'tap',
         map,
-        aim: plan.aim,
-        aimAt: plan.aimAt,
-        path: [plan.at],
+        aim: plan?.aim ?? mid,
+        aimAt: plan?.aimAt ?? null,
+        path: [at],
         downOn: hit,
         upOn: hit,
         tilt: null,
         actions,
+        early,
       });
+      return;
+    }
+    if (key === 'slide-off' || key === 'drag' || key === 'pinch' || key === 'shake') {
+      // The other gestures (#58), each one press on the bar, on either stage. Slide off: press
+      // the first target and slide off it before letting go (2.5.2). Drag: the top row's handle
+      // down past the middle of the next row (2.5.7). Pinch: two fingers on the map (2.5.1).
+      // Shake: the phone, as a simulated motion; no sensor is read (2.5.4).
+      const targets = tabStops(root);
+      const rows = Array.from(root.querySelectorAll<HTMLElement>('[data-drop]'));
+      const map =
+        key === 'drag'
+          ? mapOf(root, rows, (el) => (el as HTMLElement).dataset.drop || 'blank')
+          : mapOf(root, targets, (el) => lineFor(el).name || 'blank');
+      const actions: string[] = [];
+      const hear = (e: Event) => actions.push((e as CustomEvent<string>).detail);
+      const base = { kind: 'gesture', simulated, map, tilt: null } as const;
+      const r = root.getBoundingClientRect();
+      const centre = (el: Element): Point => {
+        const b = el.getBoundingClientRect();
+        return { x: b.left - r.left + b.width / 2, y: b.top - r.top + b.height / 2 };
+      };
+      root.addEventListener(ACTION_EVENT, hear);
+      fromBar.current = true;
+      let event: StageEvent | null = null;
+      if (key === 'slide-off' && targets[0] && map.stops[0]) {
+        const s = map.stops[0];
+        const down = centre(targets[0]);
+        const path = between(down, { x: Math.min(s.x + s.w + 32, map.width - 2), y: down.y }, 4);
+        const up = path[path.length - 1]!;
+        sendPointer(root, targets[0], 'pointerdown', down);
+        const early = actions.length;
+        path.slice(1).forEach((p) => sendPointer(root, targets[0]!, 'pointermove', p));
+        const upOn = hitAt(map, up);
+        sendPointer(root, upOn === null ? elementAt(root, up) : targets[upOn]!, 'pointerup', up);
+        if (upOn === 0) targets[0].click();
+        event = { ...base, gesture: 'slide', aim: down, aimAt: 0, path, downOn: 0, upOn, actions, early };
+      }
+      if (key === 'drag' && rows.length > 1 && map.stops[1]) {
+        const handle = rows[0]!.querySelector('[data-drag]') ?? rows[0]!;
+        const down = centre(handle);
+        const next = map.stops[1];
+        const path = between(down, { x: down.x, y: next.y + next.h * 0.75 }, 5);
+        sendPointer(root, handle, 'pointerdown', down);
+        const early = actions.length;
+        path.slice(1).forEach((p) => sendPointer(root, handle, 'pointermove', p));
+        sendPointer(root, handle, 'pointerup', path[path.length - 1]!);
+        const upOn = hitAt(map, path[path.length - 1]!);
+        event = { ...base, gesture: 'drag', aim: down, aimAt: 0, path, downOn: 0, upOn, actions, early };
+      }
+      const surface = root.querySelector('[data-pinch]');
+      if (key === 'pinch' && surface) {
+        const c = centre(surface);
+        const spread = pinches.current % 2 === 0;
+        pinches.current += 1;
+        const [from, to] = spread ? [8, 40] : [40, 8];
+        const path = between({ x: c.x - from, y: c.y }, { x: c.x - to, y: c.y }, 4);
+        const path2 = between({ x: c.x + from, y: c.y }, { x: c.x + to, y: c.y }, 4);
+        sendPointer(root, surface, 'pointerdown', path[0]!, 1);
+        sendPointer(root, surface, 'pointerdown', path2[0]!, 2);
+        path.slice(1).forEach((p, i) => {
+          sendPointer(root, surface, 'pointermove', p, 1);
+          sendPointer(root, surface, 'pointermove', path2[i + 1]!, 2);
+        });
+        sendPointer(root, surface, 'pointerup', path[path.length - 1]!, 1);
+        sendPointer(root, surface, 'pointerup', path2[path2.length - 1]!, 2);
+        event = { ...base, gesture: 'pinch', aim: null, aimAt: null, path, path2, downOn: null, upOn: null, actions };
+      }
+      if (key === 'shake') {
+        const tilt = shakes.current % 2 === 0 ? 20 : -20;
+        shakes.current += 1;
+        shakeWithin(root);
+        event = { ...base, gesture: 'shake', aim: null, aimAt: null, path: [], downOn: null, upOn: null, tilt, actions };
+      }
+      fromBar.current = false;
+      root.removeEventListener(ACTION_EVENT, hear);
+      if (event) push(event);
       return;
     }
     if (key === 'hover') {
@@ -446,6 +571,8 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
       gesture.path.push(pointAt(e));
       const map = targetMap();
       const upOn = hitAt(map, pointAt(e));
+      // What fired before the pointer came up acted on the way down (2.5.2, #58).
+      const early = gesture.actions.length;
       // The click, and the example's response to it, follow the pointer up in the same task.
       window.setTimeout(() => {
         pointing.current = false;
@@ -462,6 +589,7 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
           upOn,
           tilt: null,
           actions: gesture.actions,
+          early,
         });
       }, 0);
     };

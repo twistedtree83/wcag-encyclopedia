@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import type { StageEvent } from '../src/live/events';
 import type { FocusMap } from '../src/live/focusTrack';
-import { SLIP_PX, gestureLines, gestureSaid, hitAt, tapPlan, tiltLine } from '../src/live/gesture';
+import { SLIP_PX, between, gestureLines, gestureSaid, hitAt, tapPlan, tiltLine } from '../src/live/gesture';
 
 /**
  * The gesture pad (#57): where a tap aimed, where the pointer went down and came up, and what that
@@ -105,6 +105,12 @@ describe('the pad in words', () => {
     ]);
   });
 
+  it('says a tap that found no target to aim at', () => {
+    const none = tap({ map: { width: 80, height: 40, stops: [] }, aim: { x: 40, y: 20 }, aimAt: null, path: [{ x: 40, y: 20 }], downOn: null, upOn: null, actions: [] });
+    expect(gestureLines(none)).toEqual(['Pointer down on nothing', 'Pointer up on nothing', 'Nothing happened']);
+    expect(gestureSaid(none)).toBe('Tap landed on nothing. Nothing happened.');
+  });
+
   it('speaks a tap the bar made', () => {
     expect(gestureSaid(tap())).toBe('Tap aimed at Retweet, landed on Delete. Deleted the post.');
     expect(gestureSaid(tap({ aimAt: 0, downOn: 0, actions: ['Liked the post'] }))).toBe(
@@ -113,5 +119,134 @@ describe('the pad in words', () => {
     expect(gestureSaid(tap({ downOn: null, actions: [] }))).toBe(
       'Tap aimed at Retweet, landed on nothing. Nothing happened.',
     );
+  });
+});
+
+/*
+ * L-18 (#58): press and slide off (2.5.2), drag (2.5.7), pinch (2.5.1) and shake (2.5.4). Lines
+ * written out by hand from the issue's wording.
+ */
+describe('press, slide, pinch and shake', () => {
+  const button: FocusMap = {
+    width: 200,
+    height: 40,
+    stops: [{ x: 0, y: 0, w: 140, h: 32, label: 'Delete draft' }],
+  };
+
+  it('puts what fired on the way down between pointer down and pointer up', () => {
+    const slide = tap({
+      gesture: 'slide',
+      map: button,
+      aim: { x: 70, y: 16 },
+      aimAt: 0,
+      path: [
+        { x: 70, y: 16 },
+        { x: 180, y: 16 },
+      ],
+      downOn: 0,
+      upOn: null,
+      early: 1,
+      actions: ['Deleted the draft'],
+    });
+    expect(gestureLines(slide)).toEqual([
+      'Aimed at Delete draft',
+      'Pointer down on Delete draft',
+      'Deleted the draft',
+      'Pointer up on nothing',
+    ]);
+    expect(gestureSaid(slide)).toBe('Pressed Delete draft and slid off onto nothing. Deleted the draft.');
+    expect(gestureSaid({ ...slide, early: 0, actions: [] })).toBe(
+      'Pressed Delete draft and slid off onto nothing. Nothing happened.',
+    );
+  });
+
+  it('says where a drag picked up and dropped', () => {
+    const rows: FocusMap = {
+      width: 200,
+      height: 96,
+      stops: ['Collect from store', 'Standard delivery', 'Next day'].map((label, i) => ({
+        x: 0,
+        y: i * 32,
+        w: 200,
+        h: 32,
+        label,
+      })),
+    };
+    const drag = tap({
+      gesture: 'drag',
+      map: rows,
+      aim: { x: 12, y: 16 },
+      aimAt: 0,
+      path: [
+        { x: 12, y: 16 },
+        { x: 12, y: 32 },
+        { x: 12, y: 50 },
+      ],
+      downOn: 0,
+      upOn: 1,
+      actions: ['Moved Collect from store down'],
+    });
+    expect(gestureLines(drag)).toEqual([
+      'Aimed at Collect from store',
+      'Pointer down on Collect from store',
+      'Pointer up on Standard delivery',
+      'Moved Collect from store down',
+    ]);
+    expect(gestureSaid(drag)).toBe(
+      'Dragged Collect from store onto Standard delivery. Moved Collect from store down.',
+    );
+  });
+
+  it('describes two fingers spreading or pinching, not a pointer down and up', () => {
+    const spread = tap({
+      gesture: 'pinch',
+      aim: { x: 24, y: 8 },
+      aimAt: null,
+      path: [
+        { x: 20, y: 8 },
+        { x: 4, y: 8 },
+      ],
+      path2: [
+        { x: 28, y: 8 },
+        { x: 44, y: 8 },
+      ],
+      downOn: null,
+      upOn: null,
+      actions: ['Zoomed the map to 2×'],
+    });
+    expect(gestureLines(spread)).toEqual(['Two fingers spread apart', 'Zoomed the map to 2×']);
+    expect(gestureSaid(spread)).toBe('Two fingers spread apart. Zoomed the map to 2×.');
+    const pinch = {
+      ...spread,
+      path: [...spread.path].reverse(),
+      path2: [...spread.path2!].reverse(),
+      actions: [],
+    };
+    expect(gestureLines(pinch)).toEqual(['Two fingers pinched together', 'Nothing happened']);
+  });
+
+  it('moves a simulated pointer in even steps from down to up', () => {
+    expect(between({ x: 0, y: 10 }, { x: 40, y: 30 }, 4)).toEqual([
+      { x: 0, y: 10 },
+      { x: 10, y: 15 },
+      { x: 20, y: 20 },
+      { x: 30, y: 25 },
+      { x: 40, y: 30 },
+    ]);
+  });
+
+  it('describes a shake', () => {
+    const shake = tap({
+      gesture: 'shake',
+      tilt: 20,
+      aim: null,
+      aimAt: null,
+      path: [],
+      downOn: null,
+      upOn: null,
+      actions: ['Undid the archive'],
+    });
+    expect(gestureLines(shake)).toEqual(['Shook the phone', 'Undid the archive']);
+    expect(gestureSaid(shake)).toBe('Shook the phone. Undid the archive.');
   });
 });

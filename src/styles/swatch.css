@@ -3606,6 +3606,201 @@ ul.st-list li::before {
   grid-template-columns: minmax(0, 1fr);
 }
 
+/* --- Pointer: 2.5.1, 2.5.2, 2.5.4 and 2.5.7 (L-18) ------------------------------------------ */
+
+/* Live examples. Every button is at least 32px, so the bar's 10px slip stays on it (2.5.8). */
+.live-map,
+.live-press,
+.live-shake {
+  display: grid;
+  gap: 10px;
+}
+.live-map button,
+.live-press__btn,
+.live-shake button,
+.sortl button {
+  min-width: 32px;
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--line-2);
+  border-radius: 3px;
+  background: var(--card-bg);
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+.hmap {
+  position: relative;
+  height: 96px;
+  overflow: hidden;
+  border: 1px solid var(--line-2);
+  border-radius: 3px;
+  background: var(--deep);
+  touch-action: none;
+}
+.hmap__land {
+  position: absolute;
+  inset: 24px 30% 18px 18%;
+  border: 1.5px solid var(--ink-2);
+  border-radius: 40% 55% 35% 50%;
+  transition: transform var(--speed-state) var(--ease-out);
+}
+.hmap__pin {
+  position: absolute;
+  top: calc(50% - 4px);
+  left: calc(50% - 4px);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+.hmap__zoom {
+  display: flex;
+  gap: 8px;
+}
+.live-map .hmap__zoom button {
+  padding: 0;
+  font-size: 18px;
+  line-height: 1;
+}
+.live-press__draft,
+.live-shake__msg {
+  margin: 0;
+}
+.live-press__btn {
+  justify-self: start;
+  font-weight: 600;
+}
+.live-shake__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.live-shake button[aria-checked='true'] {
+  border-color: var(--ink);
+  font-weight: 600;
+}
+.sortl {
+  display: grid;
+  gap: 4px;
+  margin: 0 0 0.875rem;
+  padding: 0;
+  list-style: none;
+}
+.sortl__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 8px;
+  border: 1px solid var(--line-2);
+  border-radius: 3px;
+  background: var(--card-bg);
+}
+.sortl__handle {
+  padding: 4px;
+  color: var(--ink-2);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.sortl__name {
+  flex: 1;
+}
+.sortl__moves {
+  display: flex;
+  gap: 4px;
+}
+.sortl .sortl__moves button {
+  padding: 0;
+}
+
+/* The four labs: a depicted mock, then the choices and readouts. */
+.ptr-mock {
+  padding: 16px;
+  border: 1px solid var(--line-2);
+  border-radius: calc(var(--rad) * 0.65);
+  background: var(--deep);
+  color: var(--ink);
+}
+.ptr-map {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  min-height: 96px;
+  padding: 10px;
+  border: 1px solid var(--line-2);
+  background: var(--card-bg);
+}
+.ptr-map__hint,
+.ptr-note {
+  color: var(--ink-2);
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: var(--small);
+}
+.ptr-map__zoom,
+.ptr-list__moves {
+  display: flex;
+  gap: 6px;
+}
+.ptr-key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  min-height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--ink-2);
+  border-radius: 3px;
+  background: var(--card-bg);
+}
+.ptr-press,
+.ptr-phone {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+}
+.ptr-draft.is-gone {
+  color: var(--ink-2);
+  text-decoration: line-through;
+  transition: color var(--speed-state) var(--ease-out);
+}
+.ptr-phone {
+  max-width: 16rem;
+  padding: 12px;
+  border: 1.5px solid var(--ink-2);
+  border-radius: 12px;
+  background: var(--card-bg);
+  transition: transform var(--speed-state) var(--ease-out);
+}
+.ptr-phone.is-shaken {
+  transform: rotate(-4deg);
+}
+.ptr-list {
+  display: grid;
+  gap: 4px;
+}
+.ptr-list__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border: 1px solid var(--line-2);
+  background: var(--card-bg);
+}
+.ptr-list__handle {
+  color: var(--ink-2);
+}
+.ptr-list__moves {
+  margin-left: auto;
+}
+.ptr-try {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+}
+
 /* --- Breakpoints ------------------------------------------------------------------------ */
 
 @media (max-width: 1100px) {

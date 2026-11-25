@@ -43,6 +43,10 @@ export type SimKey =
   | 'headings'
   | 'zoom'
   | 'tap'
+  | 'pinch'
+  | 'slide-off'
+  | 'drag'
+  | 'shake'
   | 'vision';
 
 export type LiveExample = {

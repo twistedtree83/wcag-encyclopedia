@@ -205,7 +205,7 @@
       ],
       "importance": 18,
       "afk": true,
-      "passes": false
+      "passes": true
     },
     {
       "id": "L-19",

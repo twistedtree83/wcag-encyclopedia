@@ -39,6 +39,12 @@ import { StatusLab } from './StatusLab';
 import { SequenceLab } from './SequenceLab';
 import { StructureLab } from './StructureLab';
 import { TargetSizeLab } from './TargetSizeLab';
+import {
+  DraggingMovementsLab,
+  MotionActuationLab,
+  PointerCancellationLab,
+  PointerGesturesLab,
+} from './PointerLabs';
 import { NonTextContrastLab, SensoryLab, UseOfColourLab } from './VisionLabs';
 import { TooltipLab } from './TooltipLab';
 
@@ -112,6 +118,10 @@ export const LABS: readonly LabEntry[] = [
   { id: 'use-of-colour', title: 'Try it: take the colour away', Lab: UseOfColourLab },
   { id: 'non-text-contrast', title: 'Try it: fade the edges', Lab: NonTextContrastLab },
   { id: 'sensory-instruction', title: 'Try it: rewrite the instruction', Lab: SensoryLab },
+  { id: 'pointer-gestures', title: 'Try it: give the map buttons', Lab: PointerGesturesLab },
+  { id: 'pointer-cancellation', title: 'Try it: slide off the button', Lab: PointerCancellationLab },
+  { id: 'motion-actuation', title: 'Try it: shake to undo', Lab: MotionActuationLab },
+  { id: 'dragging-movements', title: 'Try it: reorder without dragging', Lab: DraggingMovementsLab },
 ];
 
 export function labById(id: string): LabEntry | undefined {
