@@ -62,6 +62,8 @@ Graph: `scripts2/prd-labs.json` · Parent: #40 · Integration branch: `labs`
 - [x] **L-09** #49 — Sequence, input purpose and label in name: 1.3.2, 1.3.5 and 2.5.3 (L-03)
 - [x] **L-08** #48 — Semantics flagships: 1.1.1 and 1.3.1 (L-03)
 - [x] **L-05** #45 — Keyboard: 2.1.1, 2.1.2 and 2.1.4 (L-04)
+- [x] **L-06** #46 — Focus order and bypass: 2.4.1, 2.4.3 (flagship) and 2.4.11 (L-04)
 - [x] **L-11** #51 — Language and status messages: 3.1.1, 3.1.2 and 4.1.3 (L-03)
 - [x] **L-12** #52 — Form errors and labels: 3.3.1 and 3.3.2 (L-03)
 - [x] **L-17** #57 — Gesture pad and the 2.5.8 flagship (L-03)
+- [x] **L-07** #47 — Focus and hover behaviour: 3.2.1 and 1.4.13 (L-04)

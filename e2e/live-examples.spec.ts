@@ -142,7 +142,8 @@ test('the drawn ring moves with a transition, and instantly under reduced motion
 });
 
 test('criteria without live examples keep their static stages', async ({ page }) => {
-  await open(page, '/criteria/2.4.11/');
+  // 2.4.11 went live in L-06 (#46); 1.2.1 (prerecorded media) has no live example yet.
+  await open(page, '/criteria/1.2.1/');
   await expect(page.locator('.inbar')).toHaveCount(0);
   await expect(page.locator('.ex--live')).toHaveCount(0);
   await expect(page.locator('figure.stage .stage__example')).toHaveCount(2);

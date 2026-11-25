@@ -366,6 +366,71 @@ const LABS: LabCase[] = [
     said: 'Shortcut remapped to Alt+E.',
   },
   {
+    name: 'the skip link lab on 2.4.1',
+    url: '/criteria/2.4.1/',
+    lab: '.lab-slot .bp-lab',
+    passing: '2.4.1 passes',
+    failing: '2.4.1 fails',
+    toFail: async (lab, page) => {
+      await lab.getByRole('checkbox', { name: 'Skip link, first on the page' }).focus();
+      await page.keyboard.press('Space');
+    },
+    said: 'No skip link: 15 Tab presses to reach the article, on every page.',
+  },
+  {
+    name: 'the focus order lab on 2.4.3',
+    url: '/criteria/2.4.3/',
+    lab: '.lab-slot .fo-lab',
+    passing: '2.4.3 passes',
+    failing: '2.4.3 fails',
+    toFail: async (lab, page) => {
+      await radio(lab, 'None').focus();
+      await page.keyboard.press('ArrowDown');
+    },
+    said: 'Focus goes Postcode, Name, Email, Phone, Send. It leaves the layout at stop 1.',
+  },
+  {
+    name: 'the sticky banner lab on 2.4.11',
+    url: '/criteria/2.4.11/',
+    lab: '.lab-slot .nob-lab',
+    passing: '2.4.11 passes',
+    failing: '2.4.11 fails',
+    toFail: async (lab, page) => {
+      await lab.getByRole('slider', { name: 'Banner height' }).focus();
+      await page.keyboard.press('End');
+    },
+    said: 'Banner 160 pixels tall, at the top. The focused field is completely hidden.',
+  },
+  {
+    name: 'the what-focus-does lab on 3.2.1',
+    url: '/criteria/3.2.1/',
+    lab: '.lab-slot .focus-lab',
+    passing: '3.2.1 passes',
+    failing: '3.2.1 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await radio(lab, 'Sends the form').focus();
+      await page.keyboard.press('ArrowUp');
+    },
+    said: 'Focusing Email does nothing. Only Send sends.',
+  },
+  {
+    name: 'the tame-the-tooltip lab on 1.4.13',
+    url: '/criteria/1.4.13/',
+    lab: '.lab-slot .tip-lab',
+    passing: '1.4.13 passes',
+    failing: '1.4.13 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      const conditions = ['Escape closes it', 'The pointer can move into it', 'It stays until dismissed'];
+      for (const condition of conditions) {
+        await lab.getByRole('checkbox', { name: condition }).focus();
+        await page.keyboard.press('Space');
+      }
+    },
+    said: 'Escape closes it, the pointer can move into it, and it stays until dismissed.',
+  },
+  {
     name: 'the page language lab on 3.1.1',
     url: '/criteria/3.1.1/',
     lab: '.lab-slot .lang-lab',

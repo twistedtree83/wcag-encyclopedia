@@ -73,7 +73,7 @@
       ],
       "importance": 6,
       "afk": true,
-      "passes": false
+      "passes": true
     },
     {
       "id": "L-07",
@@ -84,7 +84,7 @@
       ],
       "importance": 7,
       "afk": true,
-      "passes": false
+      "passes": true
     },
     {
       "id": "L-08",

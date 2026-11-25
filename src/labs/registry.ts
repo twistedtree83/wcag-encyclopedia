@@ -12,6 +12,9 @@
 import type { ReactNode } from 'react';
 import type { CriterionRecord } from '../criteria/types';
 import { AltTextLab } from './AltTextLab';
+import { BypassLab } from './BypassLab';
+import { FocusOrderLab } from './FocusOrderLab';
+import { ObscuredLab } from './ObscuredLab';
 import { ColourCheckLab } from './ColourCheck';
 import { FadeLab } from './FadeLab';
 import { FocusRingLab } from './FocusRingLab';
@@ -25,12 +28,14 @@ import { ShortcutLab } from './ShortcutLab';
 import { LabelInNameLab } from './LabelInNameLab';
 import { LinkPurposeLab } from './LinkPurposeLab';
 import { NameRoleValueLab } from './NameRoleValueLab';
+import { OnFocusLab } from './OnFocusLab';
 import { PageTitleLab } from './PageTitleLab';
 import { PageLanguageLab, PartsLanguageLab } from './LanguageLabs';
 import { StatusLab } from './StatusLab';
 import { SequenceLab } from './SequenceLab';
 import { StructureLab } from './StructureLab';
 import { TargetSizeLab } from './TargetSizeLab';
+import { TooltipLab } from './TooltipLab';
 
 export type LabProps = {
   /** The number of the criterion page showing the lab, e.g. "1.4.11". */
@@ -81,6 +86,11 @@ export const LABS: readonly LabEntry[] = [
   { id: 'keyboard-control', title: 'Try it: reach the button by keyboard', Lab: KeyboardLab },
   { id: 'keyboard-trap', title: 'Try it: trap the focus, or let it go', Lab: KeyboardTrapLab },
   { id: 'character-shortcuts', title: 'Try it: dictate past a shortcut', Lab: ShortcutLab },
+  { id: 'skip-link', title: 'Try it: count the Tab presses', Lab: BypassLab },
+  { id: 'focus-order', title: 'Try it: break the focus order', Lab: FocusOrderLab, flagshipFor: '2.4.3' },
+  { id: 'sticky-banner', title: 'Try it: move the sticky banner', Lab: ObscuredLab },
+  { id: 'on-focus', title: 'Try it: what focus does', Lab: OnFocusLab },
+  { id: 'tame-tooltip', title: 'Try it: tame the tooltip', Lab: TooltipLab },
   { id: 'page-title', title: 'Try it: title the page', Lab: PageTitleLab },
   { id: 'link-purpose', title: 'Try it: name the links', Lab: LinkPurposeLab },
   { id: 'headings-labels', title: 'Try it: write the headings', Lab: HeadingsLab },
