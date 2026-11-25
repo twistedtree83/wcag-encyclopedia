@@ -20,6 +20,9 @@ import { FadeLab } from './FadeLab';
 import { FocusRingLab } from './FocusRingLab';
 import { FormErrorsLab } from './FormErrorsLab';
 import { FormLabelsLab } from './FormLabelsLab';
+import { OnInputLab } from './OnInputLab';
+import { ErrorSuggestionLab } from './ErrorSuggestionLab';
+import { ErrorPreventionLab } from './ErrorPreventionLab';
 import { HeadingsLab } from './HeadingsLab';
 import { InputPurposeLab } from './InputPurposeLab';
 import { KeyboardLab } from './KeyboardLab';
@@ -102,6 +105,9 @@ export const LABS: readonly LabEntry[] = [
   { id: 'form-errors', title: 'Try it: show the error', Lab: FormErrorsLab },
   { id: 'form-labels', title: 'Try it: label the field', Lab: FormLabelsLab },
   { id: 'target-size', title: 'Try it: size the targets', Lab: TargetSizeLab, flagshipFor: '2.5.8' },
+  { id: 'on-input', title: 'Try it: change the country', Lab: OnInputLab },
+  { id: 'error-suggestion', title: 'Try it: suggest the fix', Lab: ErrorSuggestionLab },
+  { id: 'error-prevention', title: 'Try it: catch the wrong payment', Lab: ErrorPreventionLab },
 ];
 
 export function labById(id: string): LabEntry | undefined {

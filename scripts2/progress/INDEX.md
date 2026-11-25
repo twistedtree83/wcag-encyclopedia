@@ -68,3 +68,4 @@ Graph: `scripts2/prd-labs.json` · Parent: #40 · Integration branch: `labs`
 - [x] **L-12** #52 — Form errors and labels: 3.3.1 and 3.3.2 (L-03)
 - [x] **L-17** #57 — Gesture pad and the 2.5.8 flagship (L-03)
 - [x] **L-07** #47 — Focus and hover behaviour: 3.2.1 and 1.4.13 (L-04)
+- [x] **L-19** #59 — Forms: 3.2.2, 3.3.3 and 3.3.4 (L-03)
