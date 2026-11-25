@@ -7,6 +7,9 @@ import { autofillSaid, voiceSaid, type StageEvent } from './events';
 import { mapOf, nodeAt, pathTo, step, tabStops } from './focus';
 import { INSTRUMENTS } from './instruments';
 import { listOf, tabSwitchLine } from './lists';
+import { cuesIn } from './cues';
+import { nextFilter, seeCue, visionSaid, type VisionFilter } from './vision';
+import { VisionDefs, filterPrefix, visionStyle } from './VisionDefs';
 
 /**
  * A live example on its stage (#43, ADR 0002): the example, the input bar, then the instruments.
@@ -32,6 +35,7 @@ const KEY_LABEL: Readonly<Record<SimKey, string>> = {
   'switch-tab': 'Switch tab',
   links: 'List the links',
   headings: 'List the headings',
+  vision: 'Vision filter',
 };
 
 /** Which keys activate which elements: Enter buttons and links, Space buttons and checkboxes. */
@@ -60,6 +64,8 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
   const realAt = useRef<HTMLElement | null>(null);
   const [ring, setRing] = useState<Ring | null>(null);
   const [said, setSaid] = useState('');
+  /** The vision filter on the example (#56). */
+  const [vision, setVision] = useState<VisionFilter>('none');
 
   const push = useCallback((e: StageEvent) => {
     setEvents((es) => [...es, e].slice(-KEEP));
@@ -67,6 +73,7 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     // An autofill or a voice command is the bar's own doing, on either stage: say its outcome.
     if (e.kind === 'autofill') setSaid(autofillSaid(e));
     else if (e.kind === 'voice') setSaid(voiceSaid(e));
+    else if (e.kind === 'vision') setSaid(visionSaid(e));
     else if (e.simulated || e.kind === 'read') {
       const lines = e.kind === 'read' ? e.lines : [e.line];
       setSaid(`Screen reader says: ${lines.map((l) => spoken(l) || 'blank').join('; ')}`);
@@ -104,6 +111,14 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
       if (next >= 0) {
         push({ kind: 'read', simulated, lines: [tabSwitchLine(tabs[next]!.textContent ?? '', '')] });
       }
+      return;
+    }
+    // The vision filter (#56), on either stage: the next filter goes on the example, and each
+    // cue's rendered colours are measured through it.
+    if (key === 'vision') {
+      const filter = nextFilter(vision);
+      setVision(filter);
+      push({ kind: 'vision', simulated, filter, cues: cuesIn(root).map((c) => seeCue(c, filter)) });
       return;
     }
     if (key === 'autofill') {
@@ -227,18 +242,23 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
   }, [simulated, push]);
 
   const { Example } = live;
+  const prefix = filterPrefix(id);
+  const filtered = live.keys.includes('vision')
+    ? { className: 'live__example vis-target', style: visionStyle(vision, prefix) }
+    : { className: 'live__example' };
   return (
     <>
       <div className="stage__example live__frame" ref={frame}>
         {simulated ? (
-          <div className="live__example" ref={example} aria-hidden="true" inert>
+          <div {...filtered} ref={example} aria-hidden="true" inert>
             <Example />
           </div>
         ) : (
-          <div className="live__example" ref={example}>
+          <div {...filtered} ref={example}>
             <Example />
           </div>
         )}
+        {live.keys.includes('vision') ? <VisionDefs prefix={prefix} /> : null}
         {simulated && !live.hideRing ? (
           <span
             className="sim-ring"

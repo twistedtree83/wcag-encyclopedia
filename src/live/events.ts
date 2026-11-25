@@ -1,5 +1,6 @@
 import { spoken, type Announcement } from '../labs/announce';
 import type { FocusMap } from './focusTrack';
+import type { CueSeen, VisionFilter } from './vision';
 
 /**
  * What happens on a live example's stage (#43), as a list of events every instrument under the
@@ -35,7 +36,9 @@ export type StageEvent =
   /** "Autofill": what a browser put in each field, by the field's name ('' for nothing). */
   | { readonly kind: 'autofill'; readonly simulated: boolean; readonly fields: readonly AutofilledField[] }
   /** "Say what you see": a voice command, and the control it clicked, or null for none. */
-  | { readonly kind: 'voice'; readonly simulated: boolean; readonly phrase: string; readonly clicked: Announcement | null };
+  | { readonly kind: 'voice'; readonly simulated: boolean; readonly phrase: string; readonly clicked: Announcement | null }
+  /** "Vision filter": the filter now on the example, and how each cue (`[data-cue]`) looks through it. */
+  | { readonly kind: 'vision'; readonly simulated: boolean; readonly filter: VisionFilter; readonly cues: readonly CueSeen[] };
 
 export type AutofilledField = { readonly name: string; readonly value: string };
 

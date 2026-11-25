@@ -2519,6 +2519,177 @@ ul.st-list li::before {
   font-weight: 600;
 }
 
+/* --- Vision filter: 1.4.1, 1.4.11, 1.3.3 and 1.4.3 (L-16) ----------------------------------- */
+
+/* The colour-vision SVG filters live in a zero-size svg; not display:none, or they stop drawing. */
+.vis-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+/* Greyscale fades in like the colour preview's (design guide §7, 0.2s). Instant under reduced
+   motion and data-motion="off" through the global rules at the end of this file. */
+.vis-target {
+  transition: filter 0.2s;
+}
+.vis-log__now {
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+.vis-log ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* 1.4.1: the sentence is --ink-2, so the depicted link is under 3:1 from it in both themes. */
+.vis-prose {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+.vis-prose a.example-link {
+  color: var(--ex-link);
+}
+
+/* 1.4.11: a real field and checkbox whose edges are the example's border tokens. */
+.vis-fields {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+  font-size: var(--small);
+}
+.vis-fields > label {
+  font-weight: 600;
+}
+.vis-fields .swatch-field {
+  width: 100%;
+  max-width: 320px;
+  color: var(--ink);
+  font: inherit;
+}
+.vis-fields .swatch-field::placeholder {
+  color: var(--ink-2);
+}
+.vis-fields__check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+}
+.vis-check {
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  border-radius: 4px;
+  background: transparent;
+}
+.vis-check:checked {
+  background: var(--ink);
+  box-shadow: inset 0 0 0 4px var(--card-bg);
+}
+
+/* 1.3.3: a checkout step with a red and a green button of near-equal lightness. */
+.vis-step {
+  display: grid;
+  gap: 12px;
+}
+.vis-step__say {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.5;
+}
+.vis-step__panel {
+  display: grid;
+  gap: 2px;
+  max-width: 280px;
+  padding: 10px 14px;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  font-size: var(--small);
+}
+.vis-step__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.vis-btn {
+  min-height: 44px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 4px;
+  color: var(--ex-on-button);
+  font: inherit;
+  font-weight: 600;
+}
+.vis-btn--go {
+  border-radius: 999px;
+  background: var(--ex-go);
+}
+.vis-btn--stop {
+  background: var(--ex-stop);
+}
+
+/* The three labs: a depicted mock in fixed colours, drawn through the chosen filter. */
+.vis-lab__mock {
+  display: grid;
+  gap: 16px;
+  padding: 24px;
+  border-radius: calc(var(--rad) * 0.65);
+  background: var(--card-bg);
+}
+.vis-lab__mock p {
+  margin: 0;
+  line-height: 1.6;
+}
+.vis-lab__fields {
+  display: grid;
+  gap: 6px;
+  max-width: 320px;
+}
+.vis-lab__label {
+  font-weight: 600;
+  font-size: var(--small);
+}
+.vis-lab__field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1.5px solid;
+  border-radius: 4px;
+}
+.vis-lab__icon {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  color: var(--ex-on-button);
+  font-weight: 700;
+}
+.vis-lab__check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+.vis-lab__box {
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid;
+  border-radius: 4px;
+}
+.lab-res.vis-cues {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 /* --- Breakpoints ------------------------------------------------------------------------ */
 
 @media (max-width: 1100px) {

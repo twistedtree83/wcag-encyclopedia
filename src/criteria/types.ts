@@ -37,7 +37,8 @@ export type SimKey =
   | 'voice'
   | 'switch-tab'
   | 'links'
-  | 'headings';
+  | 'headings'
+  | 'vision';
 
 export type LiveExample = {
   /**

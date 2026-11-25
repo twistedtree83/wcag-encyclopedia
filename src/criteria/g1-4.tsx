@@ -6,8 +6,112 @@
  * remaining six.
  */
 
-import type { CriterionRecord } from './types';
+import { useId } from 'react';
+import type { CriterionRecord, LiveExample } from './types';
 import { MeasuredRatio } from '../components/MeasuredRatio';
+
+/*
+ * The colour criteria's live examples (#56). Each marks the parts whose colour carries meaning
+ * with `data-cue` (src/live/cues.ts), and "Vision filter" measures them through greyscale and the
+ * colour-vision views. The text around them is --ink-2 (`.vis-prose`), so the depicted link is
+ * under 3:1 from it in both themes and only its hue sets it apart.
+ */
+
+/*
+ * The broken links are drawn as the static example draws them, as coloured spans: as real links
+ * inside the inert stage, axe's link-in-text-block would still flag them (ADR 0002).
+ */
+function HueLink({ underlined, children }: { underlined: boolean; children: string }) {
+  return underlined ? (
+    <a className="example-link vis-link" href="#1.4.1" data-cue={`the link “${children}”`}>
+      {children}
+    </a>
+  ) : (
+    <span className="swatch-link vis-link" data-cue={`the link “${children}”`}>
+      {children}
+    </span>
+  );
+}
+
+function HueLinks({ underlined }: { underlined: boolean }) {
+  return (
+    <p className="vis-prose">
+      Your order ships in two days. See the{' '}
+      <HueLink underlined={underlined}>delivery schedule</HueLink> for regional cut-off times, or
+      read the <HueLink underlined={underlined}>returns policy</HueLink>.
+    </p>
+  );
+}
+
+const COLOUR_LINKS: LiveExample['keys'] = ['vision'];
+
+function EdgedFields({ strong }: { strong: boolean }) {
+  const id = useId();
+  const edge = strong ? 'border--strong' : 'border--weak';
+  return (
+    <div className="vis-fields">
+      <label htmlFor={`${id}-email`}>Email address</label>
+      <input
+        id={`${id}-email`}
+        type="email"
+        className={`swatch-field ${edge}`}
+        placeholder="you@example.com"
+        data-cue="the field’s edge"
+        data-cue-part="border"
+        data-cue-vs="surface"
+      />
+      <label className="vis-fields__check">
+        <input
+          type="checkbox"
+          className={`vis-check ${edge}`}
+          data-cue="the checkbox’s edge"
+          data-cue-part="border"
+          data-cue-vs="surface"
+        />
+        Email me order updates
+      </label>
+      <MeasuredRatio
+        fg={strong ? 'ex-border-strong' : 'ex-border-weak'}
+        bg="card-bg"
+        kind="ui"
+        label="border"
+      />
+    </div>
+  );
+}
+
+const EDGE_KEYS: LiveExample['keys'] = ['vision', 'tab', 'shift-tab', 'space'];
+
+/*
+ * The faint text keeps the static example's `data-depicts-failure`: the same text, so nothing new
+ * is excluded from axe. The badges measure against --card-bg, the surface live examples sit on.
+ */
+function CardText({ faint }: { faint: boolean }) {
+  const cls = faint ? 'faded' : 'solid';
+  const depicts = faint ? { 'data-depicts-failure': true } : {};
+  return (
+    <>
+      <p className="swatch-label">Card number</p>
+      <p
+        className={`${cls} mono`}
+        data-cue="the card number"
+        data-cue-vs="surface"
+        data-cue-need="4.5"
+        {...depicts}
+      >
+        4242 4242 4242 4242
+      </p>
+      <p className={cls} data-cue="the helper text" data-cue-vs="surface" data-cue-need="4.5" {...depicts}>
+        {faint
+          ? 'Placeholder grey, helper grey, and disabled grey are three different mistakes with the same cause.'
+          : 'Helper text keeps its quieter voice through size and weight rather than by fading towards the background.'}
+      </p>
+      <MeasuredRatio fg={faint ? 'ex-text-weak' : 'ex-text-strong'} bg="card-bg" kind="body" />
+    </>
+  );
+}
+
+const TEXT_KEYS: LiveExample['keys'] = ['vision', 'read'];
 
 export const G1_4: readonly CriterionRecord[] = [
   {
@@ -16,12 +120,17 @@ export const G1_4: readonly CriterionRecord[] = [
     level: 'A',
     since: '2.0',
     guideline: '1.4',
-    labs: ['colour-check'],
+    labs: ['colour-check', 'use-of-colour'],
     plain:
       'Colour can carry meaning, but never on its own. If removing all colour from the screen ' +
       'would lose information, add a shape, a label, an underline, or an icon.',
     fail: {
       caption: 'Hue is the only signal.',
+      live: {
+        Example: () => <HueLinks underlined={false} />,
+        keys: COLOUR_LINKS,
+        instruments: ['vision-filter'],
+      },
       render: () => (
         <>
           <p className="example-prose">
@@ -38,6 +147,11 @@ export const G1_4: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'A persistent underline was added.',
+      live: {
+        Example: () => <HueLinks underlined />,
+        keys: COLOUR_LINKS,
+        instruments: ['vision-filter'],
+      },
       render: () => (
         <>
           <p className="example-prose">
@@ -66,12 +180,17 @@ export const G1_4: readonly CriterionRecord[] = [
     level: 'AA',
     since: '2.1',
     guideline: '1.4',
-    labs: ['colour-check'],
+    labs: ['colour-check', 'non-text-contrast'],
     plain:
       'The parts of a control that tell you it is a control — the input’s edge, the checkbox ' +
       'box, the focus ring, the chart key — need 3:1 against whatever sits behind them.',
     fail: {
       caption: 'The field and checkbox edges vanish; only the placeholder hints anything is editable.',
+      live: {
+        Example: () => <EdgedFields strong={false} />,
+        keys: EDGE_KEYS,
+        instruments: ['vision-filter', 'announcement-log'],
+      },
       render: () => (
         <>
           <p className="swatch-label">Email address</p>
@@ -92,6 +211,11 @@ export const G1_4: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'One border colour, changed on every control at once.',
+      live: {
+        Example: () => <EdgedFields strong />,
+        keys: EDGE_KEYS,
+        instruments: ['vision-filter', 'announcement-log'],
+      },
       render: () => (
         <>
           <p className="swatch-label">Email address</p>
@@ -241,6 +365,11 @@ export const G1_4: readonly CriterionRecord[] = [
       'designing in.',
     fail: {
       caption: 'Hierarchy built by fading text out.',
+      live: {
+        Example: () => <CardText faint />,
+        keys: TEXT_KEYS,
+        instruments: ['vision-filter', 'announcement-log'],
+      },
       render: () => (
         <>
           <p className="swatch-label">Card number</p>
@@ -255,6 +384,11 @@ export const G1_4: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'Hierarchy moved from lightness to weight and scale.',
+      live: {
+        Example: () => <CardText faint={false} />,
+        keys: TEXT_KEYS,
+        instruments: ['vision-filter', 'announcement-log'],
+      },
       render: () => (
         <>
           <p className="swatch-label">Card number</p>

@@ -27,6 +27,7 @@ import { PageLanguageLab, PartsLanguageLab } from './LanguageLabs';
 import { StatusLab } from './StatusLab';
 import { SequenceLab } from './SequenceLab';
 import { StructureLab } from './StructureLab';
+import { NonTextContrastLab, SensoryLab, UseOfColourLab } from './VisionLabs';
 
 export type LabProps = {
   /** The number of the criterion page showing the lab, e.g. "1.4.11". */
@@ -82,6 +83,9 @@ export const LABS: readonly LabEntry[] = [
   { id: 'status-message', title: 'Try it: announce the basket', Lab: StatusLab },
   { id: 'form-errors', title: 'Try it: show the error', Lab: FormErrorsLab },
   { id: 'form-labels', title: 'Try it: label the field', Lab: FormLabelsLab },
+  { id: 'use-of-colour', title: 'Try it: take the colour away', Lab: UseOfColourLab },
+  { id: 'non-text-contrast', title: 'Try it: fade the edges', Lab: NonTextContrastLab },
+  { id: 'sensory-instruction', title: 'Try it: rewrite the instruction', Lab: SensoryLab },
 ];
 
 export function labById(id: string): LabEntry | undefined {

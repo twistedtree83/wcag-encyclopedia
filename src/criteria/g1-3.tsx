@@ -100,6 +100,49 @@ const TaggedFields = () => <ContactFields purposes />;
 
 const FIELD_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'autofill', 'read'];
 
+/*
+ * 1.3.3's live examples (#56): the same checkout step under two instructions. The broken one
+ * points by place, shape and colour; through "Vision filter" the green button is lost, and read
+ * aloud nothing is round or green. The fixed one names the button, which survives both.
+ */
+
+function CheckoutStep({ named }: { named: boolean }) {
+  return (
+    <div className="vis-step">
+      <p className="vis-step__say">
+        {named ? (
+          <>
+            Fill in <b>Delivery details</b>, then press <b>Continue to payment</b>.
+          </>
+        ) : (
+          'Fill in the panel on the left, then press the round green button below it to continue.'
+        )}
+      </p>
+      <div className="vis-step__panel">
+        <b>Delivery details</b>
+        <span>12 Acacia Avenue, Leeds</span>
+      </div>
+      <div className="vis-step__buttons">
+        <button type="button" className="vis-btn vis-btn--stop" data-cue-peer="the red button">
+          Save for later
+        </button>
+        <button
+          type="button"
+          className="vis-btn vis-btn--go"
+          data-cue="the green button"
+          data-cue-part="fill"
+          data-cue-vs="peer"
+          {...(named ? { 'data-cue-also': 'named in the instruction' } : {})}
+        >
+          Continue to payment
+        </button>
+      </div>
+    </div>
+  );
+}
+
+const STEP_SENSE_KEYS: LiveExample['keys'] = ['vision', 'read', 'tab', 'shift-tab'];
+
 export const G1_3: readonly CriterionRecord[] = [
   {
     num: '1.3.1',
@@ -228,12 +271,18 @@ export const G1_3: readonly CriterionRecord[] = [
     level: 'A',
     since: '2.0',
     guideline: '1.3',
+    labs: ['sensory-instruction'],
     plain:
       'Instructions cannot depend on shape, size, position, or sound alone. "The button on the ' +
       'right" means nothing to someone listening to the page, and nothing on a phone where it ' +
       'is now underneath.',
     fail: {
       caption: 'The instruction relies on where things happen to sit.',
+      live: {
+        Example: () => <CheckoutStep named={false} />,
+        keys: STEP_SENSE_KEYS,
+        instruments: ['vision-filter', 'announcement-log'],
+      },
       render: () => (
         <>
           <p className="example-prose">
@@ -249,6 +298,11 @@ export const G1_3: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'The instruction names the thing.',
+      live: {
+        Example: () => <CheckoutStep named />,
+        keys: STEP_SENSE_KEYS,
+        instruments: ['vision-filter', 'announcement-log'],
+      },
       render: () => (
         <>
           <p className="example-prose">

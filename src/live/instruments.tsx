@@ -4,6 +4,7 @@ import { spoken } from '../labs/announce';
 import { lastOf, logOf, type StageEvent } from './events';
 import { trackOf } from './focusTrack';
 import { withVoices } from '../labs/language';
+import { filterName } from './vision';
 
 /**
  * The instruments a live example's stage can carry (#43, CONTEXT.md "Instrument"), by id. A
@@ -147,12 +148,41 @@ function VoiceInstrument({ id, events }: InstrumentProps) {
   );
 }
 
+/**
+ * The vision filter (#56): which filter is on the example, and, for each cue whose colour carries
+ * meaning, its ratio through that filter and whether it still stands out.
+ */
+function VisionInstrument({ id, events }: InstrumentProps) {
+  const last = lastOf(events, 'vision');
+  return (
+    <div className="alog vis-log">
+      <p className="alog__h" id={`${id}-h`}>
+        Vision filter
+      </p>
+      <p className="vis-log__now">Seen in: {filterName(last?.filter ?? 'none')}</p>
+      {last ? (
+        <ul aria-labelledby={`${id}-h`}>
+          {last.cues.map((c, i) => (
+            <li key={i} className={c.found ? 'vis-log__ok' : 'vis-log__lost'}>
+              <span aria-hidden="true">{c.found ? '✓ ' : '✕ '}</span>
+              {c.line}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="alog__empty">Press “Vision filter” to see the example without full colour.</p>
+      )}
+    </div>
+  );
+}
+
 export const INSTRUMENTS: Readonly<Record<string, ComponentType<InstrumentProps>>> = {
   'announcement-log': LogInstrument,
   'voice-log': VoiceLogInstrument,
   'focus-tracker': FocusTracker,
   autofill: AutofillInstrument,
   'voice-control': VoiceInstrument,
+  'vision-filter': VisionInstrument,
 };
 
 /** The ids in `ids` that no registered instrument answers to. Empty when all resolve. */
