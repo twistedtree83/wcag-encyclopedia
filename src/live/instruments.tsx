@@ -7,6 +7,7 @@ import { gestureLines } from './gesture';
 import { withVoices } from '../labs/language';
 import { filterName } from './vision';
 import { scrollLine } from '../labs/zoom';
+import { menuOrderLines, siteLines } from './mockSite';
 
 /**
  * The instruments a live example's stage can carry (#43, CONTEXT.md "Instrument"), by id. A
@@ -355,6 +356,60 @@ function ContextInstrument({ id, events }: InstrumentProps) {
   );
 }
 
+/**
+ * The mock site (#63): which page the visit is on and how many moves it took, the ways round the
+ * site the page offers, and the pages passed on the way, with how each was reached.
+ */
+function MockSiteInstrument({ id, events }: InstrumentProps) {
+  const lines = siteLines(events);
+  return (
+    <div className="alog msite-log">
+      <p className="alog__h" id={`${id}-h`}>
+        Mock site
+      </p>
+      {lines ? (
+        <>
+          <p className="msite-log__now">{lines.now}</p>
+          <p className="msite-log__ways">{lines.ways}</p>
+          <ol aria-labelledby={`${id}-h`}>
+            {lines.trail.map((line, i) => (
+              <li key={i} aria-current={i === lines.trail.length - 1 ? 'page' : undefined}>
+                {line}
+              </li>
+            ))}
+          </ol>
+        </>
+      ) : (
+        <p className="alog__empty">Not loaded yet.</p>
+      )}
+    </div>
+  );
+}
+
+/** The menu on each mock-site page visited (#63), judged against the first page's order. */
+function MenuOrderInstrument({ id, events }: InstrumentProps) {
+  const lines = menuOrderLines(events);
+  return (
+    <div className="alog vis-log morder">
+      <p className="alog__h" id={`${id}-h`}>
+        Menu order
+      </p>
+      {lines.length > 0 ? (
+        <ul aria-labelledby={`${id}-h`}>
+          {lines.map((l, i) => (
+            <li key={i} className={l.kept ? 'vis-log__ok' : 'vis-log__lost'}>
+              <span aria-hidden="true">{l.kept ? '✓ ' : '✕ '}</span>
+              {l.text}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="alog__empty">Not loaded yet.</p>
+      )}
+    </div>
+  );
+}
+
 export const INSTRUMENTS: Readonly<Record<string, ComponentType<InstrumentProps>>> = {
   'gesture-pad': GesturePad,
   'announcement-log': LogInstrument,
@@ -367,6 +422,8 @@ export const INSTRUMENTS: Readonly<Record<string, ComponentType<InstrumentProps>
   'key-log': KeyLog,
   'pointer-log': PointerInstrument,
   context: ContextInstrument,
+  'mock-site': MockSiteInstrument,
+  'menu-order': MenuOrderInstrument,
 };
 
 /** The ids in `ids` that no registered instrument answers to. Empty when all resolve. */

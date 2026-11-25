@@ -9,6 +9,8 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { ADDRESS, COUNTRIES, OI_NAME, type Country } from '../labs/onInput';
 import type { CriterionRecord, LiveExample } from './types';
+import { MockSite } from '../live/SiteWindow';
+import { SHUFFLED_SITE, STEADY_SITE } from '../labs/consistentNav';
 
 type HelpPage = 'help' | 'delivery' | 'returns';
 type Section = Exclude<HelpPage, 'help'>;
@@ -169,6 +171,18 @@ function CountryWithButton() {
 
 const ON_INPUT_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'space', 'enter', 'read'];
 
+/*
+ * 3.2.3's live examples (#63): a four-page shop as a mock site. Broken: the menu is in another
+ * order on every page but Home. Fixed: one order everywhere. Moving between pages counts the Tab
+ * presses to "Support" again; the menu order instrument compares each page with the first.
+ */
+
+const ShuffledShop = () => <MockSite site={SHUFFLED_SITE} />;
+const SteadyShop = () => <MockSite site={STEADY_SITE} />;
+
+const SHOP_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'enter'];
+const SHOP_INSTRUMENTS = ['menu-order', 'announcement-log'];
+
 export const G3_2: readonly CriterionRecord[] = [
   {
     num: '3.2.1',
@@ -278,8 +292,10 @@ export const G3_2: readonly CriterionRecord[] = [
     plain:
       'Navigation repeated across pages has to stay in the same relative order. You may add and ' +
       'remove items; you may not shuffle them.',
+    labs: ['consistent-navigation'],
     fail: {
       caption: 'The order changes from page to page.',
+      live: { Example: ShuffledShop, keys: SHOP_KEYS, instruments: SHOP_INSTRUMENTS },
       render: () => (
         <>
           <div className="navcompare">
@@ -295,6 +311,7 @@ export const G3_2: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'The same order everywhere.',
+      live: { Example: SteadyShop, keys: SHOP_KEYS, instruments: SHOP_INSTRUMENTS },
       render: () => (
         <>
           <div className="navcompare">

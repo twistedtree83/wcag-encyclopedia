@@ -41,6 +41,8 @@ import { StructureLab } from './StructureLab';
 import { TargetSizeLab } from './TargetSizeLab';
 import { NonTextContrastLab, SensoryLab, UseOfColourLab } from './VisionLabs';
 import { TooltipLab } from './TooltipLab';
+import { MultipleWaysLab } from './MultipleWaysLab';
+import { ConsistentNavLab } from './ConsistentNavLab';
 
 export type LabProps = {
   /** The number of the criterion page showing the lab, e.g. "1.4.11". */
@@ -112,6 +114,8 @@ export const LABS: readonly LabEntry[] = [
   { id: 'use-of-colour', title: 'Try it: take the colour away', Lab: UseOfColourLab },
   { id: 'non-text-contrast', title: 'Try it: fade the edges', Lab: NonTextContrastLab },
   { id: 'sensory-instruction', title: 'Try it: rewrite the instruction', Lab: SensoryLab },
+  { id: 'multiple-ways', title: 'Try it: find the buried page', Lab: MultipleWaysLab },
+  { id: 'consistent-navigation', title: 'Try it: shuffle the menu', Lab: ConsistentNavLab },
 ];
 
 export function labById(id: string): LabEntry | undefined {
