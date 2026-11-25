@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { focusLine, spoken, type AxNode } from '../src/labs/announce';
 import { isTabbable, nodeAt, step } from '../src/live/focus';
-import { logOf, type StageEvent } from '../src/live/events';
+import { autofillSaid, logOf, voiceSaid, type StageEvent } from '../src/live/events';
 import { parseMarkup } from './markup';
 
 /**
@@ -107,5 +107,39 @@ describe('the log drawn from a stage’s input events', () => {
       { kind: 'status', simulated: false, line: message },
     ];
     expect(logOf(events).map(spoken)).toEqual(['Add to basket, button', 'Added. 4 items in basket.']);
+  });
+});
+
+describe('what the autofill and voice-control instruments report (#49)', () => {
+  const btn = { name: 'Send message to support', role: 'button', states: [], description: '' };
+
+  it('counts the fields an autofill filled', () => {
+    const none: StageEvent = {
+      kind: 'autofill',
+      simulated: true,
+      fields: [
+        { name: 'Full name', value: '' },
+        { name: 'Email', value: '' },
+      ],
+    };
+    expect(autofillSaid(none)).toBe('Autofill filled 0 of 2 fields.');
+    const both: StageEvent = {
+      kind: 'autofill',
+      simulated: false,
+      fields: [
+        { name: 'Full name', value: 'Ada Lovelace' },
+        { name: 'Email', value: 'ada@example.com' },
+      ],
+    };
+    expect(autofillSaid(both)).toBe('Autofill filled 2 of 2 fields.');
+  });
+
+  it('says what a voice command clicked, or that nothing matched', () => {
+    expect(voiceSaid({ kind: 'voice', simulated: true, phrase: 'click Send', clicked: null })).toBe(
+      'You said “click Send”. Nothing matched.',
+    );
+    expect(voiceSaid({ kind: 'voice', simulated: false, phrase: 'click Send', clicked: btn })).toBe(
+      'You said “click Send”. It clicked Send message to support, button.',
+    );
   });
 });

@@ -1904,6 +1904,245 @@ footer.foot p {
   color: var(--ink-2);
 }
 
+/* --- Focus tracker and the 2.4.7 lab (L-04) ---------------------------------------------- */
+
+/* The focus tracker: a map of the example's Tab stops, numbered in Tab order, with the ring on
+   the current stop and a dashed trail through where focus has been. Then the same in text. */
+.ftrack__map {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 180px;
+  margin: 0 0 8px;
+  overflow: visible;
+}
+.ftrack__stop {
+  fill: none;
+  stroke: var(--line-2);
+  stroke-width: 1.5;
+}
+.ftrack__path {
+  fill: none;
+  stroke: var(--ink-2);
+  stroke-width: 2;
+  stroke-dasharray: 5 4;
+}
+.ftrack__ring {
+  fill: none;
+  stroke: var(--focus);
+  stroke-width: 3;
+}
+.ftrack__num circle {
+  fill: var(--card-bg);
+  stroke: var(--ink-2);
+  stroke-width: 1.5;
+}
+.ftrack__num.is-on circle {
+  stroke: var(--focus);
+  stroke-width: 3;
+}
+.ftrack__num text {
+  fill: var(--ink);
+  font: 700 12px var(--fh), sans-serif;
+}
+.ftrack__now {
+  margin: 0 0 8px;
+}
+.ftrack__trail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ftrack__trail li {
+  padding: 4px 10px;
+  border-left: 3px solid var(--line-2);
+  border-radius: 4px;
+  background: var(--card-bg);
+  font-size: var(--small);
+}
+.ftrack__trail li[aria-current] {
+  border-left-color: var(--focus);
+  font-weight: 600;
+}
+.ftrack__n {
+  font-weight: 700;
+}
+
+/* 2.4.7's live examples: three fields. The broken row removes the outline and puts nothing back. */
+.fv-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+}
+.fv-row label {
+  display: flex;
+  flex: 1 1 7em;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  font-size: var(--small);
+  font-weight: 600;
+}
+.fv-row input {
+  width: 100%;
+  min-height: 36px;
+  padding: 6px 10px;
+  border: 1px solid var(--line-2);
+  border-radius: 4px;
+  background: var(--deep);
+  color: var(--ink);
+}
+.fv-row--none input:focus,
+.fv-row--none input:focus-visible {
+  outline: none;
+}
+
+/* The 2.4.7 lab: a depicted page (fixed colours, set inline) with a focused Save button. */
+.ring-mock {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  padding: 36px 24px;
+  border: 1px solid var(--line-2);
+  border-radius: calc(var(--rad) * 0.65);
+}
+.ring-mock__btn {
+  display: inline-block;
+  padding: 10px 24px;
+  border-radius: 6px;
+  font: 700 17px/1.2 var(--fh), sans-serif;
+}
+.ring-controls {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px 24px;
+}
+.ring-swatch {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--line-2);
+  border-radius: 4px;
+}
+
+/* --- Sequence, input purpose and label in name (L-09) ------------------------------------ */
+
+/* Live examples: the 1.3.2 steps are real buttons; the 1.3.5 fields and 2.5.3 button too. */
+.live-seq {
+  margin: 0;
+}
+.live-seq .seq__step {
+  border-radius: 4px;
+  font: inherit;
+  font-size: 15px;
+  text-align: left;
+  cursor: pointer;
+}
+.live-form,
+.lin-field,
+.ip-field {
+  display: grid;
+  gap: 6px;
+}
+.live-form label,
+.lin-field label,
+.ip-field label {
+  font-size: var(--small);
+  font-weight: 600;
+}
+.live-form input,
+.lin-field input,
+.ip-field input {
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  padding: 0 12px;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px;
+}
+.live-form input + label {
+  margin-top: 8px;
+}
+.live-send .namebox__visual {
+  min-height: 40px;
+  padding: 0 18px;
+  border: 0;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* The three labs: a depicted mock, a row of choices, then the readouts. */
+.seq-mock,
+.ip-mock,
+.lin-mock {
+  padding: 24px;
+  border-radius: calc(var(--rad) * 0.65);
+  background: var(--card-bg);
+  color: var(--ink);
+}
+.seq-mock .seq {
+  margin: 0;
+}
+.seq-mock .seq__step {
+  font-size: 15px;
+}
+.ip-mock {
+  display: grid;
+  gap: 12px;
+}
+.lin-mock .namebox__visual {
+  min-height: 40px;
+  padding: 0 18px;
+  border: 0;
+  font: inherit;
+  font-weight: 600;
+}
+.lab-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  align-items: start;
+  gap: 16px;
+}
+/* A stage with two instruments (voice control or autofill, then the log). */
+.stage__instruments > .alog + .alog {
+  margin-top: 16px;
+}
+.lin-hint {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--small);
+}
+.lab-out {
+  display: grid;
+  gap: 16px;
+}
+.lab-code {
+  display: grid;
+  gap: 6px;
+}
+.lab-code .alog__h {
+  margin: 0 0 2px;
+}
+.lab-code code {
+  display: block;
+  padding: 8px 12px;
+  border-left: 3px solid var(--line-2);
+  border-radius: 4px;
+  background: var(--card-bg);
+  color: var(--ink);
+  font: 15px/1.45 ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  overflow-wrap: anywhere;
+}
+
 /* --- Language and status messages (L-11) ------------------------------------------------ */
 
 /* The 3.1.x mocks and live examples: a short page of prose. */
@@ -2064,6 +2303,9 @@ footer.foot p {
   }
   .lab-res,
   .nrv-controls {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ring-controls {
     grid-template-columns: minmax(0, 1fr);
   }
   .pairs,

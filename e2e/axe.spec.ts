@@ -113,6 +113,9 @@ const STATE_PAGES = [
   '/criteria/4.1.2/?el=button&name=content&state=aria-pressed&on=0',
   '/criteria/4.1.2/?el=role-button&name=labelledby&state=aria-checked&on=1',
   '/criteria/4.1.2/?el=switch&name=none&state=aria-pressed&on=0',
+  '/criteria/2.4.7/?w=0&off=2&c=blue',
+  '/criteria/2.4.7/?w=6&off=0&c=yellow',
+  '/criteria/2.4.7/?w=1&off=6&c=grey',
 ];
 
 for (const url of STATE_PAGES) {

@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import type { LiveExample, SimKey } from '../criteria/types';
 import { announce, focusLine, fromDom, liveRegionLines, spoken } from '../labs/announce';
-import type { StageEvent } from './events';
-import { nodeAt, pathTo, step, tabStops } from './focus';
+import { autofillValue } from '../labs/inputPurpose';
+import { voiceMatches } from '../labs/labelInName';
+import { autofillSaid, voiceSaid, type StageEvent } from './events';
+import { mapOf, nodeAt, pathTo, step, tabStops } from './focus';
 import { INSTRUMENTS } from './instruments';
 
 /**
@@ -24,6 +26,8 @@ const KEY_LABEL: Readonly<Record<SimKey, string>> = {
   enter: 'Enter',
   space: 'Space',
   read: 'Read it aloud',
+  autofill: 'Autofill',
+  voice: 'Say what you see',
 };
 
 /** Which keys activate which elements: Enter buttons and links, Space buttons and checkboxes. */
@@ -56,7 +60,10 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
   const push = useCallback((e: StageEvent) => {
     setEvents((es) => [...es, e].slice(-KEEP));
     // Real focus is spoken by the reader's own screen reader; say only what it wouldn't.
-    if (e.simulated || e.kind === 'read') {
+    // An autofill or a voice command is the bar's own doing, on either stage: say its outcome.
+    if (e.kind === 'autofill') setSaid(autofillSaid(e));
+    else if (e.kind === 'voice') setSaid(voiceSaid(e));
+    else if (e.simulated || e.kind === 'read') {
       const lines = e.kind === 'read' ? e.lines : [e.line];
       setSaid(`Screen reader says: ${lines.map((l) => spoken(l) || 'blank').join('; ')}`);
     }
@@ -68,6 +75,10 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     return focusLine(nodeAt(ax, pathTo(root, el)), ax);
   };
 
+  /** Where every Tab stop is now, for the focus tracker. */
+  const mapFor = (stops: readonly Element[]) =>
+    mapOf(example.current!, stops, (el) => spoken(lineFor(el)) || 'blank');
+
   const press = (key: SimKey) => {
     const root = example.current;
     if (!root) return;
@@ -75,14 +86,45 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
       push({ kind: 'read', simulated, lines: announce(fromDom(root)) });
       return;
     }
+    if (key === 'autofill') {
+      // A browser fills each field whose autocomplete names a purpose it has saved (#49).
+      const fields = Array.from(root.querySelectorAll<HTMLInputElement>('input, textarea')).map(
+        (el) => {
+          const value = autofillValue(el.getAttribute('autocomplete') ?? undefined);
+          if (value) el.value = value;
+          return { name: lineFor(el).name, value };
+        },
+      );
+      push({ kind: 'autofill', simulated, fields });
+      return;
+    }
     const stops = tabStops(root);
+    if (key === 'voice') {
+      // The reader says "click" and the text they see on the first control (#49). Voice
+      // control clicks the control whose accessible name contains those words.
+      const first = stops[0];
+      if (!first) return;
+      const phrase = (first.textContent ?? '').replace(/\s+/g, ' ').trim();
+      const target = stops.find((el) => voiceMatches(phrase, lineFor(el).name));
+      if (target) target.click();
+      const clicked = target ? lineFor(target) : null;
+      push({ kind: 'voice', simulated, phrase: `click ${phrase}`, clicked });
+      return;
+    }
     if (key === 'tab' || key === 'shift-tab') {
       const back = key === 'shift-tab';
       if (simulated) {
         const next = step(stops.length, simAt, back);
         setSimAt(next);
         if (next >= 0) {
-          push({ kind: 'focus', simulated, line: lineFor(stops[next]!), index: next, total: stops.length });
+          push({
+            kind: 'focus',
+            simulated,
+            line: lineFor(stops[next]!),
+            index: next,
+            total: stops.length,
+            map: mapFor(stops),
+          });
         }
       } else {
         const next = step(stops.length, realAt.current ? stops.indexOf(realAt.current) : -1, back);
@@ -127,7 +169,14 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
       const index = stops.indexOf(el);
       if (index < 0) return;
       realAt.current = el;
-      push({ kind: 'focus', simulated: false, line: lineFor(el), index, total: stops.length });
+      push({
+        kind: 'focus',
+        simulated: false,
+        line: lineFor(el),
+        index,
+        total: stops.length,
+        map: mapFor(stops),
+      });
     };
     const onChange = (e: Event) => {
       push({ kind: 'change', simulated: false, line: lineFor(e.target as Element) });
@@ -170,7 +219,7 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
             <Example />
           </div>
         )}
-        {simulated ? (
+        {simulated && !live.hideRing ? (
           <span
             className="sim-ring"
             aria-hidden="true"
