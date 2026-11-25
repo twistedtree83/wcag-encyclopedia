@@ -43,6 +43,8 @@ export type StageEvent =
   | { readonly kind: 'vision'; readonly simulated: boolean; readonly filter: VisionFilter; readonly cues: readonly CueSeen[] }
   /** "Zoom in": the zoom frame's new zoom and window size (CSS px), and what scrolls in it (#53). */
   | { readonly kind: 'zoom'; readonly simulated: boolean; readonly zoom: number; readonly width: number; readonly height: number; readonly sideways: boolean; readonly down: boolean }
+  /** "Enlarge text" or "Toggle text spacing": the frame's text size (percent), its spacing, and whether any box now cuts its text off (#54). */
+  | { readonly kind: 'text-fit'; readonly simulated: boolean; readonly scale: number; readonly spacing: boolean; readonly clipped: boolean }
   /** A key ("Escape") or a dictated phrase sent to the focused control, and what it set off (#45). */
   | {
       readonly kind: 'keys';
@@ -101,6 +103,12 @@ export function autofillSaid({ fields }: Of<'autofill'>): string {
 /** What is said after a zoom: the zoom, the window's width and what scrolls. */
 export function zoomSaid({ zoom, width, sideways, down }: Of<'zoom'>): string {
   return `Zoomed to ${zoom}%, ${width} CSS pixels wide. ${scrollLine({ sideways, down })}.`;
+}
+
+/** What is said after the text grows or its spacing changes: the change, and whether text is cut off. */
+export function textFitSaid({ scale, spacing, clipped }: Of<'text-fit'>): string {
+  const change = scale !== 100 ? `Text at ${scale}%` : spacing ? 'Text spacing on' : 'Text at 100%, spacing off';
+  return `${change}. ${clipped ? 'Text is cut off' : 'All the text fits'}.`;
 }
 
 /** What is said after a voice command: what it clicked, or that nothing matched. */

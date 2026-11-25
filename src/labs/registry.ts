@@ -36,6 +36,7 @@ import { NameRoleValueLab } from './NameRoleValueLab';
 import { OnFocusLab } from './OnFocusLab';
 import { PageTitleLab } from './PageTitleLab';
 import { ReflowLab } from './ReflowLab';
+import { ResizeTextLab, TextSpacingLab } from './TextFitLabs';
 import { PageLanguageLab, PartsLanguageLab } from './LanguageLabs';
 import { StatusLab } from './StatusLab';
 import { SequenceLab } from './SequenceLab';
@@ -107,6 +108,8 @@ export const LABS: readonly LabEntry[] = [
   { id: 'reflow', title: 'Try it: zoom to 400%', Lab: ReflowLab, flagshipFor: '1.4.10' },
   { id: 'form-errors', title: 'Try it: show the error', Lab: FormErrorsLab },
   { id: 'form-labels', title: 'Try it: label the field', Lab: FormLabelsLab },
+  { id: 'text-spacing', title: 'Try it: loosen the spacing', Lab: TextSpacingLab, flagshipFor: '1.4.12' },
+  { id: 'resize-text', title: 'Try it: text to 200%', Lab: ResizeTextLab },
   { id: 'target-size', title: 'Try it: size the targets', Lab: TargetSizeLab, flagshipFor: '2.5.8' },
   { id: 'on-input', title: 'Try it: change the country', Lab: OnInputLab },
   { id: 'error-suggestion', title: 'Try it: suggest the fix', Lab: ErrorSuggestionLab },
