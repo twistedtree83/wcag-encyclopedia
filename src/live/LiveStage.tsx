@@ -7,6 +7,7 @@ import { ZOOMS, viewportAt, type Scrolls } from '../labs/zoom';
 import { ZoomFrame } from '../labs/ZoomFrame';
 import { clippedIn } from '../labs/NoticeCard';
 import { SCALES } from '../labs/textFit';
+import { ReaderColours } from '../labs/ImagesOfTextLab';
 import { ACTION_EVENT } from './actions';
 import { gestureSaid, hitAt, tapPlan, type Point } from './gesture';
 import {
@@ -17,6 +18,8 @@ import {
   voiceSaid,
   textFitSaid,
   zoomSaid,
+  rotateSaid,
+  lookSaid,
   type ContextCause,
   type StageEvent,
 } from './events';
@@ -62,6 +65,8 @@ const KEY_LABEL: Readonly<Record<SimKey, string>> = {
   zoom: 'Zoom in',
   'text-size': 'Enlarge text',
   spacing: 'Toggle text spacing',
+  rotate: 'Rotate',
+  restyle: 'Use my colours',
   tap: 'Tap',
 };
 
@@ -117,6 +122,11 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
   const [scaleAt, setScaleAt] = useState(0);
   const [spaced, setSpaced] = useState(false);
   const refitted = useRef(false);
+  /** "Rotate" (#55): the zoom frame on its side, and whether a turn waits to be measured. */
+  const [turned, setTurned] = useState(false);
+  const rotated = useRef(false);
+  /** "Use my colours" (#55): the reader's own colours on the example. */
+  const [restyled, setRestyled] = useState(false);
 
   const push = useCallback((e: StageEvent) => {
     setEvents((es) => [...es, e].slice(-KEEP));
@@ -127,6 +137,8 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     else if (e.kind === 'vision') setSaid(visionSaid(e));
     else if (e.kind === 'zoom') setSaid(zoomSaid(e));
     else if (e.kind === 'text-fit') setSaid(textFitSaid(e));
+    else if (e.kind === 'rotate') setSaid(rotateSaid(e));
+    else if (e.kind === 'look') setSaid(lookSaid(e));
     else if (e.kind === 'keys') {
       if (!pointerStage) setSaid(keysSaid(e));
     }
@@ -215,6 +227,19 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
       refitted.current = true;
       if (key === 'text-size') setScaleAt((i) => (i + 1) % SCALES.length);
       else setSpaced((on) => !on);
+      return;
+    }
+    // "Rotate" turns the zoom frame on its side and back (#55). The event is pushed once the
+    // frame has laid out turned, so it can say whether the page hid its content.
+    if (key === 'rotate') {
+      rotated.current = true;
+      setTurned((t) => !t);
+      return;
+    }
+    // "Use my colours" puts the reader's own colours on the example and takes them off (#55).
+    if (key === 'restyle') {
+      setRestyled(!restyled);
+      push({ kind: 'look', simulated, zoom: ZOOMS[zoomAt]!, restyled: !restyled, image: root.querySelector('img') !== null });
       return;
     }
     if (key === 'autofill') {
@@ -610,10 +635,21 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
       refitted.current = false;
       push({ kind: 'text-fit', simulated, scale: SCALES[scaleAt]!, spacing: spaced, clipped: clippedIn(example.current) });
     }
+    // A turn (#55): whether the page now draws its rotate prompt, i.e. hid its content.
+    if (rotated.current && live.zoomFrame) {
+      rotated.current = false;
+      const prompt = example.current?.querySelector('[data-rotate-prompt]');
+      const hidden = !!prompt && prompt.getClientRects().length > 0;
+      push({ kind: 'rotate', simulated, turned, ...viewportAt(ZOOMS[zoomAt]!, live.zoomFrame, turned), hidden });
+    }
     if (!zoomed.current || !live.zoomFrame) return;
     zoomed.current = false;
     const zoom = ZOOMS[zoomAt]!;
     push({ kind: 'zoom', simulated, zoom, ...viewportAt(zoom, live.zoomFrame), ...scrolls });
+    // A 1.4.5 stage (#55) also says how the heading looks at the new zoom.
+    if (live.keys.includes('restyle')) {
+      push({ kind: 'look', simulated, zoom, restyled, image: example.current?.querySelector('img') != null });
+    }
   };
 
   const { Example } = live;
@@ -621,16 +657,25 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
   const filtered = live.keys.includes('vision')
     ? { className: 'live__example vis-target', style: visionStyle(vision, prefix) }
     : { className: 'live__example' };
+  // "Use my colours" (#55) wraps the example in the reader's colours; only stages with the key.
+  const styled = live.keys.includes('restyle') ? (
+    <ReaderColours on={restyled}>
+      <Example />
+    </ReaderColours>
+  ) : (
+    <Example />
+  );
   const shown = live.zoomFrame ? (
     <ZoomFrame
       zoom={ZOOMS[zoomAt]!}
       base={live.zoomFrame}
       textScale={SCALES[scaleAt]! / 100}
       spacing={spaced}
+      turned={turned}
       focusable={!simulated}
       onMeasure={onMeasure}
     >
-      <Example />
+      {styled}
     </ZoomFrame>
   ) : (
     <Example />

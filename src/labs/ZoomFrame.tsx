@@ -97,6 +97,7 @@ export function ZoomFrame({
       className={className}
       ref={outer}
       style={{ aspectRatio: `${win.width} / ${win.height}` }}
+      data-orientation={win.width >= win.height ? 'landscape' : 'portrait'}
       data-scrolls={scrolls ? [scrolls.down && 'down', scrolls.sideways && 'sideways'].filter(Boolean).join(' ') || 'none' : undefined}
     >
       {focusable ? (

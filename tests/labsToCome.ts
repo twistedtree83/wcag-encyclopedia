@@ -19,11 +19,7 @@ export const LABS_TO_COME: readonly string[] = [
 
   '1.2.5',
 
-  '1.3.4',
-
   '1.4.2',
-
-  '1.4.5',
 
   '2.2.1',
 

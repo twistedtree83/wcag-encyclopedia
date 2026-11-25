@@ -13,6 +13,8 @@ import { CataloguePage } from '../labs/ReflowLab';
 import { DESKTOP } from '../labs/zoom';
 import { NoticeCard } from '../labs/NoticeCard';
 import { CARD_WINDOW } from '../labs/textFit';
+import { SalePage } from '../labs/ImagesOfTextLab';
+import { SALE_WINDOW } from '../labs/imagesOfText';
 
 /** 1.4.10 live examples (#53): the catalogue in a zoom frame, fixed width or reflowing. */
 function FixedCatalogue() {
@@ -32,6 +34,15 @@ function FlexibleNotice() {
 }
 const RESIZE_LIVE = { keys: ['text-size'], instruments: ['text-fit'], zoomFrame: CARD_WINDOW } as const;
 const SPACING_LIVE = { keys: ['spacing'], instruments: ['text-fit'], zoomFrame: CARD_WINDOW } as const;
+
+/** 1.4.5 live examples (#55): the sale heading in a zoom frame, as a picture or as text. */
+function ImageHeadline() {
+  return <SalePage heading="image" />;
+}
+function TextHeadline() {
+  return <SalePage heading="text" />;
+}
+const IMAGES_LIVE = { keys: ['zoom', 'restyle'], instruments: ['text-look'], zoomFrame: SALE_WINDOW } as const;
 
 const DUTIES = 'Duties are estimated at checkout and charged by your carrier on delivery.';
 const WORD_HOVER = 'the words “incl. duties”';
@@ -585,12 +596,14 @@ export const G1_4: readonly CriterionRecord[] = [
     level: 'AA',
     since: '2.0',
     guideline: '1.4',
+    labs: ['images-of-text'],
     plain:
       'Use real text, not a picture of text. Pictures of text do not reflow, do not respond to ' +
       'a reader’s font or colour settings, blur when enlarged, and cannot be selected, ' +
       'searched, or translated. Logos are exempt.',
     fail: {
       caption: 'A headline exported as an image.',
+      live: { Example: ImageHeadline, ...IMAGES_LIVE },
       render: () => (
         <>
           <span aria-hidden="true" className="imgtext">
@@ -606,6 +619,7 @@ export const G1_4: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'The same headline as live text.',
+      live: { Example: TextHeadline, ...IMAGES_LIVE },
       render: () => (
         <>
           <span className="realtext">Spring sale — 30% off</span>
