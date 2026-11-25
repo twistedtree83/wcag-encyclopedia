@@ -25,7 +25,10 @@ export type StageEvent =
     }
   /** The focused control's state changed, e.g. a switch turned off. */
   | { readonly kind: 'change'; readonly simulated: boolean; readonly line: Announcement }
-  /** "Read it aloud": the whole example, said from the top. */
+  /**
+   * "Read it aloud": the whole example, said from the top. Also a screen reader's own reading out
+   * of context: a links or headings list, or a switch to a browser tab.
+   */
   | { readonly kind: 'read'; readonly simulated: boolean; readonly lines: readonly Announcement[] }
   /** "Autofill": what a browser put in each field, by the field's name ('' for nothing). */
   | { readonly kind: 'autofill'; readonly simulated: boolean; readonly fields: readonly AutofilledField[] }
