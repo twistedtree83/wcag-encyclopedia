@@ -10,6 +10,33 @@ import type { MouseEvent } from 'react';
 import type { CriterionRecord, LiveExample } from './types';
 
 /*
+ * 2.4.7's live examples (#44): three fields, as in the static examples. The broken row removes
+ * the outline (`.fv-row--none`); the stage draws no ring either (`hideRing`), so focus goes
+ * somewhere invisible and only the focus tracker says where. The fixed row keeps the site's ring.
+ */
+
+function FocusFields({ broken }: { broken: boolean }) {
+  return (
+    <div className={broken ? 'fv-row fv-row--none' : 'fv-row'}>
+      <label>
+        Name
+        <input type="text" autoComplete="name" />
+      </label>
+      <label>
+        Email
+        <input type="email" autoComplete="email" />
+      </label>
+      <label>
+        Card
+        <input type="text" inputMode="numeric" autoComplete="cc-number" />
+      </label>
+    </div>
+  );
+}
+
+const FIELD_KEYS: LiveExample['keys'] = ['tab', 'shift-tab'];
+
+/*
  * 2.4.2, 2.4.4 and 2.4.6's live examples (#50). Each is the static example made real: the tabs
  * are switched with "Switch tab", the links and headings are pulled into a screen reader's list.
  */
@@ -395,12 +422,19 @@ export const G2_4: readonly CriterionRecord[] = [
     since: '2.0',
     guideline: '2.4',
     demos: ['focus-visible-2-4-7', 'focus-lost-2-4-7'],
+    labs: ['focus-ring'],
     plain:
       'Keyboard focus has to be visible. Removing the outline because it is ugly is the single ' +
       'most common accessibility failure on the web, and it makes a site unusable rather than ' +
       'merely awkward.',
     fail: {
       caption: 'The outline was removed and nothing replaced it.',
+      live: {
+        Example: () => <FocusFields broken />,
+        keys: FIELD_KEYS,
+        instruments: ['focus-tracker'],
+        hideRing: true,
+      },
       render: () => (
         <>
           <div className="focusrow">
@@ -418,6 +452,11 @@ export const G2_4: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'A ring with its own contrast and an offset.',
+      live: {
+        Example: () => <FocusFields broken={false} />,
+        keys: FIELD_KEYS,
+        instruments: ['focus-tracker'],
+      },
       render: () => (
         <>
           <div className="focusrow">

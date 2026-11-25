@@ -33,6 +33,8 @@ export type SimKey =
   | 'enter'
   | 'space'
   | 'read'
+  | 'autofill'
+  | 'voice'
   | 'switch-tab'
   | 'links'
   | 'headings';
@@ -48,6 +50,12 @@ export type LiveExample = {
   readonly keys: readonly SimKey[];
   /** Ids of the instruments under the stage (`src/live/instruments.tsx`), in order. */
   readonly instruments: readonly string[];
+  /**
+   * Fail stage only: draw no ring where simulated focus is. The stage still moves focus and
+   * feeds the instruments. For a failure that is the missing ring itself (2.4.7, #44), so the
+   * example shows nothing and only the focus tracker knows where focus went.
+   */
+  readonly hideRing?: boolean;
 };
 
 export type DiffLine = {

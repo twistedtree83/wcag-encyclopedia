@@ -1,6 +1,8 @@
 import type { ComponentType } from 'react';
 import { AnnouncementLog } from '../labs/AnnouncementLog';
-import { logOf, type StageEvent } from './events';
+import { spoken } from '../labs/announce';
+import { lastOf, logOf, type StageEvent } from './events';
+import { trackOf } from './focusTrack';
 
 /**
  * The instruments a live example's stage can carry (#43, CONTEXT.md "Instrument"), by id. A
@@ -23,8 +25,124 @@ function LogInstrument({ id, events }: InstrumentProps) {
   return <AnnouncementLog id={id} lines={logOf(events)} empty="Nothing said yet." />;
 }
 
+/**
+ * The focus tracker under a stage (#44): a small map of the example with every Tab stop numbered
+ * in Tab order, the ring on the stop focus is on, and a trail through the stops it visited. The
+ * map is a picture (aria-hidden); the sentence and the trail list beneath it say the same in text.
+ */
+function FocusTracker({ id, events }: InstrumentProps) {
+  const { current, total, trail, map } = trackOf(events);
+  const label = (i: number) => map?.stops[i]?.label ?? '';
+  const centre = (i: number) => {
+    const s = map!.stops[i]!;
+    return `${s.x + s.w / 2},${s.y + s.h / 2}`;
+  };
+  return (
+    <div className="ftrack">
+      <p className="alog__h" id={`${id}-ftrack`}>
+        Focus tracker
+      </p>
+      {map ? (
+        <svg
+          className="ftrack__map"
+          viewBox={`-6 -6 ${map.width + 12} ${map.height + 12}`}
+          aria-hidden="true"
+          focusable="false"
+        >
+          {map.stops.map((s, i) => (
+            <rect key={i} className="ftrack__stop" x={s.x} y={s.y} width={s.w} height={s.h} rx="4" />
+          ))}
+          {trail.length > 1 ? (
+            <polyline className="ftrack__path" points={trail.map(centre).join(' ')} />
+          ) : null}
+          {current !== null && map.stops[current] ? (
+            <rect
+              className="ftrack__ring"
+              x={map.stops[current].x - 4}
+              y={map.stops[current].y - 4}
+              width={map.stops[current].w + 8}
+              height={map.stops[current].h + 8}
+              rx="6"
+            />
+          ) : null}
+          {map.stops.map((s, i) => (
+            <g key={i} className={i === current ? 'ftrack__num is-on' : 'ftrack__num'}>
+              <circle cx={s.x + 2} cy={s.y + 2} r="11" />
+              <text x={s.x + 2} y={s.y + 2} dy="0.35em" textAnchor="middle">
+                {i + 1}
+              </text>
+            </g>
+          ))}
+        </svg>
+      ) : null}
+      <p className="ftrack__now">
+        {current === null
+          ? 'Focus is not in the example yet.'
+          : `Focus is on stop ${current + 1} of ${total}: ${label(current)}.`}
+      </p>
+      {trail.length > 0 ? (
+        <ol className="ftrack__trail" aria-label="Where focus has been, oldest first">
+          {trail.map((stop, i) => (
+            <li key={i} aria-current={i === trail.length - 1 ? 'step' : undefined}>
+              <span className="ftrack__n">{stop + 1}</span> {label(stop)}
+            </li>
+          ))}
+        </ol>
+      ) : null}
+    </div>
+  );
+}
+
+/** What the last "Autofill" put in each field (#49). */
+function AutofillInstrument({ id, events }: InstrumentProps) {
+  const last = lastOf(events, 'autofill');
+  return (
+    <div className="alog">
+      <p className="alog__h" id={`${id}-h`}>
+        Autofill
+      </p>
+      {last ? (
+        <ol aria-labelledby={`${id}-h`}>
+          {last.fields.map((f, i) => (
+            <li key={i} className={f.value ? undefined : 'alog__blank'}>
+              {f.name}: {f.value || 'left empty'}
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <p className="alog__empty">Not tried yet.</p>
+      )}
+    </div>
+  );
+}
+
+/** What the last voice command was, and what it clicked (#49). */
+function VoiceInstrument({ id, events }: InstrumentProps) {
+  const last = lastOf(events, 'voice');
+  return (
+    <div className="alog">
+      <p className="alog__h" id={`${id}-h`}>
+        Voice control
+      </p>
+      {last ? (
+        <ol aria-labelledby={`${id}-h`}>
+          <li>You said “{last.phrase}”</li>
+          <li className={last.clicked ? undefined : 'alog__blank'}>
+            {last.clicked ? `Clicked ${spoken(last.clicked)}` : 'Nothing matched'}
+          </li>
+        </ol>
+      ) : (
+        <p className="alog__empty">Nothing said yet.</p>
+      )}
+    </div>
+  );
+}
+
 export const INSTRUMENTS: Readonly<Record<string, ComponentType<InstrumentProps>>> = {
   'announcement-log': LogInstrument,
+  'focus-tracker': FocusTracker,
+  autofill: AutofillInstrument,
+  'voice-control': VoiceInstrument,
 };
 
 /** The ids in `ids` that no registered instrument answers to. Empty when all resolve. */

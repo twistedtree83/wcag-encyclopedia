@@ -6,6 +6,7 @@
  */
 
 import type { AxNode } from '../labs/announce';
+import type { FocusMap } from './focusTrack';
 
 const NATIVE = new Set(['button', 'select', 'textarea', 'summary', 'iframe']);
 
@@ -52,6 +53,26 @@ export function pathTo(root: Element, el: Element): number[] {
     path.unshift(Array.from(at.parentElement.children).indexOf(at));
   }
   return path;
+}
+
+/**
+ * Where each of `stops` sits inside `root`, for the focus tracker (#44): boxes relative to the
+ * root's top left, in Tab order, labelled by `label`. Works on inert markup too. Browser only.
+ */
+export function mapOf(
+  root: Element,
+  stops: readonly Element[],
+  label: (el: Element) => string,
+): FocusMap {
+  const r = root.getBoundingClientRect();
+  return {
+    width: r.width,
+    height: r.height,
+    stops: stops.map((el) => {
+      const b = el.getBoundingClientRect();
+      return { x: b.left - r.left, y: b.top - r.top, w: b.width, h: b.height, label: label(el) };
+    }),
+  };
 }
 
 /** The Tab stops inside `root`, in document order. Browser only. */

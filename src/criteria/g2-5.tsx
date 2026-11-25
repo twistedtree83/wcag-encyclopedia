@@ -6,7 +6,28 @@
  * criterion names an alternative for a body that does not work that way.
  */
 
-import type { CriterionRecord } from './types';
+import type { CriterionRecord, LiveExample } from './types';
+
+/*
+ * 2.5.3's live examples (#49): a Send button. The broken one's aria-label replaces the visible
+ * text, so "click Send" matches nothing; the fixed one's name starts with it. "Say what you see"
+ * speaks the button's visible text as a voice command.
+ */
+
+function SendButton({ label }: { label: string }) {
+  return (
+    <div className="live-send">
+      <button type="button" className="namebox__visual" aria-label={label}>
+        Send
+      </button>
+    </div>
+  );
+}
+
+const MislabelledSend = () => <SendButton label="Submit form" />;
+const LabelledSend = () => <SendButton label="Send message to support" />;
+
+const SEND_KEYS: LiveExample['keys'] = ['tab', 'voice', 'read'];
 
 export const G2_5: readonly CriterionRecord[] = [
   {
@@ -103,12 +124,18 @@ export const G2_5: readonly CriterionRecord[] = [
     level: 'A',
     since: '2.1',
     guideline: '2.5',
+    labs: ['label-in-name'],
     plain:
       'A control’s accessible name must contain the text shown on it. Voice-control users say ' +
       'what they see — "click Send" — and if the accessible name is something else, nothing ' +
       'happens.',
     fail: {
       caption: 'The visible text and the accessible name disagree.',
+      live: {
+        Example: MislabelledSend,
+        keys: SEND_KEYS,
+        instruments: ['voice-control', 'announcement-log'],
+      },
       render: () => (
         <>
           <div className="namebox">
@@ -124,6 +151,11 @@ export const G2_5: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'The accessible name starts with the visible text.',
+      live: {
+        Example: LabelledSend,
+        keys: SEND_KEYS,
+        instruments: ['voice-control', 'announcement-log'],
+      },
       render: () => (
         <>
           <div className="namebox">

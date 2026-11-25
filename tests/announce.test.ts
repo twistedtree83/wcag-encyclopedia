@@ -111,6 +111,13 @@ describe('states', () => {
     ).toEqual(['Bold, toggle button, pressed', 'Italic, toggle button, not pressed']);
   });
 
+  it('says what is typed in a text field, after its other states', () => {
+    expect(
+      say('<input type="email" aria-label="Email" required="" value="ada@example.com"/>'),
+    ).toEqual(['Email, edit text, required, ada@example.com']);
+    expect(say('<input type="text" aria-label="Name" value=""/>')).toEqual(['Name, edit text']);
+  });
+
   it('ignores a state the role does not support', () => {
     expect(say('<button aria-checked="true">Mute</button>')).toEqual(['Mute, button']);
     expect(say('<div role="switch" aria-pressed="true">Mute</div>')).toEqual(['Mute, switch']);

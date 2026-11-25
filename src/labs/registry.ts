@@ -13,10 +13,14 @@ import type { ReactNode } from 'react';
 import type { CriterionRecord } from '../criteria/types';
 import { ColourCheckLab } from './ColourCheck';
 import { FadeLab } from './FadeLab';
+import { FocusRingLab } from './FocusRingLab';
 import { HeadingsLab } from './HeadingsLab';
+import { InputPurposeLab } from './InputPurposeLab';
+import { LabelInNameLab } from './LabelInNameLab';
 import { LinkPurposeLab } from './LinkPurposeLab';
 import { NameRoleValueLab } from './NameRoleValueLab';
 import { PageTitleLab } from './PageTitleLab';
+import { SequenceLab } from './SequenceLab';
 
 export type LabProps = {
   /** The number of the criterion page showing the lab, e.g. "1.4.11". */
@@ -53,6 +57,15 @@ export const LABS: readonly LabEntry[] = [
     Lab: NameRoleValueLab,
     flagshipFor: '4.1.2',
   },
+  {
+    id: 'focus-ring',
+    title: 'Try it: style your own focus ring',
+    Lab: FocusRingLab,
+    flagshipFor: '2.4.7',
+  },
+  { id: 'meaningful-sequence', title: 'Try it: reorder the steps', Lab: SequenceLab },
+  { id: 'input-purpose', title: 'Try it: tag the fields', Lab: InputPurposeLab },
+  { id: 'label-in-name', title: 'Try it: say what you see', Lab: LabelInNameLab },
   { id: 'page-title', title: 'Try it: title the page', Lab: PageTitleLab },
   { id: 'link-purpose', title: 'Try it: name the links', Lab: LinkPurposeLab },
   { id: 'headings-labels', title: 'Try it: write the headings', Lab: HeadingsLab },
