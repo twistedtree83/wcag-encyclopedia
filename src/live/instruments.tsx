@@ -1,9 +1,10 @@
 import type { ComponentType } from 'react';
 import { AnnouncementLog } from '../labs/AnnouncementLog';
 import { spoken } from '../labs/announce';
-import { keyLines, lastOf, logOf, type StageEvent } from './events';
+import { contextLog, keyLines, lastOf, logOf, pointerLog, type StageEvent } from './events';
 import { trackOf } from './focusTrack';
 import { withVoices } from '../labs/language';
+import { scrollLine } from '../labs/zoom';
 
 /**
  * The instruments a live example's stage can carry (#43, CONTEXT.md "Instrument"), by id. A
@@ -147,6 +148,30 @@ function VoiceInstrument({ id, events }: InstrumentProps) {
   );
 }
 
+/** The zoom frame's zoom and window (#53), and what scrolls in it at that zoom. */
+function ZoomMeter({ id, events }: InstrumentProps) {
+  const last = lastOf(events, 'zoom');
+  return (
+    <div className="alog">
+      <p className="alog__h" id={`${id}-h`}>
+        Zoom and scrolling
+      </p>
+      {last ? (
+        <ol aria-labelledby={`${id}-h`}>
+          <li>
+            Zoom {last.zoom}%: {last.width} by {last.height} CSS pixels
+          </li>
+          <li className={last.sideways ? 'zmeter--two' : undefined}>
+            {scrollLine({ sideways: last.sideways, down: last.down })}
+          </li>
+        </ol>
+      ) : (
+        <p className="alog__empty">At 100%: not zoomed yet.</p>
+      )}
+    </div>
+  );
+}
+
 /** The last key or dictated phrase sent to the example, where focus was, and what it set off (#45). */
 function KeyLog({ id, events }: InstrumentProps) {
   const last = lastOf(events, 'keys');
@@ -170,13 +195,70 @@ function KeyLog({ id, events }: InstrumentProps) {
   );
 }
 
+/**
+ * The simulated pointer and the tooltip (#47): where the pointer went, keys pressed, and what the
+ * tooltip did after each, then whether a tooltip is open now and what it says.
+ */
+function PointerInstrument({ id, events }: InstrumentProps) {
+  const lines = pointerLog(events);
+  const popup = lastOf(events, 'popup');
+  return (
+    <div className="alog plog">
+      <p className="alog__h" id={`${id}-h`}>
+        Pointer and tooltip
+      </p>
+      {lines.length > 0 ? (
+        <ol aria-labelledby={`${id}-h`}>
+          {lines.map((line, i) => (
+            <li key={i}>{line}</li>
+          ))}
+        </ol>
+      ) : (
+        <p className="alog__empty">The pointer has not moved yet.</p>
+      )}
+      <p className="plog__now">
+        {popup?.text ? `Open now: “${popup.text}”` : 'No tooltip is open.'}
+      </p>
+    </div>
+  );
+}
+
+/**
+ * The example's own page (#47): every page it has shown, oldest first, and what moved it there.
+ * A change on focus alone is the 3.2.1 failure; a change after an action is fine.
+ */
+function ContextInstrument({ id, events }: InstrumentProps) {
+  const lines = contextLog(events);
+  return (
+    <div className="alog clog">
+      <p className="alog__h" id={`${id}-h`}>
+        Where the example is
+      </p>
+      {lines.length > 0 ? (
+        <ol aria-labelledby={`${id}-h`}>
+          {lines.map((line, i) => (
+            <li key={i} aria-current={i === lines.length - 1 ? 'page' : undefined}>
+              {line}
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <p className="alog__empty">Not loaded yet.</p>
+      )}
+    </div>
+  );
+}
+
 export const INSTRUMENTS: Readonly<Record<string, ComponentType<InstrumentProps>>> = {
   'announcement-log': LogInstrument,
   'voice-log': VoiceLogInstrument,
   'focus-tracker': FocusTracker,
   autofill: AutofillInstrument,
   'voice-control': VoiceInstrument,
+  'zoom-meter': ZoomMeter,
   'key-log': KeyLog,
+  'pointer-log': PointerInstrument,
+  context: ContextInstrument,
 };
 
 /** The ids in `ids` that no registered instrument answers to. Empty when all resolve. */

@@ -6,8 +6,113 @@
  * remaining six.
  */
 
-import type { CriterionRecord } from './types';
+import { useEffect, useId, useRef, useState } from 'react';
+import type { CriterionRecord, LiveExample } from './types';
 import { MeasuredRatio } from '../components/MeasuredRatio';
+import { CataloguePage } from '../labs/ReflowLab';
+import { DESKTOP } from '../labs/zoom';
+
+/** 1.4.10 live examples (#53): the catalogue in a zoom frame, fixed width or reflowing. */
+function FixedCatalogue() {
+  return <CataloguePage layout="fixed" />;
+}
+function ReflowingCatalogue() {
+  return <CataloguePage layout="reflow" />;
+}
+const REFLOW_LIVE = { keys: ['zoom'], instruments: ['zoom-meter'], zoomFrame: DESKTOP } as const;
+
+const DUTIES = 'Duties are estimated at checkout and charged by your carrier on delivery.';
+const WORD_HOVER = 'the words “incl. duties”';
+
+/**
+ * 1.4.13's broken tooltip, live (#47): it opens while the pointer is on the words or they have
+ * focus, and closes the moment either leaves. The tooltip is not part of what is hovered, so the
+ * pointer can't reach it, and nothing listens for Escape. `data-hover` marks where the bar's
+ * pointer can go.
+ */
+function FleetingTip() {
+  const [open, setOpen] = useState(false);
+  return (
+    <p className="example-prose live-tip">
+      Estimated total{' '}
+      <span
+        className="tipword live-tip__word"
+        tabIndex={0}
+        data-hover={WORD_HOVER}
+        onMouseEnter={() => setOpen(true)}
+        onMouseLeave={() => setOpen(false)}
+        onFocus={() => setOpen(true)}
+        onBlur={() => setOpen(false)}
+      >
+        incl. duties
+      </span>
+      <span
+        role="tooltip"
+        className="live-tip__tip live-tip__tip--fleeting"
+        data-hover="the tooltip"
+        hidden={!open}
+      >
+        {DUTIES}
+      </span>
+    </p>
+  );
+}
+
+/**
+ * 1.4.13's fixed tooltip, live (#47): the words and the tooltip are hovered together, so the
+ * pointer can move into it; Escape anywhere closes it without moving the pointer; and no timer
+ * closes it. A simulated Escape counts only when it is aimed at this example.
+ */
+function SteadyTip() {
+  const tipId = useId();
+  const wrap = useRef<HTMLSpanElement>(null);
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const at = e.target as Node;
+      const here = wrap.current && (at.contains(wrap.current) || wrap.current.contains(at));
+      if (e.key === 'Escape' && (e.isTrusted || here)) setDismissed(true);
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, []);
+  const open = (hovered || focused) && !dismissed;
+  return (
+    <p className="example-prose live-tip">
+      Estimated total{' '}
+      <span
+        className="live-tip__wrap"
+        ref={wrap}
+        onMouseEnter={() => {
+          setHovered(true);
+          setDismissed(false);
+        }}
+        onMouseLeave={() => setHovered(false)}
+      >
+        <button
+          type="button"
+          className="tipword live-tip__word"
+          aria-describedby={tipId}
+          data-hover={WORD_HOVER}
+          onFocus={() => {
+            setFocused(true);
+            setDismissed(false);
+          }}
+          onBlur={() => setFocused(false)}
+        >
+          incl. duties
+        </button>
+        <span role="tooltip" id={tipId} className="live-tip__tip" data-hover="the tooltip" hidden={!open}>
+          {DUTIES}
+        </span>
+      </span>
+    </p>
+  );
+}
+
+const TIP_KEYS: LiveExample['keys'] = ['hover', 'tab', 'escape'];
 
 export const G1_4: readonly CriterionRecord[] = [
   {
@@ -132,11 +237,13 @@ export const G1_4: readonly CriterionRecord[] = [
     since: '2.1',
     guideline: '1.4',
     demos: ['reflow-1-4-10'],
+    labs: ['reflow'],
     plain:
       'At 320 CSS pixels wide, content must not require scrolling in two directions. Same ' +
       'content, one column, no horizontal scrollbar.',
     fail: {
-      caption: 'Fixed 110px columns force a horizontal scrollbar — two-direction scrolling.',
+      caption: 'Fixed-width columns: zoomed to 320px wide, the page scrolls sideways as well as down.',
+      live: { Example: FixedCatalogue, ...REFLOW_LIVE },
       render: () => (
         <div className="mini">
           <div className="mini__frame">
@@ -155,7 +262,8 @@ export const G1_4: readonly CriterionRecord[] = [
       ),
     },
     pass: {
-      caption: 'minmax(0, 1fr) replaced the fixed track width.',
+      caption: 'A track that can shrink replaced the fixed track width, so the columns reflow.',
+      live: { Example: ReflowingCatalogue, ...REFLOW_LIVE },
       render: () => (
         <div className="mini">
           <div className="mini__frame">
@@ -177,14 +285,14 @@ export const G1_4: readonly CriterionRecord[] = [
       lines: [
         { kind: 'context', text: '.catalogue {' },
         { kind: 'context', text: '  display: grid;' },
-        { kind: 'del', text: '  grid-template-columns: repeat(3, 110px);  /* never narrows */' },
-        { kind: 'add', text: '  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));' },
-        { kind: 'context', text: '  gap: 6px;' },
+        { kind: 'del', text: '  grid-template-columns: repeat(3, 18em);  /* never narrows */' },
+        { kind: 'add', text: '  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12em), 1fr));' },
+        { kind: 'context', text: '  gap: 1em;' },
         { kind: 'context', text: '}' },
       ],
       note:
-        'A fixed track cannot reflow. Letting the track shrink to zero and letting auto-fit ' +
-        'decide the count is what turns three columns into one.',
+        'A fixed track cannot reflow. Letting each track shrink to the width available, and ' +
+        'letting auto-fit decide the count, is what turns three columns into one.',
     },
   },
   {
@@ -413,8 +521,10 @@ export const G1_4: readonly CriterionRecord[] = [
       'Anything that appears on hover or focus — a tooltip, a popover, a dropdown — has to be ' +
       'dismissable without moving the pointer, stay visible while the pointer travels into it, ' +
       'and remain until it is dismissed or stops being relevant.',
+    labs: ['tame-tooltip'],
     fail: {
       caption: 'The tooltip vanishes before it can be read or reached.',
+      live: { Example: FleetingTip, keys: TIP_KEYS, instruments: ['pointer-log'] },
       render: () => (
         <>
           <p className="example-prose">
@@ -436,6 +546,7 @@ export const G1_4: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'Hoverable, dismissable, and persistent.',
+      live: { Example: SteadyTip, keys: TIP_KEYS, instruments: ['pointer-log'] },
       render: () => (
         <>
           <p className="example-prose">

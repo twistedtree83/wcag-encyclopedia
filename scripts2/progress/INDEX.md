@@ -64,5 +64,7 @@ Graph: `scripts2/prd-labs.json` · Parent: #40 · Integration branch: `labs`
 - [x] **L-05** #45 — Keyboard: 2.1.1, 2.1.2 and 2.1.4 (L-04)
 - [x] **L-06** #46 — Focus order and bypass: 2.4.1, 2.4.3 (flagship) and 2.4.11 (L-04)
 - [x] **L-11** #51 — Language and status messages: 3.1.1, 3.1.2 and 4.1.3 (L-03)
+- [x] **L-13** #53 — Zoom frame and the 1.4.10 flagship (L-03)
 - [x] **L-12** #52 — Form errors and labels: 3.3.1 and 3.3.2 (L-03)
+- [x] **L-07** #47 — Focus and hover behaviour: 3.2.1 and 1.4.13 (L-04)
 - [x] **L-19** #59 — Forms: 3.2.2, 3.3.3 and 3.3.4 (L-03)
