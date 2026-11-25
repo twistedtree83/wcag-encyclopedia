@@ -1,6 +1,7 @@
 import type { ComponentType } from 'react';
 import { AnnouncementLog } from '../labs/AnnouncementLog';
-import { logOf, type StageEvent } from './events';
+import { spoken } from '../labs/announce';
+import { lastOf, logOf, type StageEvent } from './events';
 import { trackOf } from './focusTrack';
 
 /**
@@ -92,9 +93,56 @@ function FocusTracker({ id, events }: InstrumentProps) {
   );
 }
 
+/** What the last "Autofill" put in each field (#49). */
+function AutofillInstrument({ id, events }: InstrumentProps) {
+  const last = lastOf(events, 'autofill');
+  return (
+    <div className="alog">
+      <p className="alog__h" id={`${id}-h`}>
+        Autofill
+      </p>
+      {last ? (
+        <ol aria-labelledby={`${id}-h`}>
+          {last.fields.map((f, i) => (
+            <li key={i} className={f.value ? undefined : 'alog__blank'}>
+              {f.name}: {f.value || 'left empty'}
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <p className="alog__empty">Not tried yet.</p>
+      )}
+    </div>
+  );
+}
+
+/** What the last voice command was, and what it clicked (#49). */
+function VoiceInstrument({ id, events }: InstrumentProps) {
+  const last = lastOf(events, 'voice');
+  return (
+    <div className="alog">
+      <p className="alog__h" id={`${id}-h`}>
+        Voice control
+      </p>
+      {last ? (
+        <ol aria-labelledby={`${id}-h`}>
+          <li>You said “{last.phrase}”</li>
+          <li className={last.clicked ? undefined : 'alog__blank'}>
+            {last.clicked ? `Clicked ${spoken(last.clicked)}` : 'Nothing matched'}
+          </li>
+        </ol>
+      ) : (
+        <p className="alog__empty">Nothing said yet.</p>
+      )}
+    </div>
+  );
+}
+
 export const INSTRUMENTS: Readonly<Record<string, ComponentType<InstrumentProps>>> = {
   'announcement-log': LogInstrument,
   'focus-tracker': FocusTracker,
+  autofill: AutofillInstrument,
+  'voice-control': VoiceInstrument,
 };
 
 /** The ids in `ids` that no registered instrument answers to. Empty when all resolve. */

@@ -14,7 +14,10 @@ import type { CriterionRecord } from '../criteria/types';
 import { ColourCheckLab } from './ColourCheck';
 import { FadeLab } from './FadeLab';
 import { FocusRingLab } from './FocusRingLab';
+import { InputPurposeLab } from './InputPurposeLab';
+import { LabelInNameLab } from './LabelInNameLab';
 import { NameRoleValueLab } from './NameRoleValueLab';
+import { SequenceLab } from './SequenceLab';
 
 export type LabProps = {
   /** The number of the criterion page showing the lab, e.g. "1.4.11". */
@@ -57,6 +60,9 @@ export const LABS: readonly LabEntry[] = [
     Lab: FocusRingLab,
     flagshipFor: '2.4.7',
   },
+  { id: 'meaningful-sequence', title: 'Try it: reorder the steps', Lab: SequenceLab },
+  { id: 'input-purpose', title: 'Try it: tag the fields', Lab: InputPurposeLab },
+  { id: 'label-in-name', title: 'Try it: say what you see', Lab: LabelInNameLab },
 ];
 
 export function labById(id: string): LabEntry | undefined {

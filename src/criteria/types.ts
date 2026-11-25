@@ -32,7 +32,9 @@ export type SimKey =
   | 'shift-tab'
   | 'enter'
   | 'space'
-  | 'read';
+  | 'read'
+  | 'autofill'
+  | 'voice';
 
 export type LiveExample = {
   /**

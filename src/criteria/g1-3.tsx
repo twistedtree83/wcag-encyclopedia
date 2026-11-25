@@ -6,7 +6,70 @@
  * and nothing but a sighted reader will ever know it was meant as one.
  */
 
-import type { CriterionRecord } from './types';
+import { useId } from 'react';
+import type { CriterionRecord, LiveExample } from './types';
+
+/*
+ * 1.3.2's live examples (#49): checkout steps as buttons. The broken row is sorted on screen by
+ * CSS `order`; Tab and a read-aloud follow the source, Confirm first. The fixed row's source is
+ * in the order it shows.
+ */
+
+function ReorderedSteps() {
+  return (
+    <div className="seq seq--reordered live-seq">
+      <button type="button" className="seq__step">
+        <b>3.</b> Confirm
+      </button>
+      <button type="button" className="seq__step">
+        <b>1.</b> Basket
+      </button>
+      <button type="button" className="seq__step">
+        <b>2.</b> Address
+      </button>
+    </div>
+  );
+}
+
+function OrderedSteps() {
+  return (
+    <div className="seq live-seq">
+      <button type="button" className="seq__step">
+        <b>1.</b> Basket
+      </button>
+      <button type="button" className="seq__step">
+        <b>2.</b> Address
+      </button>
+      <button type="button" className="seq__step">
+        <b>3.</b> Confirm
+      </button>
+    </div>
+  );
+}
+
+const STEP_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'read'];
+
+/*
+ * 1.3.5's live examples (#49): the diff's contact fields, labelled in both. "Autofill" fills only
+ * the fields whose autocomplete names a purpose, so only the fixed fields fill.
+ */
+
+function ContactFields({ purposes }: { purposes: boolean }) {
+  const id = useId();
+  return (
+    <div className="live-form">
+      <label htmlFor={`${id}-name`}>Full name</label>
+      <input id={`${id}-name`} type="text" autoComplete={purposes ? 'name' : undefined} />
+      <label htmlFor={`${id}-email`}>Email</label>
+      <input id={`${id}-email`} type="email" autoComplete={purposes ? 'email' : undefined} />
+    </div>
+  );
+}
+
+const UntaggedFields = () => <ContactFields purposes={false} />;
+const TaggedFields = () => <ContactFields purposes />;
+
+const FIELD_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'autofill', 'read'];
 
 export const G1_3: readonly CriterionRecord[] = [
   {
@@ -74,12 +137,14 @@ export const G1_3: readonly CriterionRecord[] = [
     level: 'A',
     since: '2.0',
     guideline: '1.3',
+    labs: ['meaningful-sequence'],
     plain:
       'When the order of the content matters, the reading order in the markup has to match. ' +
       'CSS can move things around the screen; it does not move them in the document, and the ' +
       'document is what a screen reader and a keyboard follow.',
     fail: {
       caption: 'The visual order and the document order disagree.',
+      live: { Example: ReorderedSteps, keys: STEP_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="seq seq--reordered">
@@ -102,6 +167,7 @@ export const G1_3: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'Document order matches what is on screen.',
+      live: { Example: OrderedSteps, keys: STEP_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="seq">
@@ -221,12 +287,18 @@ export const G1_3: readonly CriterionRecord[] = [
     level: 'AA',
     since: '2.1',
     guideline: '1.3',
+    labs: ['input-purpose'],
     plain:
       'Fields collecting the user’s own information — name, email, address, phone — need to ' +
       'say which is which in the markup, via autocomplete. That is what lets a browser fill ' +
       'them, and what lets assistive tools show familiar icons or wording instead of yours.',
     fail: {
       caption: 'Nothing tells the browser what these fields are for.',
+      live: {
+        Example: UntaggedFields,
+        keys: FIELD_KEYS,
+        instruments: ['autofill', 'announcement-log'],
+      },
       render: () => (
         <>
           <p className="swatch-label">Contact</p>
@@ -245,6 +317,11 @@ export const G1_3: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'Each field declares its purpose from the standard list.',
+      live: {
+        Example: TaggedFields,
+        keys: FIELD_KEYS,
+        instruments: ['autofill', 'announcement-log'],
+      },
       render: () => (
         <>
           <p className="swatch-label">Contact</p>

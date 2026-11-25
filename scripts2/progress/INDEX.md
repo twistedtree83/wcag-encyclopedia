@@ -58,3 +58,4 @@ Graph: `scripts2/prd-labs.json` · Parent: #40 · Integration branch: `labs`
 - [x] **L-02** #42 — Announcement log and the 4.1.2 flagship lab (L-01)
 - [x] **L-03** #43 — Live examples and simulated input, piloted on 4.1.2 (L-02)
 - [x] **L-04** #44 — Focus tracker and 2.4.7: flagship lab and live examples (L-03)
+- [x] **L-09** #49 — Sequence, input purpose and label in name: 1.3.2, 1.3.5 and 2.5.3 (L-03)

@@ -169,6 +169,49 @@ const LABS: LabCase[] = [
     said:
       '3 pixel blue ring, touching the button. 6.70 to 1 against the page, 2.18 to 1 against the button. Lost against the button.',
   },
+  {
+    name: 'the reorder-the-steps lab on 1.3.2',
+    url: '/criteria/1.3.2/',
+    lab: '.lab-slot .seq-lab',
+    passing: '1.3.2 passes',
+    failing: '1.3.2 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await radio(lab, 'Confirm, Basket, Address').focus();
+      await page.keyboard.press('ArrowUp');
+    },
+    said: 'Screen reader reads: 1. Basket; 2. Address; 3. Confirm. In order.',
+  },
+  {
+    name: 'the tag-the-fields lab on 1.3.5',
+    url: '/criteria/1.3.5/',
+    lab: '.lab-slot .ip-lab',
+    passing: '1.3.5 passes',
+    failing: '1.3.5 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      for (const field of ['Full name', 'Email', 'Phone']) {
+        const group = lab.getByRole('group', { name: field, exact: true });
+        await radio(group, 'No autocomplete').focus();
+        await page.keyboard.press('ArrowDown');
+      }
+    },
+    said: 'Autofill filled 3 of 3 fields.',
+  },
+  {
+    name: 'the say-what-you-see lab on 2.5.3',
+    url: '/criteria/2.5.3/',
+    lab: '.lab-slot .lin-lab',
+    passing: '2.5.3 passes',
+    failing: '2.5.3 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await lab.getByLabel('aria-label', { exact: true }).focus();
+      await page.keyboard.press('ControlOrMeta+a');
+      await page.keyboard.type('Send message to support');
+    },
+    said: 'You said “click Send”. It clicked “Send message to support”.',
+  },
 ];
 
 async function open(page: Page, url: string) {
