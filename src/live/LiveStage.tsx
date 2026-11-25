@@ -31,6 +31,7 @@ import { listOf, tabSwitchLine } from './lists';
 import { cuesIn } from './cues';
 import { nextFilter, seeCue, visionSaid, type VisionFilter } from './vision';
 import { VisionDefs, filterPrefix, visionStyle } from './VisionDefs';
+import { playerSeenIn } from './PlayerWindow';
 import { siteSeenIn } from './SiteWindow';
 import { siteSaid } from './mockSite';
 import {
@@ -867,6 +868,25 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     timerShown.current = shows;
     push({ kind: 'clock', simulated, cause, now: clock.now, running: clock.running, shows, from });
   }, [clock, simulated, push]);
+
+  // The mock player (#65), on both stages: where the clip is, what is heard and the caption on
+  // screen, read from its `[data-player]` whenever any of that changes, whatever changed it.
+  useEffect(() => {
+    const root = example.current;
+    if (!root || !root.querySelector('[data-player]')) return;
+    let last = '';
+    const read = () => {
+      const seen = playerSeenIn(root);
+      const key = JSON.stringify(seen);
+      if (!seen || key === last) return;
+      last = key;
+      push({ kind: 'player', simulated, seen });
+    };
+    read();
+    const observer = new MutationObserver(read);
+    observer.observe(root, { subtree: true, childList: true, characterData: true, attributes: true });
+    return () => observer.disconnect();
+  }, [simulated, push]);
 
   const onMeasure = (scrolls: Scrolls) => {
     if (refitted.current) {

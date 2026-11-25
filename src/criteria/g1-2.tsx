@@ -8,6 +8,8 @@
  */
 
 import type { CriterionRecord } from './types';
+import { MockPlayer } from '../live/PlayerWindow';
+import { ALL_HANDS, BRIEFING } from '../labs/captions';
 
 function Player({ caption, badge }: { caption?: string; badge?: string }) {
   return (
@@ -23,6 +25,61 @@ function Player({ caption, badge }: { caption?: string; badge?: string }) {
     </span>
   );
 }
+
+/* --- Live examples (#65): the mock player, operated by the input bar on both stages ---------- */
+
+/** 1.2.2 broken: the briefing with its automatic captions, never checked. */
+function AutoCaptionedBriefing() {
+  return (
+    <>
+      <MockPlayer clip={BRIEFING} track="auto" />
+      <p className="example-note">
+        The machine heard something. Names, jargon, and numbers are exactly what it gets wrong,
+        and the alarm is not captioned at all.
+      </p>
+    </>
+  );
+}
+
+/** 1.2.2 fixed: the same briefing with corrected captions, speakers and sounds. */
+function CaptionedBriefing() {
+  return (
+    <>
+      <MockPlayer clip={BRIEFING} track="accurate" />
+      <p className="example-note">
+        Punctuated, attributed, and reviewed. The sounds that carry meaning are captioned too.
+      </p>
+    </>
+  );
+}
+
+/** 1.2.4 broken: a live all-hands with no captions, and a promise of a transcript later. */
+function UncaptionedStream() {
+  return (
+    <>
+      <MockPlayer clip={ALL_HANDS} track="none" />
+      <p className="example-note">
+        Streaming now, with a note that a recording and transcript will follow later today. Deaf
+        employees attend the meeting a day late and cannot ask a question in it.
+      </p>
+    </>
+  );
+}
+
+/** 1.2.4 fixed: the same stream, captioned as the speaker talks. */
+function CaptionedStream() {
+  return (
+    <>
+      <MockPlayer clip={ALL_HANDS} track="accurate" />
+      <p className="example-note">
+        Live captioning, human or machine-with-a-human. Someone can take part in the event, not
+        just read about it afterwards.
+      </p>
+    </>
+  );
+}
+
+const PLAYER_KEYS = ['tab', 'shift-tab', 'enter'] as const;
 
 export const G1_2: readonly CriterionRecord[] = [
   {
@@ -77,12 +134,14 @@ export const G1_2: readonly CriterionRecord[] = [
     level: 'A',
     since: '2.0',
     guideline: '1.2',
+    labs: ['captions'],
     plain:
       'Prerecorded video with sound needs captions: the dialogue, who is speaking, and the ' +
       'sounds that carry meaning. Auto-generated captions count only once someone has ' +
       'corrected them.',
     fail: {
       caption: 'Auto-captions, uncorrected.',
+      live: { Example: AutoCaptionedBriefing, keys: PLAYER_KEYS, instruments: ['mock-player'] },
       render: () => (
         <>
           <Player badge="video" caption="were going to deploy the pack age on fry day" />
@@ -95,6 +154,7 @@ export const G1_2: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'Corrected captions, with speakers and meaningful sound.',
+      live: { Example: CaptionedBriefing, keys: PLAYER_KEYS, instruments: ['mock-player'] },
       render: () => (
         <>
           <Player badge="video" caption="[Priya] We're going to deploy the package on Friday." />
@@ -157,11 +217,13 @@ export const G1_2: readonly CriterionRecord[] = [
     level: 'AA',
     since: '2.0',
     guideline: '1.2',
+    labs: ['live-captions'],
     plain:
       'Live video with sound needs live captions. Real time, as it happens — a transcript ' +
       'published afterwards is a different thing and does not satisfy this.',
     fail: {
       caption: 'Captions promised for "later today".',
+      live: { Example: UncaptionedStream, keys: PLAYER_KEYS, instruments: ['mock-player'] },
       render: () => (
         <>
           <Player badge="live" />
@@ -174,6 +236,7 @@ export const G1_2: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'Captions appear during the broadcast.',
+      live: { Example: CaptionedStream, keys: PLAYER_KEYS, instruments: ['mock-player'] },
       render: () => (
         <>
           <Player badge="live" caption="[CEO] …and the hiring freeze lifts in March." />

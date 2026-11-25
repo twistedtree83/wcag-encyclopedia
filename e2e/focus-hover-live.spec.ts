@@ -171,8 +171,15 @@ test.describe('1.4.13 Content on Hover or Focus', () => {
   test('the Fixed stage with the bar: hoverable, and Escape dismisses it', async ({ page }) => {
     await open(page, URL);
     const stage = fixed(page);
-    await key(stage, 'Hover').click();
-    await key(stage, 'Hover').click();
+    // The bar is pressed by keyboard here, so the real mouse never rests on the page: a click
+    // leaves it there, and while the page smooth-scrolls under it a real mouseover on the live
+    // Fixed example takes the pointer over from the bar's, clearing `.sim-cursor`.
+    const press = async (name: string) => {
+      await key(stage, name).focus();
+      await page.keyboard.press('Enter');
+    };
+    await press('Hover');
+    await press('Hover');
     await expect(lines(stage, LOG)).toHaveText([
       'Pointer on the words “incl. duties”',
       SHOWS,
@@ -180,7 +187,7 @@ test.describe('1.4.13 Content on Hover or Focus', () => {
     ]);
     await expect(tooltip(stage)).toBeVisible();
 
-    await key(stage, 'Escape').click();
+    await press('Escape');
     await expect(lines(stage, LOG).last()).toHaveText('Tooltip closes');
     await expect(tooltip(stage)).toBeHidden();
     await expect(polite(stage)).toHaveText('Pressed Escape. Tooltip closes.');

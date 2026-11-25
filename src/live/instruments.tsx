@@ -8,6 +8,7 @@ import { withVoices } from '../labs/language';
 import { filterName } from './vision';
 import { scrollLine } from '../labs/zoom';
 import { colourLine, sharpLine } from '../labs/imagesOfText';
+import { PlayerLog } from './PlayerWindow';
 import { menuOrderLines, siteLines } from './mockSite';
 import { clockLines, clockNowLine } from './clock';
 
@@ -518,6 +519,7 @@ function TextFitMeter({ id, events }: InstrumentProps) {
 export const INSTRUMENTS: Readonly<Record<string, ComponentType<InstrumentProps>>> = {
   clock: ClockInstrument,
   'gesture-pad': GesturePad,
+  'mock-player': PlayerLog,
   'announcement-log': LogInstrument,
   'voice-log': VoiceLogInstrument,
   'focus-tracker': FocusTracker,

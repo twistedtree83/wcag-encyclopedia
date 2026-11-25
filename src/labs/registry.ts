@@ -53,6 +53,7 @@ import {
 } from './PointerLabs';
 import { NonTextContrastLab, SensoryLab, UseOfColourLab } from './VisionLabs';
 import { TooltipLab } from './TooltipLab';
+import { CaptionsLab, LiveCaptionsLab } from './CaptionLabs';
 import { MultipleWaysLab } from './MultipleWaysLab';
 import { ConsistentNavLab } from './ConsistentNavLab';
 
@@ -139,6 +140,8 @@ export const LABS: readonly LabEntry[] = [
   { id: 'dragging-movements', title: 'Try it: reorder without dragging', Lab: DraggingMovementsLab },
   { id: 'redundant-entry', title: 'Try it: check out without retyping', Lab: RedundantEntryLab },
   { id: 'accessible-auth', title: 'Try it: sign in without a test', Lab: AccessibleAuthLab },
+  { id: 'captions', title: 'Try it: caption the briefing', Lab: CaptionsLab },
+  { id: 'live-captions', title: 'Try it: caption the live stream', Lab: LiveCaptionsLab },
 ];
 
 export function labById(id: string): LabEntry | undefined {
