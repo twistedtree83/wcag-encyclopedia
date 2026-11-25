@@ -11,8 +11,9 @@
  *           img (alt="" is decorative and skipped) and h1–h6. Everything else is plain text.
  *   names   aria-labelledby (every id, in order) > aria-label > native: <label for>, a wrapping
  *           <label>, img alt, an input button's value > the content, for the roles named from
- *           content (NAMED_FROM_CONTENT) > title. Content uses an image's alt and skips hidden
- *           parts. Ids resolve within the subtree passed in.
+ *           content (NAMED_FROM_CONTENT) > title > a text field's placeholder (HTML-AAM's last
+ *           resort). Content uses an image's alt and skips hidden parts. Ids resolve within the
+ *           subtree passed in.
  *   states  pressed (a button with aria-pressed is a "toggle button"), checked (from the input
  *           or aria-checked; a switch says on/off), expanded/collapsed, required, invalid entry,
  *           a heading's level. A state the role does not support is ignored, as screen readers
@@ -182,7 +183,9 @@ function nameOf(node: AxNode, role: string, index: Index): string {
     const content = textOf(node);
     if (content) return content;
   }
-  return squash(attrs.title ?? '');
+  const title = squash(attrs.title ?? '');
+  if (title || (tag !== 'input' && tag !== 'textarea')) return title;
+  return squash(attrs.placeholder ?? '');
 }
 
 /** The role word and states said for a node with `role`. */

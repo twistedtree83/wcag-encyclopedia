@@ -57,3 +57,4 @@ Graph: `scripts2/prd-labs.json` · Parent: #40 · Integration branch: `labs`
 - [x] **L-01** #41 — Lab shell, verdict and motion tokens (no deps)
 - [x] **L-02** #42 — Announcement log and the 4.1.2 flagship lab (L-01)
 - [x] **L-03** #43 — Live examples and simulated input, piloted on 4.1.2 (L-02)
+- [x] **L-12** #52 — Form errors and labels: 3.3.1 and 3.3.2 (L-03)

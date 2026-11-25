@@ -13,6 +13,8 @@ import type { ReactNode } from 'react';
 import type { CriterionRecord } from '../criteria/types';
 import { ColourCheckLab } from './ColourCheck';
 import { FadeLab } from './FadeLab';
+import { FormErrorsLab } from './FormErrorsLab';
+import { FormLabelsLab } from './FormLabelsLab';
 import { NameRoleValueLab } from './NameRoleValueLab';
 
 export type LabProps = {
@@ -50,6 +52,8 @@ export const LABS: readonly LabEntry[] = [
     Lab: NameRoleValueLab,
     flagshipFor: '4.1.2',
   },
+  { id: 'form-errors', title: 'Try it: show the error', Lab: FormErrorsLab },
+  { id: 'form-labels', title: 'Try it: label the field', Lab: FormLabelsLab },
 ];
 
 export function labById(id: string): LabEntry | undefined {

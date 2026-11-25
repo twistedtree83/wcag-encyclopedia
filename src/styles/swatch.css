@@ -1904,6 +1904,102 @@ footer.foot p {
   color: var(--ink-2);
 }
 
+/* --- Form errors and labels: 3.3.1 and 3.3.2 (L-12) ------------------------------------------ */
+
+/* A small real form: the live examples on 3.3.1 and 3.3.2, and both labs' depicted mocks. */
+.lform {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+}
+.lform__label {
+  font-weight: 600;
+  font-size: var(--small);
+}
+.lform__hint,
+.lform__err,
+.lform__banner {
+  margin: 0;
+  font-size: var(--small);
+}
+.lform__hint {
+  color: var(--ink-2);
+}
+.lform__err {
+  color: var(--err-text);
+  font-weight: 600;
+}
+.lform__banner {
+  justify-self: stretch;
+  padding: 8px 12px;
+  border-left: 3px solid var(--ok-text);
+}
+.lform__banner--bad {
+  border-left-color: var(--err-text);
+}
+.lform__banner a {
+  color: inherit;
+}
+.lform__field {
+  width: 100%;
+  max-width: 320px;
+  min-height: 44px;
+  padding: 0 12px;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+}
+.lform__field::placeholder {
+  color: var(--ink-2);
+}
+/* The error 3.3.1 is about: a red border. Thicker as well as red, so it shows in greyscale. */
+.lform__field--bad {
+  border: 3px solid var(--err-text);
+}
+.lform .btn {
+  margin-top: 8px;
+}
+.flab__mock {
+  padding: 24px;
+  border-radius: calc(var(--rad) * 0.65);
+  background: var(--card-bg);
+  color: var(--ink);
+}
+.flab__controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 16px;
+}
+.flab__controls > .btn {
+  justify-self: start;
+}
+.flab__type {
+  display: grid;
+  gap: 6px;
+  font-weight: 600;
+  font-size: var(--small);
+}
+.flab__type input {
+  min-height: 44px;
+  padding: 0 12px;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 400;
+}
+.flab__out {
+  display: grid;
+  gap: 16px;
+}
+.flab__screen {
+  font-weight: 600;
+}
+
 /* --- Breakpoints ------------------------------------------------------------------------ */
 
 @media (max-width: 1100px) {
@@ -2008,7 +2104,8 @@ footer.foot p {
     padding: 20px;
   }
   .lab-res,
-  .nrv-controls {
+  .nrv-controls,
+  .flab__controls {
     grid-template-columns: minmax(0, 1fr);
   }
   .pairs,
