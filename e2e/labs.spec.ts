@@ -204,6 +204,42 @@ const LABS: LabCase[] = [
       'Every heading and the label say what they are for.',
   },
   {
+    name: 'the form errors lab on 3.3.1',
+    url: '/criteria/3.3.1/',
+    lab: '.lab-slot .flab',
+    passing: '3.3.1 passes',
+    failing: '3.3.1 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await radio(lab, 'A red border only').focus();
+      await page.keyboard.press('ArrowDown');
+      await lab.getByRole('button', { name: 'Submit the form' }).focus();
+      await page.keyboard.press('Enter');
+    },
+    said:
+      'Screen reader says: Email; Email, edit text, invalid entry, ada@example, Enter an ' +
+      'address that includes a domain; Enter an address that includes a domain. The error is in text, tied ' +
+      'to the field.',
+  },
+  {
+    name: 'the form labels lab on 3.3.2',
+    url: '/criteria/3.3.2/',
+    lab: '.lab-slot .flab',
+    passing: '3.3.2 passes',
+    failing: '3.3.2 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await radio(lab, 'A placeholder only').focus();
+      await page.keyboard.press('ArrowDown');
+      await lab.getByLabel('Type into the field').focus();
+      await page.keyboard.type('27 3 1995');
+    },
+    said:
+      'Screen reader says: Date of birth; For example, 27 3 1995; Date of birth, edit text, ' +
+      '27 3 1995, For example, 27 3 1995. On screen: “Date of birth” and “For example, 27 3 1995”, above ' +
+      'the field.',
+  },
+  {
     name: 'the focus ring lab on 2.4.7',
     url: '/criteria/2.4.7/',
     lab: '.lab-slot .ring-lab',

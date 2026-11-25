@@ -15,6 +15,8 @@ import { AltTextLab } from './AltTextLab';
 import { ColourCheckLab } from './ColourCheck';
 import { FadeLab } from './FadeLab';
 import { FocusRingLab } from './FocusRingLab';
+import { FormErrorsLab } from './FormErrorsLab';
+import { FormLabelsLab } from './FormLabelsLab';
 import { HeadingsLab } from './HeadingsLab';
 import { InputPurposeLab } from './InputPurposeLab';
 import { LabelInNameLab } from './LabelInNameLab';
@@ -78,6 +80,8 @@ export const LABS: readonly LabEntry[] = [
   { id: 'page-language', title: 'Try it: declare the page’s language', Lab: PageLanguageLab },
   { id: 'parts-language', title: 'Try it: mark the French phrase', Lab: PartsLanguageLab },
   { id: 'status-message', title: 'Try it: announce the basket', Lab: StatusLab },
+  { id: 'form-errors', title: 'Try it: show the error', Lab: FormErrorsLab },
+  { id: 'form-labels', title: 'Try it: label the field', Lab: FormLabelsLab },
 ];
 
 export function labById(id: string): LabEntry | undefined {

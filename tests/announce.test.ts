@@ -50,6 +50,16 @@ describe('names', () => {
     ).toEqual(['Search, button']);
   });
 
+  it('names a field from its placeholder only when nothing else names it', () => {
+    expect(say('<input type="text" placeholder="Date of birth"/>')).toEqual([
+      'Date of birth, edit text',
+    ]);
+    expect(say('<label for="d">Date</label><input id="d" placeholder="DD MM YYYY"/>')).toEqual([
+      'Date',
+      'Date, edit text',
+    ]);
+  });
+
   it('says only the role when there is no name', () => {
     expect(say('<button></button>')).toEqual(['button']);
     expect(say('<div role="switch" aria-checked="true"></div>')).toEqual(['switch, on']);
