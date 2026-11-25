@@ -6,6 +6,7 @@
  * titles are all 2.4 in practice.
  */
 
+import { useEffect, useId, useRef, useState } from 'react';
 import type { CriterionRecord, LiveExample } from './types';
 
 /*
@@ -35,6 +36,130 @@ function FocusFields({ broken }: { broken: boolean }) {
 
 const FIELD_KEYS: LiveExample['keys'] = ['tab', 'shift-tab'];
 
+/*
+ * 2.4.1's, 2.4.3's and 2.4.11's live examples (#46). Links go nowhere: their clicks are
+ * prevented, so Enter on the fail stage (a programmatic click) never leaves the page.
+ */
+
+const stay = (e: { preventDefault(): void }) => e.preventDefault();
+const visibly = { focusVisible: true } as FocusOptions;
+
+const MENU = ['Home', 'Women', 'Men', 'Kids', 'Sale', 'Brands', 'Gifts', 'Help'];
+
+/** 2.4.1: a shop page with an eight-link menu, with or without a skip link before it. */
+function SkipPage({ skip }: { skip: boolean }) {
+  const id = useId();
+  const article = useRef<HTMLAnchorElement>(null);
+  return (
+    <div className="bp-page">
+      <div className="bp-page__head">
+        {skip ? (
+          <a
+            className="bp-page__skip"
+            href={`#${id}`}
+            onClick={(e) => {
+              e.preventDefault();
+              article.current?.focus(visibly);
+            }}
+          >
+            Skip to content
+          </a>
+        ) : null}
+        {MENU.map((m) => (
+          <a key={m} href="#" onClick={stay}>
+            {m}
+          </a>
+        ))}
+      </div>
+      <div className="bp-page__main" id={id}>
+        <p>Winter coats, and how to choose one.</p>
+        <a href="#" onClick={stay} ref={article}>
+          Read the buying guide
+        </a>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * 2.4.3: a filters dialog over a product list. Broken, the dialog opens and focus stays on the
+ * page behind it. Fixed, focus moves into the dialog, the page goes inert, and closing it puts
+ * focus back on the button that opened it.
+ */
+function FilterPage({ broken }: { broken: boolean }) {
+  const titleId = useId();
+  const [open, setOpen] = useState(false);
+  const opener = useRef<HTMLButtonElement>(null);
+  const apply = useRef<HTMLButtonElement>(null);
+  const wasOpen = useRef(false);
+  useEffect(() => {
+    if (broken) return;
+    if (open) apply.current?.focus(visibly);
+    else if (wasOpen.current) opener.current?.focus(visibly);
+    wasOpen.current = open;
+  }, [open, broken]);
+  return (
+    <div className="fd-page">
+      <div className="fd-page__body" inert={!broken && open}>
+        <button type="button" className="btn o sm" ref={opener} onClick={() => setOpen(true)}>
+          Show filters
+        </button>
+        <ul className="fd-page__list">
+          {['Boots', 'Trainers', 'Sandals'].map((p) => (
+            <li key={p}>
+              <a href="#" onClick={stay}>
+                {p}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+      {open ? (
+        <div className="fd-dialog" role="dialog" aria-labelledby={titleId}>
+          <p className="fd-dialog__title" id={titleId}>
+            Filters
+          </p>
+          <button type="button" className="btn sm" ref={apply} onClick={() => setOpen(false)}>
+            Apply
+          </button>
+          <button type="button" className="btn o sm" onClick={() => setOpen(false)}>
+            Close
+          </button>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+const STICKY_FIELDS = [
+  { label: 'Name', autoComplete: 'name' },
+  { label: 'Email', autoComplete: 'email' },
+  { label: 'Street', autoComplete: 'address-line1' },
+  { label: 'Town', autoComplete: 'address-level2' },
+  { label: 'Postcode', autoComplete: 'postal-code' },
+];
+
+/**
+ * 2.4.11: a short scrolling checkout with a sticky header. Broken, nothing reserves room for the
+ * header, so a field scrolled to the top on the way back up sits under it. Fixed, the box's
+ * `scroll-padding-top` keeps every focused field below the header.
+ */
+function StickyForm({ padded }: { padded: boolean }) {
+  return (
+    <div className={padded ? 'nob-box nob-box--padded' : 'nob-box'}>
+      <p className="nob-box__bar">Acme checkout</p>
+      {STICKY_FIELDS.map((f) => (
+        <label key={f.label} className="nob-box__field">
+          {f.label}
+          <input type="text" autoComplete={f.autoComplete} />
+        </label>
+      ))}
+    </div>
+  );
+}
+
+const PAGE_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'enter'];
+
 export const G2_4: readonly CriterionRecord[] = [
   {
     num: '2.4.1',
@@ -42,12 +167,18 @@ export const G2_4: readonly CriterionRecord[] = [
     level: 'A',
     since: '2.0',
     guideline: '2.4',
+    labs: ['skip-link'],
     plain:
       'Give people a way past the things that repeat on every page. A skip link is the usual ' +
       'answer; real landmarks and a sane heading structure also count, because screen reader ' +
       'users navigate by those.',
     fail: {
-      caption: 'Forty links before the article, on every page.',
+      caption: 'Every menu link stands between the reader and the article.',
+      live: {
+        Example: () => <SkipPage skip={false} />,
+        keys: PAGE_KEYS,
+        instruments: ['focus-tracker'],
+      },
       render: () => (
         <>
           <div className="tabstops">
@@ -67,6 +198,11 @@ export const G2_4: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'One link, first in the tab order.',
+      live: {
+        Example: () => <SkipPage skip />,
+        keys: PAGE_KEYS,
+        instruments: ['focus-tracker'],
+      },
       render: () => (
         <>
           <div className="tabstops">
@@ -134,12 +270,18 @@ export const G2_4: readonly CriterionRecord[] = [
     level: 'A',
     since: '2.0',
     guideline: '2.4',
+    labs: ['focus-order'],
     plain:
       'Focus has to move in an order that preserves meaning. Usually that means source order — ' +
       'and when something opens on top, like a dialog, focus goes into it and comes back out ' +
       'where it started.',
     fail: {
       caption: 'A dialog opens and focus stays behind it.',
+      live: {
+        Example: () => <FilterPage broken />,
+        keys: PAGE_KEYS,
+        instruments: ['focus-tracker'],
+      },
       render: () => (
         <>
           <div className="stack">
@@ -156,6 +298,11 @@ export const G2_4: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'Focus follows the dialog in and back out.',
+      live: {
+        Example: () => <FilterPage broken={false} />,
+        keys: PAGE_KEYS,
+        instruments: ['focus-tracker'],
+      },
       render: () => (
         <>
           <div className="stack">
@@ -396,12 +543,18 @@ export const G2_4: readonly CriterionRecord[] = [
     since: '2.2',
     guideline: '2.4',
     demos: ['obscured-2-4-11'],
+    labs: ['sticky-banner'],
     plain:
       'When something receives focus, it must not be entirely hidden behind other content. New ' +
       'in WCAG 2.2, and almost always caused by a sticky header swallowing whatever you just ' +
       'tabbed to.',
     fail: {
       caption: 'The sticky header covers the field that just took focus.',
+      live: {
+        Example: () => <StickyForm padded={false} />,
+        keys: FIELD_KEYS,
+        instruments: ['focus-tracker'],
+      },
       render: () => (
         <>
           <div className="obscure">
@@ -418,6 +571,11 @@ export const G2_4: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'Scroll padding reserves room for the header.',
+      live: {
+        Example: () => <StickyForm padded />,
+        keys: FIELD_KEYS,
+        instruments: ['focus-tracker'],
+      },
       render: () => (
         <>
           <div className="obscure">

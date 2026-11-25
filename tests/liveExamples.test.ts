@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { focusLine, spoken, type AxNode } from '../src/labs/announce';
-import { isTabbable, nodeAt, step } from '../src/live/focus';
+import { isTabbable, nodeAt, step, tabOrder } from '../src/live/focus';
 import { autofillSaid, logOf, voiceSaid, type StageEvent } from '../src/live/events';
 import { parseMarkup } from './markup';
 
@@ -131,5 +131,27 @@ describe('what the autofill and voice-control instruments report (#49)', () => {
     expect(voiceSaid({ kind: 'voice', simulated: false, phrase: 'click Send', clicked: btn })).toBe(
       'You said “click Send”. It clicked Send message to support, button.',
     );
+  });
+});
+
+describe('the order Tab visits stops in (#46)', () => {
+  it('visits positive tabindex first, lowest first, then the rest in source order', () => {
+    // HTML focus navigation: tabindex 1, 2… ascending (ties in source order), then the 0s.
+    const stops = [
+      { id: 'a', tabindex: 0 },
+      { id: 'b', tabindex: 2 },
+      { id: 'c', tabindex: 0 },
+      { id: 'd', tabindex: 1 },
+      { id: 'e', tabindex: 2 },
+    ];
+    expect(tabOrder(stops).map((s) => s.id)).toEqual(['d', 'b', 'e', 'a', 'c']);
+  });
+
+  it('keeps source order when nothing has a positive tabindex', () => {
+    const stops = [
+      { id: 'a', tabindex: 0 },
+      { id: 'b', tabindex: 0 },
+    ];
+    expect(tabOrder(stops).map((s) => s.id)).toEqual(['a', 'b']);
   });
 });

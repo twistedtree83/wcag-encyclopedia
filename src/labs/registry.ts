@@ -12,6 +12,9 @@
 import type { ReactNode } from 'react';
 import type { CriterionRecord } from '../criteria/types';
 import { AltTextLab } from './AltTextLab';
+import { BypassLab } from './BypassLab';
+import { FocusOrderLab } from './FocusOrderLab';
+import { ObscuredLab } from './ObscuredLab';
 import { ColourCheckLab } from './ColourCheck';
 import { FadeLab } from './FadeLab';
 import { FocusRingLab } from './FocusRingLab';
@@ -67,6 +70,9 @@ export const LABS: readonly LabEntry[] = [
   { id: 'label-in-name', title: 'Try it: say what you see', Lab: LabelInNameLab },
   { id: 'alt-text', title: 'Try it: write the alt text', Lab: AltTextLab, flagshipFor: '1.1.1' },
   { id: 'structure', title: 'Try it: build the structure', Lab: StructureLab, flagshipFor: '1.3.1' },
+  { id: 'skip-link', title: 'Try it: count the Tab presses', Lab: BypassLab },
+  { id: 'focus-order', title: 'Try it: break the focus order', Lab: FocusOrderLab, flagshipFor: '2.4.3' },
+  { id: 'sticky-banner', title: 'Try it: move the sticky banner', Lab: ObscuredLab },
 ];
 
 export function labById(id: string): LabEntry | undefined {

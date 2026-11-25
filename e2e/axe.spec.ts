@@ -120,6 +120,9 @@ const STATE_PAGES = [
   '/criteria/1.1.1/?img=divider&alt=swirl-divider.svg',
   '/criteria/1.3.1/?mock=table',
   '/criteria/1.3.1/?mock=form&real=heading,list,labels',
+  '/criteria/2.4.3/?src=columns&ti=none',
+  '/criteria/2.4.3/?src=send-first&ti=postcode',
+  '/criteria/2.4.3/?src=layout&ti=send',
 ];
 
 for (const url of STATE_PAGES) {

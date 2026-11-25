@@ -4,7 +4,7 @@ import { announce, focusLine, fromDom, spoken } from '../labs/announce';
 import { autofillValue } from '../labs/inputPurpose';
 import { voiceMatches } from '../labs/labelInName';
 import { autofillSaid, voiceSaid, type StageEvent } from './events';
-import { mapOf, nodeAt, pathTo, step, tabStops } from './focus';
+import { mapOf, nodeAt, pathTo, revealWithin, step, tabStops } from './focus';
 import { INSTRUMENTS } from './instruments';
 
 /**
@@ -116,6 +116,8 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
       if (simulated) {
         const next = step(stops.length, simAt, back);
         setSimAt(next);
+        // Simulated focus scrolls a scrolling box in the example as real focus would (#46).
+        if (next >= 0) revealWithin(root, stops[next]!);
         if (next >= 0) {
           push({
             kind: 'focus',
