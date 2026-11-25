@@ -4,6 +4,7 @@ import { spoken } from '../labs/announce';
 import { contextLog, keyLines, lastOf, logOf, pointerLog, type StageEvent } from './events';
 import { trackOf } from './focusTrack';
 import { withVoices } from '../labs/language';
+import { scrollLine } from '../labs/zoom';
 
 /**
  * The instruments a live example's stage can carry (#43, CONTEXT.md "Instrument"), by id. A
@@ -147,6 +148,30 @@ function VoiceInstrument({ id, events }: InstrumentProps) {
   );
 }
 
+/** The zoom frame's zoom and window (#53), and what scrolls in it at that zoom. */
+function ZoomMeter({ id, events }: InstrumentProps) {
+  const last = lastOf(events, 'zoom');
+  return (
+    <div className="alog">
+      <p className="alog__h" id={`${id}-h`}>
+        Zoom and scrolling
+      </p>
+      {last ? (
+        <ol aria-labelledby={`${id}-h`}>
+          <li>
+            Zoom {last.zoom}%: {last.width} by {last.height} CSS pixels
+          </li>
+          <li className={last.sideways ? 'zmeter--two' : undefined}>
+            {scrollLine({ sideways: last.sideways, down: last.down })}
+          </li>
+        </ol>
+      ) : (
+        <p className="alog__empty">At 100%: not zoomed yet.</p>
+      )}
+    </div>
+  );
+}
+
 /** The last key or dictated phrase sent to the example, where focus was, and what it set off (#45). */
 function KeyLog({ id, events }: InstrumentProps) {
   const last = lastOf(events, 'keys');
@@ -230,6 +255,7 @@ export const INSTRUMENTS: Readonly<Record<string, ComponentType<InstrumentProps>
   'focus-tracker': FocusTracker,
   autofill: AutofillInstrument,
   'voice-control': VoiceInstrument,
+  'zoom-meter': ZoomMeter,
   'key-log': KeyLog,
   'pointer-log': PointerInstrument,
   context: ContextInstrument,

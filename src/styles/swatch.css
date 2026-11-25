@@ -2433,6 +2433,99 @@ ul.st-list li::before {
   gap: 12px 24px;
 }
 
+/* --- Zoom frame and the 1.4.10 lab (L-13) ----------------------------------------------- */
+
+/* The zoom frame: a browser window whose content is laid out in the window's own CSS pixels,
+   then scaled (transform only) to fill the frame. The frame clips it, so the page never widens. */
+.zframe {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  background: var(--card-bg);
+}
+.zframe__view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: auto;
+  transform-origin: 0 0;
+  background: var(--card-bg);
+  color: var(--ink);
+  line-height: 1.4;
+}
+.zframe__view:focus-visible {
+  outline-offset: -6px;
+}
+.zframe--spaced .zframe__view * {
+  line-height: 1.5 !important;
+  letter-spacing: 0.12em !important;
+  word-spacing: 0.16em !important;
+}
+.zframe--spaced .zframe__view p {
+  margin-bottom: 2em !important;
+}
+/* The catalogue page drawn in the frame, sized in em so the frame's text size reaches it. */
+.zpage {
+  box-sizing: border-box;
+  min-height: 70em;
+  padding: 1.5em 2em;
+}
+.zpage p {
+  margin: 0 0 1em;
+}
+.zpage__bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5em 2em;
+  margin-bottom: 2em;
+  padding-bottom: 1em;
+  border-bottom: 1px solid var(--line-2);
+}
+.zpage__brand,
+.zpage__title {
+  font-weight: 700;
+}
+.zpage__title {
+  font-size: 1.75em;
+}
+.zpage__grid {
+  display: grid;
+  gap: 1em;
+  margin-bottom: 1.5em;
+}
+.zpage__tile {
+  display: flex;
+  align-items: flex-end;
+  aspect-ratio: 3 / 4;
+  padding: 1em;
+  border: 1px solid var(--line-2);
+  border-radius: 0.5em;
+  font-weight: 600;
+}
+.zpage--fixed {
+  width: 60em;
+}
+.zpage--fixed .zpage__grid {
+  grid-template-columns: repeat(3, 18em);
+}
+.zpage--reflow .zpage__grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12em), 1fr));
+}
+/* The 1.4.10 lab: the frame, then the zoom and layout choices, then the readouts. */
+.reflow-mock {
+  max-width: 560px;
+}
+.live__example .zframe {
+  max-width: 100%;
+}
+.alog li.zmeter--two {
+  color: var(--err-text);
+  font-weight: 600;
+}
+
 /* --- Form errors and labels: 3.3.1 and 3.3.2 (L-12) ------------------------------------------ */
 
 /* A small real form: the live examples on 3.3.1 and 3.3.2, and both labs' depicted mocks. */

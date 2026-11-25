@@ -150,7 +150,7 @@
       ],
       "importance": 13,
       "afk": true,
-      "passes": false
+      "passes": true
     },
     {
       "id": "L-14",

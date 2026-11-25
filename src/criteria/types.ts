@@ -40,7 +40,8 @@ export type SimKey =
   | 'dictate'
   | 'switch-tab'
   | 'links'
-  | 'headings';
+  | 'headings'
+  | 'zoom';
 
 export type LiveExample = {
   /**
@@ -59,6 +60,11 @@ export type LiveExample = {
    * example shows nothing and only the focus tracker knows where focus went.
    */
   readonly hideRing?: boolean;
+  /**
+   * Draw the example in a zoom frame (#53) with this window at 100%, and let the bar's "Zoom in"
+   * key step it through 100%, 200% and 400%. The `zoom-meter` instrument shows what scrolls.
+   */
+  readonly zoomFrame?: { readonly width: number; readonly height: number };
 };
 
 export type DiffLine = {

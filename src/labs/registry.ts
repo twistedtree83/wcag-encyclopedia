@@ -30,6 +30,7 @@ import { LinkPurposeLab } from './LinkPurposeLab';
 import { NameRoleValueLab } from './NameRoleValueLab';
 import { OnFocusLab } from './OnFocusLab';
 import { PageTitleLab } from './PageTitleLab';
+import { ReflowLab } from './ReflowLab';
 import { PageLanguageLab, PartsLanguageLab } from './LanguageLabs';
 import { StatusLab } from './StatusLab';
 import { SequenceLab } from './SequenceLab';
@@ -96,6 +97,7 @@ export const LABS: readonly LabEntry[] = [
   { id: 'page-language', title: 'Try it: declare the page’s language', Lab: PageLanguageLab },
   { id: 'parts-language', title: 'Try it: mark the French phrase', Lab: PartsLanguageLab },
   { id: 'status-message', title: 'Try it: announce the basket', Lab: StatusLab },
+  { id: 'reflow', title: 'Try it: zoom to 400%', Lab: ReflowLab, flagshipFor: '1.4.10' },
   { id: 'form-errors', title: 'Try it: show the error', Lab: FormErrorsLab },
   { id: 'form-labels', title: 'Try it: label the field', Lab: FormLabelsLab },
 ];

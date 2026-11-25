@@ -471,6 +471,19 @@ const LABS: LabCase[] = [
     },
     said: 'Screen reader says: Added. 4 items in basket. Focus stayed on Add to basket.',
   },
+  {
+    name: 'the reflow lab on 1.4.10',
+    url: '/criteria/1.4.10/',
+    lab: '.lab-slot .reflow-lab',
+    passing: '1.4.10 passes',
+    failing: '1.4.10 fails',
+    toFail: async (lab, page) => {
+      await radio(lab, '100%').focus();
+      await page.keyboard.press('ArrowDown');
+      await page.keyboard.press('ArrowDown');
+    },
+    said: '400% zoom, 320 CSS pixels wide. Fixed width: scrolls down and sideways.',
+  },
 ];
 
 async function open(page: Page, url: string) {
