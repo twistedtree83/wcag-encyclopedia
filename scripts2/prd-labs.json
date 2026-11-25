@@ -172,7 +172,7 @@
       ],
       "importance": 15,
       "afk": true,
-      "passes": false
+      "passes": true
     },
     {
       "id": "L-16",

@@ -2,6 +2,7 @@ import { spoken, type Announcement } from '../labs/announce';
 import type { FocusMap } from './focusTrack';
 import type { CueSeen, VisionFilter } from './vision';
 import { scrollLine } from '../labs/zoom';
+import { colourLine, sharpLine } from '../labs/imagesOfText';
 import type { GestureEvent } from './gesture';
 
 /**
@@ -45,6 +46,10 @@ export type StageEvent =
   | { readonly kind: 'zoom'; readonly simulated: boolean; readonly zoom: number; readonly width: number; readonly height: number; readonly sideways: boolean; readonly down: boolean }
   /** "Enlarge text" or "Toggle text spacing": the frame's text size (percent), its spacing, and whether any box now cuts its text off (#54). */
   | { readonly kind: 'text-fit'; readonly simulated: boolean; readonly scale: number; readonly spacing: boolean; readonly clipped: boolean }
+  /** "Rotate" (#55): the frame turned on its side or back, its window, and whether the page hid its content (a visible `data-rotate-prompt`). */
+  | { readonly kind: 'rotate'; readonly simulated: boolean; readonly turned: boolean; readonly width: number; readonly height: number; readonly hidden: boolean }
+  /** After a zoom or "Use my colours" on a 1.4.5 stage (#55): the zoom, the reader's colours, and whether the heading is an image. */
+  | { readonly kind: 'look'; readonly simulated: boolean; readonly zoom: number; readonly restyled: boolean; readonly image: boolean }
   /** A key ("Escape") or a dictated phrase sent to the focused control, and what it set off (#45). */
   | {
       readonly kind: 'keys';
@@ -112,6 +117,17 @@ export function zoomSaid({ zoom, width, sideways, down }: Of<'zoom'>): string {
 export function textFitSaid({ scale, spacing, clipped }: Of<'text-fit'>): string {
   const change = scale !== 100 ? `Text at ${scale}%` : spacing ? 'Text spacing on' : 'Text at 100%, spacing off';
   return `${change}. ${clipped ? 'Text is cut off' : 'All the text fits'}.`;
+}
+
+/** What is said after "Rotate" (#55): the way up, the window, and what the page did. */
+export function rotateSaid({ turned, width, height, hidden }: Of<'rotate'>): string {
+  const page = hidden ? 'The page hides its content and asks to be turned back.' : 'The page shows its content.';
+  return `Turned to ${turned ? 'landscape' : 'portrait'}, ${width} by ${height} CSS pixels. ${page}`;
+}
+
+/** What is said after a zoom or a change of colours on a 1.4.5 stage (#55). */
+export function lookSaid({ zoom, restyled, image }: Of<'look'>): string {
+  return `${sharpLine(zoom, image)}. ${colourLine(restyled, image)}.`;
 }
 
 /** What is said after a voice command: what it clicked, or that nothing matched. */

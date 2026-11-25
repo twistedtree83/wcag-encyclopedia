@@ -70,6 +70,7 @@ Graph: `scripts2/prd-labs.json` · Parent: #40 · Integration branch: `labs`
 - [x] **L-17** #57 — Gesture pad and the 2.5.8 flagship (L-03)
 - [x] **L-16** #56 — Vision filter, with 1.4.1, 1.4.11, 1.3.3 and the 1.4.3 live examples (L-03)
 - [x] **L-07** #47 — Focus and hover behaviour: 3.2.1 and 1.4.13 (L-04)
+- [x] **L-15** #55 — Orientation and images of text: 1.3.4 and 1.4.5 (L-13)
 - [x] **L-19** #59 — Forms: 3.2.2, 3.3.3 and 3.3.4 (L-03)
 - [x] **L-18** #58 — Pointer: 2.5.1, 2.5.2, 2.5.4 and 2.5.7 (L-17)
 - [x] **L-20** #60 — Forms: 3.3.7 and 3.3.8 (L-03)

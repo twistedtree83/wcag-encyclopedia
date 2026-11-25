@@ -37,6 +37,8 @@ import { OnFocusLab } from './OnFocusLab';
 import { PageTitleLab } from './PageTitleLab';
 import { ReflowLab } from './ReflowLab';
 import { ResizeTextLab, TextSpacingLab } from './TextFitLabs';
+import { OrientationLab } from './OrientationLab';
+import { ImagesOfTextLab } from './ImagesOfTextLab';
 import { PageLanguageLab, PartsLanguageLab } from './LanguageLabs';
 import { StatusLab } from './StatusLab';
 import { SequenceLab } from './SequenceLab';
@@ -117,6 +119,8 @@ export const LABS: readonly LabEntry[] = [
   { id: 'text-spacing', title: 'Try it: loosen the spacing', Lab: TextSpacingLab, flagshipFor: '1.4.12' },
   { id: 'resize-text', title: 'Try it: text to 200%', Lab: ResizeTextLab },
   { id: 'target-size', title: 'Try it: size the targets', Lab: TargetSizeLab, flagshipFor: '2.5.8' },
+  { id: 'orientation', title: 'Try it: turn the phone', Lab: OrientationLab },
+  { id: 'images-of-text', title: 'Try it: zoom and restyle the heading', Lab: ImagesOfTextLab },
   { id: 'on-input', title: 'Try it: change the country', Lab: OnInputLab },
   { id: 'error-suggestion', title: 'Try it: suggest the fix', Lab: ErrorSuggestionLab },
   { id: 'error-prevention', title: 'Try it: catch the wrong payment', Lab: ErrorPreventionLab },

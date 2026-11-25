@@ -44,6 +44,8 @@ export type SimKey =
   | 'zoom'
   | 'text-size'
   | 'spacing'
+  | 'rotate'
+  | 'restyle'
   | 'tap'
   | 'pinch'
   | 'slide-off'
