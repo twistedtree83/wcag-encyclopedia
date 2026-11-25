@@ -584,6 +584,32 @@ const LABS: LabCase[] = [
     },
     said: '16 pixel targets, touching. Under 24 by 24, and their 24 pixel circles overlap by 8 pixels. Fails.',
   },
+  {
+    name: 'the redundant entry lab on 3.3.7',
+    url: '/criteria/3.3.7/',
+    lab: '.lab-slot .re-lab',
+    passing: '3.3.7 passes',
+    failing: '3.3.7 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await radio(lab, 'Asked for again').focus();
+      await page.keyboard.press('ArrowDown');
+    },
+    said: 'Step 1 of 3: Delivery address. At billing, the address is carried forward.',
+  },
+  {
+    name: 'the accessible authentication lab on 3.3.8',
+    url: '/criteria/3.3.8/',
+    lab: '.lab-slot .auth-lab',
+    passing: '3.3.8 passes',
+    failing: '3.3.8 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await radio(lab, 'A password, paste blocked').focus();
+      await page.keyboard.press('ArrowDown');
+    },
+    said: 'Paste or fill the password. A password manager remembers it for the reader.',
+  },
 ];
 
 async function open(page: Page, url: string) {

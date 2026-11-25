@@ -23,6 +23,8 @@ import { FormLabelsLab } from './FormLabelsLab';
 import { OnInputLab } from './OnInputLab';
 import { ErrorSuggestionLab } from './ErrorSuggestionLab';
 import { ErrorPreventionLab } from './ErrorPreventionLab';
+import { RedundantEntryLab } from './RedundantEntryLab';
+import { AccessibleAuthLab } from './AccessibleAuthLab';
 import { HeadingsLab } from './HeadingsLab';
 import { InputPurposeLab } from './InputPurposeLab';
 import { KeyboardLab } from './KeyboardLab';
@@ -112,6 +114,8 @@ export const LABS: readonly LabEntry[] = [
   { id: 'use-of-colour', title: 'Try it: take the colour away', Lab: UseOfColourLab },
   { id: 'non-text-contrast', title: 'Try it: fade the edges', Lab: NonTextContrastLab },
   { id: 'sensory-instruction', title: 'Try it: rewrite the instruction', Lab: SensoryLab },
+  { id: 'redundant-entry', title: 'Try it: check out without retyping', Lab: RedundantEntryLab },
+  { id: 'accessible-auth', title: 'Try it: sign in without a test', Lab: AccessibleAuthLab },
 ];
 
 export function labById(id: string): LabEntry | undefined {
