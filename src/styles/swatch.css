@@ -2433,6 +2433,99 @@ ul.st-list li::before {
   gap: 12px 24px;
 }
 
+/* --- Zoom frame and the 1.4.10 lab (L-13) ----------------------------------------------- */
+
+/* The zoom frame: a browser window whose content is laid out in the window's own CSS pixels,
+   then scaled (transform only) to fill the frame. The frame clips it, so the page never widens. */
+.zframe {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  background: var(--card-bg);
+}
+.zframe__view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: auto;
+  transform-origin: 0 0;
+  background: var(--card-bg);
+  color: var(--ink);
+  line-height: 1.4;
+}
+.zframe__view:focus-visible {
+  outline-offset: -6px;
+}
+.zframe--spaced .zframe__view * {
+  line-height: 1.5 !important;
+  letter-spacing: 0.12em !important;
+  word-spacing: 0.16em !important;
+}
+.zframe--spaced .zframe__view p {
+  margin-bottom: 2em !important;
+}
+/* The catalogue page drawn in the frame, sized in em so the frame's text size reaches it. */
+.zpage {
+  box-sizing: border-box;
+  min-height: 70em;
+  padding: 1.5em 2em;
+}
+.zpage p {
+  margin: 0 0 1em;
+}
+.zpage__bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5em 2em;
+  margin-bottom: 2em;
+  padding-bottom: 1em;
+  border-bottom: 1px solid var(--line-2);
+}
+.zpage__brand,
+.zpage__title {
+  font-weight: 700;
+}
+.zpage__title {
+  font-size: 1.75em;
+}
+.zpage__grid {
+  display: grid;
+  gap: 1em;
+  margin-bottom: 1.5em;
+}
+.zpage__tile {
+  display: flex;
+  align-items: flex-end;
+  aspect-ratio: 3 / 4;
+  padding: 1em;
+  border: 1px solid var(--line-2);
+  border-radius: 0.5em;
+  font-weight: 600;
+}
+.zpage--fixed {
+  width: 60em;
+}
+.zpage--fixed .zpage__grid {
+  grid-template-columns: repeat(3, 18em);
+}
+.zpage--reflow .zpage__grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12em), 1fr));
+}
+/* The 1.4.10 lab: the frame, then the zoom and layout choices, then the readouts. */
+.reflow-mock {
+  max-width: 560px;
+}
+.live__example .zframe {
+  max-width: 100%;
+}
+.alog li.zmeter--two {
+  color: var(--err-text);
+  font-weight: 600;
+}
+
 /* --- Form errors and labels: 3.3.1 and 3.3.2 (L-12) ------------------------------------------ */
 
 /* A small real form: the live examples on 3.3.1 and 3.3.2, and both labs' depicted mocks. */
@@ -2517,6 +2610,631 @@ ul.st-list li::before {
 }
 .flab__screen {
   font-weight: 600;
+}
+
+/* --- Keyboard: 2.1.1, 2.1.2 and 2.1.4 (L-05) --------------------------------------------- */
+
+/* Live examples: a basket, a newsletter panel that loops focus, and a message with a reply box. */
+.kb-basket,
+.sc-mail {
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+}
+.kb-basket .fakebtn,
+.kb-basket .realbtn,
+.trap--live .realbtn {
+  margin: 0;
+  font-size: 15px;
+}
+.kb-field {
+  display: grid;
+  gap: 6px;
+  width: 100%;
+  font-size: var(--small);
+  font-weight: 600;
+}
+.kb-field input {
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  padding: 0 12px;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 400;
+  font-size: 16px;
+}
+.kb-count,
+.sc-state {
+  margin: 0;
+  font-size: var(--small);
+}
+.trap--live {
+  margin: 0;
+  gap: 12px;
+  padding: 16px;
+}
+.trap--live .trap__title {
+  font-size: 15px;
+}
+.trap__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+.trap__close {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 12px;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  background: var(--card-bg);
+  color: var(--ink);
+  font: inherit;
+  font-size: 15px;
+  cursor: pointer;
+}
+.sc-msg {
+  min-height: 40px;
+  padding: 0 14px;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  background: var(--card-bg);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* The key log under the focus tracker. */
+.stage__instruments > .ftrack + .alog {
+  margin-top: 16px;
+}
+
+/* The three labs: a depicted mock with a drawn ring, choices, simulated keys, then readouts. */
+.kb-mock,
+.trap-mock,
+.sc-mock {
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+  padding: 24px;
+  border-radius: calc(var(--rad) * 0.65);
+  background: var(--card-bg);
+  color: var(--ink);
+}
+.kb-mock .fakebtn,
+.kb-mock .realbtn,
+.trap-mock .trap {
+  margin: 0;
+}
+.trap-mock .trap {
+  justify-self: stretch;
+  justify-items: start;
+}
+.kb-mock__field,
+.kb-mock__count,
+.sc-mock__label {
+  font-size: var(--small);
+}
+.sc-mock__label {
+  font-weight: 600;
+}
+.trap-mock__btn {
+  margin: 0;
+}
+.trap-mock__next {
+  text-decoration: underline;
+}
+.sc-mock__msg {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.sc-mock__reply {
+  justify-self: stretch;
+}
+/* Where simulated focus is in a lab mock: drawn, since the mock itself never takes focus. */
+.lab__mock .is-focus {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+.kb-keys {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.kb-last {
+  flex-basis: 100%;
+  font-size: var(--small);
+}
+.lab-note {
+  margin: 0;
+  color: var(--ink-2);
+}
+
+/* --- Focus order, bypass and obscured focus: 2.4.1, 2.4.3, 2.4.11 (L-06) ------------------ */
+
+/* Live examples. Links and buttons are at least 24px tall (2.5.8). Anything that covers the
+   page (the 2.4.3 dialog, the 2.4.11 header) sits above the drawn focus ring, z-index 2. */
+.bp-page__head,
+.fd-page__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.bp-page__head a,
+.bp-page__main a,
+.fd-page__list a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 6px;
+  color: var(--ink);
+  font-size: var(--small);
+}
+.bp-page__head a.bp-page__skip {
+  font-weight: 700;
+}
+.bp-page__main {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: var(--bwid) solid var(--line-2);
+}
+.bp-page__main p {
+  margin: 0 0 4px;
+}
+.fd-page {
+  position: relative;
+  min-height: 132px;
+}
+.fd-page__list {
+  margin-top: 12px;
+}
+.fd-dialog {
+  position: absolute;
+  z-index: 2;
+  top: 36px;
+  right: 0;
+  left: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border: var(--bwid) solid var(--ink);
+  border-radius: var(--rad-sm);
+  background: var(--bg);
+}
+.fd-dialog__title {
+  flex-basis: 100%;
+  margin: 0;
+  font-weight: 700;
+}
+.nob-box {
+  position: relative;
+  height: 180px;
+  overflow-y: auto;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  background: var(--card-bg);
+}
+.nob-box--padded {
+  scroll-padding-top: 56px;
+}
+.nob-box__bar {
+  position: sticky;
+  z-index: 2;
+  top: 0;
+  height: 48px;
+  margin: 0 0 16px;
+  padding: 12px;
+  background: var(--ink);
+  color: var(--bg);
+  font-weight: 700;
+}
+.nob-box__field {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 12px 12px;
+  font-size: var(--small);
+  font-weight: 600;
+}
+.nob-box__field input {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 44px;
+  padding: 6px 10px;
+  border: 1px solid var(--line-2);
+  border-radius: 4px;
+  background: var(--deep);
+  color: var(--ink);
+}
+
+/* The 2.4.3 lab: the grid places every part by name, so only the focus numbers move. */
+.fo-mock,
+.bp-mock,
+.nob-mock {
+  padding: 20px;
+  border-radius: calc(var(--rad) * 0.65);
+  background: var(--card-bg);
+  color: var(--ink);
+}
+.fo-mock {
+  display: grid;
+  grid-template-areas:
+    'name email'
+    'phone postcode'
+    'send send';
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.fo-part {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  min-height: 44px;
+  padding: 6px 12px;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  background: var(--bg);
+  font-weight: 600;
+}
+.fo-part--name {
+  grid-area: name;
+}
+.fo-part--email {
+  grid-area: email;
+}
+.fo-part--phone {
+  grid-area: phone;
+}
+.fo-part--postcode {
+  grid-area: postcode;
+}
+.fo-part--send {
+  grid-area: send;
+  justify-self: start;
+}
+.fo-num {
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--ink-2);
+  border-radius: 50%;
+  font: 700 13px var(--fh), sans-serif;
+  transition: border-color var(--speed-state) var(--ease-out);
+}
+/* Out of step with the layout: the number is ringed in the error colour, and dashed. */
+.fo-part.is-off .fo-num {
+  border-color: var(--err-text);
+  border-style: dashed;
+}
+.fo-visits {
+  display: block;
+  padding: 8px 12px;
+  border-left: 3px solid var(--line-2);
+  border-radius: 4px;
+  background: var(--card-bg);
+}
+.fo-src {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding-left: 1.5em;
+}
+.fo-src code {
+  padding: 2px 8px;
+}
+
+/* The 2.4.1 lab: the page's Tab stops as chips, the menu as many as the reader chose. */
+.bp-mock__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.bp-chip {
+  display: inline-grid;
+  place-items: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--rad-chip);
+  background: var(--bg);
+  font-size: var(--small);
+}
+.bp-chip--skip {
+  border: 2px solid var(--ink);
+  font-weight: 700;
+}
+.bp-mock__main {
+  margin-top: 12px;
+  padding: 16px;
+  border: 2px dashed var(--line-2);
+  border-radius: var(--rad-sm);
+  font-weight: 700;
+}
+.bp-count,
+.nob-share {
+  display: block;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* The 2.4.11 lab: a 200px window drawn in percent, so it scales at any width. */
+.nob-mock {
+  position: relative;
+  height: 200px;
+  padding: 0;
+  overflow: hidden;
+  border: var(--bwid) solid var(--line-2);
+}
+.nob-mock__line,
+.nob-mock__field,
+.nob-mock__banner {
+  position: absolute;
+  right: 16px;
+  left: 16px;
+}
+.nob-mock__line {
+  height: 10px;
+  border-radius: 4px;
+  background: var(--line-2);
+}
+.nob-mock__field {
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  background: var(--bg);
+  font-weight: 600;
+}
+.nob-mock__banner {
+  right: 0;
+  left: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--ink);
+  color: var(--bg);
+  font-weight: 700;
+}
+
+/* --- On focus and content on hover (L-07) ------------------------------------------------ */
+
+/* The bar's drawn pointer, on either stage of a live example with a Hover key. Its tip sits on
+   the point it is given; it moves by transform only. */
+.sim-cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 6;
+  visibility: hidden;
+  pointer-events: none;
+  transition: transform var(--speed-state) var(--ease-out);
+}
+.sim-cursor[data-on='true'] {
+  visibility: visible;
+}
+.sim-cursor path,
+.tt-cursor path {
+  fill: var(--ink);
+  stroke: var(--card-bg);
+  stroke-width: 1.5;
+}
+.plog__now {
+  margin: 8px 0 0;
+  font-size: var(--small);
+  font-weight: 600;
+}
+.stage__instruments > .clog + .ftrack {
+  margin-top: 16px;
+}
+
+/* 3.2.1: a mock page with its own address bar, so a change of page stays inside the mock. */
+.ctx {
+  display: grid;
+  gap: 12px;
+}
+.ctx__bar {
+  margin: 0;
+  padding: 6px 12px;
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  background: var(--bg);
+  font: 14px/1.4 ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  overflow-wrap: anywhere;
+}
+.ctx__page {
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+}
+.ctx__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.ctx__field {
+  display: grid;
+  gap: 6px;
+  font-size: var(--small);
+  font-weight: 600;
+}
+.ctx select,
+.ctx input {
+  min-width: 0;
+  max-width: 100%;
+  min-height: 40px;
+  padding: 0 10px;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 400;
+}
+.ctx__title {
+  margin: 0;
+  font-weight: 700;
+}
+.ctx__text {
+  margin: 0;
+}
+
+/* 1.4.13: the live tooltips, placed against the sentence so they fit at 320px. The fixed one
+   touches its words, so the pointer can move straight in; the broken one opens a gap below. */
+.live-tip {
+  position: relative;
+  margin: 0;
+  padding-bottom: 136px;
+  line-height: 24px;
+}
+.live-tip__word {
+  display: inline-block;
+  min-height: 24px;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px dotted var(--ink-2);
+  background: none;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  cursor: help;
+}
+.live-tip__tip {
+  position: absolute;
+  left: 0;
+  top: 24px;
+  z-index: 5;
+  width: min(15rem, 100%);
+  padding: 8px 10px;
+  background: var(--card-bg);
+  border: 1px solid var(--line-2);
+  font-size: var(--small);
+  line-height: 1.5;
+  color: var(--ink);
+}
+.live-tip__tip[hidden] {
+  display: none;
+}
+.live-tip__tip--fleeting {
+  top: 48px;
+}
+
+/* The 3.2.1 lab: the mock form, its drawn focus, and the pages it can jump to. */
+.fl-mock,
+.tt-mock {
+  display: grid;
+  gap: 12px;
+  padding: 24px;
+  border-radius: calc(var(--rad) * 0.65);
+  background: var(--card-bg);
+  color: var(--ink);
+}
+.fl-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 12px;
+}
+.fl-stop {
+  display: grid;
+  gap: 4px;
+  border-radius: 4px;
+  outline: 3px solid transparent;
+  outline-offset: 3px;
+  transition: outline-color var(--speed-state) var(--ease-out);
+}
+.fl-stop[data-on='true'] {
+  outline-color: var(--focus);
+}
+.fl-label {
+  font-size: var(--small);
+  font-weight: 600;
+}
+.fl-box {
+  display: block;
+  width: 9rem;
+  max-width: 100%;
+  height: 36px;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  background: var(--bg);
+}
+.fl-stop--send {
+  padding: 8px 18px;
+  border-radius: var(--rad-sm);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-weight: 600;
+}
+.fl-page {
+  display: grid;
+  gap: 6px;
+}
+.fl-keys {
+  display: grid;
+  justify-items: start;
+  gap: 10px;
+}
+
+/* The 1.4.13 lab: the words, the drawn pointer, and where the tooltip opens. */
+.tt-line {
+  position: relative;
+  margin: 0;
+  padding-bottom: 104px;
+}
+.tt-word {
+  position: relative;
+}
+.tt-cursor {
+  position: absolute;
+  left: 40%;
+  top: 55%;
+}
+.tt-spot {
+  position: absolute;
+  left: 0;
+  top: 44px;
+  width: min(15rem, 100%);
+  min-height: 72px;
+}
+.tt-spot--near {
+  top: 24px;
+}
+.tt-tip {
+  display: block;
+  padding: 8px 10px;
+  background: var(--card-bg);
+  border: 1px solid var(--line-2);
+  font-size: var(--small);
+  line-height: 1.5;
+}
+.tt-acts {
+  align-items: start;
+}
+.tt-now {
+  display: block;
+  margin-top: 16px;
 }
 
 /* --- Vision filter: 1.4.1, 1.4.11, 1.3.3 and 1.4.3 (L-16) ----------------------------------- */

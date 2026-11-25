@@ -46,7 +46,17 @@ export function trackOf(events: readonly StageEvent[], steps = TRAIL_STEPS): Tra
   let map: FocusMap | null = null;
   const trail: number[] = [];
   for (const e of events) {
+    // A new page in the example (#47) has its own focus order: the tracker starts again.
+    if (e.kind === 'context') {
+      current = null;
+      map = null;
+      trail.length = 0;
+      continue;
+    }
     if (e.kind !== 'focus') continue;
+    // The example's Tab stops changed (a dialog closed, say): the old trail is about stops that
+    // are gone, so it starts again (#45).
+    if (current !== null && e.total !== total) trail.length = 0;
     current = e.index;
     total = e.total;
     if (e.map) map = e.map;

@@ -3,9 +3,22 @@ import type { LiveExample, SimKey } from '../criteria/types';
 import { announce, focusLine, fromDom, liveRegionLines, spoken } from '../labs/announce';
 import { autofillValue } from '../labs/inputPurpose';
 import { voiceMatches } from '../labs/labelInName';
-import { autofillSaid, voiceSaid, type StageEvent } from './events';
-import { mapOf, nodeAt, pathTo, step, tabStops } from './focus';
+import { ZOOMS, viewportAt, type Scrolls } from '../labs/zoom';
+import { ZoomFrame } from '../labs/ZoomFrame';
+import { ACTION_EVENT } from './actions';
+import {
+  autofillSaid,
+  contextSaid,
+  keysSaid,
+  pointerSaid,
+  voiceSaid,
+  zoomSaid,
+  type ContextCause,
+  type StageEvent,
+} from './events';
+import { mapOf, nodeAt, pathTo, revealWithin, step, tabStops } from './focus';
 import { INSTRUMENTS } from './instruments';
+import { contextOf, hoverStep, movePointer, popupText } from './pointer';
 import { listOf, tabSwitchLine } from './lists';
 import { cuesIn } from './cues';
 import { nextFilter, seeCue, visionSaid, type VisionFilter } from './vision';
@@ -24,6 +37,9 @@ import { VisionDefs, filterPrefix, visionStyle } from './VisionDefs';
  * example in its place.
  */
 
+/** What "Dictate" says (#45). Speech input reaches the page as key presses, one per letter. */
+const DICTATION = 'send this';
+
 const KEY_LABEL: Readonly<Record<SimKey, string>> = {
   tab: 'Press Tab',
   'shift-tab': 'Shift+Tab',
@@ -32,10 +48,14 @@ const KEY_LABEL: Readonly<Record<SimKey, string>> = {
   read: 'Read it aloud',
   autofill: 'Autofill',
   voice: 'Say what you see',
+  escape: 'Escape',
+  dictate: `Dictate “${DICTATION}”`,
+  hover: 'Hover',
   'switch-tab': 'Switch tab',
   links: 'List the links',
   headings: 'List the headings',
   vision: 'Vision filter',
+  zoom: 'Zoom in',
 };
 
 /** Which keys activate which elements: Enter buttons and links, Space buttons and checkboxes. */
@@ -62,10 +82,25 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
   const [simAt, setSimAt] = useState(-1);
   /** Pass stage: the last Tab stop that had real focus. */
   const realAt = useRef<HTMLElement | null>(null);
+  /** True while the bar is sending keys, so the real-key listener leaves them to `press`. */
+  const fromBar = useRef(false);
   const [ring, setRing] = useState<Ring | null>(null);
   const [said, setSaid] = useState('');
   /** The vision filter on the example (#56). */
   const [vision, setVision] = useState<VisionFilter>('none');
+  /** Fail stage: the element the drawn focus is on, so the next Tab can blur it (#47). */
+  const simEl = useRef<HTMLElement | null>(null);
+  /** Both stages: the hover target the pointer is on, or null for away (#47). */
+  const hoverEl = useRef<HTMLElement | null>(null);
+  /** The bar's drawn pointer, on either stage, or null when it is away (#47). */
+  const [cursor, setCursor] = useState<Ring | null>(null);
+  /** What the reader last did, so a change of page in the example can say what caused it. */
+  const cause = useRef<ContextCause | null>(null);
+  /** A stage with "Hover" (#47) says keys with the pointer and tooltip, not with `keysSaid`. */
+  const pointerStage = live.keys.includes('hover');
+  /** Zoom frame (#53): the index into ZOOMS, and whether a "Zoom in" waits to be measured. */
+  const [zoomAt, setZoomAt] = useState(0);
+  const zoomed = useRef(false);
 
   const push = useCallback((e: StageEvent) => {
     setEvents((es) => [...es, e].slice(-KEEP));
@@ -74,11 +109,36 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     if (e.kind === 'autofill') setSaid(autofillSaid(e));
     else if (e.kind === 'voice') setSaid(voiceSaid(e));
     else if (e.kind === 'vision') setSaid(visionSaid(e));
-    else if (e.simulated || e.kind === 'read') {
+    else if (e.kind === 'zoom') setSaid(zoomSaid(e));
+    else if (e.kind === 'keys') {
+      if (!pointerStage) setSaid(keysSaid(e));
+    }
+    // A change of page in a mock reaches no screen reader on its own: say it on both stages.
+    else if (e.kind === 'context') {
+      if (e.cause) setSaid(contextSaid(e));
+    } else if (
+      e.kind === 'read' ||
+      ((e.kind === 'focus' || e.kind === 'change' || e.kind === 'status') && e.simulated)
+    ) {
       const lines = e.kind === 'read' ? e.lines : [e.line];
       setSaid(`Screen reader says: ${lines.map((l) => spoken(l) || 'blank').join('; ')}`);
     }
-  }, []);
+  }, [pointerStage]);
+
+  // The pointer and its tooltip (#47) are said on both stages, the move or key with what the
+  // tooltip did after it: a tooltip drawn for the eye reaches no screen reader on its own.
+  useEffect(() => {
+    if (!pointerStage) return;
+    const text = pointerSaid(events);
+    if (text) setSaid(text);
+  }, [events, pointerStage]);
+
+  /** A box relative to the frame, for the drawn ring and pointer. */
+  const boxOf = (el: Element): Ring => {
+    const a = el.getBoundingClientRect();
+    const b = frame.current!.getBoundingClientRect();
+    return { x: a.left - b.left, y: a.top - b.top, w: a.width, h: a.height };
+  };
 
   const lineFor = (el: Element) => {
     const root = example.current!;
@@ -121,6 +181,13 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
       push({ kind: 'vision', simulated, filter, cues: cuesIn(root).map((c) => seeCue(c, filter)) });
       return;
     }
+    // "Zoom in" steps the zoom frame through 100%, 200% and 400%, then back to 100%. The event
+    // is pushed once the frame has laid out at the new zoom and measured what scrolls.
+    if (key === 'zoom') {
+      zoomed.current = true;
+      setZoomAt((i) => (i + 1) % ZOOMS.length);
+      return;
+    }
     if (key === 'autofill') {
       // A browser fills each field whose autocomplete names a purpose it has saved (#49).
       const fields = Array.from(root.querySelectorAll<HTMLInputElement>('input, textarea')).map(
@@ -133,7 +200,51 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
       push({ kind: 'autofill', simulated, fields });
       return;
     }
+    if (key === 'hover') {
+      // The pointer moves to the next hover target that is showing, or away (#47). On both
+      // stages: a touch reader has no pointer to hover with.
+      const from = hoverEl.current;
+      const to = hoverStep(root, from);
+      hoverEl.current = to;
+      cause.current = 'pointer';
+      setCursor(to ? boxOf(to) : null);
+      push({ kind: 'pointer', simulated, on: to ? (to.dataset.hover ?? '') : null });
+      movePointer(from, to);
+      return;
+    }
     const stops = tabStops(root);
+    if (key === 'escape' || key === 'dictate') {
+      // Keys sent to whatever has focus (#45): Escape, or a dictated phrase letter by letter.
+      // With no control focused they go to what the pointer is on (#47), else to the example
+      // itself, as keys go to the page body. A letter the example doesn't cancel is typed into
+      // the field it lands on.
+      const at = simulated ? stops[simAt] : realAt.current;
+      const focused = at && at.isConnected && root.contains(at) ? at : null;
+      const target = focused ?? hoverEl.current ?? root.firstElementChild ?? root;
+      const where = focused ? lineFor(focused) : null;
+      const actions: string[] = [];
+      const hear = (e: Event) => actions.push((e as CustomEvent<string>).detail);
+      root.addEventListener(ACTION_EVENT, hear);
+      fromBar.current = true;
+      for (const k of key === 'escape' ? ['Escape'] : [...DICTATION]) {
+        const typed = target.dispatchEvent(
+          new KeyboardEvent('keydown', { key: k, bubbles: true, cancelable: true }),
+        );
+        const field = target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement;
+        if (typed && field && k.length === 1) target.value += k;
+      }
+      fromBar.current = false;
+      root.removeEventListener(ACTION_EVENT, hear);
+      push({
+        kind: 'keys',
+        simulated,
+        keys: key === 'escape' ? 'Escape' : DICTATION,
+        dictated: key === 'dictate',
+        target: where,
+        actions,
+      });
+      return;
+    }
     if (key === 'voice') {
       // The reader says "click" and the text they see on the first control (#49). Voice
       // control clicks the control whose accessible name contains those words.
@@ -148,18 +259,32 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     }
     if (key === 'tab' || key === 'shift-tab') {
       const back = key === 'shift-tab';
+      cause.current = 'focus';
       if (simulated) {
         const next = step(stops.length, simAt, back);
         setSimAt(next);
+        // Simulated focus scrolls a scrolling box in the example as real focus would (#46).
+        if (next >= 0) revealWithin(root, stops[next]!);
         if (next >= 0) {
+          const el = stops[next]!;
           push({
             kind: 'focus',
             simulated,
-            line: lineFor(stops[next]!),
+            line: lineFor(el),
             index: next,
             total: stops.length,
             map: mapFor(stops),
           });
+          // The example's own focus handlers run as they would for real focus (#47): a broken
+          // one that changes the page on focus does so here, inside the inert example.
+          const prev = simEl.current;
+          simEl.current = el;
+          if (prev && prev !== el) {
+            prev.dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget: el }));
+          }
+          if (prev !== el) {
+            el.dispatchEvent(new FocusEvent('focusin', { bubbles: true, relatedTarget: prev }));
+          }
         }
       } else {
         const next = step(stops.length, realAt.current ? stops.indexOf(realAt.current) : -1, back);
@@ -170,9 +295,12 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     }
     const target = simulated ? stops[simAt] : realAt.current;
     if (!target || !activates(key, target)) return;
+    cause.current = 'action';
     const before = spoken(lineFor(target));
     target.click();
     // A control whose name, role and states didn't change (a plain button) says nothing new.
+    // One that went with its page (#47) says nothing either.
+    if (!target.isConnected) return;
     const after = lineFor(target);
     if (simulated && spoken(after) !== before) push({ kind: 'change', simulated, line: after });
   };
@@ -192,7 +320,7 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     place();
     window.addEventListener('resize', place);
     return () => window.removeEventListener('resize', place);
-  }, [simulated, simAt]);
+  }, [simulated, simAt, zoomAt]);
 
   // Real input on the pass stage.
   useEffect(() => {
@@ -216,12 +344,130 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     const onChange = (e: Event) => {
       push({ kind: 'change', simulated: false, line: lineFor(e.target as Element) });
     };
+    // A real key that made the example do something (#45): Escape closing a dialog, or a
+    // focus-scoped shortcut. Keys that did nothing are the reader's own business, except Escape
+    // on a stage with "Hover" (#47), whose pointer log shows it with what the tooltip did.
+    // A Tab key also marks focus as the reader's doing, for a change of page (#47): focus the
+    // example moves itself (after Go, say) is not.
+    let lastKey = '';
+    const onKey = (e: KeyboardEvent) => {
+      if (fromBar.current) return;
+      lastKey = e.key;
+      if (!e.isTrusted) return;
+      if (e.key === 'Tab') cause.current = 'focus';
+      if (e.key === 'Escape' && pointerStage) {
+        const el = document.activeElement;
+        push({
+          kind: 'keys',
+          simulated: false,
+          keys: 'Escape',
+          dictated: false,
+          target: el && el !== root && root.contains(el) ? lineFor(el) : null,
+          actions: [],
+        });
+      }
+    };
+    const onAction = (e: Event) => {
+      if (fromBar.current) return;
+      const el = document.activeElement;
+      push({
+        kind: 'keys',
+        simulated: false,
+        keys: lastKey,
+        dictated: false,
+        target: el && el !== root && root.contains(el) ? lineFor(el) : null,
+        actions: [(e as CustomEvent<string>).detail],
+      });
+    };
+    const onClick = () => {
+      cause.current = 'action';
+    };
+    // A real pointer: onto a hover target, between them, or out of the example (#47). The bar's
+    // own moves are untrusted events and are pushed by `press`.
+    const onOver = (e: MouseEvent) => {
+      if (!e.isTrusted) return;
+      const to = (e.target as Element).closest<HTMLElement>('[data-hover]');
+      if (to === hoverEl.current || (to && !root.contains(to))) return;
+      hoverEl.current = to;
+      cause.current = 'pointer';
+      setCursor(null);
+      push({ kind: 'pointer', simulated: false, on: to ? (to.dataset.hover ?? '') : null });
+    };
+    const onLeave = (e: MouseEvent) => {
+      if (!e.isTrusted || hoverEl.current === null) return;
+      hoverEl.current = null;
+      push({ kind: 'pointer', simulated: false, on: null });
+    };
     root.addEventListener('focusin', onFocus);
     root.addEventListener('change', onChange);
+    root.addEventListener('keydown', onKey, true);
+    root.addEventListener(ACTION_EVENT, onAction);
+    root.addEventListener('click', onClick);
+    root.addEventListener('mouseover', onOver);
+    root.addEventListener('mouseleave', onLeave);
     return () => {
       root.removeEventListener('focusin', onFocus);
       root.removeEventListener('change', onChange);
+      root.removeEventListener('keydown', onKey, true);
+      root.removeEventListener(ACTION_EVENT, onAction);
+      root.removeEventListener('click', onClick);
+      root.removeEventListener('mouseover', onOver);
+      root.removeEventListener('mouseleave', onLeave);
     };
+  }, [simulated, push, pointerStage]);
+
+  // What the example shows (#47), on both stages: its tooltips and its own page. Read after any
+  // change in it, whatever caused the change, so instruments see the outcome, not the intent.
+  const started = useRef(false);
+  useEffect(() => {
+    const root = example.current;
+    if (!root) return;
+    let address = contextOf(root);
+    let popup = popupText(root);
+    if (address !== null && !started.current) {
+      push({ kind: 'context', simulated, address, cause: null });
+    }
+    started.current = true;
+    const observer = new MutationObserver(() => {
+      const nextAddress = contextOf(root);
+      if (nextAddress !== null && nextAddress !== address) {
+        address = nextAddress;
+        push({ kind: 'context', simulated, address, cause: cause.current });
+        // A new page restarts the focus tracker; where real focus is now goes back on it.
+        const active = document.activeElement;
+        const stops = tabStops(root);
+        if (!simulated && active instanceof HTMLElement && stops.includes(active)) {
+          push({
+            kind: 'focus',
+            simulated: false,
+            line: lineFor(active),
+            index: stops.indexOf(active),
+            total: stops.length,
+            map: mapFor(stops),
+          });
+        }
+      }
+      const nextPopup = popupText(root);
+      if (nextPopup !== popup) {
+        popup = nextPopup;
+        push({ kind: 'popup', simulated, text: popup });
+      }
+      // Simulated focus on something that went away goes nowhere, as real focus would.
+      const el = simEl.current;
+      if (simulated && el && (!el.isConnected || el.closest('[hidden]'))) {
+        simEl.current = null;
+        setSimAt(-1);
+      }
+    });
+    observer.observe(root, {
+      subtree: true,
+      childList: true,
+      characterData: true,
+      attributes: true,
+      attributeFilter: ['hidden'],
+    });
+    return () => observer.disconnect();
+    // lineFor and mapFor read refs only.
   }, [simulated, push]);
 
   // Status messages (4.1.3), on both stages: when a live region's text changes, it is announced
@@ -241,21 +487,35 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     return () => observer.disconnect();
   }, [simulated, push]);
 
+  const onMeasure = (scrolls: Scrolls) => {
+    if (!zoomed.current || !live.zoomFrame) return;
+    zoomed.current = false;
+    const zoom = ZOOMS[zoomAt]!;
+    push({ kind: 'zoom', simulated, zoom, ...viewportAt(zoom, live.zoomFrame), ...scrolls });
+  };
+
   const { Example } = live;
   const prefix = filterPrefix(id);
   const filtered = live.keys.includes('vision')
     ? { className: 'live__example vis-target', style: visionStyle(vision, prefix) }
     : { className: 'live__example' };
+  const shown = live.zoomFrame ? (
+    <ZoomFrame zoom={ZOOMS[zoomAt]!} base={live.zoomFrame} focusable={!simulated} onMeasure={onMeasure}>
+      <Example />
+    </ZoomFrame>
+  ) : (
+    <Example />
+  );
   return (
     <>
       <div className="stage__example live__frame" ref={frame}>
         {simulated ? (
           <div {...filtered} ref={example} aria-hidden="true" inert>
-            <Example />
+            {shown}
           </div>
         ) : (
           <div {...filtered} ref={example}>
-            <Example />
+            {shown}
           </div>
         )}
         {live.keys.includes('vision') ? <VisionDefs prefix={prefix} /> : null}
@@ -274,6 +534,25 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
                 : undefined
             }
           />
+        ) : null}
+        {live.keys.includes('hover') ? (
+          // The bar's pointer, drawn on either stage (#47): it moves by transform only.
+          <span
+            className="sim-cursor"
+            aria-hidden="true"
+            data-on={cursor ? 'true' : 'false'}
+            style={
+              cursor
+                ? {
+                    transform: `translate(${cursor.x + Math.min(cursor.w / 2, 24)}px, ${cursor.y + cursor.h / 2}px)`,
+                  }
+                : undefined
+            }
+          >
+            <svg viewBox="0 0 16 22" width="16" height="22" focusable="false">
+              <path d="M1 1 L1 17 L5 13 L8 20 L11 19 L8 12 L14 12 Z" />
+            </svg>
+          </span>
         ) : null}
       </div>
       <div
