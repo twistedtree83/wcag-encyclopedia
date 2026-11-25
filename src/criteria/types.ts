@@ -43,7 +43,9 @@ export type SimKey =
   | 'headings'
   | 'zoom'
   | 'tap'
-  | 'vision';
+  | 'vision'
+  | 'wait'
+  | 'run';
 
 export type LiveExample = {
   /**
@@ -67,6 +69,12 @@ export type LiveExample = {
    * key step it through 100%, 200% and 400%. The `zoom-meter` instrument shows what scrolls.
    */
   readonly zoomFrame?: { readonly width: number; readonly height: number };
+  /**
+   * The stage's mock clock (#61), for the bar's "Wait 20 seconds" and "Run the clock": where it
+   * stops, in mock seconds. The example reads the time with `useClockNow()` (`src/live/clock.ts`)
+   * and names what it shows in a `data-timer` attribute, for the `clock` instrument.
+   */
+  readonly clock?: { readonly end: number };
 };
 
 export type DiffLine = {

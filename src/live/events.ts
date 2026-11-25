@@ -3,6 +3,7 @@ import type { FocusMap } from './focusTrack';
 import type { CueSeen, VisionFilter } from './vision';
 import { scrollLine } from '../labs/zoom';
 import type { GestureEvent } from './gesture';
+import type { ClockEvent } from './clock';
 
 /**
  * What happens on a live example's stage (#43), as a list of events every instrument under the
@@ -62,7 +63,9 @@ export type StageEvent =
   /** What the example's open tooltips (`role="tooltip"`) say now, or null for none (#47). */
   | { readonly kind: 'popup'; readonly simulated: boolean; readonly text: string | null }
   /** The example's own page (`data-context`) is now `address`, and what moved it there (#47). */
-  | { readonly kind: 'context'; readonly simulated: boolean; readonly address: string; readonly cause: ContextCause | null };
+  | { readonly kind: 'context'; readonly simulated: boolean; readonly address: string; readonly cause: ContextCause | null }
+  /** The mock clock moved, and what the example shows now (#61). */
+  | ClockEvent;
 
 /** What the reader last did before the example changed page: moved focus, acted, or hovered. */
 export type ContextCause = 'focus' | 'action' | 'pointer';

@@ -7,6 +7,7 @@ import { gestureLines } from './gesture';
 import { withVoices } from '../labs/language';
 import { filterName } from './vision';
 import { scrollLine } from '../labs/zoom';
+import { clockLines, clockNowLine } from './clock';
 
 /**
  * The instruments a live example's stage can carry (#43, CONTEXT.md "Instrument"), by id. A
@@ -355,7 +356,31 @@ function ContextInstrument({ id, events }: InstrumentProps) {
   );
 }
 
+/**
+ * The clock (#61): the stage's mock time, whether it is running, and each time the example
+ * changed on it (a warning, an expiry), with when. It never starts on its own.
+ */
+function ClockInstrument({ id, events }: InstrumentProps) {
+  const lines = clockLines(events);
+  return (
+    <div className="alog clock-log">
+      <p className="alog__h" id={`${id}-h`}>
+        Clock
+      </p>
+      <p className="clock-log__now">{clockNowLine(events)}</p>
+      {lines.length > 0 ? (
+        <ol aria-labelledby={`${id}-h`}>
+          {lines.map((line, i) => (
+            <li key={i}>{line}</li>
+          ))}
+        </ol>
+      ) : null}
+    </div>
+  );
+}
+
 export const INSTRUMENTS: Readonly<Record<string, ComponentType<InstrumentProps>>> = {
+  clock: ClockInstrument,
   'gesture-pad': GesturePad,
   'announcement-log': LogInstrument,
   'voice-log': VoiceLogInstrument,

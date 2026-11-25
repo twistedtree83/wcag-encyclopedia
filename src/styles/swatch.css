@@ -3606,6 +3606,81 @@ ul.st-list li::before {
   grid-template-columns: minmax(0, 1fr);
 }
 
+/* --- Clock and 2.2.1 (L-21) ---------------------------------------------------------------- */
+
+/* The 2.2.1 live examples: a one-field application, its warning, or its end. */
+.sess {
+  display: grid;
+  gap: 12px;
+}
+.sess .notice {
+  margin: 0;
+}
+/* The clock instrument: the mock time, then each change the example made on it. */
+.clock-log__now {
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+.stage__instruments > .clock-log + .alog {
+  margin-top: 16px;
+}
+/* The 2.2.1 lab: Sam's screen, the choices, the clock's buttons, then what happened to Sam. */
+.sess-mock {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+  max-width: 420px;
+  padding: 24px;
+  border-radius: calc(var(--rad) * 0.65);
+  background: var(--card-bg);
+  color: var(--ink);
+}
+.sess-mock .notice {
+  justify-self: stretch;
+  margin: 0;
+}
+.sess-mock__offer {
+  margin: 0;
+  font-size: var(--small);
+  font-weight: 600;
+}
+.sess-clock {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.sess-clock__now {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.sess-beats {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sess-beats li {
+  padding: 6px 12px;
+  border-left: 3px solid var(--line-2);
+  color: var(--ink);
+}
+.sess-beats li.bad {
+  border-left-color: var(--err-text);
+  color: var(--err-text);
+  font-weight: 600;
+}
+.sess-beats li.ok {
+  border-left-color: var(--ok-text);
+  color: var(--ok-text);
+  font-weight: 600;
+}
+.sess-beats__at {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
 /* --- Breakpoints ------------------------------------------------------------------------ */
 
 @media (max-width: 1100px) {

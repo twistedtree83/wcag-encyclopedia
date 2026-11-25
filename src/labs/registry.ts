@@ -34,6 +34,7 @@ import { NameRoleValueLab } from './NameRoleValueLab';
 import { OnFocusLab } from './OnFocusLab';
 import { PageTitleLab } from './PageTitleLab';
 import { ReflowLab } from './ReflowLab';
+import { SessionLab } from './SessionLab';
 import { PageLanguageLab, PartsLanguageLab } from './LanguageLabs';
 import { StatusLab } from './StatusLab';
 import { SequenceLab } from './SequenceLab';
@@ -112,6 +113,7 @@ export const LABS: readonly LabEntry[] = [
   { id: 'use-of-colour', title: 'Try it: take the colour away', Lab: UseOfColourLab },
   { id: 'non-text-contrast', title: 'Try it: fade the edges', Lab: NonTextContrastLab },
   { id: 'sensory-instruction', title: 'Try it: rewrite the instruction', Lab: SensoryLab },
+  { id: 'session-timeout', title: 'Try it: time out the session', Lab: SessionLab, flagshipFor: '2.2.1' },
 ];
 
 export function labById(id: string): LabEntry | undefined {
