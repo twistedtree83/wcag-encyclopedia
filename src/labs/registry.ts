@@ -48,6 +48,8 @@ import { NonTextContrastLab, SensoryLab, UseOfColourLab } from './VisionLabs';
 import { TooltipLab } from './TooltipLab';
 import { MultipleWaysLab } from './MultipleWaysLab';
 import { ConsistentNavLab } from './ConsistentNavLab';
+import { ConsistentIdLab } from './ConsistentIdLab';
+import { ConsistentHelpLab } from './ConsistentHelpLab';
 
 export type LabProps = {
   /** The number of the criterion page showing the lab, e.g. "1.4.11". */
@@ -125,6 +127,8 @@ export const LABS: readonly LabEntry[] = [
   { id: 'sensory-instruction', title: 'Try it: rewrite the instruction', Lab: SensoryLab },
   { id: 'multiple-ways', title: 'Try it: find the buried page', Lab: MultipleWaysLab },
   { id: 'consistent-navigation', title: 'Try it: shuffle the menu', Lab: ConsistentNavLab },
+  { id: 'consistent-identification', title: 'Try it: name the search button', Lab: ConsistentIdLab },
+  { id: 'consistent-help', title: 'Try it: move the help link', Lab: ConsistentHelpLab },
   { id: 'redundant-entry', title: 'Try it: check out without retyping', Lab: RedundantEntryLab },
   { id: 'accessible-auth', title: 'Try it: sign in without a test', Lab: AccessibleAuthLab },
 ];

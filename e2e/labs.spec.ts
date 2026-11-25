@@ -485,6 +485,44 @@ const LABS: LabCase[] = [
       'The menu keeps one order on every page. On Home it reads Home, Products, Support, Account.',
   },
   {
+    name: 'the name-the-search-button lab on 3.2.4',
+    url: '/criteria/3.2.4/',
+    lab: '.lab-slot .id-lab',
+    passing: '3.2.4 passes',
+    failing: '3.2.4 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      // Home is “Search”: show Products, name it “Search”; then Support, the same.
+      for (const from of ['Home', 'Products']) {
+        await radio(lab, from).focus();
+        await page.keyboard.press('ArrowDown');
+        await radio(lab, 'Search').focus();
+        await page.keyboard.press('Space');
+      }
+    },
+    said: 'The search button has one name on every page: “Search”. On Support it reads “Search”.',
+  },
+  {
+    name: 'the move-the-help-link lab on 3.2.6',
+    url: '/criteria/3.2.6/',
+    lab: '.lab-slot .help-lab',
+    passing: '3.2.6 passes',
+    failing: '3.2.6 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      // Home has help in the header; Products moves it there, and Account drops it.
+      await radio(lab, 'Home').focus();
+      await page.keyboard.press('ArrowDown');
+      await radio(lab, 'In the header').focus();
+      await page.keyboard.press('Space');
+      await radio(lab, 'Products').focus();
+      await page.keyboard.press('ArrowDown');
+      await radio(lab, 'Not on this page').focus();
+      await page.keyboard.press('Space');
+    },
+    said: 'Every page with help has it in the header. Account has no help link.',
+  },
+  {
     name: 'the tame-the-tooltip lab on 1.4.13',
     url: '/criteria/1.4.13/',
     lab: '.lab-slot .tip-lab',

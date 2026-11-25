@@ -74,3 +74,4 @@ Graph: `scripts2/prd-labs.json` · Parent: #40 · Integration branch: `labs`
 - [x] **L-19** #59 — Forms: 3.2.2, 3.3.3 and 3.3.4 (L-03)
 - [x] **L-23** #63 — Mock site, with 2.4.5 and 3.2.3 (L-03)
 - [x] **L-20** #60 — Forms: 3.3.7 and 3.3.8 (L-03)
+- [x] **L-24** #64 — Consistency: 3.2.4 and 3.2.6 (L-23)
