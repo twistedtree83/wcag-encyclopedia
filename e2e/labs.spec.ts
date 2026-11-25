@@ -242,6 +242,46 @@ const LABS: LabCase[] = [
     },
     said: 'In the markup: heading, list and labels. Nothing is only styled.',
   },
+  {
+    name: 'the reach-the-button lab on 2.1.1',
+    url: '/criteria/2.1.1/',
+    lab: '.lab-slot .kb-lab',
+    passing: '2.1.1 passes',
+    failing: '2.1.1 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await radio(lab, 'A click-only div').focus();
+      await page.keyboard.press('ArrowDown');
+      await page.keyboard.press('ArrowDown');
+    },
+    said: 'A real button. Tab reaches it, and Enter and Space press it.',
+  },
+  {
+    name: 'the focus trap lab on 2.1.2',
+    url: '/criteria/2.1.2/',
+    lab: '.lab-slot .trap-lab',
+    passing: '2.1.2 passes',
+    failing: '2.1.2 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await radio(lab, 'Trap focus, no way out').focus();
+      await page.keyboard.press('ArrowDown');
+    },
+    said: 'Traps focus, and Escape lets it out.',
+  },
+  {
+    name: 'the dictation lab on 2.1.4',
+    url: '/criteria/2.1.4/',
+    lab: '.lab-slot .sc-lab',
+    passing: '2.1.4 passes',
+    failing: '2.1.4 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await radio(lab, 'e, always on').focus();
+      await page.keyboard.press('ArrowDown');
+    },
+    said: 'Shortcut remapped to Alt+E.',
+  },
 ];
 
 async function open(page: Page, url: string) {

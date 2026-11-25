@@ -30,7 +30,19 @@ export type StageEvent =
   /** "Autofill": what a browser put in each field, by the field's name ('' for nothing). */
   | { readonly kind: 'autofill'; readonly simulated: boolean; readonly fields: readonly AutofilledField[] }
   /** "Say what you see": a voice command, and the control it clicked, or null for none. */
-  | { readonly kind: 'voice'; readonly simulated: boolean; readonly phrase: string; readonly clicked: Announcement | null };
+  | { readonly kind: 'voice'; readonly simulated: boolean; readonly phrase: string; readonly clicked: Announcement | null }
+  /** A key ("Escape") or a dictated phrase sent to the focused control, and what it set off (#45). */
+  | {
+      readonly kind: 'keys';
+      readonly simulated: boolean;
+      /** The key's name, or the dictated words. */
+      readonly keys: string;
+      readonly dictated: boolean;
+      /** Where focus was when the keys arrived, or null for no control. */
+      readonly target: Announcement | null;
+      /** What the example did in response, in order (`didAction` in `actions.ts`). */
+      readonly actions: readonly string[];
+    };
 
 export type AutofilledField = { readonly name: string; readonly value: string };
 
@@ -67,4 +79,21 @@ export function autofillSaid({ fields }: Of<'autofill'>): string {
 export function voiceSaid({ phrase, clicked }: Of<'voice'>): string {
   const said = `You said “${phrase}”.`;
   return clicked ? `${said} It clicked ${spoken(clicked)}.` : `${said} Nothing matched.`;
+}
+
+const keysPhrase = ({ keys, dictated }: Of<'keys'>) =>
+  dictated ? `Dictated “${keys}”` : `Pressed ${keys}`;
+const focusPhrase = ({ target }: Of<'keys'>) => (target ? spoken(target) || 'blank' : 'no control');
+
+/** The key log's lines for one keys event: the keys, where focus was, then what happened. */
+export function keyLines(e: Of<'keys'>): string[] {
+  const did = e.actions.length > 0 ? [...e.actions] : ['Nothing happened'];
+  return [keysPhrase(e), `Focus: ${focusPhrase(e)}`, ...did];
+}
+
+/** What is said after keys arrive: what they set off, each thing once, or that nothing happened. */
+export function keysSaid(e: Of<'keys'>): string {
+  const did = [...new Set(e.actions)];
+  const where = `${e.dictated ? 'with focus on' : 'on'} ${focusPhrase(e)}`;
+  return `${keysPhrase(e)} ${where}. ${did.length > 0 ? did.join('. ') : 'Nothing happened'}.`;
 }

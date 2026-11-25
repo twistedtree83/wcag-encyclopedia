@@ -1,7 +1,7 @@
 import type { ComponentType } from 'react';
 import { AnnouncementLog } from '../labs/AnnouncementLog';
 import { spoken } from '../labs/announce';
-import { lastOf, logOf, type StageEvent } from './events';
+import { keyLines, lastOf, logOf, type StageEvent } from './events';
 import { trackOf } from './focusTrack';
 
 /**
@@ -138,11 +138,35 @@ function VoiceInstrument({ id, events }: InstrumentProps) {
   );
 }
 
+/** The last key or dictated phrase sent to the example, where focus was, and what it set off (#45). */
+function KeyLog({ id, events }: InstrumentProps) {
+  const last = lastOf(events, 'keys');
+  return (
+    <div className="alog">
+      <p className="alog__h" id={`${id}-h`}>
+        Keys
+      </p>
+      {last ? (
+        <ol aria-labelledby={`${id}-h`}>
+          {keyLines(last).map((text, i) => (
+            <li key={i} className={text === 'Nothing happened' ? 'alog__blank' : undefined}>
+              {text}
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <p className="alog__empty">No keys sent yet.</p>
+      )}
+    </div>
+  );
+}
+
 export const INSTRUMENTS: Readonly<Record<string, ComponentType<InstrumentProps>>> = {
   'announcement-log': LogInstrument,
   'focus-tracker': FocusTracker,
   autofill: AutofillInstrument,
   'voice-control': VoiceInstrument,
+  'key-log': KeyLog,
 };
 
 /** The ids in `ids` that no registered instrument answers to. Empty when all resolve. */

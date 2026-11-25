@@ -16,6 +16,9 @@ import { ColourCheckLab } from './ColourCheck';
 import { FadeLab } from './FadeLab';
 import { FocusRingLab } from './FocusRingLab';
 import { InputPurposeLab } from './InputPurposeLab';
+import { KeyboardLab } from './KeyboardLab';
+import { KeyboardTrapLab } from './KeyboardTrapLab';
+import { ShortcutLab } from './ShortcutLab';
 import { LabelInNameLab } from './LabelInNameLab';
 import { NameRoleValueLab } from './NameRoleValueLab';
 import { SequenceLab } from './SequenceLab';
@@ -67,6 +70,9 @@ export const LABS: readonly LabEntry[] = [
   { id: 'label-in-name', title: 'Try it: say what you see', Lab: LabelInNameLab },
   { id: 'alt-text', title: 'Try it: write the alt text', Lab: AltTextLab, flagshipFor: '1.1.1' },
   { id: 'structure', title: 'Try it: build the structure', Lab: StructureLab, flagshipFor: '1.3.1' },
+  { id: 'keyboard-control', title: 'Try it: reach the button by keyboard', Lab: KeyboardLab },
+  { id: 'keyboard-trap', title: 'Try it: trap the focus, or let it go', Lab: KeyboardTrapLab },
+  { id: 'character-shortcuts', title: 'Try it: dictate past a shortcut', Lab: ShortcutLab },
 ];
 
 export function labById(id: string): LabEntry | undefined {

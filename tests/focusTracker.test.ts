@@ -67,4 +67,23 @@ describe('the focus tracker', () => {
     expect(trail).toHaveLength(TRAIL_STEPS);
     expect(trail[trail.length - 1]).toBe(19 % 3);
   });
+
+  it('starts a new trail when the example’s Tab stops change, as when a dialog closes (#45)', () => {
+    const one: StageEvent = {
+      kind: 'focus',
+      simulated: false,
+      line: line('Sign up'),
+      index: 0,
+      total: 1,
+      map: {
+        width: 300,
+        height: 60,
+        stops: [{ x: 0, y: 0, w: 80, h: 40, label: 'Sign up, button' }],
+      },
+    };
+    const t = trackOf([focus(0), focus(1), focus(2), one]);
+    expect(t.trail).toEqual([0]);
+    expect(t.current).toBe(0);
+    expect(t.total).toBe(1);
+  });
 });
