@@ -2458,13 +2458,18 @@ ul.st-list li::before {
 .zframe__view:focus-visible {
   outline-offset: -6px;
 }
-.zframe--spaced .zframe__view * {
+/* 1.4.12's overrides, one class each, as a reader's stylesheet would apply them (TEXT_SPACING). */
+.zframe--line .zframe__view * {
   line-height: 1.5 !important;
-  letter-spacing: 0.12em !important;
-  word-spacing: 0.16em !important;
 }
-.zframe--spaced .zframe__view p {
+.zframe--paragraph .zframe__view p {
   margin-bottom: 2em !important;
+}
+.zframe--letter .zframe__view * {
+  letter-spacing: 0.12em !important;
+}
+.zframe--word .zframe__view * {
+  word-spacing: 0.16em !important;
 }
 /* The catalogue page drawn in the frame, sized in em so the frame's text size reaches it. */
 .zpage {
@@ -3372,6 +3377,60 @@ ul.st-list li::before {
   margin-top: 16px;
 }
 
+/* --- Text size and spacing: 1.4.4 and 1.4.12 (L-14) ------------------------------------------ */
+
+/* The notice card drawn in the zoom frame. Sized in em so the frame's text size reaches it, in
+   the system font so no late web font changes it after its boxes are measured (NoticeCard). Its
+   own spacing is tighter than 1.4.12's, so each override visibly grows it. */
+.ncard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75em;
+  margin: 1.25em;
+  padding: 1em 1.25em;
+  border: 1px solid var(--line-2);
+  border-radius: 0.5em;
+  font-family: system-ui, sans-serif;
+  line-height: 1.25;
+}
+.ncard__title {
+  font-weight: 700;
+  font-size: 1.25em;
+}
+.ncard__body,
+.ncard__tag {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+.ncard__body p {
+  margin: 0 0 0.5em;
+}
+.ncard__tag {
+  display: inline-block;
+  padding: 0.25em 0.75em;
+  border: 1px solid var(--line-2);
+  border-radius: 1em;
+  background: var(--deep);
+  font-weight: 600;
+}
+/* Locked: each box is held at its designed size (inline, in px) and clips what no longer fits. */
+.ncard--locked .ncard__body,
+.ncard--locked .ncard__tag {
+  overflow: hidden;
+}
+.ncard--locked .ncard__tag {
+  white-space: nowrap;
+}
+/* Both labs: the frame, then the choices, then the readouts. */
+.fit-mock {
+  max-width: 560px;
+}
+.sem-choice .fit-all {
+  align-self: flex-start;
+  margin-top: 8px;
+}
+
 /* --- Forms: on input, error suggestion and error prevention: 3.2.2, 3.3.3, 3.3.4 (L-19) ---- */
 
 /* A depicted address bar, so a page change inside an example or mock can be seen. */
@@ -3604,6 +3663,59 @@ ul.st-list li::before {
 }
 .lab-res.vis-cues {
   grid-template-columns: minmax(0, 1fr);
+}
+
+/* --- Redundant entry and accessible authentication: 3.3.7 and 3.3.8 (L-20) ---------------- */
+
+/* The step a checkout is on, in the live examples and the 3.3.7 lab's mock. */
+.lform__step {
+  margin: 0;
+  font-weight: 600;
+}
+/* 3.3.7's fixed example: the delivery address offered back as a ticked box, 24px or more. */
+.lform__check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  font-size: var(--small);
+}
+.lform__check input {
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  accent-color: var(--ink);
+}
+/* 3.3.8's picture puzzle: letters set at angles, the cognitive test the criterion is about. */
+.lform__puzzle {
+  display: inline-flex;
+  gap: 6px;
+  padding: 8px 14px;
+  border: var(--bwid) dashed var(--line-2);
+  border-radius: var(--rad-sm);
+  color: var(--ink);
+  font: italic 700 22px/1 var(--fh), sans-serif;
+}
+.lform__puzzle > span:nth-child(odd) {
+  transform: rotate(-14deg) translateY(2px);
+}
+.lform__puzzle > span:nth-child(even) {
+  transform: rotate(11deg) translateY(-3px);
+}
+.lform__puzzle > span {
+  display: inline-block;
+}
+/* The 3.3.7 and 3.3.8 mocks' drawn fields: a field's colours, on the mock's card. */
+.flab__mock .swatch-field {
+  width: 100%;
+  max-width: 320px;
+  background: var(--bg);
+  color: var(--ink);
+}
+.re-lab__steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 /* --- Pointer: 2.5.1, 2.5.2, 2.5.4 and 2.5.7 (L-18) ------------------------------------------ */
