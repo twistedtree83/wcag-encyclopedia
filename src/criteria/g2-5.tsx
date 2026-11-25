@@ -6,6 +6,8 @@
  * criterion names an alternative for a body that does not work that way.
  */
 
+import { useState } from 'react';
+import { didAction } from '../live/actions';
 import type { CriterionRecord, LiveExample } from './types';
 
 /*
@@ -28,6 +30,50 @@ const MislabelledSend = () => <SendButton label="Submit form" />;
 const LabelledSend = () => <SendButton label="Send message to support" />;
 
 const SEND_KEYS: LiveExample['keys'] = ['tab', 'voice', 'read'];
+
+/*
+ * 2.5.8's live examples (#57): a post's toolbar, Like, Retweet and Delete. "Tap" is a fingertip
+ * that aims at each in turn and lands 10px off, as fingers do. The broken icons are 16px and
+ * touch, so it presses the wrong one or none; the fixed ones are 24px and it presses the one it
+ * aimed at. The gesture pad draws where it aimed and where it landed.
+ */
+
+const TOOLBAR = [
+  { glyph: '★', name: 'Like', did: 'Liked the post' },
+  { glyph: '↻', name: 'Retweet', did: 'Retweeted the post' },
+  { glyph: '✕', name: 'Delete', did: 'Deleted the post' },
+] as const;
+
+function Toolbar({ small }: { small: boolean }) {
+  const [last, setLast] = useState<string | null>(null);
+  return (
+    <div className="live-taps">
+      <div className={small ? 'tap-row tap-row--packed' : 'tap-row'}>
+        {TOOLBAR.map((t) => (
+          <button
+            key={t.name}
+            type="button"
+            className={small ? 'tap-target tap-target--small' : 'tap-target'}
+            aria-label={t.name}
+            onClick={(e) => {
+              didAction(e.currentTarget, t.did);
+              setLast(t.did);
+            }}
+          >
+            {t.glyph}
+          </button>
+        ))}
+      </div>
+      <p className="example-note">{last ? `${last}.` : 'Nothing pressed yet.'}</p>
+    </div>
+  );
+}
+
+const PackedToolbar = () => <Toolbar small />;
+const SizedToolbar = () => <Toolbar small={false} />;
+
+const TAP_KEYS: LiveExample['keys'] = ['tap'];
+const TAP_INSTRUMENTS = ['gesture-pad'];
 
 export const G2_5: readonly CriterionRecord[] = [
   {
@@ -272,12 +318,14 @@ export const G2_5: readonly CriterionRecord[] = [
     since: '2.2',
     guideline: '2.5',
     demos: ['targets-2-5-8'],
+    labs: ['target-size'],
     plain:
       'Targets need to be at least 24 by 24 CSS pixels, or spaced so that a 24px circle centred ' +
       'on each does not overlap its neighbours. New in WCAG 2.2. Inline links in a sentence are ' +
       'exempt.',
     fail: {
       caption: 'Sixteen-pixel icons, packed edge to edge.',
+      live: { Example: PackedToolbar, keys: TAP_KEYS, instruments: TAP_INSTRUMENTS },
       render: () => (
         <>
           <div className="targets">
@@ -294,6 +342,7 @@ export const G2_5: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'The same icons in 24px targets.',
+      live: { Example: SizedToolbar, keys: TAP_KEYS, instruments: TAP_INSTRUMENTS },
       render: () => (
         <>
           <div className="targets">

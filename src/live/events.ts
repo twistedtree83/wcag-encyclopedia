@@ -1,6 +1,7 @@
 import { spoken, type Announcement } from '../labs/announce';
 import type { FocusMap } from './focusTrack';
 import { scrollLine } from '../labs/zoom';
+import type { GestureEvent } from './gesture';
 
 /**
  * What happens on a live example's stage (#43), as a list of events every instrument under the
@@ -51,6 +52,8 @@ export type StageEvent =
       /** What the example did in response, in order (`didAction` in `actions.ts`). */
       readonly actions: readonly string[];
     }
+  /** A pointer gesture: a simulated tap or tilt from the bar, or a real pointer down and up (#57). */
+  | GestureEvent
   /** "Hover": the pointer moved onto a `data-hover` target, named by it, or away (null) (#47). */
   | { readonly kind: 'pointer'; readonly simulated: boolean; readonly on: string | null }
   /** What the example's open tooltips (`role="tooltip"`) say now, or null for none (#47). */

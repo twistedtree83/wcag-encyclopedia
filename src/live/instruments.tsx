@@ -3,6 +3,7 @@ import { AnnouncementLog } from '../labs/AnnouncementLog';
 import { spoken } from '../labs/announce';
 import { contextLog, keyLines, lastOf, logOf, pointerLog, type StageEvent } from './events';
 import { trackOf } from './focusTrack';
+import { gestureLines } from './gesture';
 import { withVoices } from '../labs/language';
 import { scrollLine } from '../labs/zoom';
 
@@ -196,6 +197,82 @@ function KeyLog({ id, events }: InstrumentProps) {
 }
 
 /**
+ * The gesture pad under a stage (#57): a small map of the example's targets with the last
+ * gesture drawn on it. A cross where a tap aimed, a dashed line to where it landed, a dot where
+ * the pointer went down, a ring where it came up, the path between, and a tilted phone for a
+ * tilt. The map is a picture (aria-hidden); the list beneath it says the same in text.
+ */
+function GesturePad({ id, events }: InstrumentProps) {
+  const last = lastOf(events, 'gesture');
+  const map = last?.map;
+  const downAt = last?.path[0];
+  const upAt = last?.path[last.path.length - 1];
+  return (
+    <div className="gpad">
+      <p className="alog__h" id={`${id}-h`}>
+        Gesture pad
+      </p>
+      {last && map ? (
+        <>
+          <svg
+            className="gpad__map"
+            viewBox={`-8 -8 ${map.width + 16} ${map.height + 16}`}
+            aria-hidden="true"
+            focusable="false"
+          >
+            {map.stops.map((s, i) => (
+              <rect
+                key={i}
+                className={i === last.downOn ? 'gpad__target is-hit' : 'gpad__target'}
+                x={s.x}
+                y={s.y}
+                width={s.w}
+                height={s.h}
+                rx="2"
+              />
+            ))}
+            {last.aim ? (
+              <g className="gpad__aim">
+                <line x1={last.aim.x - 4} y1={last.aim.y} x2={last.aim.x + 4} y2={last.aim.y} />
+                <line x1={last.aim.x} y1={last.aim.y - 4} x2={last.aim.x} y2={last.aim.y + 4} />
+                {downAt ? (
+                  <line className="gpad__slip" x1={last.aim.x} y1={last.aim.y} x2={downAt.x} y2={downAt.y} />
+                ) : null}
+              </g>
+            ) : null}
+            {last.path.length > 1 ? (
+              <polyline className="gpad__path" points={last.path.map((p) => `${p.x},${p.y}`).join(' ')} />
+            ) : null}
+            {downAt ? <circle className="gpad__down" cx={downAt.x} cy={downAt.y} r="2.5" /> : null}
+            {upAt ? <circle className="gpad__up" cx={upAt.x} cy={upAt.y} r="5" /> : null}
+            {last.tilt !== null ? (
+              <rect
+                className="gpad__tilt"
+                x={map.width / 2 - 6}
+                y={map.height / 2 - 10}
+                width="12"
+                height="20"
+                rx="2"
+                transform={`rotate(${last.tilt} ${map.width / 2} ${map.height / 2})`}
+              />
+            ) : null}
+          </svg>
+          <ol aria-labelledby={`${id}-h`}>
+            {gestureLines(last).map((text, i) => (
+              <li key={i} className={text === 'Nothing happened' ? 'alog__blank' : undefined}>
+                {text}
+              </li>
+            ))}
+          </ol>
+        </>
+      ) : (
+        <p className="alog__empty">No gestures yet.</p>
+      )}
+    </div>
+  );
+}
+
+/**
  * The simulated pointer and the tooltip (#47): where the pointer went, keys pressed, and what the
  * tooltip did after each, then whether a tooltip is open now and what it says.
  */
@@ -250,6 +327,7 @@ function ContextInstrument({ id, events }: InstrumentProps) {
 }
 
 export const INSTRUMENTS: Readonly<Record<string, ComponentType<InstrumentProps>>> = {
+  'gesture-pad': GesturePad,
   'announcement-log': LogInstrument,
   'voice-log': VoiceLogInstrument,
   'focus-tracker': FocusTracker,

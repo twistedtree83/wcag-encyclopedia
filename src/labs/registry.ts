@@ -35,6 +35,7 @@ import { PageLanguageLab, PartsLanguageLab } from './LanguageLabs';
 import { StatusLab } from './StatusLab';
 import { SequenceLab } from './SequenceLab';
 import { StructureLab } from './StructureLab';
+import { TargetSizeLab } from './TargetSizeLab';
 import { TooltipLab } from './TooltipLab';
 
 export type LabProps = {
@@ -100,6 +101,7 @@ export const LABS: readonly LabEntry[] = [
   { id: 'reflow', title: 'Try it: zoom to 400%', Lab: ReflowLab, flagshipFor: '1.4.10' },
   { id: 'form-errors', title: 'Try it: show the error', Lab: FormErrorsLab },
   { id: 'form-labels', title: 'Try it: label the field', Lab: FormLabelsLab },
+  { id: 'target-size', title: 'Try it: size the targets', Lab: TargetSizeLab, flagshipFor: '2.5.8' },
 ];
 
 export function labById(id: string): LabEntry | undefined {

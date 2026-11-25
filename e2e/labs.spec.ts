@@ -484,6 +484,18 @@ const LABS: LabCase[] = [
     },
     said: '400% zoom, 320 CSS pixels wide. Fixed width: scrolls down and sideways.',
   },
+  {
+    name: 'the target size lab on 2.5.8',
+    url: '/criteria/2.5.8/',
+    lab: '.lab-slot .ts-lab',
+    passing: '2.5.8 passes',
+    failing: '2.5.8 fails',
+    toFail: async (lab, page) => {
+      await lab.getByRole('slider', { name: 'Space between targets' }).focus();
+      await page.keyboard.press('Home');
+    },
+    said: '16 pixel targets, touching. Under 24 by 24, and their 24 pixel circles overlap by 8 pixels. Fails.',
+  },
 ];
 
 async function open(page: Page, url: string) {
