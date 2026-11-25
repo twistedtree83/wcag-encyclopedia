@@ -2,7 +2,7 @@ import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from
 import type { LiveExample, SimKey } from '../criteria/types';
 import { announce, focusLine, fromDom, spoken } from '../labs/announce';
 import type { StageEvent } from './events';
-import { nodeAt, pathTo, step, tabStops } from './focus';
+import { mapOf, nodeAt, pathTo, step, tabStops } from './focus';
 import { INSTRUMENTS } from './instruments';
 
 /**
@@ -68,6 +68,10 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     return focusLine(nodeAt(ax, pathTo(root, el)), ax);
   };
 
+  /** Where every Tab stop is now, for the focus tracker. */
+  const mapFor = (stops: readonly Element[]) =>
+    mapOf(example.current!, stops, (el) => spoken(lineFor(el)) || 'blank');
+
   const press = (key: SimKey) => {
     const root = example.current;
     if (!root) return;
@@ -82,7 +86,14 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
         const next = step(stops.length, simAt, back);
         setSimAt(next);
         if (next >= 0) {
-          push({ kind: 'focus', simulated, line: lineFor(stops[next]!), index: next, total: stops.length });
+          push({
+            kind: 'focus',
+            simulated,
+            line: lineFor(stops[next]!),
+            index: next,
+            total: stops.length,
+            map: mapFor(stops),
+          });
         }
       } else {
         const next = step(stops.length, realAt.current ? stops.indexOf(realAt.current) : -1, back);
@@ -124,7 +135,14 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
       const index = stops.indexOf(el);
       if (index < 0) return;
       realAt.current = el;
-      push({ kind: 'focus', simulated: false, line: lineFor(el), index, total: stops.length });
+      push({
+        kind: 'focus',
+        simulated: false,
+        line: lineFor(el),
+        index,
+        total: stops.length,
+        map: mapFor(stops),
+      });
     };
     const onChange = (e: Event) => {
       push({ kind: 'change', simulated: false, line: lineFor(e.target as Element) });
@@ -150,7 +168,7 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
             <Example />
           </div>
         )}
-        {simulated ? (
+        {simulated && !live.hideRing ? (
           <span
             className="sim-ring"
             aria-hidden="true"
