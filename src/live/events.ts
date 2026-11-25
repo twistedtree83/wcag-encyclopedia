@@ -4,6 +4,7 @@ import type { CueSeen, VisionFilter } from './vision';
 import { scrollLine } from '../labs/zoom';
 import { colourLine, sharpLine } from '../labs/imagesOfText';
 import type { GestureEvent } from './gesture';
+import type { PlayerSeen } from './mockPlayer';
 
 /**
  * What happens on a live example's stage (#43), as a list of events every instrument under the
@@ -68,6 +69,8 @@ export type StageEvent =
   | { readonly kind: 'pointer'; readonly simulated: boolean; readonly on: string | null }
   /** What the example's open tooltips (`role="tooltip"`) say now, or null for none (#47). */
   | { readonly kind: 'popup'; readonly simulated: boolean; readonly text: string | null }
+  /** The mock player (#65): where the clip is, what is heard and the caption on screen. */
+  | { readonly kind: 'player'; readonly simulated: boolean; readonly seen: PlayerSeen }
   /** The example's own page (`data-context`) is now `address`, and what moved it there (#47). */
   | { readonly kind: 'context'; readonly simulated: boolean; readonly address: string; readonly cause: ContextCause | null };
 

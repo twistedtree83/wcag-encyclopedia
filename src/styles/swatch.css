@@ -3812,6 +3812,92 @@ ul.st-list li::before {
   gap: 8px;
 }
 
+/* --- Mock player: 1.2.2 and 1.2.4 (L-25) ------------------------------------------------- */
+
+/* The stand-in for a video (#65): a screen that says its picture in words, the caption, and a
+   transport row. No media element; the picture steps with the clip, nothing animates. */
+.mplayer {
+  display: block;
+  margin: 0 0 0.875rem;
+  border: 1px solid var(--line-2);
+  background: var(--deep);
+}
+.mplayer__screen {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  aspect-ratio: 16 / 9;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--line-2);
+}
+.mplayer--lab {
+  margin: 0;
+}
+.mplayer--lab .mplayer__screen {
+  border-bottom: 0;
+}
+.mplayer__badge {
+  padding: 0.125rem 0.375rem;
+  border: 1px solid var(--line-2);
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.mplayer__picture {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-style: italic;
+  color: var(--ink-2);
+}
+.mplayer__cc {
+  align-self: center;
+  margin: auto 0 0;
+  padding: 0.25rem 0.5rem;
+  background: var(--ink);
+  color: var(--card-bg);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  text-align: center;
+}
+.mplayer__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.5rem;
+}
+.mplayer__scrub {
+  flex: 1 1 8rem;
+  min-width: 0;
+  min-height: 24px;
+  accent-color: var(--ink);
+}
+.mplayer__time {
+  font-variant-numeric: tabular-nums;
+  font-size: var(--small);
+  color: var(--ink);
+}
+.mplayer-out {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+  margin: 0;
+}
+.mplayer-out dt {
+  font-size: var(--small);
+  font-weight: 600;
+}
+.mplayer-out dd {
+  margin: 4px 0 0;
+}
+.mplog__now {
+  margin: 0 0 6px;
+  font-size: var(--small);
+}
+
 /* --- Breakpoints ------------------------------------------------------------------------ */
 
 @media (max-width: 1100px) {
@@ -3920,6 +4006,9 @@ ul.st-list li::before {
     grid-template-columns: minmax(0, 1fr);
   }
   .ring-controls {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .mplayer-out {
     grid-template-columns: minmax(0, 1fr);
   }
   .ts-controls {

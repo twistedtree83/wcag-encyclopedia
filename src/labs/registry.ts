@@ -46,6 +46,7 @@ import { StructureLab } from './StructureLab';
 import { TargetSizeLab } from './TargetSizeLab';
 import { NonTextContrastLab, SensoryLab, UseOfColourLab } from './VisionLabs';
 import { TooltipLab } from './TooltipLab';
+import { CaptionsLab, LiveCaptionsLab } from './CaptionLabs';
 
 export type LabProps = {
   /** The number of the criterion page showing the lab, e.g. "1.4.11". */
@@ -123,6 +124,8 @@ export const LABS: readonly LabEntry[] = [
   { id: 'sensory-instruction', title: 'Try it: rewrite the instruction', Lab: SensoryLab },
   { id: 'redundant-entry', title: 'Try it: check out without retyping', Lab: RedundantEntryLab },
   { id: 'accessible-auth', title: 'Try it: sign in without a test', Lab: AccessibleAuthLab },
+  { id: 'captions', title: 'Try it: caption the briefing', Lab: CaptionsLab },
+  { id: 'live-captions', title: 'Try it: caption the live stream', Lab: LiveCaptionsLab },
 ];
 
 export function labById(id: string): LabEntry | undefined {

@@ -73,3 +73,4 @@ Graph: `scripts2/prd-labs.json` · Parent: #40 · Integration branch: `labs`
 - [x] **L-15** #55 — Orientation and images of text: 1.3.4 and 1.4.5 (L-13)
 - [x] **L-19** #59 — Forms: 3.2.2, 3.3.3 and 3.3.4 (L-03)
 - [x] **L-20** #60 — Forms: 3.3.7 and 3.3.8 (L-03)
+- [x] **L-25** #65 — Mock player, with 1.2.2 and 1.2.4 (L-03)

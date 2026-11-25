@@ -8,6 +8,7 @@ import { withVoices } from '../labs/language';
 import { filterName } from './vision';
 import { scrollLine } from '../labs/zoom';
 import { colourLine, sharpLine } from '../labs/imagesOfText';
+import { PlayerLog } from './PlayerWindow';
 
 /**
  * The instruments a live example's stage can carry (#43, CONTEXT.md "Instrument"), by id. A
@@ -430,6 +431,7 @@ function TextFitMeter({ id, events }: InstrumentProps) {
 
 export const INSTRUMENTS: Readonly<Record<string, ComponentType<InstrumentProps>>> = {
   'gesture-pad': GesturePad,
+  'mock-player': PlayerLog,
   'announcement-log': LogInstrument,
   'voice-log': VoiceLogInstrument,
   'focus-tracker': FocusTracker,

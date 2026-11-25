@@ -30,6 +30,7 @@ import { listOf, tabSwitchLine } from './lists';
 import { cuesIn } from './cues';
 import { nextFilter, seeCue, visionSaid, type VisionFilter } from './vision';
 import { VisionDefs, filterPrefix, visionStyle } from './VisionDefs';
+import { playerSeenIn } from './PlayerWindow';
 
 /**
  * A live example on its stage (#43, ADR 0002): the example, the input bar, then the instruments.
@@ -626,6 +627,25 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
       });
       heard = lines.map(spoken);
     });
+    observer.observe(root, { subtree: true, childList: true, characterData: true, attributes: true });
+    return () => observer.disconnect();
+  }, [simulated, push]);
+
+  // The mock player (#65), on both stages: where the clip is, what is heard and the caption on
+  // screen, read from its `[data-player]` whenever any of that changes, whatever changed it.
+  useEffect(() => {
+    const root = example.current;
+    if (!root || !root.querySelector('[data-player]')) return;
+    let last = '';
+    const read = () => {
+      const seen = playerSeenIn(root);
+      const key = JSON.stringify(seen);
+      if (!seen || key === last) return;
+      last = key;
+      push({ kind: 'player', simulated, seen });
+    };
+    read();
+    const observer = new MutationObserver(read);
     observer.observe(root, { subtree: true, childList: true, characterData: true, attributes: true });
     return () => observer.disconnect();
   }, [simulated, push]);
