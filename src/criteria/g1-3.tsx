@@ -8,6 +8,17 @@
 
 import { useId } from 'react';
 import type { CriterionRecord, LiveExample } from './types';
+import { OrderPage } from '../labs/OrientationLab';
+import { PHONE } from '../labs/orientation';
+
+/** 1.3.4's live examples (#55): an order page on a phone in the zoom frame, locked or adapting. */
+function LockedOrder() {
+  return <OrderPage lock="portrait" />;
+}
+function AdaptingOrder() {
+  return <OrderPage lock="adapts" />;
+}
+const ORIENT_LIVE = { keys: ['rotate'], instruments: ['orientation-meter'], zoomFrame: PHONE } as const;
 
 /*
  * 1.3.1's live examples (#48): the static examples' shipping note, live. Read aloud, the styled
@@ -270,12 +281,14 @@ export const G1_3: readonly CriterionRecord[] = [
     level: 'AA',
     since: '2.1',
     guideline: '1.3',
+    labs: ['orientation'],
     plain:
       'Do not lock the screen to portrait or landscape unless the orientation is essential — a ' +
       'piano keyboard, a cheque scanner. Someone whose wheelchair mount holds their phone ' +
       'sideways cannot simply turn it.',
     fail: {
       caption: 'The app refuses to work sideways.',
+      live: { Example: LockedOrder, ...ORIENT_LIVE },
       render: () => (
         <>
           <div className="orient">
@@ -292,6 +305,7 @@ export const G1_3: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'The same content reflows to whatever shape it is given.',
+      live: { Example: AdaptingOrder, ...ORIENT_LIVE },
       render: () => (
         <>
           <div className="orient">

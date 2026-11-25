@@ -31,6 +31,8 @@ import { NameRoleValueLab } from './NameRoleValueLab';
 import { OnFocusLab } from './OnFocusLab';
 import { PageTitleLab } from './PageTitleLab';
 import { ReflowLab } from './ReflowLab';
+import { OrientationLab } from './OrientationLab';
+import { ImagesOfTextLab } from './ImagesOfTextLab';
 import { PageLanguageLab, PartsLanguageLab } from './LanguageLabs';
 import { StatusLab } from './StatusLab';
 import { SequenceLab } from './SequenceLab';
@@ -102,6 +104,8 @@ export const LABS: readonly LabEntry[] = [
   { id: 'form-errors', title: 'Try it: show the error', Lab: FormErrorsLab },
   { id: 'form-labels', title: 'Try it: label the field', Lab: FormLabelsLab },
   { id: 'target-size', title: 'Try it: size the targets', Lab: TargetSizeLab, flagshipFor: '2.5.8' },
+  { id: 'orientation', title: 'Try it: turn the phone', Lab: OrientationLab },
+  { id: 'images-of-text', title: 'Try it: zoom and restyle the heading', Lab: ImagesOfTextLab },
 ];
 
 export function labById(id: string): LabEntry | undefined {

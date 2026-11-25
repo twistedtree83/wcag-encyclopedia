@@ -496,6 +496,30 @@ const LABS: LabCase[] = [
     },
     said: '16 pixel targets, touching. Under 24 by 24, and their 24 pixel circles overlap by 8 pixels. Fails.',
   },
+  {
+    name: 'the orientation lab on 1.3.4',
+    url: '/criteria/1.3.4/',
+    lab: '.lab-slot .orient-lab',
+    passing: '1.3.4 passes',
+    failing: '1.3.4 fails',
+    toFail: async (lab, page) => {
+      await radio(lab, 'Adapts').focus();
+      await page.keyboard.press('ArrowDown');
+    },
+    said: 'Portrait, 360 by 640 CSS pixels. Locked to portrait: the content is shown only this way up.',
+  },
+  {
+    name: 'the images of text lab on 1.4.5',
+    url: '/criteria/1.4.5/',
+    lab: '.lab-slot .itext-lab',
+    passing: '1.4.5 passes',
+    failing: '1.4.5 fails',
+    toFail: async (lab, page) => {
+      await radio(lab, 'Real text').focus();
+      await page.keyboard.press('ArrowDown');
+    },
+    said: 'Image of text at 100%. Image at its own size: sharp. Your colours: off.',
+  },
 ];
 
 async function open(page: Page, url: string) {

@@ -5,6 +5,7 @@ import { autofillValue } from '../labs/inputPurpose';
 import { voiceMatches } from '../labs/labelInName';
 import { ZOOMS, viewportAt, type Scrolls } from '../labs/zoom';
 import { ZoomFrame } from '../labs/ZoomFrame';
+import { ReaderColours } from '../labs/ImagesOfTextLab';
 import { ACTION_EVENT } from './actions';
 import { gestureSaid, hitAt, tapPlan, type Point } from './gesture';
 import {
@@ -14,6 +15,8 @@ import {
   pointerSaid,
   voiceSaid,
   zoomSaid,
+  rotateSaid,
+  lookSaid,
   type ContextCause,
   type StageEvent,
 } from './events';
@@ -53,6 +56,8 @@ const KEY_LABEL: Readonly<Record<SimKey, string>> = {
   links: 'List the links',
   headings: 'List the headings',
   zoom: 'Zoom in',
+  rotate: 'Rotate',
+  restyle: 'Use my colours',
   tap: 'Tap',
 };
 
@@ -102,6 +107,11 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
   /** Zoom frame (#53): the index into ZOOMS, and whether a "Zoom in" waits to be measured. */
   const [zoomAt, setZoomAt] = useState(0);
   const zoomed = useRef(false);
+  /** "Rotate" (#55): the zoom frame on its side, and whether a turn waits to be measured. */
+  const [turned, setTurned] = useState(false);
+  const rotated = useRef(false);
+  /** "Use my colours" (#55): the reader's own colours on the example. */
+  const [restyled, setRestyled] = useState(false);
 
   const push = useCallback((e: StageEvent) => {
     setEvents((es) => [...es, e].slice(-KEEP));
@@ -110,6 +120,8 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     if (e.kind === 'autofill') setSaid(autofillSaid(e));
     else if (e.kind === 'voice') setSaid(voiceSaid(e));
     else if (e.kind === 'zoom') setSaid(zoomSaid(e));
+    else if (e.kind === 'rotate') setSaid(rotateSaid(e));
+    else if (e.kind === 'look') setSaid(lookSaid(e));
     else if (e.kind === 'keys') {
       if (!pointerStage) setSaid(keysSaid(e));
     }
@@ -182,6 +194,19 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     if (key === 'zoom') {
       zoomed.current = true;
       setZoomAt((i) => (i + 1) % ZOOMS.length);
+      return;
+    }
+    // "Rotate" turns the zoom frame on its side and back (#55). The event is pushed once the
+    // frame has laid out turned, so it can say whether the page hid its content.
+    if (key === 'rotate') {
+      rotated.current = true;
+      setTurned((t) => !t);
+      return;
+    }
+    // "Use my colours" puts the reader's own colours on the example and takes them off (#55).
+    if (key === 'restyle') {
+      setRestyled(!restyled);
+      push({ kind: 'look', simulated, zoom: ZOOMS[zoomAt]!, restyled: !restyled, image: root.querySelector('img') !== null });
       return;
     }
     if (key === 'autofill') {
@@ -573,16 +598,35 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
   }, [simulated, push]);
 
   const onMeasure = (scrolls: Scrolls) => {
+    // A turn (#55): whether the page now draws its rotate prompt, i.e. hid its content.
+    if (rotated.current && live.zoomFrame) {
+      rotated.current = false;
+      const prompt = example.current?.querySelector('[data-rotate-prompt]');
+      const hidden = !!prompt && prompt.getClientRects().length > 0;
+      push({ kind: 'rotate', simulated, turned, ...viewportAt(ZOOMS[zoomAt]!, live.zoomFrame, turned), hidden });
+    }
     if (!zoomed.current || !live.zoomFrame) return;
     zoomed.current = false;
     const zoom = ZOOMS[zoomAt]!;
     push({ kind: 'zoom', simulated, zoom, ...viewportAt(zoom, live.zoomFrame), ...scrolls });
+    // A 1.4.5 stage (#55) also says how the heading looks at the new zoom.
+    if (live.keys.includes('restyle')) {
+      push({ kind: 'look', simulated, zoom, restyled, image: example.current?.querySelector('img') != null });
+    }
   };
 
   const { Example } = live;
-  const shown = live.zoomFrame ? (
-    <ZoomFrame zoom={ZOOMS[zoomAt]!} base={live.zoomFrame} focusable={!simulated} onMeasure={onMeasure}>
+  // "Use my colours" (#55) wraps the example in the reader's colours; only stages with the key.
+  const styled = live.keys.includes('restyle') ? (
+    <ReaderColours on={restyled}>
       <Example />
+    </ReaderColours>
+  ) : (
+    <Example />
+  );
+  const shown = live.zoomFrame ? (
+    <ZoomFrame zoom={ZOOMS[zoomAt]!} base={live.zoomFrame} turned={turned} focusable={!simulated} onMeasure={onMeasure}>
+      {styled}
     </ZoomFrame>
   ) : (
     <Example />

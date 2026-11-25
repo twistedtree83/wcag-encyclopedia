@@ -6,6 +6,7 @@ import { trackOf } from './focusTrack';
 import { gestureLines } from './gesture';
 import { withVoices } from '../labs/language';
 import { scrollLine } from '../labs/zoom';
+import { colourLine, sharpLine } from '../labs/imagesOfText';
 
 /**
  * The instruments a live example's stage can carry (#43, CONTEXT.md "Instrument"), by id. A
@@ -173,6 +174,54 @@ function ZoomMeter({ id, events }: InstrumentProps) {
   );
 }
 
+/** The phone's way up and window (#55), and whether the page still shows its content. */
+function OrientationMeter({ id, events }: InstrumentProps) {
+  const last = lastOf(events, 'rotate');
+  return (
+    <div className="alog">
+      <p className="alog__h" id={`${id}-h`}>
+        Orientation
+      </p>
+      {last ? (
+        <ol aria-labelledby={`${id}-h`}>
+          <li>
+            {last.turned ? 'Landscape' : 'Portrait'}: {last.width} by {last.height} CSS pixels
+          </li>
+          <li className={last.hidden ? 'zmeter--two' : undefined}>
+            {last.hidden ? 'Content hidden: the page asks to be turned back' : 'Content shown'}
+          </li>
+        </ol>
+      ) : (
+        <p className="alog__empty">Upright: not turned yet.</p>
+      )}
+    </div>
+  );
+}
+
+/** How the 1.4.5 heading looks after a zoom or the reader's colours (#55). */
+function TextLook({ id, events }: InstrumentProps) {
+  const last = lastOf(events, 'look');
+  return (
+    <div className="alog">
+      <p className="alog__h" id={`${id}-h`}>
+        Zoom and your colours
+      </p>
+      {last ? (
+        <ol aria-labelledby={`${id}-h`}>
+          <li className={last.image && last.zoom > 100 ? 'zmeter--two' : undefined}>
+            {sharpLine(last.zoom, last.image)}
+          </li>
+          <li className={last.image && last.restyled ? 'zmeter--two' : undefined}>
+            {colourLine(last.restyled, last.image)}
+          </li>
+        </ol>
+      ) : (
+        <p className="alog__empty">At 100%, in the page’s own colours.</p>
+      )}
+    </div>
+  );
+}
+
 /** The last key or dictated phrase sent to the example, where focus was, and what it set off (#45). */
 function KeyLog({ id, events }: InstrumentProps) {
   const last = lastOf(events, 'keys');
@@ -334,6 +383,8 @@ export const INSTRUMENTS: Readonly<Record<string, ComponentType<InstrumentProps>
   autofill: AutofillInstrument,
   'voice-control': VoiceInstrument,
   'zoom-meter': ZoomMeter,
+  'orientation-meter': OrientationMeter,
+  'text-look': TextLook,
   'key-log': KeyLog,
   'pointer-log': PointerInstrument,
   context: ContextInstrument,

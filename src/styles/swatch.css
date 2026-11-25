@@ -3372,6 +3372,100 @@ ul.st-list li::before {
   margin-top: 16px;
 }
 
+/* --- Orientation and images of text: 1.3.4 and 1.4.5 (L-15) --------------------------------- */
+
+/* A phone held upright is drawn narrow, so a portrait frame is not as tall as a full-width one. */
+.zframe[data-orientation='portrait'] {
+  width: min(100%, 14rem);
+}
+.orient-mock {
+  max-width: 440px;
+}
+/* The order page is its own size container: its CSS asks the frame's window which way up it is. */
+.opage {
+  box-sizing: border-box;
+  height: 100%;
+  container-type: size;
+}
+.opage__body {
+  padding: 1.25em 1.5em;
+}
+.opage p {
+  margin: 0 0 0.75em;
+}
+.opage__title {
+  font-size: 1.5em;
+  font-weight: 700;
+}
+.opage__steps {
+  margin: 0;
+  padding-left: 1.25em;
+  line-height: 1.6;
+}
+.opage__prompt {
+  display: none;
+  box-sizing: border-box;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 2em;
+  text-align: center;
+  font-size: 1.25em;
+  font-weight: 700;
+}
+@container (orientation: landscape) {
+  .opage--adapts .opage__body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5em;
+  }
+  .opage--portrait .opage__body {
+    display: none;
+  }
+  .opage--portrait .opage__prompt {
+    display: flex;
+  }
+}
+@container (orientation: portrait) {
+  .opage--landscape .opage__body {
+    display: none;
+  }
+  .opage--landscape .opage__prompt {
+    display: flex;
+  }
+}
+/* The sale page: a heading that is text or a picture of it. The picture keeps its own pixel
+   size, so it neither reflows nor sharpens; zoom stretches it. */
+.itext-mock {
+  max-width: 560px;
+}
+.ipage {
+  padding: 1.25em 1.5em;
+}
+.ipage__h {
+  margin: 0 0 0.5em;
+  font-size: 1.75em;
+  line-height: 1.2;
+}
+.ipage__img {
+  display: block;
+  max-width: none;
+}
+.ipage p {
+  margin: 0;
+}
+/* The reader's own colours and font (a user stylesheet: dark ink on the sun tint, an audited pair).
+   It reaches text, never a picture's pixels. */
+.reader-colours--on {
+  min-height: 100%;
+}
+.reader-colours--on,
+.reader-colours--on * {
+  background-color: var(--a2) !important;
+  color: var(--on-a) !important;
+  font-family: Verdana, Tahoma, sans-serif !important;
+}
+
 /* --- Breakpoints ------------------------------------------------------------------------ */
 
 @media (max-width: 1100px) {
