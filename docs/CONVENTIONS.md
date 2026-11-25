@@ -120,6 +120,7 @@ globally at the end of `swatch.css`.
 - 1.3.1 flagship lab: `?mock=`, `?real=` (comma list), handled only in `src/labs/structureQuery.ts`.
 - 2.4.3 flagship lab: `?src=`, `?ti=`, handled only in `src/labs/orderQuery.ts`.
 - 1.4.10 flagship lab: `?zoom=100|200|400`, `?layout=fixed|reflow`, handled only in `src/labs/reflowQuery.ts`.
+- 1.4.12 flagship lab: `?spacing=` (comma list of `line,paragraph,letter,word`, may be empty), `?boxes=fixed|flexible`, handled only in `src/labs/spacingQuery.ts`.
   A flagship lab pre-renders its start, applies the query in a mount effect without announcing
   it, and writes changes back with `history.replaceState` (the start writes no query).
 

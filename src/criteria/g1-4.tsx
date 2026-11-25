@@ -11,6 +11,8 @@ import type { CriterionRecord, LiveExample } from './types';
 import { MeasuredRatio } from '../components/MeasuredRatio';
 import { CataloguePage } from '../labs/ReflowLab';
 import { DESKTOP } from '../labs/zoom';
+import { NoticeCard } from '../labs/NoticeCard';
+import { CARD_WINDOW } from '../labs/textFit';
 
 /** 1.4.10 live examples (#53): the catalogue in a zoom frame, fixed width or reflowing. */
 function FixedCatalogue() {
@@ -20,6 +22,16 @@ function ReflowingCatalogue() {
   return <CataloguePage layout="reflow" />;
 }
 const REFLOW_LIVE = { keys: ['zoom'], instruments: ['zoom-meter'], zoomFrame: DESKTOP } as const;
+
+/** 1.4.4 and 1.4.12 live examples (#54): a notice card in a zoom frame, its boxes locked or flexible. */
+function LockedNotice() {
+  return <NoticeCard locked />;
+}
+function FlexibleNotice() {
+  return <NoticeCard locked={false} />;
+}
+const RESIZE_LIVE = { keys: ['text-size'], instruments: ['text-fit'], zoomFrame: CARD_WINDOW } as const;
+const SPACING_LIVE = { keys: ['spacing'], instruments: ['text-fit'], zoomFrame: CARD_WINDOW } as const;
 
 const DUTIES = 'Duties are estimated at checkout and charged by your carrier on delivery.';
 const WORD_HOVER = 'the words “incl. duties”';
@@ -383,12 +395,14 @@ export const G1_4: readonly CriterionRecord[] = [
     level: 'AA',
     since: '2.0',
     guideline: '1.4',
+    labs: ['resize-text'],
     plain:
       'Text has to survive being enlarged to 200% without losing content or function. That ' +
       'means no fixed pixel heights around text, and no boxes that clip when their contents ' +
       'grow.',
     fail: {
       caption: 'A fixed-height box clips its own text when enlarged.',
+      live: { Example: LockedNotice, ...RESIZE_LIVE },
       render: () => (
         <>
           <div className="clipbox clipbox--fixed">
@@ -404,6 +418,7 @@ export const G1_4: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'The box grows with its contents.',
+      live: { Example: FlexibleNotice, ...RESIZE_LIVE },
       render: () => (
         <>
           <div className="clipbox">
@@ -476,12 +491,14 @@ export const G1_4: readonly CriterionRecord[] = [
     level: 'AA',
     since: '2.1',
     guideline: '1.4',
+    labs: ['text-spacing'],
     plain:
       'A reader must be able to increase line height to 1.5×, paragraph spacing to 2×, letter ' +
       'spacing to 0.12em, and word spacing to 0.16em without losing content. People with ' +
       'dyslexia and low vision use exactly these overrides.',
     fail: {
       caption: 'Loosened spacing pushes text out of a rigid container.',
+      live: { Example: LockedNotice, ...SPACING_LIVE },
       render: () => (
         <>
           <div className="spacing spacing--rigid">
@@ -496,6 +513,7 @@ export const G1_4: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'The container is sized by its contents.',
+      live: { Example: FlexibleNotice, ...SPACING_LIVE },
       render: () => (
         <>
           <div className="spacing">

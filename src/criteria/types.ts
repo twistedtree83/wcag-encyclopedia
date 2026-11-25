@@ -41,7 +41,9 @@ export type SimKey =
   | 'switch-tab'
   | 'links'
   | 'headings'
-  | 'zoom';
+  | 'zoom'
+  | 'text-size'
+  | 'spacing';
 
 export type LiveExample = {
   /**
@@ -63,6 +65,8 @@ export type LiveExample = {
   /**
    * Draw the example in a zoom frame (#53) with this window at 100%, and let the bar's "Zoom in"
    * key step it through 100%, 200% and 400%. The `zoom-meter` instrument shows what scrolls.
+   * "Enlarge text" and "Toggle text spacing" change the text in it instead (#54), and the
+   * `text-fit` instrument shows whether any box cuts its text off.
    */
   readonly zoomFrame?: { readonly width: number; readonly height: number };
 };
