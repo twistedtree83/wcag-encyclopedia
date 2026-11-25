@@ -15,12 +15,17 @@ import { AltTextLab } from './AltTextLab';
 import { ColourCheckLab } from './ColourCheck';
 import { FadeLab } from './FadeLab';
 import { FocusRingLab } from './FocusRingLab';
+import { HeadingsLab } from './HeadingsLab';
 import { InputPurposeLab } from './InputPurposeLab';
 import { KeyboardLab } from './KeyboardLab';
 import { KeyboardTrapLab } from './KeyboardTrapLab';
 import { ShortcutLab } from './ShortcutLab';
 import { LabelInNameLab } from './LabelInNameLab';
+import { LinkPurposeLab } from './LinkPurposeLab';
 import { NameRoleValueLab } from './NameRoleValueLab';
+import { PageTitleLab } from './PageTitleLab';
+import { PageLanguageLab, PartsLanguageLab } from './LanguageLabs';
+import { StatusLab } from './StatusLab';
 import { SequenceLab } from './SequenceLab';
 import { StructureLab } from './StructureLab';
 
@@ -73,6 +78,12 @@ export const LABS: readonly LabEntry[] = [
   { id: 'keyboard-control', title: 'Try it: reach the button by keyboard', Lab: KeyboardLab },
   { id: 'keyboard-trap', title: 'Try it: trap the focus, or let it go', Lab: KeyboardTrapLab },
   { id: 'character-shortcuts', title: 'Try it: dictate past a shortcut', Lab: ShortcutLab },
+  { id: 'page-title', title: 'Try it: title the page', Lab: PageTitleLab },
+  { id: 'link-purpose', title: 'Try it: name the links', Lab: LinkPurposeLab },
+  { id: 'headings-labels', title: 'Try it: write the headings', Lab: HeadingsLab },
+  { id: 'page-language', title: 'Try it: declare the page’s language', Lab: PageLanguageLab },
+  { id: 'parts-language', title: 'Try it: mark the French phrase', Lab: PartsLanguageLab },
+  { id: 'status-message', title: 'Try it: announce the basket', Lab: StatusLab },
 ];
 
 export function labById(id: string): LabEntry | undefined {

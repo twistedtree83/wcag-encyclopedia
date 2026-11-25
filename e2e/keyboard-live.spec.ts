@@ -215,9 +215,9 @@ test.describe('2.1.4 Character Key Shortcuts', () => {
       'Unstarred the message',
     ]);
     await expect(stage.locator('.sc-state')).toHaveText('Archived');
-    await expect(polite(stage)).toHaveText(
-      'Dictated “send this” with focus on no control. Starred the message. Archived the message. Unstarred the message.',
-    );
+    // The message's status region changed last, so that is what the stage speaks (L-11's status
+    // events); the key log above keeps every shortcut the phrase set off.
+    await expect(polite(stage)).toHaveText('Screen reader says: Archived');
     await expectInertBroken(stage);
   });
 
