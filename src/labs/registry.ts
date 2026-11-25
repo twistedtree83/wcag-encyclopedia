@@ -49,6 +49,7 @@ import { NonTextContrastLab, SensoryLab, UseOfColourLab } from './VisionLabs';
 import { TooltipLab } from './TooltipLab';
 import { MultipleWaysLab } from './MultipleWaysLab';
 import { ConsistentNavLab } from './ConsistentNavLab';
+import { AudioLab, CarouselLab, FlashLab } from './TimingLabs';
 
 export type LabProps = {
   /** The number of the criterion page showing the lab, e.g. "1.4.11". */
@@ -129,6 +130,9 @@ export const LABS: readonly LabEntry[] = [
   { id: 'session-timeout', title: 'Try it: time out the session', Lab: SessionLab, flagshipFor: '2.2.1' },
   { id: 'redundant-entry', title: 'Try it: check out without retyping', Lab: RedundantEntryLab },
   { id: 'accessible-auth', title: 'Try it: sign in without a test', Lab: AccessibleAuthLab },
+  { id: 'stop-carousel', title: 'Try it: stop the carousel', Lab: CarouselLab },
+  { id: 'audio-control', title: 'Try it: quiet the autoplay', Lab: AudioLab },
+  { id: 'flash-rate', title: 'Try it: raise the flash rate', Lab: FlashLab },
 ];
 
 export function labById(id: string): LabEntry | undefined {
