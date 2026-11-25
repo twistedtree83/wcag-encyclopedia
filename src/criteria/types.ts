@@ -42,7 +42,8 @@ export type SimKey =
   | 'links'
   | 'headings'
   | 'zoom'
-  | 'tap';
+  | 'tap'
+  | 'vision';
 
 export type LiveExample = {
   /**

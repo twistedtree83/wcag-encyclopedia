@@ -39,6 +39,7 @@ import { StatusLab } from './StatusLab';
 import { SequenceLab } from './SequenceLab';
 import { StructureLab } from './StructureLab';
 import { TargetSizeLab } from './TargetSizeLab';
+import { NonTextContrastLab, SensoryLab, UseOfColourLab } from './VisionLabs';
 import { TooltipLab } from './TooltipLab';
 
 export type LabProps = {
@@ -108,6 +109,9 @@ export const LABS: readonly LabEntry[] = [
   { id: 'on-input', title: 'Try it: change the country', Lab: OnInputLab },
   { id: 'error-suggestion', title: 'Try it: suggest the fix', Lab: ErrorSuggestionLab },
   { id: 'error-prevention', title: 'Try it: catch the wrong payment', Lab: ErrorPreventionLab },
+  { id: 'use-of-colour', title: 'Try it: take the colour away', Lab: UseOfColourLab },
+  { id: 'non-text-contrast', title: 'Try it: fade the edges', Lab: NonTextContrastLab },
+  { id: 'sensory-instruction', title: 'Try it: rewrite the instruction', Lab: SensoryLab },
 ];
 
 export function labById(id: string): LabEntry | undefined {

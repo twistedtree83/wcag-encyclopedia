@@ -183,7 +183,7 @@
       ],
       "importance": 16,
       "afk": true,
-      "passes": false
+      "passes": true
     },
     {
       "id": "L-17",
