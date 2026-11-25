@@ -39,7 +39,8 @@ export type SimKey =
   | 'dictate'
   | 'switch-tab'
   | 'links'
-  | 'headings';
+  | 'headings'
+  | 'tap';
 
 export type LiveExample = {
   /**

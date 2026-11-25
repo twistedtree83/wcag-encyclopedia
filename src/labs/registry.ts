@@ -30,6 +30,7 @@ import { PageLanguageLab, PartsLanguageLab } from './LanguageLabs';
 import { StatusLab } from './StatusLab';
 import { SequenceLab } from './SequenceLab';
 import { StructureLab } from './StructureLab';
+import { TargetSizeLab } from './TargetSizeLab';
 
 export type LabProps = {
   /** The number of the criterion page showing the lab, e.g. "1.4.11". */
@@ -88,6 +89,7 @@ export const LABS: readonly LabEntry[] = [
   { id: 'status-message', title: 'Try it: announce the basket', Lab: StatusLab },
   { id: 'form-errors', title: 'Try it: show the error', Lab: FormErrorsLab },
   { id: 'form-labels', title: 'Try it: label the field', Lab: FormLabelsLab },
+  { id: 'target-size', title: 'Try it: size the targets', Lab: TargetSizeLab, flagshipFor: '2.5.8' },
 ];
 
 export function labById(id: string): LabEntry | undefined {

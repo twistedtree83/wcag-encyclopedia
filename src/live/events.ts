@@ -1,5 +1,6 @@
 import { spoken, type Announcement } from '../labs/announce';
 import type { FocusMap } from './focusTrack';
+import type { GestureEvent } from './gesture';
 
 /**
  * What happens on a live example's stage (#43), as a list of events every instrument under the
@@ -47,7 +48,9 @@ export type StageEvent =
       readonly target: Announcement | null;
       /** What the example did in response, in order (`didAction` in `actions.ts`). */
       readonly actions: readonly string[];
-    };
+    }
+  /** A pointer gesture: a simulated tap or tilt from the bar, or a real pointer down and up (#57). */
+  | GestureEvent;
 
 export type AutofilledField = { readonly name: string; readonly value: string };
 
