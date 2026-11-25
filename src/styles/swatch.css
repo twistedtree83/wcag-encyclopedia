@@ -3681,6 +3681,59 @@ ul.st-list li::before {
   font-weight: 600;
 }
 
+/* --- Redundant entry and accessible authentication: 3.3.7 and 3.3.8 (L-20) ---------------- */
+
+/* The step a checkout is on, in the live examples and the 3.3.7 lab's mock. */
+.lform__step {
+  margin: 0;
+  font-weight: 600;
+}
+/* 3.3.7's fixed example: the delivery address offered back as a ticked box, 24px or more. */
+.lform__check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  font-size: var(--small);
+}
+.lform__check input {
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  accent-color: var(--ink);
+}
+/* 3.3.8's picture puzzle: letters set at angles, the cognitive test the criterion is about. */
+.lform__puzzle {
+  display: inline-flex;
+  gap: 6px;
+  padding: 8px 14px;
+  border: var(--bwid) dashed var(--line-2);
+  border-radius: var(--rad-sm);
+  color: var(--ink);
+  font: italic 700 22px/1 var(--fh), sans-serif;
+}
+.lform__puzzle > span:nth-child(odd) {
+  transform: rotate(-14deg) translateY(2px);
+}
+.lform__puzzle > span:nth-child(even) {
+  transform: rotate(11deg) translateY(-3px);
+}
+.lform__puzzle > span {
+  display: inline-block;
+}
+/* The 3.3.7 and 3.3.8 mocks' drawn fields: a field's colours, on the mock's card. */
+.flab__mock .swatch-field {
+  width: 100%;
+  max-width: 320px;
+  background: var(--bg);
+  color: var(--ink);
+}
+.re-lab__steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 /* --- Breakpoints ------------------------------------------------------------------------ */
 
 @media (max-width: 1100px) {
