@@ -98,6 +98,16 @@ describe('the log drawn from a stage’s input events', () => {
     expect(logOf([read]).map(spoken)).toEqual(['', 'Email notifications']);
     expect(logOf([read, read, read, read], 5)).toHaveLength(5);
   });
+
+  it('writes a status message announced while focus stays where it was', () => {
+    const add = { name: 'Add to basket', role: 'button', states: [], description: '' };
+    const message = { name: 'Added. 4 items in basket.', role: null, states: [], description: '' };
+    const events: StageEvent[] = [
+      { kind: 'focus', simulated: false, line: add, index: 0, total: 1 },
+      { kind: 'status', simulated: false, line: message },
+    ];
+    expect(logOf(events).map(spoken)).toEqual(['Add to basket, button', 'Added. 4 items in basket.']);
+  });
 });
 
 describe('what the autofill and voice-control instruments report (#49)', () => {

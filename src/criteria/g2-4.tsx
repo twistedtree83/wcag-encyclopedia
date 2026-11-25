@@ -6,7 +6,7 @@
  * titles are all 2.4 in practice.
  */
 
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState, type MouseEvent } from 'react';
 import type { CriterionRecord, LiveExample } from './types';
 
 /*
@@ -37,11 +37,98 @@ function FocusFields({ broken }: { broken: boolean }) {
 const FIELD_KEYS: LiveExample['keys'] = ['tab', 'shift-tab'];
 
 /*
+ * 2.4.2, 2.4.4 and 2.4.6's live examples (#50). Each is the static example made real: the tabs
+ * are switched with "Switch tab", the links and headings are pulled into a screen reader's list.
+ */
+
+function SameTitles() {
+  return (
+    <div className="tabs">
+      <span className="tabs__tab" data-sim-tab>Acme</span>
+      <span className="tabs__tab" data-sim-tab>Acme</span>
+      <span className="tabs__tab" data-sim-tab>Acme</span>
+    </div>
+  );
+}
+
+function SpecificTitles() {
+  return (
+    <div className="tabs">
+      <span className="tabs__tab" data-sim-tab>Basket (3) — Acme</span>
+      <span className="tabs__tab" data-sim-tab>Delivery — Acme</span>
+      <span className="tabs__tab" data-sim-tab>Order confirmed — Acme</span>
+    </div>
+  );
+}
+
+const TITLE_KEYS: LiveExample['keys'] = ['switch-tab'];
+
+/** The documents the example links point at don't exist; following one would leave the page. */
+const stay = (e: MouseEvent) => e.preventDefault();
+
+function ReadMoreLinks() {
+  return (
+    <ul className="linklist live-links" onClick={stay}>
+      <li>Annual report 2025 — <a href="/reports/annual-2025.pdf">read more</a></li>
+      <li>Board minutes, March — <a href="/reports/minutes-march">read more</a></li>
+      <li>Sustainability update — <a href="/reports/sustainability">read more</a></li>
+    </ul>
+  );
+}
+
+function NamedLinks() {
+  return (
+    <ul className="linklist live-links" onClick={stay}>
+      <li>
+        <a href="/reports/annual-2025.pdf">Read the annual report 2025</a> (PDF, 2.4 MB)
+      </li>
+      <li>
+        <a href="/reports/minutes-march">Read the board minutes for March</a>
+      </li>
+      <li>
+        <a href="/reports/sustainability">Read the sustainability update</a>
+      </li>
+    </ul>
+  );
+}
+
+const LINK_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'links'];
+
+function VagueHeadings() {
+  return (
+    <div className="fauxdoc live-doc">
+      <h3 className="fauxdoc__real-h">More</h3>
+      <h4 className="fauxdoc__line">Information</h4>
+      <h4 className="fauxdoc__line">Details</h4>
+      <label className="live-doc__field">
+        Enter your details here
+        <input type="text" />
+      </label>
+    </div>
+  );
+}
+
+function DescriptiveHeadings() {
+  return (
+    <div className="fauxdoc live-doc">
+      <h3 className="fauxdoc__real-h">Returns and refunds</h3>
+      <h4 className="fauxdoc__line">How long you have</h4>
+      <h4 className="fauxdoc__line">What it costs</h4>
+      <label className="live-doc__field">
+        Order number
+        <input type="text" />
+      </label>
+    </div>
+  );
+}
+
+const HEADING_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'headings'];
+
+/*
  * 2.4.1's, 2.4.3's and 2.4.11's live examples (#46). Links go nowhere: their clicks are
  * prevented, so Enter on the fail stage (a programmatic click) never leaves the page.
  */
 
-const stay = (e: { preventDefault(): void }) => e.preventDefault();
 const visibly = { focusVisible: true } as FocusOptions;
 
 const MENU = ['Home', 'Women', 'Men', 'Kids', 'Sale', 'Brands', 'Gifts', 'Help'];
@@ -227,11 +314,13 @@ export const G2_4: readonly CriterionRecord[] = [
     level: 'A',
     since: '2.0',
     guideline: '2.4',
+    labs: ['page-title'],
     plain:
       'Every page needs a title that describes it. It is the first thing a screen reader ' +
       'announces, and the only thing distinguishing twenty open tabs or twenty history entries.',
     fail: {
       caption: 'The same title on every page.',
+      live: { Example: SameTitles, keys: TITLE_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="tabs">
@@ -248,6 +337,7 @@ export const G2_4: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'Specific first, site name last.',
+      live: { Example: SpecificTitles, keys: TITLE_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="tabs">
@@ -324,12 +414,14 @@ export const G2_4: readonly CriterionRecord[] = [
     level: 'A',
     since: '2.0',
     guideline: '2.4',
+    labs: ['link-purpose'],
     plain:
       'What a link does has to be clear from its text, or from the sentence, list item, cell, ' +
       'or paragraph around it. Screen reader users often pull up a list of every link on the ' +
       'page, where that surrounding context is gone.',
     fail: {
       caption: 'Eleven links that all say the same thing.',
+      live: { Example: ReadMoreLinks, keys: LINK_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="linklist">
@@ -347,6 +439,7 @@ export const G2_4: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'The link text names its destination.',
+      live: { Example: NamedLinks, keys: LINK_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="linklist">
@@ -426,12 +519,14 @@ export const G2_4: readonly CriterionRecord[] = [
     level: 'AA',
     since: '2.0',
     guideline: '2.4',
+    labs: ['headings-labels'],
     plain:
       'Where headings and labels exist, they have to describe the topic or purpose. This is ' +
       'about being informative, not merely present — 1.3.1 asks whether a heading is marked up ' +
       'as one; this asks whether it says anything.',
     fail: {
       caption: 'Headings that describe nothing.',
+      live: { Example: VagueHeadings, keys: HEADING_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="fauxdoc">
@@ -448,6 +543,7 @@ export const G2_4: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'Headings that answer "what is under here".',
+      live: { Example: DescriptiveHeadings, keys: HEADING_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="fauxdoc">

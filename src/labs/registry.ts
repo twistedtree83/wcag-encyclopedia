@@ -18,9 +18,14 @@ import { ObscuredLab } from './ObscuredLab';
 import { ColourCheckLab } from './ColourCheck';
 import { FadeLab } from './FadeLab';
 import { FocusRingLab } from './FocusRingLab';
+import { HeadingsLab } from './HeadingsLab';
 import { InputPurposeLab } from './InputPurposeLab';
 import { LabelInNameLab } from './LabelInNameLab';
+import { LinkPurposeLab } from './LinkPurposeLab';
 import { NameRoleValueLab } from './NameRoleValueLab';
+import { PageTitleLab } from './PageTitleLab';
+import { PageLanguageLab, PartsLanguageLab } from './LanguageLabs';
+import { StatusLab } from './StatusLab';
 import { SequenceLab } from './SequenceLab';
 import { StructureLab } from './StructureLab';
 
@@ -73,6 +78,12 @@ export const LABS: readonly LabEntry[] = [
   { id: 'skip-link', title: 'Try it: count the Tab presses', Lab: BypassLab },
   { id: 'focus-order', title: 'Try it: break the focus order', Lab: FocusOrderLab, flagshipFor: '2.4.3' },
   { id: 'sticky-banner', title: 'Try it: move the sticky banner', Lab: ObscuredLab },
+  { id: 'page-title', title: 'Try it: title the page', Lab: PageTitleLab },
+  { id: 'link-purpose', title: 'Try it: name the links', Lab: LinkPurposeLab },
+  { id: 'headings-labels', title: 'Try it: write the headings', Lab: HeadingsLab },
+  { id: 'page-language', title: 'Try it: declare the page’s language', Lab: PageLanguageLab },
+  { id: 'parts-language', title: 'Try it: mark the French phrase', Lab: PartsLanguageLab },
+  { id: 'status-message', title: 'Try it: announce the basket', Lab: StatusLab },
 ];
 
 export function labById(id: string): LabEntry | undefined {

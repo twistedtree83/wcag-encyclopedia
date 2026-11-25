@@ -5,7 +5,54 @@
  * constantly. The cost of getting them wrong lands entirely on people using speech.
  */
 
-import type { CriterionRecord } from './types';
+import type { CriterionRecord, LiveExample } from './types';
+
+/*
+ * 3.1.1 and 3.1.2's live examples (#51). Each is a short mock page; "Read it aloud" fills the
+ * log with the voice each line is read in. A mock page with no `lang` is read in the reader's
+ * own default voice. The real page's `lang` is never changed.
+ */
+
+function PageWithoutLang() {
+  return (
+    <div className="live-page">
+      <p className="live-page__h">Opening hours</p>
+      <p>Monday to Friday, nine till five.</p>
+    </div>
+  );
+}
+
+function PageWithLang() {
+  return (
+    <div className="live-page" lang="en">
+      <p className="live-page__h">Opening hours</p>
+      <p>Monday to Friday, nine till five.</p>
+    </div>
+  );
+}
+
+function PhraseUnmarked() {
+  return (
+    <div className="live-page" lang="en">
+      <p>
+        The sign on the door still read <em>Défense d’afficher</em>, which nobody obeyed.
+      </p>
+    </div>
+  );
+}
+
+function PhraseMarked() {
+  return (
+    <div className="live-page" lang="en">
+      <p>
+        The sign on the door still read <em lang="fr">Défense d’afficher</em>, which nobody
+        obeyed.
+      </p>
+    </div>
+  );
+}
+
+const READ_KEYS: LiveExample['keys'] = ['read'];
 
 export const G3_1: readonly CriterionRecord[] = [
   {
@@ -14,11 +61,13 @@ export const G3_1: readonly CriterionRecord[] = [
     level: 'A',
     since: '2.0',
     guideline: '3.1',
+    labs: ['page-language'],
     plain:
       'Declare the page’s language in the markup. It is what tells a screen reader which voice ' +
       'and pronunciation rules to use, and what lets a browser offer to translate.',
     fail: {
       caption: 'No language declared.',
+      live: { Example: PageWithoutLang, keys: READ_KEYS, instruments: ['voice-log'] },
       render: () => (
         <>
           <div className="codeline">&lt;html&gt;</div>
@@ -31,6 +80,7 @@ export const G3_1: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'One attribute.',
+      live: { Example: PageWithLang, keys: READ_KEYS, instruments: ['voice-log'] },
       render: () => (
         <>
           <div className="codeline">&lt;html lang="en"&gt;</div>
@@ -58,12 +108,14 @@ export const G3_1: readonly CriterionRecord[] = [
     level: 'AA',
     since: '2.0',
     guideline: '3.1',
+    labs: ['parts-language'],
     plain:
       'Passages in another language need their own lang attribute, so a screen reader switches ' +
       'voice for them. Proper names and words that have been absorbed into the surrounding ' +
       'language are exempt.',
     fail: {
       caption: 'A French quotation read with an English voice.',
+      live: { Example: PhraseUnmarked, keys: READ_KEYS, instruments: ['voice-log'] },
       render: () => (
         <>
           <p className="example-prose">
@@ -78,6 +130,7 @@ export const G3_1: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'The passage declares its own language.',
+      live: { Example: PhraseMarked, keys: READ_KEYS, instruments: ['voice-log'] },
       render: () => (
         <>
           <p className="example-prose">

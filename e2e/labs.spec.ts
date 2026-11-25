@@ -157,6 +157,53 @@ const LABS: LabCase[] = [
       'Role, name and state all exposed.',
   },
   {
+    name: 'the page title lab on 2.4.2',
+    url: '/criteria/2.4.2/',
+    lab: '.lab-slot .title-lab',
+    passing: '2.4.2 passes',
+    failing: '2.4.2 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await radio(lab, 'Generic: “Acme”').focus();
+      await page.keyboard.press('ArrowDown');
+    },
+    said: 'Screen reader says: Delivery details — Acme. The title says which page this is.',
+  },
+  {
+    name: 'the link purpose lab on 2.4.4',
+    url: '/criteria/2.4.4/',
+    lab: '.lab-slot .link-lab',
+    passing: '2.4.4 passes',
+    failing: '2.4.4 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await radio(lab, '“Read more”').focus();
+      await page.keyboard.press('ArrowDown');
+      await page.keyboard.press('ArrowDown');
+    },
+    said:
+      'Links list says: Read the annual report 2025, link; Read the board minutes for March, ' +
+      'link; Read the sustainability update, link. Each link says where it goes, even out of context.',
+  },
+  {
+    name: 'the headings and labels lab on 2.4.6',
+    url: '/criteria/2.4.6/',
+    lab: '.lab-slot .headings-lab',
+    passing: '2.4.6 passes',
+    failing: '2.4.6 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await radio(lab, '“More”, “Information”, “Details”').focus();
+      await page.keyboard.press('ArrowDown');
+      await radio(lab, '“Enter your details here”').focus();
+      await page.keyboard.press('ArrowDown');
+    },
+    said:
+      'Headings and fields list says: Returns and refunds, heading, level 4; How long you have, ' +
+      'heading, level 5; What it costs, heading, level 5; Order number, edit text. ' +
+      'Every heading and the label say what they are for.',
+  },
+  {
     name: 'the focus ring lab on 2.4.7',
     url: '/criteria/2.4.7/',
     lab: '.lab-slot .ring-lab',
@@ -277,6 +324,47 @@ const LABS: LabCase[] = [
       await page.keyboard.press('End');
     },
     said: 'Banner 160 pixels tall, at the top. The focused field is completely hidden.',
+  },
+  {
+    name: 'the page language lab on 3.1.1',
+    url: '/criteria/3.1.1/',
+    lab: '.lab-slot .lang-lab',
+    passing: '3.1.1 passes',
+    failing: '3.1.1 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await radio(lab, 'None').focus();
+      await page.keyboard.press('ArrowDown');
+    },
+    said: 'The page is read in an English voice.',
+  },
+  {
+    name: 'the language of parts lab on 3.1.2',
+    url: '/criteria/3.1.2/',
+    lab: '.lab-slot .lang-lab',
+    passing: '3.1.2 passes',
+    failing: '3.1.2 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await lab.getByRole('checkbox', { name: 'Mark the phrase lang="fr"' }).focus();
+      await page.keyboard.press('Space');
+    },
+    said: 'Défense d’afficher is read in a French voice, then back to English.',
+  },
+  {
+    name: 'the status message lab on 4.1.3',
+    url: '/criteria/4.1.3/',
+    lab: '.lab-slot .status-lab',
+    passing: '4.1.3 passes',
+    failing: '4.1.3 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await lab.getByRole('checkbox', { name: 'Put the message in a status region' }).focus();
+      await page.keyboard.press('Space');
+      await lab.getByRole('button', { name: 'Press Add to basket' }).focus();
+      await page.keyboard.press('Enter');
+    },
+    said: 'Screen reader says: Added. 4 items in basket. Focus stayed on Add to basket.',
   },
 ];
 
