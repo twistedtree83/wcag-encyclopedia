@@ -20,6 +20,8 @@ import { FadeLab } from './FadeLab';
 import { FocusRingLab } from './FocusRingLab';
 import { FormErrorsLab } from './FormErrorsLab';
 import { FormLabelsLab } from './FormLabelsLab';
+import { RedundantEntryLab } from './RedundantEntryLab';
+import { AccessibleAuthLab } from './AccessibleAuthLab';
 import { HeadingsLab } from './HeadingsLab';
 import { InputPurposeLab } from './InputPurposeLab';
 import { KeyboardLab } from './KeyboardLab';
@@ -100,6 +102,8 @@ export const LABS: readonly LabEntry[] = [
   { id: 'reflow', title: 'Try it: zoom to 400%', Lab: ReflowLab, flagshipFor: '1.4.10' },
   { id: 'form-errors', title: 'Try it: show the error', Lab: FormErrorsLab },
   { id: 'form-labels', title: 'Try it: label the field', Lab: FormLabelsLab },
+  { id: 'redundant-entry', title: 'Try it: check out without retyping', Lab: RedundantEntryLab },
+  { id: 'accessible-auth', title: 'Try it: sign in without a test', Lab: AccessibleAuthLab },
 ];
 
 export function labById(id: string): LabEntry | undefined {

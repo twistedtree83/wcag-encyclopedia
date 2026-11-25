@@ -152,6 +152,142 @@ function LabelledFields() {
 
 const LABEL_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'read'];
 
+/*
+ * 3.3.7's live examples (#60): the last step of a checkout, after the delivery address was typed
+ * at step 2. The broken step asks for it again in an empty field; the fixed one offers it back
+ * with a ticked box, and only an unticked box asks for a different address.
+ */
+
+const DELIVERY = '12 Cotton Row, Leeds';
+
+function RetypedBilling() {
+  const id = useId();
+  return (
+    <div className="lform">
+      <p className="lform__hint">Step 2 of 4, done: delivery to {DELIVERY}</p>
+      <p className="lform__step">Step 4 of 4: billing</p>
+      <label className="lform__label" htmlFor={`${id}-bill`}>
+        Billing address
+      </label>
+      <input id={`${id}-bill`} autoComplete="billing street-address" className="lform__field" />
+      <button type="button" className="btn p sm">
+        Pay now
+      </button>
+    </div>
+  );
+}
+
+function OfferedBilling() {
+  const id = useId();
+  const [same, setSame] = useState(true);
+  return (
+    <div className="lform">
+      <p className="lform__hint">Step 2 of 4, done: delivery to {DELIVERY}</p>
+      <p className="lform__step">Step 4 of 4: billing</p>
+      <label className="lform__check">
+        <input type="checkbox" checked={same} onChange={(e) => setSame(e.target.checked)} />
+        Same as delivery: {DELIVERY}
+      </label>
+      {same ? null : (
+        <>
+          <label className="lform__label" htmlFor={`${id}-bill`}>
+            Billing address
+          </label>
+          <input id={`${id}-bill`} autoComplete="billing street-address" className="lform__field" />
+        </>
+      )}
+      <button type="button" className="btn p sm">
+        Pay now
+      </button>
+    </div>
+  );
+}
+
+const REENTRY_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'space', 'read'];
+
+/*
+ * 3.3.8's live examples (#60). The broken sign-in blocks paste into its password and adds a
+ * picture puzzle; it is inert, so nothing can be typed into it. The fixed one asks for no real
+ * credential: a code from a mock email, which can be pasted or filled, or a passkey or emailed
+ * link, which test nothing. Those two buttons say in a status message that this is a mock.
+ */
+
+function PuzzleSignIn() {
+  const id = useId();
+  return (
+    <div className="lform">
+      <label className="lform__label" htmlFor={`${id}-pw`}>
+        Password
+      </label>
+      <p className="lform__hint" id={`${id}-pw-hint`}>
+        Paste is turned off for your security.
+      </p>
+      <input
+        id={`${id}-pw`}
+        type="password"
+        autoComplete="current-password"
+        aria-describedby={`${id}-pw-hint`}
+        onPaste={(e) => e.preventDefault()}
+        className="lform__field"
+      />
+      <p className="lform__label">Type the letters in the picture</p>
+      <span role="img" aria-label="Security check" className="lform__puzzle">
+        {['k', 'X', '7', 'q', 'P'].map((c) => (
+          <span key={c}>{c}</span>
+        ))}
+      </span>
+      <input aria-label="Letters" autoComplete="off" className="lform__field" />
+      <button type="button" className="btn p sm">
+        Sign in
+      </button>
+    </div>
+  );
+}
+
+function PasteableSignIn() {
+  const id = useId();
+  const [note, setNote] = useState('');
+  return (
+    <div className="lform">
+      <label className="lform__label" htmlFor={`${id}-code`}>
+        Sign-in code
+      </label>
+      <p className="lform__hint" id={`${id}-code-hint`}>
+        We emailed you a code. Paste it, or let your browser fill it in.
+      </p>
+      <input
+        id={`${id}-code`}
+        autoComplete="one-time-code"
+        inputMode="numeric"
+        aria-describedby={`${id}-code-hint`}
+        className="lform__field"
+      />
+      <button type="button" className="btn p sm">
+        Sign in
+      </button>
+      <button
+        type="button"
+        className="btn o sm"
+        onClick={() => setNote('This is a mock: no passkey is asked for.')}
+      >
+        Use a passkey instead
+      </button>
+      <button
+        type="button"
+        className="btn o sm"
+        onClick={() => setNote('This is a mock: no email is sent.')}
+      >
+        Email me a sign-in link
+      </button>
+      <p className="lform__hint" role="status">
+        {note}
+      </p>
+    </div>
+  );
+}
+
+const SIGNIN_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'enter', 'read'];
+
 export const G3_3: readonly CriterionRecord[] = [
   {
     num: '3.3.1',
@@ -373,12 +509,14 @@ export const G3_3: readonly CriterionRecord[] = [
     level: 'A',
     since: '2.2',
     guideline: '3.3',
+    labs: ['redundant-entry'],
     plain:
       'Do not ask for the same information twice in one process. Either carry it forward or ' +
       'offer it for selection. New in WCAG 2.2. Re-entry is a memory and dexterity tax, and it ' +
       'is a pure one — the site already has the answer.',
     fail: {
       caption: 'The address is typed twice.',
+      live: { Example: RetypedBilling, keys: REENTRY_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="formdemo">
@@ -398,6 +536,7 @@ export const G3_3: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'It is offered back rather than asked for again.',
+      live: { Example: OfferedBilling, keys: REENTRY_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="formdemo">
@@ -420,6 +559,7 @@ export const G3_3: readonly CriterionRecord[] = [
     level: 'AA',
     since: '2.2',
     guideline: '3.3',
+    labs: ['accessible-auth'],
     plain:
       'Signing in must not depend on a cognitive function test — remembering a password, ' +
       'transcribing a code, solving a puzzle — unless there is an alternative, a mechanism to ' +
@@ -427,6 +567,7 @@ export const G3_3: readonly CriterionRecord[] = [
       'this is the one that outlaws blocking paste into password fields.',
     fail: {
       caption: 'A puzzle, and paste disabled.',
+      live: { Example: PuzzleSignIn, keys: SIGNIN_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="formdemo">
@@ -445,6 +586,7 @@ export const G3_3: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'Paste allowed, and a route that tests nothing.',
+      live: { Example: PasteableSignIn, keys: SIGNIN_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="formdemo">
