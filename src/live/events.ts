@@ -1,4 +1,4 @@
-import type { Announcement } from '../labs/announce';
+import { spoken, type Announcement } from '../labs/announce';
 
 /**
  * What happens on a live example's stage (#43), as a list of events every instrument under the
@@ -17,7 +17,13 @@ export type StageEvent =
   /** The focused control's state changed, e.g. a switch turned off. */
   | { readonly kind: 'change'; readonly simulated: boolean; readonly line: Announcement }
   /** "Read it aloud": the whole example, said from the top. */
-  | { readonly kind: 'read'; readonly simulated: boolean; readonly lines: readonly Announcement[] };
+  | { readonly kind: 'read'; readonly simulated: boolean; readonly lines: readonly Announcement[] }
+  /** "Autofill": what a browser put in each field, by the field's name ('' for nothing). */
+  | { readonly kind: 'autofill'; readonly simulated: boolean; readonly fields: readonly AutofilledField[] }
+  /** "Say what you see": a voice command, and the control it clicked, or null for none. */
+  | { readonly kind: 'voice'; readonly simulated: boolean; readonly phrase: string; readonly clicked: Announcement | null };
+
+export type AutofilledField = { readonly name: string; readonly value: string };
 
 /** How many lines the announcement log keeps, so both stages' logs stay the same size. */
 export const LOG_LINES = 4;
@@ -30,4 +36,26 @@ export function logOf(events: readonly StageEvent[], max = LOG_LINES): Announcem
     return [];
   });
   return lines.slice(-max);
+}
+
+type Of<K extends StageEvent['kind']> = Extract<StageEvent, { kind: K }>;
+
+/** The latest event of one kind, or undefined. */
+export function lastOf<K extends StageEvent['kind']>(
+  events: readonly StageEvent[],
+  kind: K,
+): Of<K> | undefined {
+  return [...events].reverse().find((e): e is Of<K> => e.kind === kind);
+}
+
+/** What is said after an autofill: how many fields it filled. */
+export function autofillSaid({ fields }: Of<'autofill'>): string {
+  const filled = fields.filter((f) => f.value !== '').length;
+  return `Autofill filled ${filled} of ${fields.length} fields.`;
+}
+
+/** What is said after a voice command: what it clicked, or that nothing matched. */
+export function voiceSaid({ phrase, clicked }: Of<'voice'>): string {
+  const said = `You said “${phrase}”.`;
+  return clicked ? `${said} It clicked ${spoken(clicked)}.` : `${said} Nothing matched.`;
 }

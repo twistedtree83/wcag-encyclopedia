@@ -68,7 +68,7 @@ export function NrvMock({ nrv, labelId }: { readonly nrv: Nrv; readonly labelId:
   );
 }
 
-function Choice<T extends string>({
+export function Choice<T extends string>({
   name,
   legend,
   options,
