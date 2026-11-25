@@ -5,6 +5,7 @@ import { contextLog, keyLines, lastOf, logOf, pointerLog, type StageEvent } from
 import { trackOf } from './focusTrack';
 import { gestureLines } from './gesture';
 import { withVoices } from '../labs/language';
+import { filterName } from './vision';
 import { scrollLine } from '../labs/zoom';
 import { colourLine, sharpLine } from '../labs/imagesOfText';
 
@@ -145,6 +146,34 @@ function VoiceInstrument({ id, events }: InstrumentProps) {
         </ol>
       ) : (
         <p className="alog__empty">Nothing said yet.</p>
+      )}
+    </div>
+  );
+}
+
+/**
+ * The vision filter (#56): which filter is on the example, and, for each cue whose colour carries
+ * meaning, its ratio through that filter and whether it still stands out.
+ */
+function VisionInstrument({ id, events }: InstrumentProps) {
+  const last = lastOf(events, 'vision');
+  return (
+    <div className="alog vis-log">
+      <p className="alog__h" id={`${id}-h`}>
+        Vision filter
+      </p>
+      <p className="vis-log__now">Seen in: {filterName(last?.filter ?? 'none')}</p>
+      {last ? (
+        <ul aria-labelledby={`${id}-h`}>
+          {last.cues.map((c, i) => (
+            <li key={i} className={c.found ? 'vis-log__ok' : 'vis-log__lost'}>
+              <span aria-hidden="true">{c.found ? '✓ ' : '✕ '}</span>
+              {c.line}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="alog__empty">Press “Vision filter” to see the example without full colour.</p>
       )}
     </div>
   );
@@ -382,6 +411,7 @@ export const INSTRUMENTS: Readonly<Record<string, ComponentType<InstrumentProps>
   'focus-tracker': FocusTracker,
   autofill: AutofillInstrument,
   'voice-control': VoiceInstrument,
+  'vision-filter': VisionInstrument,
   'zoom-meter': ZoomMeter,
   'orientation-meter': OrientationMeter,
   'text-look': TextLook,

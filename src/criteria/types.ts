@@ -44,7 +44,8 @@ export type SimKey =
   | 'zoom'
   | 'rotate'
   | 'restyle'
-  | 'tap';
+  | 'tap'
+  | 'vision';
 
 export type LiveExample = {
   /**

@@ -46,9 +46,9 @@ describe('the verdict', () => {
 
 describe('every lab in the shell, before any script runs', () => {
   const pages = [
-    { path: criterionPath('1.4.1'), labs: 1, verdicts: ['1.4.3 passes'] },
+    { path: criterionPath('1.4.1'), labs: 2, verdicts: ['1.4.3 passes', '1.4.1 fails'] },
     { path: criterionPath('1.4.3'), labs: 2, verdicts: ['1.4.3 passes', '1.4.3 passes'] },
-    { path: criterionPath('1.4.11'), labs: 1, verdicts: ['1.4.11 passes'] },
+    { path: criterionPath('1.4.11'), labs: 2, verdicts: ['1.4.11 passes', '1.4.11 passes'] },
     { path: PATHS.colourCheck, labs: 1, verdicts: ['1.4.3 passes'] },
     { path: PATHS.home, labs: 2, verdicts: ['1.4.3 passes', '1.4.3 passes'] },
   ];

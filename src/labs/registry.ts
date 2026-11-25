@@ -20,6 +20,9 @@ import { FadeLab } from './FadeLab';
 import { FocusRingLab } from './FocusRingLab';
 import { FormErrorsLab } from './FormErrorsLab';
 import { FormLabelsLab } from './FormLabelsLab';
+import { OnInputLab } from './OnInputLab';
+import { ErrorSuggestionLab } from './ErrorSuggestionLab';
+import { ErrorPreventionLab } from './ErrorPreventionLab';
 import { HeadingsLab } from './HeadingsLab';
 import { InputPurposeLab } from './InputPurposeLab';
 import { KeyboardLab } from './KeyboardLab';
@@ -38,6 +41,7 @@ import { StatusLab } from './StatusLab';
 import { SequenceLab } from './SequenceLab';
 import { StructureLab } from './StructureLab';
 import { TargetSizeLab } from './TargetSizeLab';
+import { NonTextContrastLab, SensoryLab, UseOfColourLab } from './VisionLabs';
 import { TooltipLab } from './TooltipLab';
 
 export type LabProps = {
@@ -106,6 +110,12 @@ export const LABS: readonly LabEntry[] = [
   { id: 'target-size', title: 'Try it: size the targets', Lab: TargetSizeLab, flagshipFor: '2.5.8' },
   { id: 'orientation', title: 'Try it: turn the phone', Lab: OrientationLab },
   { id: 'images-of-text', title: 'Try it: zoom and restyle the heading', Lab: ImagesOfTextLab },
+  { id: 'on-input', title: 'Try it: change the country', Lab: OnInputLab },
+  { id: 'error-suggestion', title: 'Try it: suggest the fix', Lab: ErrorSuggestionLab },
+  { id: 'error-prevention', title: 'Try it: catch the wrong payment', Lab: ErrorPreventionLab },
+  { id: 'use-of-colour', title: 'Try it: take the colour away', Lab: UseOfColourLab },
+  { id: 'non-text-contrast', title: 'Try it: fade the edges', Lab: NonTextContrastLab },
+  { id: 'sensory-instruction', title: 'Try it: rewrite the instruction', Lab: SensoryLab },
 ];
 
 export function labById(id: string): LabEntry | undefined {
