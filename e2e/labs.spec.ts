@@ -636,6 +636,20 @@ const LABS: LabCase[] = [
     said: '16 pixel targets, touching. Under 24 by 24, and their 24 pixel circles overlap by 8 pixels. Fails.',
   },
   {
+    name: 'the session timeout lab on 2.2.1',
+    url: '/criteria/2.2.1/',
+    lab: '.lab-slot .sess-lab',
+    passing: '2.2.1 passes',
+    failing: '2.2.1 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await radio(lab, 'No warning').focus();
+      await page.keyboard.press('ArrowDown');
+      await page.keyboard.press('ArrowDown');
+    },
+    said: '2 minute limit. Warn 20 seconds ahead. Passes: a 20 second warning, and one action for more time.',
+  },
+  {
     name: 'the redundant entry lab on 3.3.7',
     url: '/criteria/3.3.7/',
     lab: '.lab-slot .re-lab',

@@ -36,6 +36,7 @@ import { NameRoleValueLab } from './NameRoleValueLab';
 import { OnFocusLab } from './OnFocusLab';
 import { PageTitleLab } from './PageTitleLab';
 import { ReflowLab } from './ReflowLab';
+import { SessionLab } from './SessionLab';
 import { ResizeTextLab, TextSpacingLab } from './TextFitLabs';
 import { OrientationLab } from './OrientationLab';
 import { ImagesOfTextLab } from './ImagesOfTextLab';
@@ -125,6 +126,7 @@ export const LABS: readonly LabEntry[] = [
   { id: 'sensory-instruction', title: 'Try it: rewrite the instruction', Lab: SensoryLab },
   { id: 'multiple-ways', title: 'Try it: find the buried page', Lab: MultipleWaysLab },
   { id: 'consistent-navigation', title: 'Try it: shuffle the menu', Lab: ConsistentNavLab },
+  { id: 'session-timeout', title: 'Try it: time out the session', Lab: SessionLab, flagshipFor: '2.2.1' },
   { id: 'redundant-entry', title: 'Try it: check out without retyping', Lab: RedundantEntryLab },
   { id: 'accessible-auth', title: 'Try it: sign in without a test', Lab: AccessibleAuthLab },
 ];

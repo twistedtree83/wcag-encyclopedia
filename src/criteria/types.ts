@@ -47,7 +47,9 @@ export type SimKey =
   | 'rotate'
   | 'restyle'
   | 'tap'
-  | 'vision';
+  | 'vision'
+  | 'wait'
+  | 'run';
 
 export type LiveExample = {
   /**
@@ -73,6 +75,12 @@ export type LiveExample = {
    * `text-fit` instrument shows whether any box cuts its text off.
    */
   readonly zoomFrame?: { readonly width: number; readonly height: number };
+  /**
+   * The stage's mock clock (#61), for the bar's "Wait 20 seconds" and "Run the clock": where it
+   * stops, in mock seconds. The example reads the time with `useClockNow()` (`src/live/clock.ts`)
+   * and names what it shows in a `data-timer` attribute, for the `clock` instrument.
+   */
+  readonly clock?: { readonly end: number };
 };
 
 export type DiffLine = {

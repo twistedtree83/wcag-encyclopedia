@@ -5,7 +5,111 @@
  * the speed the person who built the thing does.
  */
 
-import type { CriterionRecord } from './types';
+import { useId, useRef, useState, type Ref } from 'react';
+import { useClockNow } from '../live/clock';
+import type { CriterionRecord, LiveExample } from './types';
+
+/*
+ * 2.2.1's live examples (#61): a one-field application on a two-minute session, on the stage's
+ * mock clock. Nothing runs until the reader presses "Wait 20 seconds" or "Run the clock". The
+ * broken one ends without a word and takes the answer with it; the fixed one warns 20 seconds
+ * ahead in an alert, offers more time in one press, and keeps the answer if the time runs out.
+ * Each names what it shows in `data-timer`, for the clock instrument.
+ */
+
+const SESSION = 120;
+const WARN = 20;
+
+function NameField({ field }: { readonly field?: Ref<HTMLInputElement> }) {
+  const id = useId();
+  return (
+    <form className="lform" onSubmit={(e) => e.preventDefault()}>
+      <label className="lform__label" htmlFor={`${id}-name`}>
+        Full name
+      </label>
+      <input
+        ref={field}
+        id={`${id}-name`}
+        autoComplete="name"
+        defaultValue="Sam Okafor"
+        className="lform__field"
+      />
+      <button type="submit" className="btn p sm">
+        Send application
+      </button>
+    </form>
+  );
+}
+
+function ExpiringForm() {
+  const now = useClockNow();
+  if (now >= SESSION) {
+    return (
+      <div className="sess" data-timer="Session expired, answer lost">
+        <div className="notice notice--bad">
+          <span className="notice__title">Session expired</span>
+          <span>Please sign in again. Your answers have been cleared.</span>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className="sess" data-timer="Form open">
+      <NameField />
+    </div>
+  );
+}
+
+function WarnedForm() {
+  const now = useClockNow();
+  const field = useRef<HTMLInputElement>(null);
+  const [deadline, setDeadline] = useState(SESSION);
+  const left = deadline - now;
+  if (left <= 0) {
+    return (
+      <div className="sess" data-timer="Session ended, answer saved">
+        <div className="notice">
+          <span className="notice__title">Session ended</span>
+          <span>Your answers are saved. Sign in to carry on where you left off.</span>
+        </div>
+      </div>
+    );
+  }
+  const warned = left <= WARN;
+  const shows = warned ? 'Warning: Still there?' : deadline > SESSION ? 'Form open, time extended' : 'Form open';
+  return (
+    <div className="sess" data-timer={shows}>
+      {/* In the page from the start, so the warning is announced when it fills. */}
+      <div role="alert">
+        {warned ? (
+          <div className="notice">
+            <span className="notice__title">Still there?</span>
+            <span>Your session ends in {WARN} seconds. Your answers are saved.</span>
+            <span className="notice__actions">
+              <button
+                type="button"
+                className="btn p sm"
+                onClick={() => {
+                  setDeadline(now + SESSION);
+                  field.current?.focus();
+                }}
+              >
+                Give me more time
+              </button>
+            </span>
+          </div>
+        ) : null}
+      </div>
+      <NameField field={field} />
+    </div>
+  );
+}
+
+const SESSION_LIVE: Omit<LiveExample, 'Example'> = {
+  keys: ['tab', 'shift-tab', 'enter', 'read', 'wait', 'run'],
+  instruments: ['clock', 'announcement-log'],
+  clock: { end: 180 },
+};
 
 export const G2_2: readonly CriterionRecord[] = [
   {
@@ -14,12 +118,14 @@ export const G2_2: readonly CriterionRecord[] = [
     level: 'A',
     since: '2.0',
     guideline: '2.2',
+    labs: ['session-timeout'],
     plain:
       'If something is on a timer, the reader must be able to turn it off, adjust it to at ' +
       'least ten times the default, or extend it — with at least twenty seconds’ warning and a ' +
       'simple action to get more time. Real-time events and hard security limits are exempt.',
     fail: {
       caption: 'Session ends without warning, taking the form with it.',
+      live: { Example: ExpiringForm, ...SESSION_LIVE },
       render: () => (
         <>
           <div className="notice notice--bad">
@@ -36,6 +142,7 @@ export const G2_2: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'A warning, an extension, and the work preserved.',
+      live: { Example: WarnedForm, ...SESSION_LIVE },
       render: () => (
         <>
           <div className="notice">
