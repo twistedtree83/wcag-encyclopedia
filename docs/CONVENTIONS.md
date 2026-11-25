@@ -118,6 +118,7 @@ globally at the end of `swatch.css`.
 - 2.4.7 flagship lab: `?w=`, `?off=`, `?c=`, handled only in `src/labs/ringQuery.ts`.
 - 1.1.1 flagship lab: `?img=`, `?alt=` (absent: no alt attribute), handled only in `src/labs/altQuery.ts`.
 - 1.3.1 flagship lab: `?mock=`, `?real=` (comma list), handled only in `src/labs/structureQuery.ts`.
+- 2.5.8 flagship lab: `?size=8..44`, `?gap=0..24`, handled only in `src/labs/targetQuery.ts`.
 - 2.4.3 flagship lab: `?src=`, `?ti=`, handled only in `src/labs/orderQuery.ts`.
 - 1.4.10 flagship lab: `?zoom=100|200|400`, `?layout=fixed|reflow`, handled only in `src/labs/reflowQuery.ts`.
   A flagship lab pre-renders its start, applies the query in a mount effect without announcing

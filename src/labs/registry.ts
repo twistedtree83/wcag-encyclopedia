@@ -20,6 +20,9 @@ import { FadeLab } from './FadeLab';
 import { FocusRingLab } from './FocusRingLab';
 import { FormErrorsLab } from './FormErrorsLab';
 import { FormLabelsLab } from './FormLabelsLab';
+import { OnInputLab } from './OnInputLab';
+import { ErrorSuggestionLab } from './ErrorSuggestionLab';
+import { ErrorPreventionLab } from './ErrorPreventionLab';
 import { RedundantEntryLab } from './RedundantEntryLab';
 import { AccessibleAuthLab } from './AccessibleAuthLab';
 import { HeadingsLab } from './HeadingsLab';
@@ -37,6 +40,7 @@ import { PageLanguageLab, PartsLanguageLab } from './LanguageLabs';
 import { StatusLab } from './StatusLab';
 import { SequenceLab } from './SequenceLab';
 import { StructureLab } from './StructureLab';
+import { TargetSizeLab } from './TargetSizeLab';
 import { TooltipLab } from './TooltipLab';
 
 export type LabProps = {
@@ -102,6 +106,10 @@ export const LABS: readonly LabEntry[] = [
   { id: 'reflow', title: 'Try it: zoom to 400%', Lab: ReflowLab, flagshipFor: '1.4.10' },
   { id: 'form-errors', title: 'Try it: show the error', Lab: FormErrorsLab },
   { id: 'form-labels', title: 'Try it: label the field', Lab: FormLabelsLab },
+  { id: 'target-size', title: 'Try it: size the targets', Lab: TargetSizeLab, flagshipFor: '2.5.8' },
+  { id: 'on-input', title: 'Try it: change the country', Lab: OnInputLab },
+  { id: 'error-suggestion', title: 'Try it: suggest the fix', Lab: ErrorSuggestionLab },
+  { id: 'error-prevention', title: 'Try it: catch the wrong payment', Lab: ErrorPreventionLab },
   { id: 'redundant-entry', title: 'Try it: check out without retyping', Lab: RedundantEntryLab },
   { id: 'accessible-auth', title: 'Try it: sign in without a test', Lab: AccessibleAuthLab },
 ];

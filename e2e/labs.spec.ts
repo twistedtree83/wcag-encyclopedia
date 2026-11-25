@@ -240,6 +240,49 @@ const LABS: LabCase[] = [
       'the field.',
   },
   {
+    name: 'the on-input lab on 3.2.2',
+    url: '/criteria/3.2.2/',
+    lab: '.lab-slot .olab',
+    passing: '3.2.2 passes',
+    failing: '3.2.2 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await radio(lab, 'Goes to its page straight away').focus();
+      await page.keyboard.press('ArrowDown');
+    },
+    said: 'Changing the country now waits for the Go button.',
+  },
+  {
+    name: 'the error suggestion lab on 3.3.3',
+    url: '/criteria/3.3.3/',
+    lab: '.lab-slot .eslab',
+    passing: '3.3.3 passes',
+    failing: '3.3.3 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await radio(lab, '“Invalid input”').focus();
+      await page.keyboard.press('ArrowDown');
+      await lab.getByRole('button', { name: 'Submit the form' }).focus();
+      await page.keyboard.press('Enter');
+    },
+    said:
+      'Screen reader says: Date; Date, edit text, invalid entry, 05/03/26, Use DD/MM/YYYY, for example ' +
+      '05/03/2026; Use DD/MM/YYYY, for example 05/03/2026. It says how to put it right.',
+  },
+  {
+    name: 'the error prevention lab on 3.3.4',
+    url: '/criteria/3.3.4/',
+    lab: '.lab-slot .plab',
+    passing: '3.3.4 passes',
+    failing: '3.3.4 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await radio(lab, 'None: one click pays').focus();
+      await page.keyboard.press('ArrowDown');
+    },
+    said: 'Paying now shows a review step first, with a way back to correct it.',
+  },
+  {
     name: 'the focus ring lab on 2.4.7',
     url: '/criteria/2.4.7/',
     lab: '.lab-slot .ring-lab',
@@ -483,6 +526,18 @@ const LABS: LabCase[] = [
       await page.keyboard.press('ArrowDown');
     },
     said: '400% zoom, 320 CSS pixels wide. Fixed width: scrolls down and sideways.',
+  },
+  {
+    name: 'the target size lab on 2.5.8',
+    url: '/criteria/2.5.8/',
+    lab: '.lab-slot .ts-lab',
+    passing: '2.5.8 passes',
+    failing: '2.5.8 fails',
+    toFail: async (lab, page) => {
+      await lab.getByRole('slider', { name: 'Space between targets' }).focus();
+      await page.keyboard.press('Home');
+    },
+    said: '16 pixel targets, touching. Under 24 by 24, and their 24 pixel circles overlap by 8 pixels. Fails.',
   },
   {
     name: 'the redundant entry lab on 3.3.7',

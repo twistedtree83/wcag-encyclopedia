@@ -7,7 +7,8 @@
  * (prevention).
  */
 
-import { useId, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
+import { isDayMonthYear } from '../labs/errorSuggestion';
 import type { CriterionRecord, LiveExample } from './types';
 
 /*
@@ -151,6 +152,146 @@ function LabelledFields() {
 }
 
 const LABEL_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'read'];
+
+/*
+ * 3.3.3's live examples (#59). Both forms have rejected a date typed month first, and both tie the
+ * error to the field (3.3.1 is met). The broken error says only that the date is invalid; the
+ * fixed one says the order to use, with an example. Submitting the fixed form again checks the
+ * date, and moves focus back to it while it is still wrong.
+ */
+
+const US_DATE = '03/27/1995';
+const VAGUE = 'Invalid date';
+const SUGGESTION = 'Enter the date as day, month, year — for example 27 3 1995';
+
+function DateForm({ message, check }: { readonly message: string; readonly check: boolean }) {
+  const id = useId();
+  const field = useRef<HTMLInputElement>(null);
+  const [bad, setBad] = useState(true);
+  const submit = (e: FormEvent) => {
+    e.preventDefault();
+    if (!check) return;
+    const ok = isDayMonthYear(field.current?.value ?? '');
+    setBad(!ok);
+    if (!ok) field.current?.focus();
+  };
+  return (
+    <form className="lform" noValidate onSubmit={submit}>
+      <label className="lform__label" htmlFor={`${id}-dob`}>
+        Date of birth
+      </label>
+      <input
+        ref={field}
+        id={`${id}-dob`}
+        type="text"
+        autoComplete="bday"
+        defaultValue={US_DATE}
+        className={bad ? 'lform__field lform__field--bad' : 'lform__field'}
+        {...(bad ? { 'aria-invalid': true, 'aria-describedby': `${id}-err` } : {})}
+      />
+      {bad ? (
+        <p className="lform__err" id={`${id}-err`}>
+          <span aria-hidden="true">✕ </span>
+          {message}
+        </p>
+      ) : null}
+      <button type="submit" className="btn p sm">
+        Continue
+      </button>
+    </form>
+  );
+}
+
+function VagueDateForm() {
+  return <DateForm message={VAGUE} check={false} />;
+}
+
+function SuggestingDateForm() {
+  return <DateForm message={SUGGESTION} check />;
+}
+
+const SUGGESTION_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'enter', 'read'];
+
+/*
+ * 3.3.4's live examples (#59). Deleting every record. The broken button deletes at once, and says
+ * there is no way back. The fixed one asks first, with a way to cancel, and offers an undo once
+ * it is done. The outcome is a status message on both, so the log hears it.
+ */
+
+const RECORDS = '1,240';
+
+function InstantDelete() {
+  const [gone, setGone] = useState(false);
+  return (
+    <div className="lform">
+      <p className="lform__label">Records: {gone ? 0 : RECORDS}</p>
+      <button type="button" className="btn p sm" onClick={() => setGone(true)}>
+        Delete all records
+      </button>
+      <p className="lform__hint" role="status">
+        {gone ? `Deleted ${RECORDS} records. This can’t be undone.` : ''}
+      </p>
+    </div>
+  );
+}
+
+type DeleteStage = 'idle' | 'review' | 'deleted';
+
+function GuardedDelete() {
+  const [stage, setStage] = useState<DeleteStage>('idle');
+  const [status, setStatus] = useState('');
+  const box = useRef<HTMLDivElement>(null);
+  const moved = useRef(false);
+  // The button pressed is replaced at the next stage: focus goes to the first one there.
+  useEffect(() => {
+    if (!moved.current) return;
+    box.current?.querySelector<HTMLElement>('button')?.focus();
+  }, [stage]);
+  const go = (next: DeleteStage, message: string) => {
+    moved.current = true;
+    setStage(next);
+    setStatus(message);
+  };
+  return (
+    <div className="lform" ref={box}>
+      <p className="lform__label">Records: {stage === 'deleted' ? 0 : RECORDS}</p>
+      {stage === 'idle' ? (
+        <button type="button" className="btn p sm" onClick={() => go('review', '')}>
+          Delete all records
+        </button>
+      ) : null}
+      {stage === 'review' ? (
+        <>
+          <p className="lform__banner">
+            Delete all {RECORDS} records? You can restore them for 30 days.
+          </p>
+          <span className="pay__btns">
+            <button type="button" className="btn o sm" onClick={() => go('idle', 'Nothing was deleted.')}>
+              Cancel
+            </button>
+            <button
+              type="button"
+              className="btn p sm"
+              onClick={() => go('deleted', `Deleted ${RECORDS} records. You can undo this for 30 days.`)}
+            >
+              Yes, delete {RECORDS} records
+            </button>
+          </span>
+        </>
+      ) : null}
+      {stage === 'deleted' ? (
+        <button type="button" className="btn o sm" onClick={() => go('idle', `Restored ${RECORDS} records.`)}>
+          Undo
+        </button>
+      ) : null}
+      <p className="lform__hint" role="status">
+        {status}
+      </p>
+    </div>
+  );
+}
+
+const PREVENTION_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'enter', 'read'];
 
 /*
  * 3.3.7's live examples (#60): the last step of a checkout, after the delivery address was typed
@@ -420,11 +561,13 @@ export const G3_3: readonly CriterionRecord[] = [
     level: 'AA',
     since: '2.0',
     guideline: '3.3',
+    labs: ['error-suggestion'],
     plain:
       'When you know what is wrong and you know how to fix it, say so. Naming the problem is ' +
       'Level A; suggesting the correction is this.',
     fail: {
       caption: 'The error names the field and stops there.',
+      live: { Example: VagueDateForm, keys: SUGGESTION_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="formdemo">
@@ -440,6 +583,7 @@ export const G3_3: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'The error says what to do instead.',
+      live: { Example: SuggestingDateForm, keys: SUGGESTION_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="formdemo">
@@ -464,12 +608,14 @@ export const G3_3: readonly CriterionRecord[] = [
     level: 'AA',
     since: '2.0',
     guideline: '3.3',
+    labs: ['error-prevention'],
     plain:
       'For anything legally binding, financial, or destructive, give the reader a way out: make ' +
       'it reversible, check the input and let them correct it, or offer a confirmation step ' +
       'they must actively take.',
     fail: {
       caption: 'One irreversible click.',
+      live: { Example: InstantDelete, keys: PREVENTION_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="press">
@@ -485,6 +631,7 @@ export const G3_3: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'Review, confirm, and a window to undo.',
+      live: { Example: GuardedDelete, keys: PREVENTION_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="formdemo">

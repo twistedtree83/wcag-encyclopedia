@@ -41,7 +41,8 @@ export type SimKey =
   | 'switch-tab'
   | 'links'
   | 'headings'
-  | 'zoom';
+  | 'zoom'
+  | 'tap';
 
 export type LiveExample = {
   /**
