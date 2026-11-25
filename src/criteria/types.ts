@@ -43,7 +43,9 @@ export type SimKey =
   | 'headings'
   | 'zoom'
   | 'text-size'
-  | 'spacing';
+  | 'spacing'
+  | 'tap'
+  | 'vision';
 
 export type LiveExample = {
   /**

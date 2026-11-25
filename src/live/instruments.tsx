@@ -3,7 +3,9 @@ import { AnnouncementLog } from '../labs/AnnouncementLog';
 import { spoken } from '../labs/announce';
 import { contextLog, keyLines, lastOf, logOf, pointerLog, type StageEvent } from './events';
 import { trackOf } from './focusTrack';
+import { gestureLines } from './gesture';
 import { withVoices } from '../labs/language';
+import { filterName } from './vision';
 import { scrollLine } from '../labs/zoom';
 
 /**
@@ -148,6 +150,34 @@ function VoiceInstrument({ id, events }: InstrumentProps) {
   );
 }
 
+/**
+ * The vision filter (#56): which filter is on the example, and, for each cue whose colour carries
+ * meaning, its ratio through that filter and whether it still stands out.
+ */
+function VisionInstrument({ id, events }: InstrumentProps) {
+  const last = lastOf(events, 'vision');
+  return (
+    <div className="alog vis-log">
+      <p className="alog__h" id={`${id}-h`}>
+        Vision filter
+      </p>
+      <p className="vis-log__now">Seen in: {filterName(last?.filter ?? 'none')}</p>
+      {last ? (
+        <ul aria-labelledby={`${id}-h`}>
+          {last.cues.map((c, i) => (
+            <li key={i} className={c.found ? 'vis-log__ok' : 'vis-log__lost'}>
+              <span aria-hidden="true">{c.found ? '✓ ' : '✕ '}</span>
+              {c.line}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="alog__empty">Press “Vision filter” to see the example without full colour.</p>
+      )}
+    </div>
+  );
+}
+
 /** The zoom frame's zoom and window (#53), and what scrolls in it at that zoom. */
 function ZoomMeter({ id, events }: InstrumentProps) {
   const last = lastOf(events, 'zoom');
@@ -190,6 +220,82 @@ function KeyLog({ id, events }: InstrumentProps) {
         </ol>
       ) : (
         <p className="alog__empty">No keys sent yet.</p>
+      )}
+    </div>
+  );
+}
+
+/**
+ * The gesture pad under a stage (#57): a small map of the example's targets with the last
+ * gesture drawn on it. A cross where a tap aimed, a dashed line to where it landed, a dot where
+ * the pointer went down, a ring where it came up, the path between, and a tilted phone for a
+ * tilt. The map is a picture (aria-hidden); the list beneath it says the same in text.
+ */
+function GesturePad({ id, events }: InstrumentProps) {
+  const last = lastOf(events, 'gesture');
+  const map = last?.map;
+  const downAt = last?.path[0];
+  const upAt = last?.path[last.path.length - 1];
+  return (
+    <div className="gpad">
+      <p className="alog__h" id={`${id}-h`}>
+        Gesture pad
+      </p>
+      {last && map ? (
+        <>
+          <svg
+            className="gpad__map"
+            viewBox={`-8 -8 ${map.width + 16} ${map.height + 16}`}
+            aria-hidden="true"
+            focusable="false"
+          >
+            {map.stops.map((s, i) => (
+              <rect
+                key={i}
+                className={i === last.downOn ? 'gpad__target is-hit' : 'gpad__target'}
+                x={s.x}
+                y={s.y}
+                width={s.w}
+                height={s.h}
+                rx="2"
+              />
+            ))}
+            {last.aim ? (
+              <g className="gpad__aim">
+                <line x1={last.aim.x - 4} y1={last.aim.y} x2={last.aim.x + 4} y2={last.aim.y} />
+                <line x1={last.aim.x} y1={last.aim.y - 4} x2={last.aim.x} y2={last.aim.y + 4} />
+                {downAt ? (
+                  <line className="gpad__slip" x1={last.aim.x} y1={last.aim.y} x2={downAt.x} y2={downAt.y} />
+                ) : null}
+              </g>
+            ) : null}
+            {last.path.length > 1 ? (
+              <polyline className="gpad__path" points={last.path.map((p) => `${p.x},${p.y}`).join(' ')} />
+            ) : null}
+            {downAt ? <circle className="gpad__down" cx={downAt.x} cy={downAt.y} r="2.5" /> : null}
+            {upAt ? <circle className="gpad__up" cx={upAt.x} cy={upAt.y} r="5" /> : null}
+            {last.tilt !== null ? (
+              <rect
+                className="gpad__tilt"
+                x={map.width / 2 - 6}
+                y={map.height / 2 - 10}
+                width="12"
+                height="20"
+                rx="2"
+                transform={`rotate(${last.tilt} ${map.width / 2} ${map.height / 2})`}
+              />
+            ) : null}
+          </svg>
+          <ol aria-labelledby={`${id}-h`}>
+            {gestureLines(last).map((text, i) => (
+              <li key={i} className={text === 'Nothing happened' ? 'alog__blank' : undefined}>
+                {text}
+              </li>
+            ))}
+          </ol>
+        </>
+      ) : (
+        <p className="alog__empty">No gestures yet.</p>
       )}
     </div>
   );
@@ -274,11 +380,13 @@ function TextFitMeter({ id, events }: InstrumentProps) {
 }
 
 export const INSTRUMENTS: Readonly<Record<string, ComponentType<InstrumentProps>>> = {
+  'gesture-pad': GesturePad,
   'announcement-log': LogInstrument,
   'voice-log': VoiceLogInstrument,
   'focus-tracker': FocusTracker,
   autofill: AutofillInstrument,
   'voice-control': VoiceInstrument,
+  'vision-filter': VisionInstrument,
   'zoom-meter': ZoomMeter,
   'text-fit': TextFitMeter,
   'key-log': KeyLog,

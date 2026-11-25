@@ -8,6 +8,7 @@ import { ZoomFrame } from '../labs/ZoomFrame';
 import { clippedIn } from '../labs/NoticeCard';
 import { SCALES } from '../labs/textFit';
 import { ACTION_EVENT } from './actions';
+import { gestureSaid, hitAt, tapPlan, type Point } from './gesture';
 import {
   autofillSaid,
   contextSaid,
@@ -23,6 +24,9 @@ import { mapOf, nodeAt, pathTo, revealWithin, step, tabStops } from './focus';
 import { INSTRUMENTS } from './instruments';
 import { contextOf, hoverStep, movePointer, popupText } from './pointer';
 import { listOf, tabSwitchLine } from './lists';
+import { cuesIn } from './cues';
+import { nextFilter, seeCue, visionSaid, type VisionFilter } from './vision';
+import { VisionDefs, filterPrefix, visionStyle } from './VisionDefs';
 
 /**
  * A live example on its stage (#43, ADR 0002): the example, the input bar, then the instruments.
@@ -54,9 +58,11 @@ const KEY_LABEL: Readonly<Record<SimKey, string>> = {
   'switch-tab': 'Switch tab',
   links: 'List the links',
   headings: 'List the headings',
+  vision: 'Vision filter',
   zoom: 'Zoom in',
   'text-size': 'Enlarge text',
   spacing: 'Toggle text spacing',
+  tap: 'Tap',
 };
 
 /** Which keys activate which elements: Enter buttons and links, Space buttons and checkboxes. */
@@ -87,6 +93,13 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
   const fromBar = useRef(false);
   const [ring, setRing] = useState<Ring | null>(null);
   const [said, setSaid] = useState('');
+  /** "Tap" (#57): how many taps the bar has made, and where the last one landed in the frame. */
+  const taps = useRef(0);
+  const [tapMark, setTapMark] = useState<Point | null>(null);
+  /** True from a real pointer down until just after its click, so its actions are a gesture's. */
+  const pointing = useRef(false);
+  /** The vision filter on the example (#56). */
+  const [vision, setVision] = useState<VisionFilter>('none');
   /** Fail stage: the element the drawn focus is on, so the next Tab can blur it (#47). */
   const simEl = useRef<HTMLElement | null>(null);
   /** Both stages: the hover target the pointer is on, or null for away (#47). */
@@ -111,10 +124,15 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     // An autofill or a voice command is the bar's own doing, on either stage: say its outcome.
     if (e.kind === 'autofill') setSaid(autofillSaid(e));
     else if (e.kind === 'voice') setSaid(voiceSaid(e));
+    else if (e.kind === 'vision') setSaid(visionSaid(e));
     else if (e.kind === 'zoom') setSaid(zoomSaid(e));
     else if (e.kind === 'text-fit') setSaid(textFitSaid(e));
     else if (e.kind === 'keys') {
       if (!pointerStage) setSaid(keysSaid(e));
+    }
+    // The bar's own taps are said on both stages; a real pointer is the reader's own doing.
+    else if (e.kind === 'gesture') {
+      if (e.aim) setSaid(gestureSaid(e));
     }
     // A change of page in a mock reaches no screen reader on its own: say it on both stages.
     else if (e.kind === 'context') {
@@ -176,6 +194,14 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
       }
       return;
     }
+    // The vision filter (#56), on either stage: the next filter goes on the example, and each
+    // cue's rendered colours are measured through it.
+    if (key === 'vision') {
+      const filter = nextFilter(vision);
+      setVision(filter);
+      push({ kind: 'vision', simulated, filter, cues: cuesIn(root).map((c) => seeCue(c, filter)) });
+      return;
+    }
     // "Zoom in" steps the zoom frame through 100%, 200% and 400%, then back to 100%. The event
     // is pushed once the frame has laid out at the new zoom and measured what scrolls.
     if (key === 'zoom') {
@@ -201,6 +227,40 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
         },
       );
       push({ kind: 'autofill', simulated, fields });
+      return;
+    }
+    if (key === 'tap') {
+      // A fingertip tap from the bar (#57), on either stage: aimed at each target in turn, it
+      // lands a little off and presses whatever is under it. No drag, no path (2.5.1, 2.5.7).
+      const targets = tabStops(root);
+      const map = mapOf(root, targets, (el) => lineFor(el).name || 'blank');
+      const plan = tapPlan(map, taps.current);
+      if (!plan) return;
+      taps.current += 1;
+      const hit = hitAt(map, plan.at);
+      const actions: string[] = [];
+      const hear = (e: Event) => actions.push((e as CustomEvent<string>).detail);
+      root.addEventListener(ACTION_EVENT, hear);
+      fromBar.current = true;
+      if (hit !== null) targets[hit]!.click();
+      fromBar.current = false;
+      root.removeEventListener(ACTION_EVENT, hear);
+      const r = root.getBoundingClientRect();
+      const f = frame.current!.getBoundingClientRect();
+      setTapMark({ x: plan.at.x + r.left - f.left, y: plan.at.y + r.top - f.top });
+      push({
+        kind: 'gesture',
+        simulated,
+        gesture: 'tap',
+        map,
+        aim: plan.aim,
+        aimAt: plan.aimAt,
+        path: [plan.at],
+        downOn: hit,
+        upOn: hit,
+        tilt: null,
+        actions,
+      });
       return;
     }
     if (key === 'hover') {
@@ -371,7 +431,7 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
       }
     };
     const onAction = (e: Event) => {
-      if (fromBar.current) return;
+      if (fromBar.current || pointing.current) return;
       const el = document.activeElement;
       push({
         kind: 'keys',
@@ -382,6 +442,56 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
         actions: [(e as CustomEvent<string>).detail],
       });
     };
+    // A real pointer (#57): down, the path while it is down, up, and what its click set off.
+    let down: { path: Point[]; downOn: number | null; actions: string[] } | null = null;
+    const pointAt = (e: PointerEvent): Point => {
+      const r = root.getBoundingClientRect();
+      return { x: e.clientX - r.left, y: e.clientY - r.top };
+    };
+    const targetMap = () => mapOf(root, tabStops(root), (el) => lineFor(el).name || 'blank');
+    const hearPointer = (e: Event) => down?.actions.push((e as CustomEvent<string>).detail);
+    const onDown = (e: PointerEvent) => {
+      if (!e.isPrimary) return;
+      pointing.current = true;
+      down = { path: [pointAt(e)], downOn: hitAt(targetMap(), pointAt(e)), actions: [] };
+    };
+    const onMove = (e: PointerEvent) => {
+      if (down && e.isPrimary && down.path.length < 60) down.path.push(pointAt(e));
+    };
+    const onUp = (e: PointerEvent) => {
+      if (!down || !e.isPrimary) return;
+      const gesture = down;
+      gesture.path.push(pointAt(e));
+      const map = targetMap();
+      const upOn = hitAt(map, pointAt(e));
+      // The click, and the example's response to it, follow the pointer up in the same task.
+      window.setTimeout(() => {
+        pointing.current = false;
+        down = null;
+        push({
+          kind: 'gesture',
+          simulated: false,
+          gesture: 'pointer',
+          map,
+          aim: null,
+          aimAt: null,
+          path: gesture.path,
+          downOn: gesture.downOn,
+          upOn,
+          tilt: null,
+          actions: gesture.actions,
+        });
+      }, 0);
+    };
+    const onCancel = () => {
+      pointing.current = false;
+      down = null;
+    };
+    root.addEventListener('pointerdown', onDown);
+    root.addEventListener('pointermove', onMove);
+    root.addEventListener('pointerup', onUp);
+    root.addEventListener('pointercancel', onCancel);
+    root.addEventListener(ACTION_EVENT, hearPointer);
     const onClick = () => {
       cause.current = 'action';
     };
@@ -409,6 +519,11 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     root.addEventListener('mouseover', onOver);
     root.addEventListener('mouseleave', onLeave);
     return () => {
+      root.removeEventListener('pointerdown', onDown);
+      root.removeEventListener('pointermove', onMove);
+      root.removeEventListener('pointerup', onUp);
+      root.removeEventListener('pointercancel', onCancel);
+      root.removeEventListener(ACTION_EVENT, hearPointer);
       root.removeEventListener('focusin', onFocus);
       root.removeEventListener('change', onChange);
       root.removeEventListener('keydown', onKey, true);
@@ -502,6 +617,10 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
   };
 
   const { Example } = live;
+  const prefix = filterPrefix(id);
+  const filtered = live.keys.includes('vision')
+    ? { className: 'live__example vis-target', style: visionStyle(vision, prefix) }
+    : { className: 'live__example' };
   const shown = live.zoomFrame ? (
     <ZoomFrame
       zoom={ZOOMS[zoomAt]!}
@@ -520,14 +639,15 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     <>
       <div className="stage__example live__frame" ref={frame}>
         {simulated ? (
-          <div className="live__example" ref={example} aria-hidden="true" inert>
+          <div {...filtered} ref={example} aria-hidden="true" inert>
             {shown}
           </div>
         ) : (
-          <div className="live__example" ref={example}>
+          <div {...filtered} ref={example}>
             {shown}
           </div>
         )}
+        {live.keys.includes('vision') ? <VisionDefs prefix={prefix} /> : null}
         {simulated && !live.hideRing ? (
           <span
             className="sim-ring"
@@ -542,6 +662,14 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
                   }
                 : undefined
             }
+          />
+        ) : null}
+        {live.keys.includes('tap') ? (
+          <span
+            className="sim-tap"
+            aria-hidden="true"
+            data-on={tapMark ? 'true' : 'false'}
+            style={tapMark ? { transform: `translate(${tapMark.x}px, ${tapMark.y}px)` } : undefined}
           />
         ) : null}
         {live.keys.includes('hover') ? (

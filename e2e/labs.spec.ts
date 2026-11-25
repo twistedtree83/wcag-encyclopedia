@@ -240,6 +240,49 @@ const LABS: LabCase[] = [
       'the field.',
   },
   {
+    name: 'the on-input lab on 3.2.2',
+    url: '/criteria/3.2.2/',
+    lab: '.lab-slot .olab',
+    passing: '3.2.2 passes',
+    failing: '3.2.2 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await radio(lab, 'Goes to its page straight away').focus();
+      await page.keyboard.press('ArrowDown');
+    },
+    said: 'Changing the country now waits for the Go button.',
+  },
+  {
+    name: 'the error suggestion lab on 3.3.3',
+    url: '/criteria/3.3.3/',
+    lab: '.lab-slot .eslab',
+    passing: '3.3.3 passes',
+    failing: '3.3.3 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await radio(lab, '“Invalid input”').focus();
+      await page.keyboard.press('ArrowDown');
+      await lab.getByRole('button', { name: 'Submit the form' }).focus();
+      await page.keyboard.press('Enter');
+    },
+    said:
+      'Screen reader says: Date; Date, edit text, invalid entry, 05/03/26, Use DD/MM/YYYY, for example ' +
+      '05/03/2026; Use DD/MM/YYYY, for example 05/03/2026. It says how to put it right.',
+  },
+  {
+    name: 'the error prevention lab on 3.3.4',
+    url: '/criteria/3.3.4/',
+    lab: '.lab-slot .plab',
+    passing: '3.3.4 passes',
+    failing: '3.3.4 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await radio(lab, 'None: one click pays').focus();
+      await page.keyboard.press('ArrowDown');
+    },
+    said: 'Paying now shows a review step first, with a way back to correct it.',
+  },
+  {
     name: 'the focus ring lab on 2.4.7',
     url: '/criteria/2.4.7/',
     lab: '.lab-slot .ring-lab',
@@ -472,6 +515,51 @@ const LABS: LabCase[] = [
     said: 'Screen reader says: Added. 4 items in basket. Focus stayed on Add to basket.',
   },
   {
+    name: 'the take-the-colour-away lab on 1.4.1',
+    url: '/criteria/1.4.1/',
+    lab: '.lab-slot .vis-lab',
+    passing: '1.4.1 passes',
+    failing: '1.4.1 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      for (const cue of ['Underline the links', 'Mark the error with an icon']) {
+        await lab.getByRole('checkbox', { name: cue }).focus();
+        await page.keyboard.press('Space');
+      }
+    },
+    said:
+      'Full colour. The links: 1.58 : 1 against the text around them, and underlined. Stands out. ' +
+      'The field in error: 1.34 : 1 against the field beside it, and marked with an icon. Stands out.',
+  },
+  {
+    name: 'the fade-the-edges lab on 1.4.11',
+    url: '/criteria/1.4.11/',
+    lab: '.lab-slot .vis-lab',
+    passing: '1.4.11 passes',
+    failing: '1.4.11 fails',
+    toFail: async (lab, page) => {
+      await lab.getByRole('slider', { name: 'Fade the edges' }).focus();
+      await page.keyboard.press('End');
+    },
+    said: '100% faded. The edges are 1.00 : 1 against the background, in full colour. Fails borders and icons AA.',
+  },
+  {
+    name: 'the rewrite-the-instruction lab on 1.3.3',
+    url: '/criteria/1.3.3/',
+    lab: '.lab-slot .vis-lab',
+    passing: '1.3.3 passes',
+    failing: '1.3.3 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await radio(lab, 'Press the round green button on the right.').focus();
+      await page.keyboard.press('ArrowDown');
+      await page.keyboard.press('ArrowDown');
+    },
+    said:
+      'Read aloud: “Press Continue to payment.” The buttons are Save for later and Continue to ' +
+      'payment. The instruction names Continue to payment.',
+  },
+  {
     name: 'the reflow lab on 1.4.10',
     url: '/criteria/1.4.10/',
     lab: '.lab-slot .reflow-lab',
@@ -507,6 +595,18 @@ const LABS: LabCase[] = [
       await page.keyboard.press('ArrowDown');
     },
     said: 'Text at 150%. Locked in px: text is cut off.',
+  },
+  {
+    name: 'the target size lab on 2.5.8',
+    url: '/criteria/2.5.8/',
+    lab: '.lab-slot .ts-lab',
+    passing: '2.5.8 passes',
+    failing: '2.5.8 fails',
+    toFail: async (lab, page) => {
+      await lab.getByRole('slider', { name: 'Space between targets' }).focus();
+      await page.keyboard.press('Home');
+    },
+    said: '16 pixel targets, touching. Under 24 by 24, and their 24 pixel circles overlap by 8 pixels. Fails.',
   },
 ];
 

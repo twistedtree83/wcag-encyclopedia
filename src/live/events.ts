@@ -1,6 +1,8 @@
 import { spoken, type Announcement } from '../labs/announce';
 import type { FocusMap } from './focusTrack';
+import type { CueSeen, VisionFilter } from './vision';
 import { scrollLine } from '../labs/zoom';
+import type { GestureEvent } from './gesture';
 
 /**
  * What happens on a live example's stage (#43), as a list of events every instrument under the
@@ -37,6 +39,8 @@ export type StageEvent =
   | { readonly kind: 'autofill'; readonly simulated: boolean; readonly fields: readonly AutofilledField[] }
   /** "Say what you see": a voice command, and the control it clicked, or null for none. */
   | { readonly kind: 'voice'; readonly simulated: boolean; readonly phrase: string; readonly clicked: Announcement | null }
+  /** "Vision filter": the filter now on the example, and how each cue (`[data-cue]`) looks through it. */
+  | { readonly kind: 'vision'; readonly simulated: boolean; readonly filter: VisionFilter; readonly cues: readonly CueSeen[] }
   /** "Zoom in": the zoom frame's new zoom and window size (CSS px), and what scrolls in it (#53). */
   | { readonly kind: 'zoom'; readonly simulated: boolean; readonly zoom: number; readonly width: number; readonly height: number; readonly sideways: boolean; readonly down: boolean }
   /** "Enlarge text" or "Toggle text spacing": the frame's text size (percent), its spacing, and whether any box now cuts its text off (#54). */
@@ -53,6 +57,8 @@ export type StageEvent =
       /** What the example did in response, in order (`didAction` in `actions.ts`). */
       readonly actions: readonly string[];
     }
+  /** A pointer gesture: a simulated tap or tilt from the bar, or a real pointer down and up (#57). */
+  | GestureEvent
   /** "Hover": the pointer moved onto a `data-hover` target, named by it, or away (null) (#47). */
   | { readonly kind: 'pointer'; readonly simulated: boolean; readonly on: string | null }
   /** What the example's open tooltips (`role="tooltip"`) say now, or null for none (#47). */
