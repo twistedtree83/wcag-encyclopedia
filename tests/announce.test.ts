@@ -146,3 +146,56 @@ describe('what is skipped, and language', () => {
     expect(spoken(line!)).toBe('Bonjour (fr)');
   });
 });
+
+describe('lists and tables (1.3.1, #48)', () => {
+  it('says a list with its item count, then each item', () => {
+    expect(say('<ul><li>Orders leave in two days</li><li>Returns are free</li></ul>')).toEqual([
+      'list, 2 items',
+      'Orders leave in two days',
+      'Returns are free',
+    ]);
+  });
+
+  it('counts a one-item ordered list as one item', () => {
+    expect(say('<ol><li>Basket</li></ol>')).toEqual(['list, 1 item', 'Basket']);
+  });
+
+  it('reads styled divs that look like a list as plain lines', () => {
+    expect(say('<div><div>— Orders leave</div><div>— Returns are free</div></div>')).toEqual([
+      '— Orders leave',
+      '— Returns are free',
+    ]);
+  });
+
+  it('says a table with its size, its column headers, then its cells', () => {
+    expect(
+      say(
+        '<table aria-label="Opening hours"><thead><tr><th scope="col">Day</th><th scope="col">Hours</th></tr></thead>' +
+          '<tbody><tr><td>Saturday</td><td>9am to 5pm</td></tr><tr><td>Sunday</td><td>Closed</td></tr></tbody></table>',
+      ),
+    ).toEqual([
+      'Opening hours, table, 3 rows, 2 columns',
+      'Day, column header',
+      'Hours, column header',
+      'Saturday',
+      '9am to 5pm',
+      'Sunday',
+      'Closed',
+    ]);
+  });
+
+  it('says a row header, and a first-row header with no scope as a column header', () => {
+    expect(
+      say(
+        '<table><tr><th>Day</th><th>Hours</th></tr>' +
+          '<tr><th scope="row">Monday</th><td>Closed</td></tr></table>',
+      ),
+    ).toEqual([
+      'table, 2 rows, 2 columns',
+      'Day, column header',
+      'Hours, column header',
+      'Monday, row header',
+      'Closed',
+    ]);
+  });
+});

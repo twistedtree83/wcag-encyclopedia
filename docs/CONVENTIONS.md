@@ -115,6 +115,8 @@ globally at the end of `swatch.css`.
   `src/catalog/urlQuery.ts`.
 - Colour check: `?fg=` and `?bg=`, handled only in `src/labs/pairQuery.ts`.
 - 4.1.2 flagship lab: `?el=`, `?name=`, `?state=`, `?on=`, handled only in `src/labs/nrvQuery.ts`.
+- 1.1.1 flagship lab: `?img=`, `?alt=` (absent: no alt attribute), handled only in `src/labs/altQuery.ts`.
+- 1.3.1 flagship lab: `?mock=`, `?real=` (comma list), handled only in `src/labs/structureQuery.ts`.
   A flagship lab pre-renders its start, applies the query in a mount effect without announcing
   it, and writes changes back with `history.replaceState` (the start writes no query).
 

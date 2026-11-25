@@ -11,9 +11,11 @@
 
 import type { ReactNode } from 'react';
 import type { CriterionRecord } from '../criteria/types';
+import { AltTextLab } from './AltTextLab';
 import { ColourCheckLab } from './ColourCheck';
 import { FadeLab } from './FadeLab';
 import { NameRoleValueLab } from './NameRoleValueLab';
+import { StructureLab } from './StructureLab';
 
 export type LabProps = {
   /** The number of the criterion page showing the lab, e.g. "1.4.11". */
@@ -50,6 +52,8 @@ export const LABS: readonly LabEntry[] = [
     Lab: NameRoleValueLab,
     flagshipFor: '4.1.2',
   },
+  { id: 'alt-text', title: 'Try it: write the alt text', Lab: AltTextLab, flagshipFor: '1.1.1' },
+  { id: 'structure', title: 'Try it: build the structure', Lab: StructureLab, flagshipFor: '1.3.1' },
 ];
 
 export function labById(id: string): LabEntry | undefined {
