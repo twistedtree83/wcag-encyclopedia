@@ -118,6 +118,7 @@ globally at the end of `swatch.css`.
 - 2.4.7 flagship lab: `?w=`, `?off=`, `?c=`, handled only in `src/labs/ringQuery.ts`.
 - 1.1.1 flagship lab: `?img=`, `?alt=` (absent: no alt attribute), handled only in `src/labs/altQuery.ts`.
 - 1.3.1 flagship lab: `?mock=`, `?real=` (comma list), handled only in `src/labs/structureQuery.ts`.
+- 2.4.3 flagship lab: `?src=`, `?ti=`, handled only in `src/labs/orderQuery.ts`.
   A flagship lab pre-renders its start, applies the query in a mount effect without announcing
   it, and writes changes back with `history.replaceState` (the start writes no query).
 

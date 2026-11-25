@@ -75,12 +75,49 @@ export function mapOf(
   };
 }
 
-/** The Tab stops inside `root`, in document order. Browser only. */
+/**
+ * The order Tab visits `stops` (given in source order) in, as HTML focus navigation does (#46):
+ * positive `tabindex` first, lowest first, ties in source order; then everything else in source
+ * order. Stable, so nothing moves when no stop has a positive tabindex.
+ */
+export function tabOrder<T extends { readonly tabindex: number }>(stops: readonly T[]): T[] {
+  const rank = (s: T) => (s.tabindex > 0 ? s.tabindex : Number.POSITIVE_INFINITY);
+  return [...stops].sort((a, b) => rank(a) - rank(b));
+}
+
+/**
+ * The Tab stops inside `root`, in Tab order. Skips anything under `[hidden]`, and anything under
+ * an `inert` element inside the root (a page behind an open dialog, #46); the root itself may be
+ * inert, as the fail stage's is. Browser only.
+ */
 export function tabStops(root: Element): HTMLElement[] {
-  return Array.from(root.querySelectorAll<HTMLElement>('*')).filter((el) => {
+  const inRoot = Array.from(root.querySelectorAll<HTMLElement>('*')).filter((el) => {
     if (el.closest('[hidden]')) return false;
+    const inert = el.closest('[inert]');
+    if (inert && inert !== root && root.contains(inert)) return false;
     const attrs: Record<string, string> = {};
     for (const a of Array.from(el.attributes)) attrs[a.name] = a.value;
     return isTabbable(el.tagName.toLowerCase(), attrs);
   });
+  return tabOrder(inRoot.map((el) => ({ el, tabindex: Number(el.getAttribute('tabindex')) || 0 }))).map(
+    (s) => s.el,
+  );
+}
+
+/**
+ * Scroll `el` into view inside any scrolling box between it and `root`, as a browser does when
+ * focus lands (#46: 2.4.11's sticky header). Never scrolls the page itself. Honours the box's
+ * `scroll-padding-top`, like real focus scrolling. Browser only.
+ */
+export function revealWithin(root: Element, el: Element): void {
+  for (let box = el.parentElement; box && box !== root.parentElement; box = box.parentElement) {
+    const style = getComputedStyle(box);
+    if (!/(auto|scroll)/.test(style.overflowY) || box.scrollHeight <= box.clientHeight) continue;
+    const pad = parseFloat(style.scrollPaddingTop) || 0;
+    const a = el.getBoundingClientRect();
+    const b = box.getBoundingClientRect();
+    const top = a.top - b.top - box.clientTop;
+    if (top < pad) box.scrollTop += top - pad;
+    else if (top + a.height > box.clientHeight) box.scrollTop += top + a.height - box.clientHeight;
+  }
 }
