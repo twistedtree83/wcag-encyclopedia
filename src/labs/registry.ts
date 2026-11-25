@@ -14,6 +14,8 @@ import type { CriterionRecord } from '../criteria/types';
 import { ColourCheckLab } from './ColourCheck';
 import { FadeLab } from './FadeLab';
 import { NameRoleValueLab } from './NameRoleValueLab';
+import { PageLanguageLab, PartsLanguageLab } from './LanguageLabs';
+import { StatusLab } from './StatusLab';
 
 export type LabProps = {
   /** The number of the criterion page showing the lab, e.g. "1.4.11". */
@@ -50,6 +52,9 @@ export const LABS: readonly LabEntry[] = [
     Lab: NameRoleValueLab,
     flagshipFor: '4.1.2',
   },
+  { id: 'page-language', title: 'Try it: declare the page’s language', Lab: PageLanguageLab },
+  { id: 'parts-language', title: 'Try it: mark the French phrase', Lab: PartsLanguageLab },
+  { id: 'status-message', title: 'Try it: announce the basket', Lab: StatusLab },
 ];
 
 export function labById(id: string): LabEntry | undefined {

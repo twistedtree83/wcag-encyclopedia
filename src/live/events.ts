@@ -17,7 +17,9 @@ export type StageEvent =
   /** The focused control's state changed, e.g. a switch turned off. */
   | { readonly kind: 'change'; readonly simulated: boolean; readonly line: Announcement }
   /** "Read it aloud": the whole example, said from the top. */
-  | { readonly kind: 'read'; readonly simulated: boolean; readonly lines: readonly Announcement[] };
+  | { readonly kind: 'read'; readonly simulated: boolean; readonly lines: readonly Announcement[] }
+  /** A live region's text changed and was announced, wherever focus was (4.1.3). */
+  | { readonly kind: 'status'; readonly simulated: boolean; readonly line: Announcement };
 
 /** How many lines the announcement log keeps, so both stages' logs stay the same size. */
 export const LOG_LINES = 4;
@@ -26,7 +28,7 @@ export const LOG_LINES = 4;
 export function logOf(events: readonly StageEvent[], max = LOG_LINES): Announcement[] {
   const lines = events.flatMap((e) => {
     if (e.kind === 'read') return [...e.lines];
-    if (e.kind === 'focus' || e.kind === 'change') return [e.line];
+    if (e.kind === 'focus' || e.kind === 'change' || e.kind === 'status') return [e.line];
     return [];
   });
   return lines.slice(-max);

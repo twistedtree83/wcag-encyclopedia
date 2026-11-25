@@ -38,6 +38,41 @@ function FixedToggle() {
 
 const TOGGLE_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'space', 'read'];
 
+/*
+ * 4.1.3's live examples (#51): Add to basket updates the count. The broken basket changes only
+ * the count, which no screen reader says; the fixed one also puts a message in a status region
+ * that was in the page from the start, so it is announced while focus stays on the button.
+ */
+
+function SilentBasket() {
+  const [count, setCount] = useState(3);
+  return (
+    <div className="live-shop">
+      <p>Wireless headphones</p>
+      <button type="button" className="btn o sm" onClick={() => setCount(count + 1)}>
+        Add to basket
+      </button>
+      <p>Basket ({count})</p>
+    </div>
+  );
+}
+
+function AnnouncedBasket() {
+  const [count, setCount] = useState(3);
+  return (
+    <div className="live-shop">
+      <p>Wireless headphones</p>
+      <button type="button" className="btn o sm" onClick={() => setCount(count + 1)}>
+        Add to basket
+      </button>
+      <p>Basket ({count})</p>
+      <p role="status">{count > 3 ? `Added. ${count} items in basket.` : ''}</p>
+    </div>
+  );
+}
+
+const BASKET_KEYS: LiveExample['keys'] = ['tab', 'enter', 'read'];
+
 export const G4_1: readonly CriterionRecord[] = [
   {
     num: '4.1.2',
@@ -121,12 +156,14 @@ export const G4_1: readonly CriterionRecord[] = [
     since: '2.1',
     guideline: '4.1',
     demos: ['live-4-1-3'],
+    labs: ['status-message'],
     plain:
       'When something important changes without moving focus — a result count, a saved ' +
       'confirmation, an error appearing — it has to be announced. Moving focus to it would be a ' +
       'change of context; this is how you tell people without interrupting them.',
     fail: {
       caption: 'The basket updates silently.',
+      live: { Example: SilentBasket, keys: BASKET_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="a11ytree">
@@ -143,6 +180,7 @@ export const G4_1: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'A live region announces it, without stealing focus.',
+      live: { Example: AnnouncedBasket, keys: BASKET_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="a11ytree">

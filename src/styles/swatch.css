@@ -1904,6 +1904,61 @@ footer.foot p {
   color: var(--ink-2);
 }
 
+/* --- Language and status messages (L-11) ------------------------------------------------ */
+
+/* The 3.1.x mocks and live examples: a short page of prose. */
+.lang-page h4,
+.live-page__h {
+  margin: 0 0 8px;
+  font: 700 20px/1.2 var(--fh), sans-serif;
+}
+.lang-page p,
+.live-page p {
+  margin: 0;
+  font-size: 17px;
+}
+.lang-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.lang-note {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--small);
+}
+/* The 4.1.3 mock and live examples: a product, its button, the basket and the message. */
+.status-shop,
+.live-shop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  font-size: 17px;
+}
+.status-shop p,
+.live-shop p {
+  margin: 0;
+}
+.status-shop__item,
+.live-shop > p:first-child {
+  flex: 1 0 100%;
+  font-weight: 600;
+}
+/* The message's region is in the page from the start, empty, so it is never display: none. */
+.status-shop__msg,
+.live-shop > [role='status'] {
+  flex: 1 0 100%;
+  min-height: 1.45em;
+  font-weight: 600;
+}
+.status-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 24px;
+}
+
 /* --- Breakpoints ------------------------------------------------------------------------ */
 
 @media (max-width: 1100px) {

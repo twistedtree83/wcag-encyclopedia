@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react';
 import { AnnouncementLog } from '../labs/AnnouncementLog';
+import { withVoices } from '../labs/language';
 import { logOf, type StageEvent } from './events';
 
 /**
@@ -23,8 +24,17 @@ function LogInstrument({ id, events }: InstrumentProps) {
   return <AnnouncementLog id={id} lines={logOf(events)} empty="Nothing said yet." />;
 }
 
+/**
+ * The announcement log naming the voice each line is read in (3.1.1, 3.1.2): the language that
+ * applies to it, or the reader's own default voice when the markup declares none.
+ */
+function VoiceLogInstrument({ id, events }: InstrumentProps) {
+  return <AnnouncementLog id={id} lines={withVoices(logOf(events))} empty="Nothing said yet." />;
+}
+
 export const INSTRUMENTS: Readonly<Record<string, ComponentType<InstrumentProps>>> = {
   'announcement-log': LogInstrument,
+  'voice-log': VoiceLogInstrument,
 };
 
 /** The ids in `ids` that no registered instrument answers to. Empty when all resolve. */
