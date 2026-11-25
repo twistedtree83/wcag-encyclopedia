@@ -51,6 +51,10 @@ const darkBase = {
   /** Body text. Weak deliberately fails 1.4.3; strong passes. */
   'ex-text-weak': '#575751',
   'ex-text-strong': '#B3ADA1',
+  /** 1.3.3's two buttons (#56): green and red of near-equal lightness, white text on both. */
+  'ex-go': '#2E7D32',
+  'ex-stop': '#C62828',
+  'ex-on-button': '#FFFFFF',
 };
 
 type BaseToken = keyof typeof darkBase;
@@ -212,4 +216,34 @@ export const TOKEN_PAIRS: readonly TokenPair[] = [
     expect: 'fail',
     where: 'depicted control edge in a failing example (1.4.11), must stay under 3:1',
   },
+  // Live examples (#56) sit on the card surface inside the stage.
+  { fg: 'ex-link', bg: 'card-bg', kind: 'body', where: 'depicted link in a live example (1.4.1)' },
+  {
+    fg: 'ex-border-strong',
+    bg: 'card-bg',
+    kind: 'ui',
+    where: 'control edge in a passing live example (1.4.11)',
+  },
+  {
+    fg: 'ex-border-weak',
+    bg: 'card-bg',
+    kind: 'ui',
+    expect: 'fail',
+    where: 'control edge in a failing live example (1.4.11), must stay under 3:1',
+  },
+  {
+    fg: 'ex-text-strong',
+    bg: 'card-bg',
+    kind: 'body',
+    where: 'body text in a passing live example (1.4.3)',
+  },
+  {
+    fg: 'ex-text-weak',
+    bg: 'card-bg',
+    kind: 'body',
+    expect: 'fail',
+    where: 'body text in a failing live example (1.4.3), must stay under 4.5:1',
+  },
+  { fg: 'ex-on-button', bg: 'ex-go', kind: 'body', where: 'the green button’s label (1.3.3)' },
+  { fg: 'ex-on-button', bg: 'ex-stop', kind: 'body', where: 'the red button’s label (1.3.3)' },
 ];

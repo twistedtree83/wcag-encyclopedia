@@ -21,6 +21,9 @@ import { mapOf, nodeAt, pathTo, revealWithin, step, tabStops } from './focus';
 import { INSTRUMENTS } from './instruments';
 import { contextOf, hoverStep, movePointer, popupText } from './pointer';
 import { listOf, tabSwitchLine } from './lists';
+import { cuesIn } from './cues';
+import { nextFilter, seeCue, visionSaid, type VisionFilter } from './vision';
+import { VisionDefs, filterPrefix, visionStyle } from './VisionDefs';
 
 /**
  * A live example on its stage (#43, ADR 0002): the example, the input bar, then the instruments.
@@ -52,6 +55,7 @@ const KEY_LABEL: Readonly<Record<SimKey, string>> = {
   'switch-tab': 'Switch tab',
   links: 'List the links',
   headings: 'List the headings',
+  vision: 'Vision filter',
   zoom: 'Zoom in',
   tap: 'Tap',
 };
@@ -89,6 +93,8 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
   const [tapMark, setTapMark] = useState<Point | null>(null);
   /** True from a real pointer down until just after its click, so its actions are a gesture's. */
   const pointing = useRef(false);
+  /** The vision filter on the example (#56). */
+  const [vision, setVision] = useState<VisionFilter>('none');
   /** Fail stage: the element the drawn focus is on, so the next Tab can blur it (#47). */
   const simEl = useRef<HTMLElement | null>(null);
   /** Both stages: the hover target the pointer is on, or null for away (#47). */
@@ -109,6 +115,7 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     // An autofill or a voice command is the bar's own doing, on either stage: say its outcome.
     if (e.kind === 'autofill') setSaid(autofillSaid(e));
     else if (e.kind === 'voice') setSaid(voiceSaid(e));
+    else if (e.kind === 'vision') setSaid(visionSaid(e));
     else if (e.kind === 'zoom') setSaid(zoomSaid(e));
     else if (e.kind === 'keys') {
       if (!pointerStage) setSaid(keysSaid(e));
@@ -175,6 +182,14 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
       if (next >= 0) {
         push({ kind: 'read', simulated, lines: [tabSwitchLine(tabs[next]!.textContent ?? '', '')] });
       }
+      return;
+    }
+    // The vision filter (#56), on either stage: the next filter goes on the example, and each
+    // cue's rendered colours are measured through it.
+    if (key === 'vision') {
+      const filter = nextFilter(vision);
+      setVision(filter);
+      push({ kind: 'vision', simulated, filter, cues: cuesIn(root).map((c) => seeCue(c, filter)) });
       return;
     }
     // "Zoom in" steps the zoom frame through 100%, 200% and 400%, then back to 100%. The event
@@ -580,6 +595,10 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
   };
 
   const { Example } = live;
+  const prefix = filterPrefix(id);
+  const filtered = live.keys.includes('vision')
+    ? { className: 'live__example vis-target', style: visionStyle(vision, prefix) }
+    : { className: 'live__example' };
   const shown = live.zoomFrame ? (
     <ZoomFrame zoom={ZOOMS[zoomAt]!} base={live.zoomFrame} focusable={!simulated} onMeasure={onMeasure}>
       <Example />
@@ -591,14 +610,15 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     <>
       <div className="stage__example live__frame" ref={frame}>
         {simulated ? (
-          <div className="live__example" ref={example} aria-hidden="true" inert>
+          <div {...filtered} ref={example} aria-hidden="true" inert>
             {shown}
           </div>
         ) : (
-          <div className="live__example" ref={example}>
+          <div {...filtered} ref={example}>
             {shown}
           </div>
         )}
+        {live.keys.includes('vision') ? <VisionDefs prefix={prefix} /> : null}
         {simulated && !live.hideRing ? (
           <span
             className="sim-ring"
