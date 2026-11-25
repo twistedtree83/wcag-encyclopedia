@@ -3,6 +3,7 @@ import { AnnouncementLog } from '../labs/AnnouncementLog';
 import { spoken } from '../labs/announce';
 import { lastOf, logOf, type StageEvent } from './events';
 import { trackOf } from './focusTrack';
+import { withVoices } from '../labs/language';
 
 /**
  * The instruments a live example's stage can carry (#43, CONTEXT.md "Instrument"), by id. A
@@ -23,6 +24,14 @@ export type InstrumentProps = {
 /** The announcement log under a stage: what a screen reader said as the reader operated it. */
 function LogInstrument({ id, events }: InstrumentProps) {
   return <AnnouncementLog id={id} lines={logOf(events)} empty="Nothing said yet." />;
+}
+
+/**
+ * The announcement log naming the voice each line is read in (3.1.1, 3.1.2): the language that
+ * applies to it, or the reader's own default voice when the markup declares none.
+ */
+function VoiceLogInstrument({ id, events }: InstrumentProps) {
+  return <AnnouncementLog id={id} lines={withVoices(logOf(events))} empty="Nothing said yet." />;
 }
 
 /**
@@ -140,6 +149,7 @@ function VoiceInstrument({ id, events }: InstrumentProps) {
 
 export const INSTRUMENTS: Readonly<Record<string, ComponentType<InstrumentProps>>> = {
   'announcement-log': LogInstrument,
+  'voice-log': VoiceLogInstrument,
   'focus-tracker': FocusTracker,
   autofill: AutofillInstrument,
   'voice-control': VoiceInstrument,

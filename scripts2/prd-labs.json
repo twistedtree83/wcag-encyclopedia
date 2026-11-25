@@ -128,7 +128,7 @@
       ],
       "importance": 11,
       "afk": true,
-      "passes": false
+      "passes": true
     },
     {
       "id": "L-12",

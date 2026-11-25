@@ -289,6 +289,47 @@ const LABS: LabCase[] = [
     },
     said: 'In the markup: heading, list and labels. Nothing is only styled.',
   },
+  {
+    name: 'the page language lab on 3.1.1',
+    url: '/criteria/3.1.1/',
+    lab: '.lab-slot .lang-lab',
+    passing: '3.1.1 passes',
+    failing: '3.1.1 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await radio(lab, 'None').focus();
+      await page.keyboard.press('ArrowDown');
+    },
+    said: 'The page is read in an English voice.',
+  },
+  {
+    name: 'the language of parts lab on 3.1.2',
+    url: '/criteria/3.1.2/',
+    lab: '.lab-slot .lang-lab',
+    passing: '3.1.2 passes',
+    failing: '3.1.2 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await lab.getByRole('checkbox', { name: 'Mark the phrase lang="fr"' }).focus();
+      await page.keyboard.press('Space');
+    },
+    said: 'Défense d’afficher is read in a French voice, then back to English.',
+  },
+  {
+    name: 'the status message lab on 4.1.3',
+    url: '/criteria/4.1.3/',
+    lab: '.lab-slot .status-lab',
+    passing: '4.1.3 passes',
+    failing: '4.1.3 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await lab.getByRole('checkbox', { name: 'Put the message in a status region' }).focus();
+      await page.keyboard.press('Space');
+      await lab.getByRole('button', { name: 'Press Add to basket' }).focus();
+      await page.keyboard.press('Enter');
+    },
+    said: 'Screen reader says: Added. 4 items in basket. Focus stayed on Add to basket.',
+  },
 ];
 
 async function open(page: Page, url: string) {

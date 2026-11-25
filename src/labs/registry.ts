@@ -21,6 +21,8 @@ import { LabelInNameLab } from './LabelInNameLab';
 import { LinkPurposeLab } from './LinkPurposeLab';
 import { NameRoleValueLab } from './NameRoleValueLab';
 import { PageTitleLab } from './PageTitleLab';
+import { PageLanguageLab, PartsLanguageLab } from './LanguageLabs';
+import { StatusLab } from './StatusLab';
 import { SequenceLab } from './SequenceLab';
 import { StructureLab } from './StructureLab';
 
@@ -73,6 +75,9 @@ export const LABS: readonly LabEntry[] = [
   { id: 'page-title', title: 'Try it: title the page', Lab: PageTitleLab },
   { id: 'link-purpose', title: 'Try it: name the links', Lab: LinkPurposeLab },
   { id: 'headings-labels', title: 'Try it: write the headings', Lab: HeadingsLab },
+  { id: 'page-language', title: 'Try it: declare the page’s language', Lab: PageLanguageLab },
+  { id: 'parts-language', title: 'Try it: mark the French phrase', Lab: PartsLanguageLab },
+  { id: 'status-message', title: 'Try it: announce the basket', Lab: StatusLab },
 ];
 
 export function labById(id: string): LabEntry | undefined {

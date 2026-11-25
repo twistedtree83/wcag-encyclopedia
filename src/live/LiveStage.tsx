@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import type { LiveExample, SimKey } from '../criteria/types';
-import { announce, focusLine, fromDom, spoken } from '../labs/announce';
+import { announce, focusLine, fromDom, liveRegionLines, spoken } from '../labs/announce';
 import { autofillValue } from '../labs/inputPurpose';
 import { voiceMatches } from '../labs/labelInName';
 import { autofillSaid, voiceSaid, type StageEvent } from './events';
@@ -155,8 +155,11 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     }
     const target = simulated ? stops[simAt] : realAt.current;
     if (!target || !activates(key, target)) return;
+    const before = spoken(lineFor(target));
     target.click();
-    if (simulated) push({ kind: 'change', simulated, line: lineFor(target) });
+    // A control whose name, role and states didn't change (a plain button) says nothing new.
+    const after = lineFor(target);
+    if (simulated && spoken(after) !== before) push({ kind: 'change', simulated, line: after });
   };
 
   // The drawn ring follows the simulated focus, and the layout on resize.
@@ -204,6 +207,23 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
       root.removeEventListener('focusin', onFocus);
       root.removeEventListener('change', onChange);
     };
+  }, [simulated, push]);
+
+  // Status messages (4.1.3), on both stages: when a live region's text changes, it is announced
+  // wherever focus is. Read from attributes, so the inert fail stage is judged the same way.
+  useEffect(() => {
+    const root = example.current;
+    if (!root) return;
+    let heard = liveRegionLines(fromDom(root)).map(spoken);
+    const observer = new MutationObserver(() => {
+      const lines = liveRegionLines(fromDom(root));
+      lines.forEach((line, i) => {
+        if (line.name && spoken(line) !== heard[i]) push({ kind: 'status', simulated, line });
+      });
+      heard = lines.map(spoken);
+    });
+    observer.observe(root, { subtree: true, childList: true, characterData: true, attributes: true });
+    return () => observer.disconnect();
   }, [simulated, push]);
 
   const { Example } = live;
