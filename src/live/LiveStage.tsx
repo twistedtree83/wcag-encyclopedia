@@ -32,6 +32,19 @@ import { nextFilter, seeCue, visionSaid, type VisionFilter } from './vision';
 import { VisionDefs, filterPrefix, visionStyle } from './VisionDefs';
 import { siteSeenIn } from './SiteWindow';
 import { siteSaid } from './mockSite';
+import {
+  CLOCK_START,
+  CLOCK_STEP,
+  ClockNow,
+  clockSaid,
+  ticked,
+  toggled,
+  useTicker,
+  waited,
+  withClock,
+  type Clock,
+  type ClockEvent,
+} from './clock';
 
 /**
  * A live example on its stage (#43, ADR 0002): the example, the input bar, then the instruments.
@@ -70,7 +83,12 @@ const KEY_LABEL: Readonly<Record<SimKey, string>> = {
   rotate: 'Rotate',
   restyle: 'Use my colours',
   tap: 'Tap',
+  wait: `Wait ${CLOCK_STEP} seconds`,
+  run: 'Run the clock',
 };
+
+/** Where a stage's clock stops when the record gives no end, in mock seconds. */
+const CLOCK_END = 180;
 
 /** Which keys activate which elements: Enter buttons and links, Space buttons and checkboxes. */
 function activates(key: 'enter' | 'space', el: Element): boolean {
@@ -120,6 +138,11 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
   /** Zoom frame (#53): the index into ZOOMS, and whether a "Zoom in" waits to be measured. */
   const [zoomAt, setZoomAt] = useState(0);
   const zoomed = useRef(false);
+  /** The mock clock (#61): never runs until the bar starts it. What moved it last, and what the example showed. */
+  const [clock, setClock] = useState<Clock>(CLOCK_START);
+  const clockEnd = live.clock?.end ?? CLOCK_END;
+  const clockMoved = useRef<ClockEvent['cause'] | null>(null);
+  const timerShown = useRef<string | null>(null);
   /** Text in the frame (#54): the index into SCALES, spacing on, and whether a change waits to be measured. */
   const [scaleAt, setScaleAt] = useState(0);
   const [spaced, setSpaced] = useState(false);
@@ -131,7 +154,7 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
   const [restyled, setRestyled] = useState(false);
 
   const push = useCallback((e: StageEvent) => {
-    setEvents((es) => [...es, e].slice(-KEEP));
+    setEvents((es) => (e.kind === 'clock' ? withClock(es, e) : [...es, e]).slice(-KEEP));
     // Real focus is spoken by the reader's own screen reader; say only what it wouldn't.
     // An autofill or a voice command is the bar's own doing, on either stage: say its outcome.
     if (e.kind === 'autofill') setSaid(autofillSaid(e));
@@ -155,6 +178,11 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     // So does a move round a mock site (#63), on both stages; not where the visit starts.
     else if (e.kind === 'site') {
       if (e.page.via) setSaid(siteSaid(e));
+    }
+    // The clock is the bar's own doing on both stages: say its presses, and what changed (#61).
+    else if (e.kind === 'clock') {
+      const text = clockSaid(e);
+      if (text) setSaid(text);
     } else if (
       e.kind === 'read' ||
       ((e.kind === 'focus' || e.kind === 'change' || e.kind === 'status') && e.simulated)
@@ -218,6 +246,18 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
       const filter = nextFilter(vision);
       setVision(filter);
       push({ kind: 'vision', simulated, filter, cues: cuesIn(root).map((c) => seeCue(c, filter)) });
+      return;
+    }
+    // The mock clock (#61), on either stage: "Wait" jumps it, "Run" starts or pauses it. The
+    // event is pushed once the example has rendered at the new time.
+    if (key === 'wait') {
+      clockMoved.current = 'wait';
+      setClock((c) => waited(c, clockEnd));
+      return;
+    }
+    if (key === 'run') {
+      clockMoved.current = clock.running ? 'pause' : 'run';
+      setClock((c) => toggled(c, clockEnd));
       return;
     }
     // "Zoom in" steps the zoom frame through 100%, 200% and 400%, then back to 100%. The event
@@ -661,6 +701,45 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     return () => observer.disconnect();
   }, [simulated, push]);
 
+  // The clock (#61): ticks only while the reader has it running.
+  useTicker(clock.running, () => {
+    clockMoved.current = 'tick';
+    setClock((c) => ticked(c, clockEnd));
+  });
+  // What the example shows on the clock, before the reader first moves it, and any change it
+  // makes itself between moves ("Give me more time"). A change the clock made is pushed by the
+  // layout effect below before this observer runs, so it is never pushed twice.
+  const clockAt = useRef(clock);
+  clockAt.current = clock;
+  useEffect(() => {
+    const root = example.current;
+    if (!root) return;
+    const read = () => root.querySelector('[data-timer]')?.getAttribute('data-timer') ?? null;
+    timerShown.current = read();
+    const observer = new MutationObserver(() => {
+      const shows = read();
+      if (shows === timerShown.current) return;
+      const from = timerShown.current;
+      timerShown.current = shows;
+      const { now, running } = clockAt.current;
+      push({ kind: 'clock', simulated, cause: 'example', now, running, shows, from });
+    });
+    observer.observe(root, { subtree: true, childList: true, attributes: true, attributeFilter: ['data-timer'] });
+    return () => observer.disconnect();
+  }, [simulated, push]);
+  // Once the example has rendered at the new mock time, say what it shows now.
+  useLayoutEffect(() => {
+    const moved = clockMoved.current;
+    const root = example.current;
+    if (moved === null || !root) return;
+    clockMoved.current = null;
+    const cause = (moved === 'tick' || moved === 'run') && !clock.running ? 'end' : moved;
+    const shows = root.querySelector('[data-timer]')?.getAttribute('data-timer') ?? null;
+    const from = timerShown.current;
+    timerShown.current = shows;
+    push({ kind: 'clock', simulated, cause, now: clock.now, running: clock.running, shows, from });
+  }, [clock, simulated, push]);
+
   const onMeasure = (scrolls: Scrolls) => {
     if (refitted.current) {
       refitted.current = false;
@@ -696,20 +775,24 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
   ) : (
     <Example />
   );
-  const shown = live.zoomFrame ? (
-    <ZoomFrame
-      zoom={ZOOMS[zoomAt]!}
-      base={live.zoomFrame}
-      textScale={SCALES[scaleAt]! / 100}
-      spacing={spaced}
-      turned={turned}
-      focusable={!simulated}
-      onMeasure={onMeasure}
-    >
-      {styled}
-    </ZoomFrame>
-  ) : (
-    <Example />
+  const shown = (
+    <ClockNow.Provider value={clock.now}>
+      {live.zoomFrame ? (
+        <ZoomFrame
+          zoom={ZOOMS[zoomAt]!}
+          base={live.zoomFrame}
+          textScale={SCALES[scaleAt]! / 100}
+          spacing={spaced}
+          turned={turned}
+          focusable={!simulated}
+          onMeasure={onMeasure}
+        >
+          {styled}
+        </ZoomFrame>
+      ) : (
+        <Example />
+      )}
+    </ClockNow.Provider>
   );
   return (
     <>
@@ -775,7 +858,7 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
       >
         {live.keys.map((key) => (
           <button key={key} type="button" className="btn o sm" onClick={() => press(key)}>
-            {KEY_LABEL[key]}
+            {key === 'run' && clock.running ? 'Pause the clock' : KEY_LABEL[key]}
           </button>
         ))}
       </div>
