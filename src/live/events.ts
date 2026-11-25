@@ -5,6 +5,7 @@ import { scrollLine } from '../labs/zoom';
 import { colourLine, sharpLine } from '../labs/imagesOfText';
 import type { GestureEvent } from './gesture';
 import type { PlayerSeen } from './mockPlayer';
+import type { SiteSeen } from './mockSite';
 
 /**
  * What happens on a live example's stage (#43), as a list of events every instrument under the
@@ -72,7 +73,9 @@ export type StageEvent =
   /** The mock player (#65): where the clip is, what is heard and the caption on screen. */
   | { readonly kind: 'player'; readonly simulated: boolean; readonly seen: PlayerSeen }
   /** The example's own page (`data-context`) is now `address`, and what moved it there (#47). */
-  | { readonly kind: 'context'; readonly simulated: boolean; readonly address: string; readonly cause: ContextCause | null };
+  | { readonly kind: 'context'; readonly simulated: boolean; readonly address: string; readonly cause: ContextCause | null }
+  /** The example's mock site (`[data-site]`) now shows this page (#63). */
+  | { readonly kind: 'site'; readonly simulated: boolean; readonly page: SiteSeen };
 
 /** What the reader last did before the example changed page: moved focus, acted, or hovered. */
 export type ContextCause = 'focus' | 'action' | 'pointer';

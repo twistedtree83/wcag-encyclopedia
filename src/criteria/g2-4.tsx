@@ -8,6 +8,8 @@
 
 import { useEffect, useId, useRef, useState, type MouseEvent } from 'react';
 import type { CriterionRecord, LiveExample } from './types';
+import { MockSite } from '../live/SiteWindow';
+import { SUPPORT_SITE, SUPPORT_SITE_FOUND } from '../labs/multipleWays';
 
 /*
  * 2.4.7's live examples (#44): three fields, as in the static examples. The broken row removes
@@ -247,6 +249,18 @@ function StickyForm({ padded }: { padded: boolean }) {
 
 const PAGE_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'enter'];
 
+/*
+ * 2.4.5's live examples (#63): the shop's support site as a mock site the reader moves round.
+ * Broken: the menu and each page's links are the only way down to VAT invoices. Fixed: search
+ * (filled with “VAT”) and a site map lead there too. Neither ever navigates the real page.
+ */
+
+const LostSite = () => <MockSite site={SUPPORT_SITE} />;
+const FoundSite = () => <MockSite site={SUPPORT_SITE_FOUND} />;
+
+const SITE_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'enter'];
+const SITE_INSTRUMENTS = ['mock-site', 'announcement-log'];
+
 export const G2_4: readonly CriterionRecord[] = [
   {
     num: '2.4.1',
@@ -482,8 +496,10 @@ export const G2_4: readonly CriterionRecord[] = [
       'Offer more than one route to each page — navigation plus search, or a sitemap, or an ' +
       'index. People navigate differently; some scan structure, others go straight to search. ' +
       'Steps within a process are exempt.',
+    labs: ['multiple-ways'],
     fail: {
       caption: 'A deep hierarchy and nothing else.',
+      live: { Example: LostSite, keys: SITE_KEYS, instruments: SITE_INSTRUMENTS },
       render: () => (
         <>
           <div className="crumbs">Home › Support › Billing › Invoices › VAT</div>
@@ -497,6 +513,7 @@ export const G2_4: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'Two independent routes, at least.',
+      live: { Example: FoundSite, keys: SITE_KEYS, instruments: SITE_INSTRUMENTS },
       render: () => (
         <>
           <div className="crumbs">Home › Support › Billing › Invoices › VAT</div>
