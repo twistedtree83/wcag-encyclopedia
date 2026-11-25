@@ -74,5 +74,6 @@ Graph: `scripts2/prd-labs.json` · Parent: #40 · Integration branch: `labs`
 - [x] **L-19** #59 — Forms: 3.2.2, 3.3.3 and 3.3.4 (L-03)
 - [x] **L-23** #63 — Mock site, with 2.4.5 and 3.2.3 (L-03)
 - [x] **L-21** #61 — Clock and the 2.2.1 flagship (L-03)
+- [x] **L-18** #58 — Pointer: 2.5.1, 2.5.2, 2.5.4 and 2.5.7 (L-17)
 - [x] **L-20** #60 — Forms: 3.3.7 and 3.3.8 (L-03)
 - [x] **L-22** #62 — Timing, audio and flashing: 2.2.2, 1.4.2 and 2.3.1 (L-21)

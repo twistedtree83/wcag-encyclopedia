@@ -325,6 +325,14 @@ function GesturePad({ id, events }: InstrumentProps) {
             ) : null}
             {downAt ? <circle className="gpad__down" cx={downAt.x} cy={downAt.y} r="2.5" /> : null}
             {upAt ? <circle className="gpad__up" cx={upAt.x} cy={upAt.y} r="5" /> : null}
+            {/* A pinch's second finger (#58). */}
+            {last.path2 && last.path2.length > 1 ? (
+              <>
+                <polyline className="gpad__path" points={last.path2.map((p) => `${p.x},${p.y}`).join(' ')} />
+                <circle className="gpad__down" cx={last.path2[0]!.x} cy={last.path2[0]!.y} r="2.5" />
+                <circle className="gpad__up" cx={last.path2[last.path2.length - 1]!.x} cy={last.path2[last.path2.length - 1]!.y} r="5" />
+              </>
+            ) : null}
             {last.tilt !== null ? (
               <rect
                 className="gpad__tilt"

@@ -45,6 +45,12 @@ import { StatusLab } from './StatusLab';
 import { SequenceLab } from './SequenceLab';
 import { StructureLab } from './StructureLab';
 import { TargetSizeLab } from './TargetSizeLab';
+import {
+  DraggingMovementsLab,
+  MotionActuationLab,
+  PointerCancellationLab,
+  PointerGesturesLab,
+} from './PointerLabs';
 import { NonTextContrastLab, SensoryLab, UseOfColourLab } from './VisionLabs';
 import { TooltipLab } from './TooltipLab';
 import { MultipleWaysLab } from './MultipleWaysLab';
@@ -128,6 +134,10 @@ export const LABS: readonly LabEntry[] = [
   { id: 'multiple-ways', title: 'Try it: find the buried page', Lab: MultipleWaysLab },
   { id: 'consistent-navigation', title: 'Try it: shuffle the menu', Lab: ConsistentNavLab },
   { id: 'session-timeout', title: 'Try it: time out the session', Lab: SessionLab, flagshipFor: '2.2.1' },
+  { id: 'pointer-gestures', title: 'Try it: give the map buttons', Lab: PointerGesturesLab },
+  { id: 'pointer-cancellation', title: 'Try it: slide off the button', Lab: PointerCancellationLab },
+  { id: 'motion-actuation', title: 'Try it: shake to undo', Lab: MotionActuationLab },
+  { id: 'dragging-movements', title: 'Try it: reorder without dragging', Lab: DraggingMovementsLab },
   { id: 'redundant-entry', title: 'Try it: check out without retyping', Lab: RedundantEntryLab },
   { id: 'accessible-auth', title: 'Try it: sign in without a test', Lab: AccessibleAuthLab },
   { id: 'stop-carousel', title: 'Try it: stop the carousel', Lab: CarouselLab },
