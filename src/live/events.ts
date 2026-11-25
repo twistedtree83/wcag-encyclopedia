@@ -64,7 +64,10 @@ export type StageEvent =
       /** What the example did in response, in order (`didAction` in `actions.ts`). */
       readonly actions: readonly string[];
     }
-  /** A pointer gesture: a simulated tap or tilt from the bar, or a real pointer down and up (#57). */
+  /**
+   * A pointer gesture: a simulated tap, slide-off, drag, pinch or shake from the bar (#57, #58),
+   * or a real pointer down and up.
+   */
   | GestureEvent
   /** "Hover": the pointer moved onto a `data-hover` target, named by it, or away (null) (#47). */
   | { readonly kind: 'pointer'; readonly simulated: boolean; readonly on: string | null }

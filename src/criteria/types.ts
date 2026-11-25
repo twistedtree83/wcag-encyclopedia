@@ -47,6 +47,10 @@ export type SimKey =
   | 'rotate'
   | 'restyle'
   | 'tap'
+  | 'pinch'
+  | 'slide-off'
+  | 'drag'
+  | 'shake'
   | 'vision'
   | 'wait'
   | 'run';

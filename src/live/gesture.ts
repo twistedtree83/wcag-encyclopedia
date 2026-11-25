@@ -19,7 +19,11 @@ export type Point = { readonly x: number; readonly y: number };
 export type GestureName =
   | 'tap'
   | 'tilt'
-  | 'pointer';
+  | 'pointer'
+  | 'slide'
+  | 'drag'
+  | 'pinch'
+  | 'shake';
 
 export type GestureEvent = {
   readonly kind: 'gesture';
@@ -32,6 +36,8 @@ export type GestureEvent = {
   readonly aimAt: number | null;
   /** The pointer's positions from down to up, relative to the example. Empty for a tilt. */
   readonly path: readonly Point[];
+  /** A two-finger gesture's second finger, from down to up (a pinch, #58). */
+  readonly path2?: readonly Point[];
   /** The target under the pointer when it went down and when it came up, or null for none. */
   readonly downOn: number | null;
   readonly upOn: number | null;
@@ -39,6 +45,8 @@ export type GestureEvent = {
   readonly tilt: number | null;
   /** What the example did in response (`didAction`), in order. */
   readonly actions: readonly string[];
+  /** How many of `actions` fired on the way down, before the pointer came up (2.5.2, #58). */
+  readonly early?: number;
 };
 
 /** How far a simulated fingertip lands from where it aimed, in CSS pixels. */
@@ -65,30 +73,67 @@ export function tapPlan(map: FocusMap, n: number): TapPlan | null {
   return { aimAt, aim, at: { x: aim.x + slip, y: aim.y } };
 }
 
+/** A simulated pointer's path from `a` to `b` in `steps` even moves, both ends included (#58). */
+export function between(a: Point, b: Point, steps: number): Point[] {
+  return Array.from({ length: steps + 1 }, (_, i) => ({
+    x: a.x + ((b.x - a.x) * i) / steps,
+    y: a.y + ((b.y - a.y) * i) / steps,
+  }));
+}
+
 const on = (map: FocusMap, i: number | null) => (i === null ? 'nothing' : (map.stops[i]?.label ?? 'nothing'));
 
 export function tiltLine(degrees: number): string {
   return `Tilted ${Math.abs(degrees)}° ${degrees < 0 ? 'left' : 'right'}`;
 }
 
-/** The pad's lines for one gesture: the aim, down and up, any tilt, then what it set off. */
+const apart = (a: Point, b: Point) => Math.hypot(a.x - b.x, a.y - b.y);
+
+/** Whether a two-finger gesture spread its fingers apart (true) or pinched them together. */
+function spreads(e: GestureEvent): boolean {
+  const one = e.path;
+  const two = e.path2 ?? [];
+  if (one.length === 0 || two.length === 0) return false;
+  return apart(one[one.length - 1]!, two[two.length - 1]!) > apart(one[0]!, two[0]!);
+}
+
+/** The motion of the device or the fingers, for gestures that are not a pointer down and up. */
+function motionLine(e: GestureEvent): string | null {
+  if (e.gesture === 'shake') return 'Shook the phone';
+  if (e.gesture === 'pinch') return spreads(e) ? 'Two fingers spread apart' : 'Two fingers pinched together';
+  if (e.tilt !== null) return tiltLine(e.tilt);
+  return null;
+}
+
+/**
+ * The pad's lines for one gesture: the aim, pointer down, what fired on the way down (2.5.2),
+ * pointer up, then what the rest set off. A pinch, a shake or a tilt is said as a motion instead.
+ */
 export function gestureLines(e: GestureEvent): string[] {
   const lines: string[] = [];
   if (e.aimAt !== null) lines.push(`Aimed at ${on(e.map, e.aimAt)}`);
-  if (e.path.length > 0) {
-    lines.push(`Pointer down on ${on(e.map, e.downOn)}`, `Pointer up on ${on(e.map, e.upOn)}`);
+  const pressed = e.gesture !== 'pinch' && e.path.length > 0;
+  const early = pressed ? Math.min(e.early ?? 0, e.actions.length) : 0;
+  if (pressed) {
+    lines.push(`Pointer down on ${on(e.map, e.downOn)}`, ...e.actions.slice(0, early));
+    lines.push(`Pointer up on ${on(e.map, e.upOn)}`);
   }
-  if (e.tilt !== null) lines.push(tiltLine(e.tilt));
-  lines.push(...(e.actions.length > 0 ? e.actions : ['Nothing happened']));
+  const motion = motionLine(e);
+  if (motion) lines.push(motion);
+  if (e.actions.length === 0) lines.push('Nothing happened');
+  else lines.push(...e.actions.slice(early));
   return lines;
 }
 
-/** What is said after the bar makes a gesture: where the tap aimed and landed, and the outcome. */
+/** What is said after the bar makes a gesture: what the bar did, and the outcome. */
 export function gestureSaid(e: GestureEvent): string {
   const did = e.actions.length > 0 ? [...new Set(e.actions)].join('. ') : 'Nothing happened';
-  const what =
-    e.tilt !== null
-      ? tiltLine(e.tilt)
-      : `Tap aimed at ${on(e.map, e.aimAt)}, landed on ${on(e.map, e.downOn)}`;
+  const motion = motionLine(e);
+  let what: string;
+  if (motion !== null) what = motion;
+  else if (e.gesture === 'slide') what = `Pressed ${on(e.map, e.downOn)} and slid off onto ${on(e.map, e.upOn)}`;
+  else if (e.gesture === 'drag') what = `Dragged ${on(e.map, e.downOn)} onto ${on(e.map, e.upOn)}`;
+  else if (e.aimAt === null) what = `Tap landed on ${on(e.map, e.downOn)}`;
+  else what = `Tap aimed at ${on(e.map, e.aimAt)}, landed on ${on(e.map, e.downOn)}`;
   return `${what}. ${did}.`;
 }
