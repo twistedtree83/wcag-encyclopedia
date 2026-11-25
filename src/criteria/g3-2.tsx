@@ -11,6 +11,8 @@ import { ADDRESS, COUNTRIES, OI_NAME, type Country } from '../labs/onInput';
 import type { CriterionRecord, LiveExample } from './types';
 import { MockSite } from '../live/SiteWindow';
 import { SHUFFLED_SITE, STEADY_SITE } from '../labs/consistentNav';
+import { FICKLE_SEARCH_SITE, STEADY_SEARCH_SITE } from '../labs/consistentId';
+import { ROAMING_HELP_SITE, STEADY_HELP_SITE } from '../labs/consistentHelp';
 
 type HelpPage = 'help' | 'delivery' | 'returns';
 type Section = Exclude<HelpPage, 'help'>;
@@ -183,6 +185,21 @@ const SteadyShop = () => <MockSite site={STEADY_SITE} />;
 const SHOP_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'enter'];
 const SHOP_INSTRUMENTS = ['menu-order', 'announcement-log'];
 
+/*
+ * 3.2.4's and 3.2.6's live examples (#64), on the same mock shop. 3.2.4: the search button is
+ * "Search" on Home, "Find" on Products and "Go" on Support (broken), or "Search" on every page.
+ * 3.2.6: the help link sits in the header, the footer or the page, page by page (broken), or
+ * in the header on every page. Each instrument judges every page visited against the first.
+ */
+
+const FickleSearch = () => <MockSite site={FICKLE_SEARCH_SITE} />;
+const SteadySearch = () => <MockSite site={STEADY_SEARCH_SITE} />;
+const RoamingHelp = () => <MockSite site={ROAMING_HELP_SITE} />;
+const SteadyHelp = () => <MockSite site={STEADY_HELP_SITE} />;
+
+const ID_INSTRUMENTS = ['search-name', 'announcement-log'];
+const HELP_INSTRUMENTS = ['help-place', 'announcement-log'];
+
 export const G3_2: readonly CriterionRecord[] = [
   {
     num: '3.2.1',
@@ -336,8 +353,10 @@ export const G3_2: readonly CriterionRecord[] = [
     plain:
       'The same function needs the same name and icon everywhere. Three words for one action ' +
       'means three things to learn, and no way to be sure they are the same thing.',
+    labs: ['consistent-identification'],
     fail: {
       caption: 'One action, three names.',
+      live: { Example: FickleSearch, keys: SHOP_KEYS, instruments: ID_INSTRUMENTS },
       render: () => (
         <>
           <div className="navcompare">
@@ -354,6 +373,7 @@ export const G3_2: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'One action, one name.',
+      live: { Example: SteadySearch, keys: SHOP_KEYS, instruments: ID_INSTRUMENTS },
       render: () => (
         <>
           <div className="navcompare">
@@ -380,8 +400,10 @@ export const G3_2: readonly CriterionRecord[] = [
       'If help is offered — a contact link, a chat widget, a help page — it has to appear in ' +
       'the same relative place on every page that has it. New in WCAG 2.2. People look for help ' +
       'when they are already stuck, which is the worst moment to have to hunt for it.',
+    labs: ['consistent-help'],
     fail: {
       caption: 'Help moves around.',
+      live: { Example: RoamingHelp, keys: SHOP_KEYS, instruments: HELP_INSTRUMENTS },
       render: () => (
         <>
           <div className="navcompare">
@@ -398,6 +420,7 @@ export const G3_2: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'Help sits in the same relative position throughout.',
+      live: { Example: SteadyHelp, keys: SHOP_KEYS, instruments: HELP_INSTRUMENTS },
       render: () => (
         <>
           <div className="navcompare">

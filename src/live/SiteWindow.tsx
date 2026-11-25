@@ -1,14 +1,19 @@
 import { useLayoutEffect, useRef, useState, type FormEvent, type MouseEvent } from 'react';
 import {
+  HELP_PAGE,
+  HELP_PLACE,
   SEARCH_PAGE,
   SITE_MAP_PAGE,
+  helpOn,
   menuOn,
   pageOf,
+  searchNameOn,
   titleOf,
   type ShownPage,
   type Site,
   type SitePlace,
   type SiteSeen,
+  type HelpPlace,
   type Via,
 } from './mockSite';
 
@@ -20,10 +25,12 @@ import {
  *
  * What a stage reads (`siteSeenIn`): the drawn `[data-site]` window, with `data-site-page`
  * (title), `data-site-address` and `data-site-via` (how it was reached, '' at the start); the
- * menu's links in `[data-site-nav]`; and each way round the site as `[data-site-way]`.
+ * menu's links in `[data-site-nav]`; and each way round the site as `[data-site-way]`. For #64,
+ * the search button is `[data-site-search]` (its text is its name) and the help link's container
+ * is `[data-site-help]`, valued with where it is ("the header").
  */
 
-const VIAS: readonly Via[] = ['menu', 'search', 'site map', 'link'];
+const VIAS: readonly Via[] = ['menu', 'search', 'site map', 'link', 'help'];
 
 /** A link inside the mock: its href is a hash that is never followed. */
 function SiteLinkTo({ to, via, label }: { to: string; via: Via; label: string }) {
@@ -31,6 +38,15 @@ function SiteLinkTo({ to, via, label }: { to: string; via: Via; label: string })
     <a href={`#${to}`} data-to={to} data-via={via}>
       {label}
     </a>
+  );
+}
+
+/** The help link (#64), where the site puts it on this page. */
+function HelpLink({ place }: { place: HelpPlace }) {
+  return (
+    <p className="msite__help" data-site-help={HELP_PLACE[place]}>
+      <SiteLinkTo to={HELP_PAGE} via="help" label="Help" />
+    </p>
   );
 }
 
@@ -47,6 +63,7 @@ export function SiteWindow({
   readonly onSearch?: (query: string) => void;
 }) {
   const menu = menuOn(site, page.id);
+  const help = helpOn(site, page.id);
   const search = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onSearch?.(String(new FormData(e.currentTarget).get('q') ?? '').trim());
@@ -63,7 +80,7 @@ export function SiteWindow({
       <p className="msite__bar" tabIndex={-1}>
         {page.address}
       </p>
-      {menu || site.search !== null ? (
+      {menu || site.search !== null || help === 'header' ? (
         <div className="msite__head">
           {menu ? (
             <ul className="msite__menu" data-site-nav data-site-way="the menu">
@@ -80,11 +97,12 @@ export function SiteWindow({
                 Search the shop
                 <input type="search" name="q" defaultValue={site.search} />
               </label>
-              <button type="submit" className="btn o sm">
-                Search
+              <button type="submit" className="btn o sm" data-site-search>
+                {searchNameOn(site, page.id)}
               </button>
             </form>
           ) : null}
+          {help === 'header' ? <HelpLink place="header" /> : null}
         </div>
       ) : null}
       <div className="msite__page">
@@ -99,12 +117,14 @@ export function SiteWindow({
             ))}
           </ul>
         ) : null}
+        {help === 'page' ? <HelpLink place="page" /> : null}
       </div>
       {site.siteMap ? (
         <p className="msite__foot" data-site-way="the site map">
           <SiteLinkTo to={SITE_MAP_PAGE} via="site map" label="Site map" />
         </p>
       ) : null}
+      {help === 'footer' ? <HelpLink place="footer" /> : null}
     </div>
   );
 }
@@ -165,5 +185,16 @@ export function siteSeenIn(root: Element): SiteSeen | null {
     ways: Array.from(win.querySelectorAll<HTMLElement>('[data-site-way]')).map(
       (el) => el.dataset.siteWay ?? '',
     ),
+    ...named(win, text),
+  };
+}
+
+/** The search button's name and the help link's place (#64), when the page draws them. */
+function named(win: Element, text: (el: Element) => string): Pick<SiteSeen, 'searchName' | 'help'> {
+  const search = win.querySelector('[data-site-search]');
+  const help = win.querySelector<HTMLElement>('[data-site-help]');
+  return {
+    ...(search ? { searchName: text(search) } : {}),
+    ...(help ? { help: help.dataset.siteHelp ?? '' } : {}),
   };
 }

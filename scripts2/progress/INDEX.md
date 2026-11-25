@@ -77,3 +77,4 @@ Graph: `scripts2/prd-labs.json` · Parent: #40 · Integration branch: `labs`
 - [x] **L-18** #58 — Pointer: 2.5.1, 2.5.2, 2.5.4 and 2.5.7 (L-17)
 - [x] **L-20** #60 — Forms: 3.3.7 and 3.3.8 (L-03)
 - [x] **L-25** #65 — Mock player, with 1.2.2 and 1.2.4 (L-03)
+- [x] **L-24** #64 — Consistency: 3.2.4 and 3.2.6 (L-23)

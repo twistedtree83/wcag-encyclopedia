@@ -16,7 +16,7 @@
 import type { StageEvent } from './events';
 
 /** How the reader got to a page: the menu, search, the site map or a link in a page's text. */
-export type Via = 'menu' | 'search' | 'site map' | 'link';
+export type Via = 'menu' | 'search' | 'site map' | 'link' | 'help';
 
 export type SitePageData = {
   readonly id: string;
@@ -42,7 +42,24 @@ export type Site = {
   readonly search: string | null;
   /** A site map link in the footer. */
   readonly siteMap: boolean;
+  /** The search button's name, and the pages that name it otherwise (#64); “Search” if absent. */
+  readonly searchName?: { readonly label: string; readonly on?: Readonly<Record<string, string>> };
+  /** Where the help link sits, and the pages that place it otherwise or (null) leave it off (#64). */
+  readonly help?: { readonly at: HelpPlace; readonly on?: Readonly<Record<string, HelpPlace | null>> };
 };
+
+/** Where on a page the help link is drawn: after the menu, at the end of the page, or the footer. */
+export type HelpPlace = 'header' | 'page' | 'footer';
+
+/** How a help place reads: "the header". Also the drawn `data-site-help` value. */
+export const HELP_PLACE: Readonly<Record<HelpPlace, string>> = {
+  header: 'the header',
+  page: 'the page',
+  footer: 'the footer',
+};
+
+/** The page the help link goes to. */
+export const HELP_PAGE = 'help';
 
 /** Where the visit is: a page id ('search' and 'site-map' are synthesised) and the search. */
 export type SitePlace = { readonly id: string; readonly query: string };
@@ -72,6 +89,19 @@ export function titleOf(site: Site, id: string): string {
 export function menuOn(site: Site, id: string): readonly string[] | null {
   if (!site.menu) return null;
   return site.menu.on?.[id] ?? site.menu.items;
+}
+
+/** The search button's name on a page, or null when the site has no search. */
+export function searchNameOn(site: Site, id: string): string | null {
+  if (site.search === null) return null;
+  return site.searchName?.on?.[id] ?? site.searchName?.label ?? 'Search';
+}
+
+/** Where the help link is on a page, or null when that page (or the site) has none. */
+export function helpOn(site: Site, id: string): HelpPlace | null {
+  if (!site.help) return null;
+  const on = site.help.on?.[id];
+  return on === undefined ? site.help.at : on;
 }
 
 const addressOf = (site: Site, path: string) => (path ? `${site.host}/${path}` : site.host);
@@ -142,6 +172,10 @@ export type SiteSeen = {
   readonly nav: readonly string[];
   /** The ways round the site the page offers ("the menu", "search", "the site map"). */
   readonly ways: readonly string[];
+  /** The search button's name as drawn (#64); absent when the page has no search. */
+  readonly searchName?: string;
+  /** Where the help link is drawn ("the header"), absent when the page has none (#64). */
+  readonly help?: string;
 };
 
 const VIA: Readonly<Record<Via, string>> = {
@@ -149,6 +183,7 @@ const VIA: Readonly<Record<Via, string>> = {
   search: 'by search',
   'site map': 'by the site map',
   link: 'by a link on the page',
+  help: 'by the help link',
 };
 
 type SiteEvent = Extract<StageEvent, { kind: 'site' }>;
@@ -196,6 +231,54 @@ export function menuOrderLines(
       const kept = orderKept(first.page.nav, e.page.nav);
       const judged = kept ? `Same order as ${first.page.title}.` : `Order changed from ${first.page.title}.`;
       return { text: `${menu} ${judged}`, kept };
+    })
+    .slice(-max);
+}
+
+type Judged = { text: string; kept: boolean };
+
+/**
+ * The search control instrument (#64): each page visited, its search button's name, and whether
+ * it is the name the first page with search gave it (3.2.4).
+ */
+export function searchNameLines(events: readonly StageEvent[], max = TRAIL_LINES): Judged[] {
+  const sites = sitesOf(events);
+  const first = sites.find((e) => e.page.searchName !== undefined);
+  return sites
+    .map((e) => {
+      const { title, searchName } = e.page;
+      if (searchName === undefined) return { text: `${title}: no search on this page.`, kept: true };
+      const reads = `${title}: the search button reads “${searchName}”.`;
+      if (e === first) return { text: `${reads} The first page seen.`, kept: true };
+      const kept = searchName === first!.page.searchName;
+      const judged = kept
+        ? `Same name as on ${first!.page.title}.`
+        : `Named “${first!.page.searchName}” on ${first!.page.title}.`;
+      return { text: `${reads} ${judged}`, kept };
+    })
+    .slice(-max);
+}
+
+/**
+ * The help link instrument (#64): each page visited, where its help link is, and whether that is
+ * where the first page with help had it (3.2.6). A page with no help is fine.
+ */
+export function helpPlaceLines(events: readonly StageEvent[], max = TRAIL_LINES): Judged[] {
+  const sites = sitesOf(events);
+  const first = sites.find((e) => e.page.help !== undefined);
+  return sites
+    .map((e) => {
+      const { title, help } = e.page;
+      if (help === undefined) {
+        return { text: `${title}: no help link. Help need not be on every page.`, kept: true };
+      }
+      const where = `${title}: help in ${help}.`;
+      if (e === first) return { text: `${where} The first page with help.`, kept: true };
+      const kept = help === first!.page.help;
+      const judged = kept
+        ? `Same place as on ${first!.page.title}.`
+        : `Moved from ${first!.page.help} on ${first!.page.title}.`;
+      return { text: `${where} ${judged}`, kept };
     })
     .slice(-max);
 }
