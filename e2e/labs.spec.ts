@@ -458,6 +458,33 @@ const LABS: LabCase[] = [
     said: 'Focusing Email does nothing. Only Send sends.',
   },
   {
+    name: 'the find-the-buried-page lab on 2.4.5',
+    url: '/criteria/2.4.5/',
+    lab: '.lab-slot .ways-lab',
+    passing: '2.4.5 passes',
+    failing: '2.4.5 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await lab.getByRole('checkbox', { name: 'Search' }).focus();
+      await page.keyboard.press('Space');
+    },
+    said: '2 ways lead to VAT invoices: the menu and search.',
+  },
+  {
+    name: 'the shuffle-the-menu lab on 3.2.3',
+    url: '/criteria/3.2.3/',
+    lab: '.lab-slot .nav-lab',
+    passing: '3.2.3 passes',
+    failing: '3.2.3 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await radio(lab, 'Shuffled on each page').focus();
+      await page.keyboard.press('ArrowUp');
+    },
+    said:
+      'The menu keeps one order on every page. On Home it reads Home, Products, Support, Account.',
+  },
+  {
     name: 'the tame-the-tooltip lab on 1.4.13',
     url: '/criteria/1.4.13/',
     lab: '.lab-slot .tip-lab',

@@ -30,6 +30,8 @@ import { listOf, tabSwitchLine } from './lists';
 import { cuesIn } from './cues';
 import { nextFilter, seeCue, visionSaid, type VisionFilter } from './vision';
 import { VisionDefs, filterPrefix, visionStyle } from './VisionDefs';
+import { siteSeenIn } from './SiteWindow';
+import { siteSaid } from './mockSite';
 
 /**
  * A live example on its stage (#43, ADR 0002): the example, the input bar, then the instruments.
@@ -149,6 +151,10 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     // A change of page in a mock reaches no screen reader on its own: say it on both stages.
     else if (e.kind === 'context') {
       if (e.cause) setSaid(contextSaid(e));
+    }
+    // So does a move round a mock site (#63), on both stages; not where the visit starts.
+    else if (e.kind === 'site') {
+      if (e.page.via) setSaid(siteSaid(e));
     } else if (
       e.kind === 'read' ||
       ((e.kind === 'focus' || e.kind === 'change' || e.kind === 'status') && e.simulated)
@@ -611,6 +617,31 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     });
     return () => observer.disconnect();
     // lineFor and mapFor read refs only.
+  }, [simulated, push]);
+
+  // A mock site (#63), on both stages: the page it shows, read after any change in it, so the
+  // instruments see where the reader got to and how, whatever moved it there.
+  // Kept across effect runs, so StrictMode's second run doesn't push the first page twice.
+  const siteShown = useRef('');
+  useEffect(() => {
+    const root = example.current;
+    if (!root) return;
+    const read = () => {
+      const page = siteSeenIn(root);
+      const key = page ? JSON.stringify(page) : '';
+      if (!page || key === siteShown.current) return;
+      siteShown.current = key;
+      push({ kind: 'site', simulated, page });
+    };
+    read();
+    const observer = new MutationObserver(read);
+    observer.observe(root, {
+      subtree: true,
+      childList: true,
+      attributes: true,
+      attributeFilter: ['data-site-page', 'data-site-address'],
+    });
+    return () => observer.disconnect();
   }, [simulated, push]);
 
   // Status messages (4.1.3), on both stages: when a live region's text changes, it is announced
