@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { DESKTOP, scrollsOf, viewportAt, type Scrolls, type Viewport } from './zoom';
+import { OVERRIDES, type Override } from './textFit';
 
 /**
  * The zoom frame (#53, CONTEXT.md "Instrument"): a browser window drawn inside a lab or a live
@@ -9,7 +10,8 @@ import { DESKTOP, scrollsOf, viewportAt, type Scrolls, type Viewport } from './z
  *
  *   zoom        percent; the window is `base` divided by it (`viewportAt`)
  *   textScale   text size, 1 = 100%; content sized in em follows it (1.4.4)
- *   spacing     1.4.12's text spacing on everything inside (`.zframe--spaced`)
+ *   spacing     1.4.12's text spacing on everything inside: true for all four overrides, or a
+ *               list of them (`.zframe--line`, `--paragraph`, `--letter`, `--word`)
  *   turned      portrait instead of landscape: width and height swap (1.3.4)
  *   focusable   the window is a real scroll box a keyboard can scroll. Off inside inert mocks.
  *
@@ -22,7 +24,7 @@ type Props = {
   readonly zoom: number;
   readonly base?: Viewport;
   readonly textScale?: number;
-  readonly spacing?: boolean;
+  readonly spacing?: boolean | readonly Override[];
   readonly turned?: boolean;
   readonly focusable?: boolean;
   readonly onMeasure?: (scrolls: Scrolls) => void;
@@ -87,9 +89,12 @@ export function ZoomFrame({
     transform: scale === null ? undefined : `scale(${scale})`,
   } satisfies CSSProperties;
 
+  const on = spacing === true ? OVERRIDES.map((o) => o.value) : spacing || [];
+  const className = ['zframe', ...on.map((o) => `zframe--${o}`)].join(' ');
+
   return (
     <div
-      className={spacing ? 'zframe zframe--spaced' : 'zframe'}
+      className={className}
       ref={outer}
       style={{ aspectRatio: `${win.width} / ${win.height}` }}
       data-scrolls={scrolls ? [scrolls.down && 'down', scrolls.sideways && 'sideways'].filter(Boolean).join(' ') || 'none' : undefined}

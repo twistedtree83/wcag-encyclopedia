@@ -5,6 +5,8 @@ import { autofillValue } from '../labs/inputPurpose';
 import { voiceMatches } from '../labs/labelInName';
 import { ZOOMS, viewportAt, type Scrolls } from '../labs/zoom';
 import { ZoomFrame } from '../labs/ZoomFrame';
+import { clippedIn } from '../labs/NoticeCard';
+import { SCALES } from '../labs/textFit';
 import { ACTION_EVENT } from './actions';
 import { gestureSaid, hitAt, tapPlan, type Point } from './gesture';
 import {
@@ -13,6 +15,7 @@ import {
   keysSaid,
   pointerSaid,
   voiceSaid,
+  textFitSaid,
   zoomSaid,
   type ContextCause,
   type StageEvent,
@@ -70,6 +73,8 @@ const KEY_LABEL: Readonly<Record<SimKey, string>> = {
   headings: 'List the headings',
   vision: 'Vision filter',
   zoom: 'Zoom in',
+  'text-size': 'Enlarge text',
+  spacing: 'Toggle text spacing',
   tap: 'Tap',
   wait: `Wait ${CLOCK_STEP} seconds`,
   run: 'Run the clock',
@@ -131,6 +136,10 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
   const clockEnd = live.clock?.end ?? CLOCK_END;
   const clockMoved = useRef<ClockEvent['cause'] | null>(null);
   const timerShown = useRef<string | null>(null);
+  /** Text in the frame (#54): the index into SCALES, spacing on, and whether a change waits to be measured. */
+  const [scaleAt, setScaleAt] = useState(0);
+  const [spaced, setSpaced] = useState(false);
+  const refitted = useRef(false);
 
   const push = useCallback((e: StageEvent) => {
     setEvents((es) => (e.kind === 'clock' ? withClock(es, e) : [...es, e]).slice(-KEEP));
@@ -140,6 +149,7 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     else if (e.kind === 'voice') setSaid(voiceSaid(e));
     else if (e.kind === 'vision') setSaid(visionSaid(e));
     else if (e.kind === 'zoom') setSaid(zoomSaid(e));
+    else if (e.kind === 'text-fit') setSaid(textFitSaid(e));
     else if (e.kind === 'keys') {
       if (!pointerStage) setSaid(keysSaid(e));
     }
@@ -237,6 +247,14 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     if (key === 'zoom') {
       zoomed.current = true;
       setZoomAt((i) => (i + 1) % ZOOMS.length);
+      return;
+    }
+    // "Enlarge text" steps the frame's text through 100%, 150% and 200%; "Toggle text spacing"
+    // turns 1.4.12's four overrides on or off. The event is pushed once the frame has laid out.
+    if (key === 'text-size' || key === 'spacing') {
+      refitted.current = true;
+      if (key === 'text-size') setScaleAt((i) => (i + 1) % SCALES.length);
+      else setSpaced((on) => !on);
       return;
     }
     if (key === 'autofill') {
@@ -667,6 +685,10 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
   }, [clock, simulated, push]);
 
   const onMeasure = (scrolls: Scrolls) => {
+    if (refitted.current) {
+      refitted.current = false;
+      push({ kind: 'text-fit', simulated, scale: SCALES[scaleAt]!, spacing: spaced, clipped: clippedIn(example.current) });
+    }
     if (!zoomed.current || !live.zoomFrame) return;
     zoomed.current = false;
     const zoom = ZOOMS[zoomAt]!;
@@ -681,7 +703,14 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
   const shown = (
     <ClockNow.Provider value={clock.now}>
       {live.zoomFrame ? (
-        <ZoomFrame zoom={ZOOMS[zoomAt]!} base={live.zoomFrame} focusable={!simulated} onMeasure={onMeasure}>
+        <ZoomFrame
+          zoom={ZOOMS[zoomAt]!}
+          base={live.zoomFrame}
+          textScale={SCALES[scaleAt]! / 100}
+          spacing={spaced}
+          focusable={!simulated}
+          onMeasure={onMeasure}
+        >
           <Example />
         </ZoomFrame>
       ) : (
