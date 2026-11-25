@@ -2923,6 +2923,69 @@ ul.st-list li::before {
   font-weight: 700;
 }
 
+/* --- Forms: on input, error suggestion and error prevention: 3.2.2, 3.3.3, 3.3.4 (L-19) ---- */
+
+/* A depicted address bar, so a page change inside an example or mock can be seen. */
+.addrbar {
+  justify-self: stretch;
+  margin: 0;
+  padding: 6px 12px;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  color: var(--ink-2);
+  font: 15px/1.45 ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  overflow-wrap: anywhere;
+}
+/* A radio group inside a small form: a fieldset with its legend set as a field label. */
+.lform__set {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.lform__set legend {
+  margin: 0 0 4px;
+  padding: 0;
+}
+.lform__set label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 32px;
+  font-size: var(--small);
+}
+.lform__set input {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  accent-color: var(--btn-bg);
+}
+/* A row of buttons: a review step's two choices. */
+.pay__btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.lform .pay__btns .btn {
+  margin-top: 0;
+}
+.olab__page {
+  display: grid;
+  gap: 12px;
+}
+.olab__out {
+  margin: 0;
+  font-weight: 600;
+}
+.plab__actions {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+}
+
 /* --- Breakpoints ------------------------------------------------------------------------ */
 
 @media (max-width: 1100px) {

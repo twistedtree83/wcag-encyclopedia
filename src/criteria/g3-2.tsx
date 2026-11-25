@@ -6,7 +6,91 @@
  * screen magnifier or screen reader user their entire orientation.
  */
 
-import type { CriterionRecord } from './types';
+import { useId, useState } from 'react';
+import { ADDRESS, COUNTRIES, OI_NAME, type Country } from '../labs/onInput';
+import type { CriterionRecord, LiveExample } from './types';
+
+/*
+ * 3.2.2's live examples (#59). A checkout form with a name already typed and a country choice.
+ * In the broken one, choosing a country reloads the page for that country (inside the example):
+ * the address changes and the name is gone. In the fixed one, choosing only chooses; the button
+ * updates the address format in place, and nothing typed is lost.
+ */
+
+function CountryChoice({
+  id,
+  chosen,
+  onChoose,
+}: {
+  readonly id: string;
+  readonly chosen: Country;
+  readonly onChoose: (c: Country) => void;
+}) {
+  return (
+    <fieldset className="lform__set">
+      <legend className="lform__label">Country</legend>
+      {COUNTRIES.map((c) => (
+        <label key={c.value}>
+          <input
+            type="radio"
+            name={`${id}-country`}
+            value={c.value}
+            checked={chosen === c.value}
+            onChange={() => onChoose(c.value)}
+          />{' '}
+          {c.label}
+        </label>
+      ))}
+    </fieldset>
+  );
+}
+
+function ReloadingCountry() {
+  const id = useId();
+  const [page, setPage] = useState<Country>('uk');
+  return (
+    <form className="lform" noValidate onSubmit={(e) => e.preventDefault()}>
+      <p className="addrbar">{ADDRESS[page]}</p>
+      <label className="lform__label" htmlFor={`${id}-name`}>
+        Name
+      </label>
+      {/* A reload builds a new form: what was typed is gone. */}
+      <input
+        key={page}
+        id={`${id}-name`}
+        autoComplete="name"
+        defaultValue={page === 'uk' ? OI_NAME : ''}
+        className="lform__field"
+      />
+      <CountryChoice id={id} chosen={page} onChoose={setPage} />
+    </form>
+  );
+}
+
+function CountryWithButton() {
+  const id = useId();
+  const [chosen, setChosen] = useState<Country>('uk');
+  const [format, setFormat] = useState<Country>('uk');
+  return (
+    <form className="lform" noValidate onSubmit={(e) => e.preventDefault()}>
+      <p className="addrbar">{ADDRESS.uk}</p>
+      <label className="lform__label" htmlFor={`${id}-name`}>
+        Name
+      </label>
+      <input id={`${id}-name`} autoComplete="name" defaultValue={OI_NAME} className="lform__field" />
+      <CountryChoice id={id} chosen={chosen} onChoose={setChosen} />
+      <button type="button" className="btn o sm" onClick={() => setFormat(chosen)}>
+        Update address format
+      </button>
+      <label className="lform__label" htmlFor={`${id}-post`}>
+        {format === 'uk' ? 'Postcode' : 'Code postal, 5 digits'}
+      </label>
+      <input id={`${id}-post`} autoComplete="postal-code" className="lform__field" />
+    </form>
+  );
+}
+
+const ON_INPUT_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'space', 'enter', 'read'];
 
 export const G3_2: readonly CriterionRecord[] = [
   {
@@ -58,11 +142,13 @@ export const G3_2: readonly CriterionRecord[] = [
     level: 'A',
     since: '2.0',
     guideline: '3.2',
+    labs: ['on-input'],
     plain:
       'Changing a setting must not change the context either, unless you warned the reader ' +
       'first. Picking an option is not the same as committing to it.',
     fail: {
       caption: 'Choosing a country reloads the page mid-form.',
+      live: { Example: ReloadingCountry, keys: ON_INPUT_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="press">
@@ -78,6 +164,7 @@ export const G3_2: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'The change is applied by a button, or announced in advance.',
+      live: { Example: CountryWithButton, keys: ON_INPUT_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="press">
