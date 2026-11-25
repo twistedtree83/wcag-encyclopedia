@@ -3,7 +3,8 @@ import type { LiveExample, SimKey } from '../criteria/types';
 import { announce, focusLine, fromDom, liveRegionLines, spoken } from '../labs/announce';
 import { autofillValue } from '../labs/inputPurpose';
 import { voiceMatches } from '../labs/labelInName';
-import { autofillSaid, voiceSaid, type StageEvent } from './events';
+import { ACTION_EVENT } from './actions';
+import { autofillSaid, keysSaid, voiceSaid, type StageEvent } from './events';
 import { mapOf, nodeAt, pathTo, step, tabStops } from './focus';
 import { INSTRUMENTS } from './instruments';
 import { listOf, tabSwitchLine } from './lists';
@@ -21,6 +22,9 @@ import { listOf, tabSwitchLine } from './lists';
  * example in its place.
  */
 
+/** What "Dictate" says (#45). Speech input reaches the page as key presses, one per letter. */
+const DICTATION = 'send this';
+
 const KEY_LABEL: Readonly<Record<SimKey, string>> = {
   tab: 'Press Tab',
   'shift-tab': 'Shift+Tab',
@@ -29,6 +33,8 @@ const KEY_LABEL: Readonly<Record<SimKey, string>> = {
   read: 'Read it aloud',
   autofill: 'Autofill',
   voice: 'Say what you see',
+  escape: 'Escape',
+  dictate: `Dictate “${DICTATION}”`,
   'switch-tab': 'Switch tab',
   links: 'List the links',
   headings: 'List the headings',
@@ -58,6 +64,8 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
   const [simAt, setSimAt] = useState(-1);
   /** Pass stage: the last Tab stop that had real focus. */
   const realAt = useRef<HTMLElement | null>(null);
+  /** True while the bar is sending keys, so the real-key listener leaves them to `press`. */
+  const fromBar = useRef(false);
   const [ring, setRing] = useState<Ring | null>(null);
   const [said, setSaid] = useState('');
 
@@ -67,6 +75,7 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     // An autofill or a voice command is the bar's own doing, on either stage: say its outcome.
     if (e.kind === 'autofill') setSaid(autofillSaid(e));
     else if (e.kind === 'voice') setSaid(voiceSaid(e));
+    else if (e.kind === 'keys') setSaid(keysSaid(e));
     else if (e.simulated || e.kind === 'read') {
       const lines = e.kind === 'read' ? e.lines : [e.line];
       setSaid(`Screen reader says: ${lines.map((l) => spoken(l) || 'blank').join('; ')}`);
@@ -119,6 +128,37 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
       return;
     }
     const stops = tabStops(root);
+    if (key === 'escape' || key === 'dictate') {
+      // Keys sent to whatever has focus (#45): Escape, or a dictated phrase letter by letter.
+      // With no control focused they go to the example itself, as keys go to the page body.
+      // A letter the example doesn't cancel is typed into the field it lands on.
+      const at = simulated ? stops[simAt] : realAt.current;
+      const focused = at && at.isConnected && root.contains(at) ? at : null;
+      const target = focused ?? root.firstElementChild ?? root;
+      const where = focused ? lineFor(focused) : null;
+      const actions: string[] = [];
+      const hear = (e: Event) => actions.push((e as CustomEvent<string>).detail);
+      root.addEventListener(ACTION_EVENT, hear);
+      fromBar.current = true;
+      for (const k of key === 'escape' ? ['Escape'] : [...DICTATION]) {
+        const typed = target.dispatchEvent(
+          new KeyboardEvent('keydown', { key: k, bubbles: true, cancelable: true }),
+        );
+        const field = target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement;
+        if (typed && field && k.length === 1) target.value += k;
+      }
+      fromBar.current = false;
+      root.removeEventListener(ACTION_EVENT, hear);
+      push({
+        kind: 'keys',
+        simulated,
+        keys: key === 'escape' ? 'Escape' : DICTATION,
+        dictated: key === 'dictate',
+        target: where,
+        actions,
+      });
+      return;
+    }
     if (key === 'voice') {
       // The reader says "click" and the text they see on the first control (#49). Voice
       // control clicks the control whose accessible name contains those words.
@@ -201,11 +241,33 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     const onChange = (e: Event) => {
       push({ kind: 'change', simulated: false, line: lineFor(e.target as Element) });
     };
+    // A real key that made the example do something (#45): Escape closing a dialog, or a
+    // focus-scoped shortcut. Keys that did nothing are the reader's own business.
+    let lastKey = '';
+    const onKey = (e: KeyboardEvent) => {
+      if (!fromBar.current) lastKey = e.key;
+    };
+    const onAction = (e: Event) => {
+      if (fromBar.current) return;
+      const el = document.activeElement;
+      push({
+        kind: 'keys',
+        simulated: false,
+        keys: lastKey,
+        dictated: false,
+        target: el && el !== root && root.contains(el) ? lineFor(el) : null,
+        actions: [(e as CustomEvent<string>).detail],
+      });
+    };
     root.addEventListener('focusin', onFocus);
     root.addEventListener('change', onChange);
+    root.addEventListener('keydown', onKey, true);
+    root.addEventListener(ACTION_EVENT, onAction);
     return () => {
       root.removeEventListener('focusin', onFocus);
       root.removeEventListener('change', onChange);
+      root.removeEventListener('keydown', onKey, true);
+      root.removeEventListener(ACTION_EVENT, onAction);
     };
   }, [simulated, push]);
 
