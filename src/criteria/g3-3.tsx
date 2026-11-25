@@ -7,7 +7,150 @@
  * (prevention).
  */
 
-import type { CriterionRecord } from './types';
+import { useId, useRef, useState, type FormEvent } from 'react';
+import type { CriterionRecord, LiveExample } from './types';
+
+/*
+ * 3.3.1's live examples (#52). Both forms have already been submitted once and rejected the email.
+ * The broken one says so with a red border and a banner that names nothing; the fixed one names
+ * the field in a summary that links to it, and ties the message to the field. Submitting the fixed
+ * form again checks the email, and moves focus to it while it is still wrong.
+ */
+
+const REJECTED = 'ada@example';
+const WHY = 'Enter an address that includes a domain';
+
+function RejectedForm() {
+  const id = useId();
+  return (
+    <form className="lform" noValidate onSubmit={(e) => e.preventDefault()}>
+      <p className="lform__banner lform__banner--bad">Invalid input</p>
+      <label className="lform__label" htmlFor={`${id}-email`}>
+        Email
+      </label>
+      <input
+        id={`${id}-email`}
+        type="email"
+        autoComplete="email"
+        defaultValue={REJECTED}
+        className="lform__field lform__field--bad"
+      />
+      <label className="lform__label" htmlFor={`${id}-post`}>
+        Postcode
+      </label>
+      <input id={`${id}-post`} autoComplete="postal-code" defaultValue="SW1A 1AA" className="lform__field" />
+      <button type="submit" className="btn p sm">
+        Continue
+      </button>
+    </form>
+  );
+}
+
+function ExplainedForm() {
+  const id = useId();
+  const field = useRef<HTMLInputElement>(null);
+  const [bad, setBad] = useState(true);
+  const toField = (e: { preventDefault(): void }) => {
+    e.preventDefault();
+    field.current?.focus();
+  };
+  const submit = (e: FormEvent) => {
+    const ok = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(field.current?.value ?? '');
+    setBad(!ok);
+    if (ok) e.preventDefault();
+    else toField(e);
+  };
+  return (
+    <form className="lform" noValidate onSubmit={submit}>
+      {bad ? (
+        <p className="lform__banner">
+          1 problem:{' '}
+          <a href={`#${id}-email`} onClick={toField}>
+            Email — {WHY.toLowerCase()}
+          </a>
+        </p>
+      ) : null}
+      <label className="lform__label" htmlFor={`${id}-email`}>
+        Email
+      </label>
+      <input
+        ref={field}
+        id={`${id}-email`}
+        type="email"
+        autoComplete="email"
+        defaultValue={REJECTED}
+        className={bad ? 'lform__field lform__field--bad' : 'lform__field'}
+        {...(bad ? { 'aria-invalid': true, 'aria-describedby': `${id}-err` } : {})}
+      />
+      {bad ? (
+        <p className="lform__err" id={`${id}-err`}>
+          <span aria-hidden="true">✕ </span>
+          {WHY}
+        </p>
+      ) : null}
+      <label className="lform__label" htmlFor={`${id}-post`}>
+        Postcode
+      </label>
+      <input id={`${id}-post`} autoComplete="postal-code" defaultValue="SW1A 1AA" className="lform__field" />
+      <button type="submit" className="btn p sm">
+        Continue
+      </button>
+    </form>
+  );
+}
+
+const ERROR_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'enter', 'read'];
+
+/*
+ * 3.3.2's live examples (#52). The broken fields are labelled by placeholders alone, and the date
+ * has been typed into, so its label has already gone. The fixed fields keep visible labels, with
+ * each format stated before typing and tied to its field.
+ */
+
+function PlaceholderFields() {
+  return (
+    <div className="lform">
+      <input type="text" autoComplete="bday" placeholder="Date" defaultValue="03/27/95" className="lform__field" />
+      <input type="password" autoComplete="new-password" placeholder="Password" className="lform__field" />
+    </div>
+  );
+}
+
+function LabelledFields() {
+  const id = useId();
+  return (
+    <div className="lform">
+      <label className="lform__label" htmlFor={`${id}-dob`}>
+        Date of birth
+      </label>
+      <p className="lform__hint" id={`${id}-dob-hint`}>
+        For example, 27 3 1995
+      </p>
+      <input
+        id={`${id}-dob`}
+        type="text"
+        autoComplete="bday"
+        aria-describedby={`${id}-dob-hint`}
+        className="lform__field"
+      />
+      <label className="lform__label" htmlFor={`${id}-pw`}>
+        Password
+      </label>
+      <p className="lform__hint" id={`${id}-pw-hint`}>
+        At least 12 characters
+      </p>
+      <input
+        id={`${id}-pw`}
+        type="password"
+        autoComplete="new-password"
+        aria-describedby={`${id}-pw-hint`}
+        className="lform__field"
+      />
+    </div>
+  );
+}
+
+const LABEL_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'read'];
 
 export const G3_3: readonly CriterionRecord[] = [
   {
@@ -17,12 +160,14 @@ export const G3_3: readonly CriterionRecord[] = [
     since: '2.0',
     guideline: '3.3',
     demos: ['errors-3-3-1'],
+    labs: ['form-errors'],
     plain:
       'When input is rejected, say so in text, and say which field. A red outline is not an ' +
       'error message — it is invisible to a screen reader and to anyone who cannot distinguish ' +
       'the colour.',
     fail: {
       caption: 'A colour and a generic banner.',
+      live: { Example: RejectedForm, keys: ERROR_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="formdemo">
@@ -45,6 +190,7 @@ export const G3_3: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'The error names the field, in text, and links to it.',
+      live: { Example: ExplainedForm, keys: ERROR_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="formdemo">
@@ -85,12 +231,14 @@ export const G3_3: readonly CriterionRecord[] = [
     level: 'A',
     since: '2.0',
     guideline: '3.3',
+    labs: ['form-labels'],
     plain:
       'Fields need labels, and any format requirement has to be stated before the reader types ' +
       'rather than after they get it wrong. A placeholder is not a label: it disappears the ' +
       'moment focus arrives, exactly when it is needed.',
     fail: {
       caption: 'Placeholders standing in for labels.',
+      live: { Example: PlaceholderFields, keys: LABEL_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="formdemo">
@@ -110,6 +258,7 @@ export const G3_3: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'Persistent labels, with the rules stated up front.',
+      live: { Example: LabelledFields, keys: LABEL_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="formdemo">

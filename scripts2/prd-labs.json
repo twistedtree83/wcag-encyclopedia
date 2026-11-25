@@ -62,7 +62,7 @@
       ],
       "importance": 5,
       "afk": true,
-      "passes": false
+      "passes": true
     },
     {
       "id": "L-06",
@@ -139,7 +139,7 @@
       ],
       "importance": 12,
       "afk": true,
-      "passes": false
+      "passes": true
     },
     {
       "id": "L-13",

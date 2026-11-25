@@ -158,6 +158,7 @@ export const TOKEN_PAIRS: readonly TokenPair[] = [
   { fg: 'err-text', bg: 'deep', kind: 'body', where: 'error text on panels' },
   { fg: 'ok-text', bg: 'bg', kind: 'body', where: 'pass text on the page' },
   { fg: 'ok-text', bg: 'deep', kind: 'body', where: 'pass text on panels' },
+  { fg: 'ok-text', bg: 'card-bg', kind: 'ui', where: 'pass edge on a live example banner (3.3.1)' },
 
   // Ink on the pastel fills: stage labels, principle cards, tags.
   { fg: 'on-a', bg: 'a1', kind: 'body', where: 'ink on sky (Fixed label, Perceivable)' },

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { focusLine, spoken, type AxNode } from '../src/labs/announce';
 import { isTabbable, nodeAt, step } from '../src/live/focus';
-import { autofillSaid, logOf, voiceSaid, type StageEvent } from '../src/live/events';
+import { autofillSaid, keyLines, keysSaid, logOf, voiceSaid, type StageEvent } from '../src/live/events';
 import { parseMarkup } from './markup';
 
 /**
@@ -141,5 +141,55 @@ describe('what the autofill and voice-control instruments report (#49)', () => {
     expect(voiceSaid({ kind: 'voice', simulated: false, phrase: 'click Send', clicked: btn })).toBe(
       'You said “click Send”. It clicked Send message to support, button.',
     );
+  });
+});
+
+describe('what the key log reports (#45)', () => {
+  const sub = { name: 'Subscribe', role: 'button', states: [], description: '' };
+
+  it('says a key that did nothing, and where focus was', () => {
+    const e: StageEvent = {
+      kind: 'keys',
+      simulated: true,
+      keys: 'Escape',
+      dictated: false,
+      target: sub,
+      actions: [],
+    };
+    expect(keysSaid(e)).toBe('Pressed Escape on Subscribe, button. Nothing happened.');
+    expect(keyLines(e)).toEqual(['Pressed Escape', 'Focus: Subscribe, button', 'Nothing happened']);
+  });
+
+  it('says each thing a dictated word set off, once each in speech', () => {
+    const e: StageEvent = {
+      kind: 'keys',
+      simulated: true,
+      keys: 'send this',
+      dictated: true,
+      target: null,
+      actions: ['Starred the message', 'Archived the message', 'Starred the message'],
+    };
+    expect(keysSaid(e)).toBe(
+      'Dictated “send this” with focus on no control. Starred the message. Archived the message.',
+    );
+    expect(keyLines(e)).toEqual([
+      'Dictated “send this”',
+      'Focus: no control',
+      'Starred the message',
+      'Archived the message',
+      'Starred the message',
+    ]);
+  });
+
+  it('keeps key events out of the announcement log', () => {
+    const e: StageEvent = {
+      kind: 'keys',
+      simulated: false,
+      keys: 'Escape',
+      dictated: false,
+      target: sub,
+      actions: ['Closed the newsletter'],
+    };
+    expect(logOf([e])).toEqual([]);
   });
 });

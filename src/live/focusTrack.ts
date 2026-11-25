@@ -47,6 +47,9 @@ export function trackOf(events: readonly StageEvent[], steps = TRAIL_STEPS): Tra
   const trail: number[] = [];
   for (const e of events) {
     if (e.kind !== 'focus') continue;
+    // The example's Tab stops changed (a dialog closed, say): the old trail is about stops that
+    // are gone, so it starts again (#45).
+    if (current !== null && e.total !== total) trail.length = 0;
     current = e.index;
     total = e.total;
     if (e.map) map = e.map;

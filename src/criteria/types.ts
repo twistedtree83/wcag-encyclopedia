@@ -35,6 +35,8 @@ export type SimKey =
   | 'read'
   | 'autofill'
   | 'voice'
+  | 'escape'
+  | 'dictate'
   | 'switch-tab'
   | 'links'
   | 'headings'
