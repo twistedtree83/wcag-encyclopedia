@@ -1,4 +1,5 @@
 import type { Announcement } from '../labs/announce';
+import type { FocusMap } from './focusTrack';
 
 /**
  * What happens on a live example's stage (#43), as a list of events every instrument under the
@@ -12,8 +13,16 @@ import type { Announcement } from '../labs/announce';
  * Adding an event kind for a new instrument: add one member below, on its own line.
  */
 export type StageEvent =
-  /** Focus landed on Tab stop `index` of `total`. */
-  | { readonly kind: 'focus'; readonly simulated: boolean; readonly line: Announcement; readonly index: number; readonly total: number }
+  /** Focus landed on Tab stop `index` of `total`. New fields go one per line. */
+  | {
+      readonly kind: 'focus';
+      readonly simulated: boolean;
+      readonly line: Announcement;
+      readonly index: number;
+      readonly total: number;
+      /** Where every Tab stop sat when focus landed, for the focus tracker (#44). */
+      readonly map?: FocusMap;
+    }
   /** The focused control's state changed, e.g. a switch turned off. */
   | { readonly kind: 'change'; readonly simulated: boolean; readonly line: Announcement }
   /** "Read it aloud": the whole example, said from the top. */

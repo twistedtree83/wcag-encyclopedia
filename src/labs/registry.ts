@@ -13,6 +13,7 @@ import type { ReactNode } from 'react';
 import type { CriterionRecord } from '../criteria/types';
 import { ColourCheckLab } from './ColourCheck';
 import { FadeLab } from './FadeLab';
+import { FocusRingLab } from './FocusRingLab';
 import { NameRoleValueLab } from './NameRoleValueLab';
 
 export type LabProps = {
@@ -49,6 +50,12 @@ export const LABS: readonly LabEntry[] = [
     title: 'Try it: build the toggle',
     Lab: NameRoleValueLab,
     flagshipFor: '4.1.2',
+  },
+  {
+    id: 'focus-ring',
+    title: 'Try it: style your own focus ring',
+    Lab: FocusRingLab,
+    flagshipFor: '2.4.7',
   },
 ];
 

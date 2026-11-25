@@ -156,6 +156,19 @@ const LABS: LabCase[] = [
       'Screen reader says: Email notifications, switch, on; Email notifications. ' +
       'Role, name and state all exposed.',
   },
+  {
+    name: 'the focus ring lab on 2.4.7',
+    url: '/criteria/2.4.7/',
+    lab: '.lab-slot .ring-lab',
+    passing: '2.4.7 passes',
+    failing: '2.4.7 fails',
+    toFail: async (lab, page) => {
+      await lab.getByRole('slider', { name: 'Gap from the button' }).focus();
+      await page.keyboard.press('Home');
+    },
+    said:
+      '3 pixel blue ring, touching the button. 6.70 to 1 against the page, 2.18 to 1 against the button. Lost against the button.',
+  },
 ];
 
 async function open(page: Page, url: string) {

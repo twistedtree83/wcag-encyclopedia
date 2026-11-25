@@ -51,7 +51,7 @@
       ],
       "importance": 4,
       "afk": true,
-      "passes": false
+      "passes": true
     },
     {
       "id": "L-05",
