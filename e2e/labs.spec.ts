@@ -600,6 +600,30 @@ const LABS: LabCase[] = [
     said: '400% zoom, 320 CSS pixels wide. Fixed width: scrolls down and sideways.',
   },
   {
+    name: 'the text spacing lab on 1.4.12',
+    url: '/criteria/1.4.12/',
+    lab: '.lab-slot .spacing-lab',
+    passing: '1.4.12 passes',
+    failing: '1.4.12 fails',
+    toFail: async (lab, page) => {
+      await lab.getByRole('checkbox', { name: 'Line height 1.5', exact: true }).focus();
+      await page.keyboard.press('Space');
+    },
+    said: 'Line height 1.5. Fixed-height boxes: text is cut off.',
+  },
+  {
+    name: 'the resize text lab on 1.4.4',
+    url: '/criteria/1.4.4/',
+    lab: '.lab-slot .resize-lab',
+    passing: '1.4.4 passes',
+    failing: '1.4.4 fails',
+    toFail: async (lab, page) => {
+      await radio(lab, '100%').focus();
+      await page.keyboard.press('ArrowDown');
+    },
+    said: 'Text at 150%. Locked in px: text is cut off.',
+  },
+  {
     name: 'the target size lab on 2.5.8',
     url: '/criteria/2.5.8/',
     lab: '.lab-slot .ts-lab',
@@ -610,6 +634,32 @@ const LABS: LabCase[] = [
       await page.keyboard.press('Home');
     },
     said: '16 pixel targets, touching. Under 24 by 24, and their 24 pixel circles overlap by 8 pixels. Fails.',
+  },
+  {
+    name: 'the redundant entry lab on 3.3.7',
+    url: '/criteria/3.3.7/',
+    lab: '.lab-slot .re-lab',
+    passing: '3.3.7 passes',
+    failing: '3.3.7 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await radio(lab, 'Asked for again').focus();
+      await page.keyboard.press('ArrowDown');
+    },
+    said: 'Step 1 of 3: Delivery address. At billing, the address is carried forward.',
+  },
+  {
+    name: 'the accessible authentication lab on 3.3.8',
+    url: '/criteria/3.3.8/',
+    lab: '.lab-slot .auth-lab',
+    passing: '3.3.8 passes',
+    failing: '3.3.8 fails',
+    startsFailing: true,
+    toPass: async (lab, page) => {
+      await radio(lab, 'A password, paste blocked').focus();
+      await page.keyboard.press('ArrowDown');
+    },
+    said: 'Paste or fill the password. A password manager remembers it for the reader.',
   },
 ];
 

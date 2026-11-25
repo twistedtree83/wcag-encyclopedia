@@ -410,6 +410,30 @@ function MenuOrderInstrument({ id, events }: InstrumentProps) {
   );
 }
 
+/** The frame's text size and spacing (#54), and whether any box now cuts its text off. */
+function TextFitMeter({ id, events }: InstrumentProps) {
+  const last = lastOf(events, 'text-fit');
+  return (
+    <div className="alog">
+      <p className="alog__h" id={`${id}-h`}>
+        Text and clipping
+      </p>
+      {last ? (
+        <ol aria-labelledby={`${id}-h`}>
+          <li>
+            Text at {last.scale}%, spacing {last.spacing ? 'on' : 'off'}
+          </li>
+          <li className={last.clipped ? 'zmeter--two' : undefined}>
+            {last.clipped ? 'Text is cut off' : 'All the text fits'}
+          </li>
+        </ol>
+      ) : (
+        <p className="alog__empty">As designed: nothing changed yet.</p>
+      )}
+    </div>
+  );
+}
+
 export const INSTRUMENTS: Readonly<Record<string, ComponentType<InstrumentProps>>> = {
   'gesture-pad': GesturePad,
   'announcement-log': LogInstrument,
@@ -419,6 +443,7 @@ export const INSTRUMENTS: Readonly<Record<string, ComponentType<InstrumentProps>
   'voice-control': VoiceInstrument,
   'vision-filter': VisionInstrument,
   'zoom-meter': ZoomMeter,
+  'text-fit': TextFitMeter,
   'key-log': KeyLog,
   'pointer-log': PointerInstrument,
   context: ContextInstrument,
