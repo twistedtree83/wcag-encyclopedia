@@ -214,7 +214,9 @@ one entry per line so parallel work merges cleanly, and check each step:
 - Several checkouts (git worktrees) can't share the default port 4173: `reuseExistingServer`
   makes one checkout's scan silently test another checkout's build. Give each its own port with
   `E2E_PORT=4505 npm run verify`.
-- `E2E_WORKERS` sets Playwright's workers (default 2). Locally a failed test is retried once
+- `E2E_WORKERS` sets Playwright's workers (default 6, sized for one suite on a 10-core machine).
+  When several checkouts run the suite at once, set `E2E_WORKERS=2` in each, or tests fail on
+  the 30s timeout. Locally a failed test is retried once
   (never on CI), and `test:a11y` ends by printing every test that passed only on retry and the
   15 slowest (`scripts/flaky.mjs`, reading `test-results/results.json`). Treat a flaky test as a
   bug to fix, not a pass.
@@ -223,6 +225,10 @@ one entry per line so parallel work merges cleanly, and check each step:
   own file, so this runs just that lab's bar. The lab bar's tests report their location as
   `e2e/labs/support.ts`; the describe name says which lab. Iterate with it; commit
   only on a green `npm run verify`.
+- Merging a branch whose full gate passed: if the target branch has not moved since the branch
+  was cut (`git merge-base --is-ancestor <target> <branch>`), the merged tree is the tree that
+  passed, so the gate is not re-run; confirm with `npm run build`. If the target has moved, run
+  the full `npm run verify` on the merge.
 - e2e waits for hydration before interacting:
   `page.waitForFunction(() => document.documentElement.dataset.hydrated === 'true')`.
 - The suite covers about 1,500 tests across 59 pages. On a heavily loaded machine, tests fail on

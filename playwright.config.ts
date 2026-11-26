@@ -9,8 +9,9 @@ export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  // E2E_WORKERS: Playwright workers (default 2; the suite times out under heavier parallel load).
-  workers: Number(process.env.E2E_WORKERS ?? 2),
+  // E2E_WORKERS: Playwright workers. 6 suits one suite on a 10-core machine; set 2 when several
+  // checkouts run the suite at once, or tests fail on the 30s timeout.
+  workers: Number(process.env.E2E_WORKERS ?? 6),
   // One local retry absorbs load flakes; scripts/flaky.mjs lists them so they stay visible.
   retries: process.env.CI ? 0 : 1,
   reporter: [
