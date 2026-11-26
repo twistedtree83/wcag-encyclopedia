@@ -7,6 +7,8 @@
 
 import { useId, useRef, useState, type Ref } from 'react';
 import { useClockNow } from '../live/clock';
+import { slideAt } from '../labs/carousel';
+import { Slides } from '../labs/timingParts';
 import type { CriterionRecord, LiveExample } from './types';
 
 /*
@@ -111,6 +113,64 @@ const SESSION_LIVE: Omit<LiveExample, 'Example'> = {
   clock: { end: 180 },
 };
 
+/*
+ * 2.2.2's live examples (#62): a carousel that moves a slide every four mock seconds once the
+ * reader moves the stage's clock. The broken one has no control; the fixed one has a real Pause
+ * button before the slides. `data-timer` names the phase (moving, past five seconds, paused),
+ * never the slide, so a running clock isn't a change on every tick.
+ */
+
+const MOVING = 5;
+
+function ShopLink() {
+  return (
+    <a href="#shop-the-sale" className="tcar__link" onClick={(e) => e.preventDefault()}>
+      Shop the sale
+    </a>
+  );
+}
+
+function MovingCarousel() {
+  const now = useClockNow();
+  const shows = now <= MOVING ? 'Moving on its own' : 'Still moving after 5 seconds, no control';
+  return (
+    <div className="tcar" data-timer={shows}>
+      <Slides slide={slideAt(now)} />
+      <ShopLink />
+    </div>
+  );
+}
+
+function PausableCarousel() {
+  const now = useClockNow();
+  const [pausedAt, setPausedAt] = useState<number | null>(null);
+  const shows =
+    pausedAt !== null
+      ? 'Paused by the reader'
+      : now <= MOVING
+        ? 'Moving, with Pause'
+        : 'Moving after 5 seconds, with Pause';
+  return (
+    <div className="tcar" data-timer={shows}>
+      <button
+        type="button"
+        className="btn o sm"
+        onClick={() => setPausedAt(pausedAt === null ? now : null)}
+      >
+        {pausedAt === null ? 'Pause' : 'Play'}
+      </button>
+      <Slides slide={slideAt(pausedAt ?? now)} />
+      <ShopLink />
+    </div>
+  );
+}
+
+const CAROUSEL_LIVE: Omit<LiveExample, 'Example'> = {
+  keys: ['tab', 'shift-tab', 'enter', 'read', 'wait', 'run'],
+  instruments: ['clock', 'announcement-log'],
+  clock: { end: 60 },
+};
+
 export const G2_2: readonly CriterionRecord[] = [
   {
     num: '2.2.1',
@@ -170,6 +230,7 @@ export const G2_2: readonly CriterionRecord[] = [
     since: '2.0',
     guideline: '2.2',
     demos: ['autoplay-2-2-2'],
+    labs: ['stop-carousel'],
     plain:
       'Anything that moves, blinks, scrolls, or auto-updates for more than five seconds needs a ' +
       'way to pause, stop, or hide it — provided it runs alongside other content. Motion in the ' +
@@ -177,6 +238,7 @@ export const G2_2: readonly CriterionRecord[] = [
       'vision using magnification.',
     fail: {
       caption: 'A carousel that advances on its own, with no control.',
+      live: { Example: MovingCarousel, ...CAROUSEL_LIVE },
       render: () => (
         <>
           <div className="carousel" aria-hidden="true">
@@ -194,6 +256,7 @@ export const G2_2: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'A pause control, present before the motion starts.',
+      live: { Example: PausableCarousel, ...CAROUSEL_LIVE },
       render: () => (
         <>
           <div className="carousel" aria-hidden="true">

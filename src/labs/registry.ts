@@ -58,6 +58,7 @@ import { MultipleWaysLab } from './MultipleWaysLab';
 import { ConsistentNavLab } from './ConsistentNavLab';
 import { ConsistentIdLab } from './ConsistentIdLab';
 import { ConsistentHelpLab } from './ConsistentHelpLab';
+import { AudioLab, CarouselLab, FlashLab } from './TimingLabs';
 
 export type LabProps = {
   /** The number of the criterion page showing the lab, e.g. "1.4.11". */
@@ -146,6 +147,9 @@ export const LABS: readonly LabEntry[] = [
   { id: 'accessible-auth', title: 'Try it: sign in without a test', Lab: AccessibleAuthLab },
   { id: 'captions', title: 'Try it: caption the briefing', Lab: CaptionsLab },
   { id: 'live-captions', title: 'Try it: caption the live stream', Lab: LiveCaptionsLab },
+  { id: 'stop-carousel', title: 'Try it: stop the carousel', Lab: CarouselLab },
+  { id: 'audio-control', title: 'Try it: quiet the autoplay', Lab: AudioLab },
+  { id: 'flash-rate', title: 'Try it: raise the flash rate', Lab: FlashLab },
 ];
 
 export function labById(id: string): LabEntry | undefined {

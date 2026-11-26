@@ -15,6 +15,9 @@ import { NoticeCard } from '../labs/NoticeCard';
 import { CARD_WINDOW } from '../labs/textFit';
 import { SalePage } from '../labs/ImagesOfTextLab';
 import { SALE_WINDOW } from '../labs/imagesOfText';
+import { useClockNow } from '../live/clock';
+import { levelsAt } from '../labs/autoplay';
+import { LevelMeter } from '../labs/timingParts';
 
 /** 1.4.10 live examples (#53): the catalogue in a zoom frame, fixed width or reflowing. */
 function FixedCatalogue() {
@@ -240,6 +243,61 @@ function CardText({ faint }: { faint: boolean }) {
 
 const TEXT_KEYS: LiveExample['keys'] = ['vision', 'read'];
 
+/*
+ * 1.4.2's live examples (#62): a track that plays as the page loads, drawn as a level meter
+ * because the site is silent; it moves only on the stage's mock clock. The broken one has no
+ * control; the fixed one has a real "Pause audio" button first, before anything else.
+ * `data-timer` names the phase, never the level, so a running clock is quiet.
+ */
+
+const AUDIBLE = 3;
+
+function TrackPanel({ playing, now }: { readonly playing: boolean; readonly now: number }) {
+  return (
+    <>
+      <p className="tim-track">Now playing: Summer sale jingle</p>
+      <LevelMeter levels={levelsAt(playing, now)} playing={playing} />
+      <a href="#sale-details" className="tcar__link" onClick={(e) => e.preventDefault()}>
+        See the sale
+      </a>
+    </>
+  );
+}
+
+function AutoplayTrack() {
+  const now = useClockNow();
+  const shows = now < AUDIBLE ? 'Playing' : 'Still playing after 3 seconds, no control';
+  return (
+    <div className="tcar" data-timer={shows}>
+      <TrackPanel playing now={now} />
+    </div>
+  );
+}
+
+function PausableTrack() {
+  const now = useClockNow();
+  const [paused, setPaused] = useState(false);
+  const shows = paused
+    ? 'Paused by the reader'
+    : now < AUDIBLE
+      ? 'Playing, with Pause audio'
+      : 'Playing after 3 seconds, with Pause audio';
+  return (
+    <div className="tcar" data-timer={shows}>
+      <button type="button" className="btn o sm" onClick={() => setPaused(!paused)}>
+        {paused ? 'Play audio' : 'Pause audio'}
+      </button>
+      <TrackPanel playing={!paused} now={now} />
+    </div>
+  );
+}
+
+const AUDIO_LIVE: Omit<LiveExample, 'Example'> = {
+  keys: ['tab', 'shift-tab', 'enter', 'read', 'wait', 'run'],
+  instruments: ['clock', 'announcement-log'],
+  clock: { end: 60 },
+};
+
 export const G1_4: readonly CriterionRecord[] = [
   {
     num: '1.4.1',
@@ -447,12 +505,14 @@ export const G1_4: readonly CriterionRecord[] = [
     level: 'A',
     since: '2.0',
     guideline: '1.4',
+    labs: ['audio-control'],
     plain:
       'If sound plays automatically for more than three seconds, there has to be a way to stop ' +
       'it — a control on the page, not just the operating system volume. Screen reader users ' +
       'cannot hear their own screen reader over it.',
     fail: {
       caption: 'Autoplaying audio with no control on the page.',
+      live: { Example: AutoplayTrack, ...AUDIO_LIVE },
       render: () => (
         <>
           <p className="example-prose">A background video with sound starts as the page loads.</p>
@@ -466,6 +526,7 @@ export const G1_4: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'It does not autoplay — and if it must, a stop control comes first.',
+      live: { Example: PausableTrack, ...AUDIO_LIVE },
       render: () => (
         <>
           <p className="example-prose">
