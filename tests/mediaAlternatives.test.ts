@@ -23,7 +23,7 @@ import {
   descSaid,
   onlyVerdict,
   onlySaid,
-} from '../src/labs/mediaAlternatives';
+} from '../src/labs/media-alternatives/mediaAlternatives';
 
 /**
  * Media alternatives on the mock player (#66): description cues and transcripts for 1.2.1,

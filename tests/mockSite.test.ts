@@ -17,7 +17,7 @@ import {
   waysSaid,
   waysVerdict,
   withWay,
-} from '../src/labs/multipleWays';
+} from '../src/labs/multiple-ways/multipleWays';
 import {
   NAV_START,
   navLine,
@@ -26,7 +26,7 @@ import {
   showPage,
   withContact,
   withOrder,
-} from '../src/labs/consistentNav';
+} from '../src/labs/consistent-navigation/consistentNav';
 
 /**
  * The mock site (#63): its pure model, the two instruments' lines, and the 2.4.5 and 3.2.3 labs.

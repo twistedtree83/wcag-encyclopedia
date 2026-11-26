@@ -1,0 +1,105 @@
+/* The timing lab's own styles, imported by its lab.ts. Shared lab styles stay in src/styles. */
+
+.tslides {
+  justify-self: stretch;
+  padding: 12px 16px;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  background: var(--card-bg);
+  color: var(--ink);
+}
+.tslides__slide {
+  margin: 0 0 4px;
+  font-weight: 600;
+}
+.tslides__dots {
+  margin: 0;
+  font-size: var(--small);
+  color: var(--ink-2);
+}
+/* The drawn level meter: the site is silent, so the sound is five bars. */
+.tlevel {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+.tlevel__bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 32px;
+}
+.tlevel__bar {
+  display: block;
+  width: 8px;
+  background: var(--ink-2);
+}
+.tlevel__text {
+  font-size: var(--small);
+  color: var(--ink-2);
+}
+/* One second of a banner as 16 still frames. Depicted, never played. */
+.tstrip {
+  display: grid;
+  gap: 4px;
+  justify-self: stretch;
+}
+.tstrip__frames {
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+  gap: 2px;
+  max-width: 320px;
+}
+.tstrip__f {
+  display: block;
+  height: 16px;
+  border: 1px solid var(--line-2);
+  background: var(--card-bg);
+}
+.tstrip__f--dark {
+  background: var(--ink-2);
+}
+.tstrip__label {
+  font-size: var(--small);
+  color: var(--ink-2);
+}
+/* The flash-rate meter: the rate on a 0 to 8 scale, the limit at 3 marked by a line. */
+.fmeter {
+  display: grid;
+  gap: 4px;
+  justify-self: stretch;
+}
+.fmeter__track {
+  position: relative;
+  display: block;
+  max-width: 320px;
+  height: 12px;
+  border: var(--bwid) solid var(--line-2);
+  background: var(--card-bg);
+}
+.fmeter__bar {
+  display: block;
+  height: 100%;
+  background: var(--ink-2);
+}
+.fmeter__bar--over {
+  background: var(--err-text);
+}
+.fmeter__limit {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 2px;
+  background: var(--ink);
+}
+.fmeter__text {
+  font-size: var(--small);
+  font-weight: 600;
+  color: var(--ink);
+}
+.fmeter__text.bad {
+  color: var(--err-text);
+}
+.tim-lab .sess-mock .pill {
+  justify-self: start;
+}

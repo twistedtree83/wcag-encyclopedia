@@ -8,7 +8,7 @@
  */
 
 import { clockTime, useClockNow } from '../live/clock';
-import { FlashMeter, FlashStrip } from '../labs/timingParts';
+import { FlashMeter, FlashStrip } from '../labs/timing/timingParts';
 import type { CriterionRecord, LiveExample } from './types';
 
 /*

@@ -39,7 +39,8 @@ To add a page:
 4. Put the component in `src/pages/` and import it from the entry. `tests/retired.test.ts`
    fails on any module under `src/` that the entry points don't reach.
 5. Nothing else is needed for axe. `e2e/axe.spec.ts` scans every route in light and dark at
-   1280px and 320px. A page with URL-driven states adds its query URLs to `STATE_PAGES`.
+   1280px and 320px. A page with URL-driven states passes its query URLs to `axeStates` there;
+   a lab passes its own from its lab spec (see "Labs").
 
 ## Tokens and CSS
 
@@ -52,10 +53,13 @@ To add a page:
   it with `:visible`.
 - `swatch.css` holds the site and `examples.css` holds criterion examples and demos. Add a site
   section as `/* --- <Component> --- */` before "Breakpoints", and put its media rules in the
-  shared blocks. Check `examples.css` before naming a site class: examples own names such as
+  shared blocks. A lab's own rules go in its folder's `lab.css` instead (see "Labs"). Check `examples.css` before naming a site class: examples own names such as
   `.crumbs` and `.res`.
-- Fonts are Figtree and Onest only. `e2e/retired.spec.ts` fails if the old fonts or the old
-  single-page markup come back into `dist/`.
+- Fonts are Figtree and Onest only, set as `var(--fh)` and `var(--fb)`. Code uses
+  `ui-monospace, 'SF Mono', Menlo, Consolas, monospace`. `e2e/retired.spec.ts` fails if the old
+  fonts or the old single-page markup come back into `dist/`.
+- `tests/styleRules.test.ts` enforces the mechanical rules: transitions, font stacks, sections
+  before "Breakpoints", axe excludes and the "rule" wording.
 
 ## Records, labs and thresholds
 
@@ -64,7 +68,7 @@ To add a page:
   leaving it empty. 1.4.3 carries `['colour-check', 'fade-text']`. A lab renders its own h3 under
   the page's single "Try it yourself" h2, never an h2 of its own.
 - Contrast maths lives in `src/color/contrast.ts`. Ratios are truncated, never rounded:
-  `formatScore`, `passesThreshold`. Threshold lists live in `src/labs/thresholds.ts`. Don't
+  `formatScore`, `passesThreshold`. Threshold lists live in `src/labs/shared/thresholds.ts`. Don't
   re-implement either in a lab.
 - Never call a threshold or a criterion a "rule" in code, class names or copy.
 - Slider and colour-input announcements: the visible `<output aria-live="off">` plus one polite
@@ -73,11 +77,18 @@ To add a page:
 
 ## Labs
 
-Every lab renders inside `LabShell` (`src/labs/LabShell.tsx`), which adds the verdict line, the
-Reset button and the one polite region. To add a lab:
+A lab lives in its own **lab folder**, `src/labs/<name>/` (ADR 0004). `src/labs/registry.ts`
+collects every `src/labs/*/lab.ts` with `import.meta.glob`, so adding a lab is adding a folder:
+no shared list is edited. `src/labs/INDEX.md` lists lab → criteria → folder. Every lab renders
+inside `LabShell` (`src/labs/shared/LabShell.tsx`), which adds the verdict line, the Reset button
+and the one polite region. To add a lab:
 
-1. Write the lab in `src/labs/`. Keep its pure model (state → ratio, results, verdict,
-   announcement) in a separate `.ts` file, as `fade.ts` does, and unit-test that.
+1. Make `src/labs/<name>/`, named after the lab id. Put the component there and keep its pure
+   model (state → ratio, results, verdict, announcement) in a separate `.ts` file beside it, as
+   `fade-text/fade.ts` does, and unit-test that in `tests/`. Use the parts in `src/labs/shared/`
+   (`LabShell`, `LabChoice`, `Choice`, `Slider`, the announcement log, `thresholds`, the zoom
+   frame); a part a second lab needs moves into `shared/`, never into an import across lab
+   folders.
 2. Render `<LabShell className verdict said onReset>` with the mock first, then the controls row.
    Mark the mock `data-lab-mock`. Ids come from `useId`, since a page may show a lab twice.
    The mock passes axe in every state like the rest of the lab. Only a mock that depicts a
@@ -86,18 +97,26 @@ Reset button and the one polite region. To add a lab:
 3. `verdict` is `{ criterion, passes }` for what's on screen. `said` is a new `{ text }` object
    for each change the reader makes, and `null` (or unchanged) otherwise. Reset sets it to
    `null`, so it is never announced. Don't add a live region of your own.
-4. Register it in `LABS` (`src/labs/registry.ts`), with `flagshipFor: '<num>'` if it is that
-   criterion's flagship, then add its id to the record's `labs`. Every criterion has at least
-   one lab and live fail and pass examples; the data-integrity test fails on any gap.
-5. Add a case to `LABS` in `e2e/labs.spec.ts`. It covers both verdicts by keyboard, axe in the
-   failing state, Reset and the motion rules.
+4. Register it in `src/labs/<name>/lab.ts`: `export default { id, title, criteria, Lab } satisfies
+   LabEntry;` with `flagshipFor: '<num>'` if it is that criterion's flagship, and
+   `import './lab.css';` if it has styles. Then add its id to each record in `criteria` (the
+   record's `labs` sets the order on the page). Every criterion has at least one lab and live
+   fail and pass examples; the data-integrity test fails on any gap, and
+   `tests/labRegistry.test.ts` fails if `criteria` and the records disagree.
+5. Put the lab's own CSS in `src/labs/<name>/lab.css`, narrow-width rules included under their
+   own `@media`. Lab sheets load after `swatch.css` and `examples.css`, so a lab rule that must
+   lose to a shared rule of equal specificity stays in the shared sheet.
+6. Add `e2e/labs/<name>.lab.spec.ts` passing its cases to `labCases` (`e2e/labs/support.ts`).
+   Each case covers both verdicts by keyboard, axe in the failing state, Reset and the motion
+   rules. A lab with URL state passes its query URLs to `axeStates` in the same file.
+7. Run `npm run labs:index` and commit `src/labs/INDEX.md`; a unit test fails while it is stale.
 
 A lab that shows what a screen reader would say uses the announcement log
-(`src/labs/AnnouncementLog.tsx`, computation in `src/labs/announce.ts`): render the mock
+(`src/labs/shared/AnnouncementLog.tsx`, computation in `src/labs/shared/announce.ts`): render the mock
 `aria-hidden="true" inert` into a ref, read it with `useAnnouncementLog(ref, state)` and draw it
 with `<AnnouncementLog>`. The log reads the root even though it is hidden. Unit tests feed it
 React markup through `tests/markup.ts` (no DOM in vitest). A lab that starts failing sets
-`startsFailing` and `toPass` in its `e2e/labs.spec.ts` case.
+`startsFailing` and `toPass` in its `e2e/labs/<name>.lab.spec.ts` case.
 
 A **live example** (ADR 0002) is set on the record: `live: { Example, keys, instruments }` on
 both `fail` and `pass` (`src/criteria/types.ts`). The page pre-renders `render` and swaps the
@@ -118,21 +137,23 @@ view of the stage's events. "Fail" is the inert stage, driven by the bar only; "
 
 | Ids | Model and drawing | Reads (`StageEvent` kind) | Simulated vs real |
 |---|---|---|---|
-| `announcement-log`, `voice-log` | `src/labs/announce.ts`, `logOf` in `src/live/events.ts`, `src/labs/language.ts` | `focus`, `change`, `read`, `status` | Fail: the bar steps a model over `tabStops` (attributes, not real focus). Pass: real `focusin`/`change`. Live-region text from a MutationObserver on both. |
+| `announcement-log`, `voice-log` | `src/labs/shared/announce.ts`, `logOf` in `src/live/events.ts`, `src/labs/language/language.ts` | `focus`, `change`, `read`, `status` | Fail: the bar steps a model over `tabStops` (attributes, not real focus). Pass: real `focusin`/`change`. Live-region text from a MutationObserver on both. |
 | `focus-tracker` | `src/live/focusTrack.ts`, `src/live/focus.ts` | `focus` with `map` | As above, with the same output on both stages. |
 | `key-log` | `keyLines` in `events.ts`, `didAction` in `src/live/actions.ts` | `keys` | The bar dispatches real `keydown`s on both. Pass also logs real keys whose handler calls `didAction`. |
 | `pointer-log`, `context` | `src/live/pointer.ts` | `pointer`, `popup`, `context` | The bar's Hover dispatches `mouseover`/`mouseout`. Pass also logs the real mouse. Tooltips (`role="tooltip"`) and `[data-context]` come from a MutationObserver. |
-| `zoom-meter`, `text-fit`, `orientation-meter`, `text-look` | `src/labs/ZoomFrame.tsx`, `src/labs/zoom.ts`, `src/labs/textFit.ts`, `src/live/clip.ts`, `src/live/ReaderColours.tsx` | `zoom`, `text-fit`, `rotate`, `look` | The frame is real layout on both stages and only the bar changes it. On the pass stage the window is a real scrollable region. |
+| `zoom-meter`, `text-fit`, `orientation-meter`, `text-look` | `src/labs/shared/ZoomFrame.tsx`, `src/labs/shared/zoom.ts`, `src/labs/shared/textFit.ts`, `src/live/clip.ts`, `src/live/ReaderColours.tsx` | `zoom`, `text-fit`, `rotate`, `look` | The frame is real layout on both stages and only the bar changes it. On the pass stage the window is a real scrollable region. |
 | `vision-filter` | `src/live/vision.ts`, `src/live/cues.ts`, `src/live/VisionDefs.tsx` | `vision` | Identical on both: the filter is depicted, and `[data-cue]` colours are read from computed style. |
 | `clock` | `src/live/clock.ts` | `clock` | Mock time from the bar's Wait and Run only. It never starts on its own. |
-| `gesture-pad`, `voice-control`, `autofill` | `src/live/gesture.ts`, `src/labs/labelInName.ts`, `src/labs/inputPurpose.ts` | `gesture`, `voice`, `autofill` | The bar sends real `PointerEvent`s (touch, not primary) and hit-tests Tab stops with `hitAt`. A real pointer on the pass stage is logged but not spoken. |
+| `gesture-pad`, `voice-control`, `autofill` | `src/live/gesture.ts`, `src/labs/label-in-name/labelInName.ts`, `src/labs/input-purpose/inputPurpose.ts` | `gesture`, `voice`, `autofill` | The bar sends real `PointerEvent`s (touch, not primary) and hit-tests Tab stops with `hitAt`. A real pointer on the pass stage is logged but not spoken. |
 | `mock-player` | `src/live/mockPlayer.ts`, `src/live/PlayerWindow.tsx` | `player` | `[data-player-*]` attributes read by a MutationObserver on both. Play runs in real time. |
 | `mock-site`, `menu-order`, `search-name`, `help-place` | `src/live/mockSite.ts`, `src/live/SiteWindow.tsx` | `site` | `[data-site-*]` attributes read by a MutationObserver on both. |
 
 ## Changing the shared lab files
 
-A new key, event, instrument or lab touches files every lab shares. Keep each edit to one entry
-per line so parallel work merges cleanly, and check each step:
+A new lab touches no shared file: it is a lab folder, a lab spec and a regenerated index
+("Labs" above). The only shared lines it edits are the `labs` field on its own criterion
+records. A new key, event or instrument still touches files every lab shares. Keep each edit to
+one entry per line so parallel work merges cleanly, and check each step:
 
 1. **Key:** a `SimKey` member in `src/criteria/types.ts`, its label in `KEY_LABEL` and a
    self-contained branch in `press` (`src/live/LiveStage.tsx`). A record lists the same `keys`
@@ -143,12 +164,12 @@ per line so parallel work merges cleanly, and check each step:
    reader does that.
 3. **Instrument:** one line in `INSTRUMENTS` (`src/live/instruments.tsx`), which types
    `live.instruments`. Add it to its group in `CONTEXT.md` and to the table above.
-4. **Lab:** a `LABS` entry in `src/labs/registry.ts`, the record's `labs` and a `LabCase` in
-   `e2e/labs.spec.ts`. A live example gets its own `e2e/<topic>-live.spec.ts`.
-5. **URL state:** one `*Query.ts` module, a line under "URL contracts" below, and its URLs in
-   `STATE_PAGES` (`e2e/axe.spec.ts`), which scans each in four modes.
-6. **CSS:** a `/* --- <Component> --- */` section in `swatch.css` before "Breakpoints", with
+4. **Shared lab part:** a part two labs use moves into `src/labs/shared/`, and its styles stay
+   in `swatch.css` as a `/* --- <Component> --- */` section before "Breakpoints", with
    narrow-width rules in the shared `max-width` blocks.
+5. **URL state:** one `*Query.ts` module in the lab's folder, a line under "URL contracts"
+   below, and its URLs passed to `axeStates` in the lab's spec, which scans each in four modes.
+6. **Live example:** its own `e2e/<topic>-live.spec.ts`.
 
 ## Lab and live-example gotchas
 
@@ -175,16 +196,16 @@ per line so parallel work merges cleanly, and check each step:
 
 - All criteria and Home: `?p=1..4`, `?l=A|AA`, `?new`, `?q=`, handled only in
   `src/catalog/urlQuery.ts`.
-- Colour check: `?fg=` and `?bg=`, handled only in `src/labs/pairQuery.ts`.
-- 4.1.2 flagship lab: `?el=`, `?name=`, `?state=`, `?on=`, handled only in `src/labs/nrvQuery.ts`.
-- 2.4.7 flagship lab: `?w=`, `?off=`, `?c=`, handled only in `src/labs/ringQuery.ts`.
-- 1.1.1 flagship lab: `?img=`, `?alt=` (absent: no alt attribute), handled only in `src/labs/altQuery.ts`.
-- 1.3.1 flagship lab: `?mock=`, `?real=` (comma list), handled only in `src/labs/structureQuery.ts`.
-- 2.5.8 flagship lab: `?size=8..44`, `?gap=0..24`, handled only in `src/labs/targetQuery.ts`.
-- 2.4.3 flagship lab: `?src=`, `?ti=`, handled only in `src/labs/orderQuery.ts`.
-- 1.4.10 flagship lab: `?zoom=100|200|400`, `?layout=fixed|reflow`, handled only in `src/labs/reflowQuery.ts`.
-- 2.2.1 flagship lab: `?limit=60|120|300`, `?help=none|late|extend|adjust|off`, handled only in `src/labs/timeoutQuery.ts`. The lab's clock is never in the URL.
-- 1.4.12 flagship lab: `?spacing=` (comma list of `line,paragraph,letter,word`, may be empty), `?boxes=fixed|flexible`, handled only in `src/labs/spacingQuery.ts`.
+- Colour check: `?fg=` and `?bg=`, handled only in `src/labs/colour-check/pairQuery.ts`.
+- 4.1.2 flagship lab: `?el=`, `?name=`, `?state=`, `?on=`, handled only in `src/labs/name-role-value/nrvQuery.ts`.
+- 2.4.7 flagship lab: `?w=`, `?off=`, `?c=`, handled only in `src/labs/focus-ring/ringQuery.ts`.
+- 1.1.1 flagship lab: `?img=`, `?alt=` (absent: no alt attribute), handled only in `src/labs/alt-text/altQuery.ts`.
+- 1.3.1 flagship lab: `?mock=`, `?real=` (comma list), handled only in `src/labs/structure/structureQuery.ts`.
+- 2.5.8 flagship lab: `?size=8..44`, `?gap=0..24`, handled only in `src/labs/target-size/targetQuery.ts`.
+- 2.4.3 flagship lab: `?src=`, `?ti=`, handled only in `src/labs/focus-order/orderQuery.ts`.
+- 1.4.10 flagship lab: `?zoom=100|200|400`, `?layout=fixed|reflow`, handled only in `src/labs/reflow/reflowQuery.ts`.
+- 2.2.1 flagship lab: `?limit=60|120|300`, `?help=none|late|extend|adjust|off`, handled only in `src/labs/session-timeout/timeoutQuery.ts`. The lab's clock is never in the URL.
+- 1.4.12 flagship lab: `?spacing=` (comma list of `line,paragraph,letter,word`, may be empty), `?boxes=fixed|flexible`, handled only in `src/labs/text-fit/spacingQuery.ts`.
   A flagship lab pre-renders its start, applies the query in a mount effect without announcing
   it, and writes changes back with `history.replaceState` (the start writes no query).
 
@@ -193,9 +214,18 @@ per line so parallel work merges cleanly, and check each step:
 - Several checkouts (git worktrees) can't share the default port 4173: `reuseExistingServer`
   makes one checkout's scan silently test another checkout's build. Give each its own port with
   `E2E_PORT=4505 npm run verify`.
+- `E2E_WORKERS` sets Playwright's workers (default 2). Locally a failed test is retried once
+  (never on CI), and `test:a11y` ends by printing every test that passed only on retry and the
+  15 slowest (`scripts/flaky.mjs`, reading `test-results/results.json`). Treat a flaky test as a
+  bug to fix, not a pass.
+- `npm run verify:changed` runs lint, types, unit tests and the build, then only the e2e spec
+  files changed since `labs` (`playwright test --only-changed=labs`). A new lab's spec is its
+  own file, so this runs just that lab's bar. The lab bar's tests report their location as
+  `e2e/labs/support.ts`; the describe name says which lab. Iterate with it; commit
+  only on a green `npm run verify`.
 - e2e waits for hydration before interacting:
   `page.waitForFunction(() => document.documentElement.dataset.hydrated === 'true')`.
-- The suite covers about 535 tests across 59 pages. On a heavily loaded machine, tests fail on
+- The suite covers about 1,500 tests across 59 pages. On a heavily loaded machine, tests fail on
   the 30s timeout rather than on assertions. Re-run those with
   `npx playwright test --last-failed --workers=1` before treating them as real. Assertion
   failures are always real.
@@ -205,7 +235,7 @@ per line so parallel work merges cleanly, and check each step:
 - Mark a test `test.slow()` if it runs more than one full-page axe scan. Two scans per test come
   close to the 30s limit under load.
 - A lab announces `ANNOUNCE_DELAY_MS` (500 ms) after the reader's last change. Wait for an
-  announcement on its own budget (`heard` in `e2e/labs.spec.ts`, 15s). To show something was
+  announcement on its own budget (`heard` in `e2e/labs/support.ts`, 15s). To show something was
   *not* announced, wait past two delays first, then assert the region is unchanged.
 - Mock play and the running clock are real time. Reach a time with Wait presses or the player's
   slider (ArrowRight is +1 s). Drive Play by the bar only on the fail stage, and poll with a long

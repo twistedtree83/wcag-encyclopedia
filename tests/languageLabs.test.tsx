@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import type { ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { announce, spoken, type AxNode } from '../src/labs/announce';
+import { announce, spoken, type AxNode } from '../src/labs/shared/announce';
 import {
   pageSaid,
   pageVerdict,
@@ -9,8 +9,8 @@ import {
   partsVerdict,
   voiceOf,
   withVoices,
-} from '../src/labs/language';
-import { PageMock, PartsMock } from '../src/labs/LanguageLabs';
+} from '../src/labs/language/language';
+import { PageMock, PartsMock } from '../src/labs/language/LanguageLabs';
 import { parseMarkup } from './markup';
 
 /**

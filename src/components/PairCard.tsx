@@ -1,5 +1,5 @@
 import { contrastRatio, formatScore } from '../color/contrast';
-import type { ColourPair, MistakePair } from '../labs/pairs';
+import type { ColourPair, MistakePair } from '../labs/colour-check/pairs';
 import { FailIcon, PassIcon } from './Icons';
 
 /**

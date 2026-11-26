@@ -1,0 +1,7 @@
+/* The redundant-entry lab's own styles, imported by its lab.ts. Shared lab styles stay in src/styles. */
+
+.re-lab__steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}

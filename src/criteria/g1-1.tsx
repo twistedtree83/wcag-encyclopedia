@@ -3,10 +3,10 @@
  *
  * One criterion, and the one most often "done" badly: alt text that exists but says nothing.
  * The example contrasts three images that need three different treatments, because the common
- * mistake is applying one rule to all of them.
+ * mistake is giving all of them one treatment.
  */
 
-import { CHART, DIVIDER, PHOTO } from '../labs/pictures';
+import { CHART, DIVIDER, PHOTO } from '../labs/alt-text/pictures';
 import type { CriterionRecord, LiveExample } from './types';
 
 /** A small depiction of an image in some other product's page. */
@@ -76,7 +76,7 @@ export const G1_1: readonly CriterionRecord[] = [
               <span className="example-note">A sales chart, described by its filename.</span>
             </li>
             <li>
-              <Thumb label="rule" />
+              <Thumb label="divider" />
               <code className="alt-code">alt="decorative swirl"</code>
               <span className="example-note">
                 A divider, announced to every screen reader user who passes it.
@@ -109,7 +109,7 @@ export const G1_1: readonly CriterionRecord[] = [
               </span>
             </li>
             <li>
-              <Thumb label="rule" />
+              <Thumb label="divider" />
               <code className="alt-code">alt=""</code>
               <span className="example-note">
                 Empty, not missing. The image is removed from the accessibility tree entirely.

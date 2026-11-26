@@ -14,8 +14,8 @@ import {
   focusVerdict,
   pressTab,
   withAct,
-} from '../src/labs/onFocus';
-import { TIP_START, tipAct, tipSaid, tipVerdict, withConditions } from '../src/labs/tooltip';
+} from '../src/labs/on-focus/onFocus';
+import { TIP_START, tipAct, tipSaid, tipVerdict, withConditions } from '../src/labs/tame-tooltip/tooltip';
 
 /**
  * 3.2.1 On Focus and 1.4.13 Content on Hover or Focus (#47): the pure parts. The simulated

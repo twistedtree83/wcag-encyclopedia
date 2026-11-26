@@ -1,0 +1,8 @@
+/* The status-message lab's own styles, imported by its lab.ts. Shared lab styles stay in src/styles. */
+
+.status-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 24px;
+}

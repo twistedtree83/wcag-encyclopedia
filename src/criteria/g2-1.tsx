@@ -7,7 +7,7 @@
  */
 
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
-import { basketText } from '../labs/keyboard';
+import { basketText } from '../labs/keyboard-control/keyboard';
 import { didAction } from '../live/actions';
 import type { CriterionRecord, LiveExample } from './types';
 

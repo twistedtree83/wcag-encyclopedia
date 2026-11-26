@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { AA_BODY, AA_LARGE, AA_UI, AAA_BODY } from '../color/contrast';
 import { PairCard } from '../components/PairCard';
-import { ColourCheck, useColourPair } from '../labs/ColourCheck';
-import { pairFromSearch } from '../labs/pairQuery';
-import { PAIRS, PRESETS, type ColourPair } from '../labs/pairs';
+import { ColourCheck, useColourPair } from '../labs/colour-check/ColourCheck';
+import { pairFromSearch } from '../labs/colour-check/pairQuery';
+import { PAIRS, PRESETS, type ColourPair } from '../labs/colour-check/pairs';
 
 /** The id of the wide check, and of its text-colour hex field (`cc-fg`). */
 const CHECK_ID = 'cc';

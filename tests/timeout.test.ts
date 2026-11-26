@@ -6,8 +6,8 @@ import {
   storySaid,
   timeoutSaid,
   timeoutVerdict,
-} from '../src/labs/timeout';
-import { searchFromTimeout, timeoutFromSearch } from '../src/labs/timeoutQuery';
+} from '../src/labs/session-timeout/timeout';
+import { searchFromTimeout, timeoutFromSearch } from '../src/labs/session-timeout/timeoutQuery';
 
 /*
  * The 2.2.1 lab's story (#61). Sam needs four minutes to fill in the form and ten seconds to

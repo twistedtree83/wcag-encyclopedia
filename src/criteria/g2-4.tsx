@@ -9,7 +9,7 @@
 import { useEffect, useId, useRef, useState, type MouseEvent } from 'react';
 import type { CriterionRecord, LiveExample } from './types';
 import { MockSite } from '../live/SiteWindow';
-import { SUPPORT_SITE, SUPPORT_SITE_FOUND } from '../labs/multipleWays';
+import { SUPPORT_SITE, SUPPORT_SITE_FOUND } from '../labs/multiple-ways/multipleWays';
 
 /*
  * 2.4.7's live examples (#44): three fields, as in the static examples. The broken row removes
@@ -672,7 +672,7 @@ export const G2_4: readonly CriterionRecord[] = [
         { kind: 'add', text: '  outline-offset: 2px;' },
         { kind: 'add', text: '}' },
       ],
-      note: 'The rule this page uses on every interactive element, verbatim.',
+      note: 'The CSS rule this page uses on every interactive element, verbatim.',
     },
   },
 

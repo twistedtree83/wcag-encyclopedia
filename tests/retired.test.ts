@@ -43,6 +43,14 @@ function reachable(): Set<string> {
       const target = resolveImport(file, m[1]!);
       if (target) queue.push(target);
     }
+    // `import.meta.glob('./*/lab.ts')` (the lab registry): one `*` standing for a folder name.
+    for (const m of text.matchAll(/import\.meta\.glob(?:<[^>]*>)?\(\s*'(\.[^'*]*)\*\/([^'*]+)'/g)) {
+      const dir = resolve(dirname(file), m[1]!);
+      for (const name of readdirSync(dir)) {
+        const target = join(dir, name, m[2]!);
+        if (existsSync(target)) queue.push(target);
+      }
+    }
   }
   return seen;
 }

@@ -10,7 +10,7 @@ import AxeBuilder from '@axe-core/playwright';
  *   2.5.4  shake to undo: Fixed adds an Undo button and a switch that turns shaking off
  *   2.5.7  delivery options: both drag; only Fixed has move up and move down
  *
- * The shared lab bar (verdicts by keyboard, Reset, axe when failing, motion) is in `labs.spec.ts`.
+ * The shared lab bar (verdicts by keyboard, Reset, axe when failing, motion) is in `e2e/labs/`.
  */
 
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa', 'best-practice'];

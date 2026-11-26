@@ -1,0 +1,13 @@
+/* The character-shortcuts lab's own styles, imported by its lab.ts. Shared lab styles stay in src/styles. */
+
+.sc-mock__label {
+  font-weight: 600;
+}
+.sc-mock__msg {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.sc-mock__reply {
+  justify-self: stretch;
+}

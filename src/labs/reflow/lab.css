@@ -1,0 +1,54 @@
+/* The reflow lab's own styles, imported by its lab.ts. Shared lab styles stay in src/styles. */
+
+/* The catalogue page drawn in the frame, sized in em so the frame's text size reaches it. */
+.zpage {
+  box-sizing: border-box;
+  min-height: 70em;
+  padding: 1.5em 2em;
+}
+.zpage p {
+  margin: 0 0 1em;
+}
+.zpage__bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5em 2em;
+  margin-bottom: 2em;
+  padding-bottom: 1em;
+  border-bottom: 1px solid var(--line-2);
+}
+.zpage__brand,
+.zpage__title {
+  font-weight: 700;
+}
+.zpage__title {
+  font-size: 1.75em;
+}
+.zpage__grid {
+  display: grid;
+  gap: 1em;
+  margin-bottom: 1.5em;
+}
+.zpage__tile {
+  display: flex;
+  align-items: flex-end;
+  aspect-ratio: 3 / 4;
+  padding: 1em;
+  border: 1px solid var(--line-2);
+  border-radius: 0.5em;
+  font-weight: 600;
+}
+.zpage--fixed {
+  width: 60em;
+}
+.zpage--fixed .zpage__grid {
+  grid-template-columns: repeat(3, 18em);
+}
+.zpage--reflow .zpage__grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12em), 1fr));
+}
+/* The 1.4.10 lab: the frame, then the zoom and layout choices, then the readouts. */
+.reflow-mock {
+  max-width: 560px;
+}

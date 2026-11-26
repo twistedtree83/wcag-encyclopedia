@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { focusLine, spoken, type AxNode } from '../src/labs/announce';
+import { focusLine, spoken, type AxNode } from '../src/labs/shared/announce';
 import { isTabbable, nodeAt, step, tabOrder } from '../src/live/focus';
 import { autofillSaid, keyLines, keysSaid, logOf, voiceSaid, type StageEvent } from '../src/live/events';
 import { parseMarkup } from './markup';

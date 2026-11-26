@@ -9,15 +9,15 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import type { CriterionRecord, LiveExample } from './types';
 import { MeasuredRatio } from '../components/MeasuredRatio';
-import { CataloguePage } from '../labs/ReflowLab';
-import { DESKTOP } from '../labs/zoom';
-import { NoticeCard } from '../labs/NoticeCard';
-import { CARD_WINDOW } from '../labs/textFit';
-import { SalePage } from '../labs/ImagesOfTextLab';
-import { SALE_WINDOW } from '../labs/imagesOfText';
+import { CataloguePage } from '../labs/reflow/ReflowLab';
+import { DESKTOP } from '../labs/shared/zoom';
+import { NoticeCard } from '../labs/text-fit/NoticeCard';
+import { CARD_WINDOW } from '../labs/shared/textFit';
+import { SalePage } from '../labs/images-of-text/ImagesOfTextLab';
+import { SALE_WINDOW } from '../labs/images-of-text/imagesOfText';
 import { useClockNow } from '../live/clock';
-import { levelsAt } from '../labs/autoplay';
-import { LevelMeter } from '../labs/timingParts';
+import { levelsAt } from '../labs/timing/autoplay';
+import { LevelMeter } from '../labs/timing/timingParts';
 
 /** 1.4.10 live examples (#53): the catalogue in a zoom frame, fixed width or reflowing. */
 function FixedCatalogue() {

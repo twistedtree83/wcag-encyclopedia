@@ -10,7 +10,7 @@ import AxeBuilder from '@axe-core/playwright';
  *   Lab     the reader sets the limit and what the site offers, then runs the clock on Sam.
  *
  * The clock never runs on load. The shared lab bar (verdicts by keyboard, Reset, axe, motion)
- * is the `labs.spec.ts` entry.
+ * is the lab's `e2e/labs/<lab>.lab.spec.ts`.
  */
 
 const URL = '/criteria/2.2.1/';

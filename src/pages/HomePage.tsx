@@ -8,9 +8,9 @@ import { PairCard } from '../components/PairCard';
 import { Pledge } from '../components/Pledge';
 import { CORPUS, criteriaInPrinciple, criterion } from '../criteria/corpus';
 import { PRINCIPLES, principleFor } from '../criteria/structure';
-import { ColourCheck, useColourPair } from '../labs/ColourCheck';
-import { FadeLab } from '../labs/FadeLab';
-import { PAIRS, type ColourPair } from '../labs/pairs';
+import { ColourCheck, useColourPair } from '../labs/colour-check/ColourCheck';
+import { FadeLab } from '../labs/fade-text/FadeLab';
+import { PAIRS, type ColourPair } from '../labs/colour-check/pairs';
 import { useRoute } from '../site/RouteContext';
 import { PATHS, criterionPath } from '../site/routes';
 

@@ -6,14 +6,14 @@ import {
   orientationSaid,
   orientationVerdict,
   phoneAt,
-} from '../src/labs/orientation';
+} from '../src/labs/orientation/orientation';
 import {
   IMAGES_START,
   colourLine,
   imagesSaid,
   imagesVerdict,
   sharpLine,
-} from '../src/labs/imagesOfText';
+} from '../src/labs/images-of-text/imagesOfText';
 import { lookSaid, rotateSaid } from '../src/live/events';
 import { unresolvedInstruments } from '../src/live/instruments';
 

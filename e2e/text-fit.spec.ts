@@ -12,7 +12,7 @@ import AxeBuilder from '@axe-core/playwright';
  *           boxes, with state in the URL. 1.4.4: text at 100/150/200%, locked or flexible.
  *
  * The verdicts come from the labs' model; the card measures its own boxes (`data-clipped`), and
- * these tests check the two agree. The shared lab bar is the `labs.spec.ts` entries.
+ * these tests check the two agree. The shared lab bar is the `e2e/labs/` specs.
  */
 
 const SPACING_URL = '/criteria/1.4.12/';

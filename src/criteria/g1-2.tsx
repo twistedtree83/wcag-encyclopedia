@@ -9,8 +9,8 @@
 
 import type { CriterionRecord } from './types';
 import { MockPlayer, Transcript } from '../live/PlayerWindow';
-import { ALL_HANDS, BRIEFING } from '../labs/captions';
-import { BUDGET, EPISODE, FOLD } from '../labs/mediaAlternatives';
+import { ALL_HANDS, BRIEFING } from '../labs/captions/captions';
+import { BUDGET, EPISODE, FOLD } from '../labs/media-alternatives/mediaAlternatives';
 
 function Player({ caption, badge }: { caption?: string; badge?: string }) {
   return (

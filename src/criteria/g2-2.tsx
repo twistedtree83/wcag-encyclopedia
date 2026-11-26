@@ -7,8 +7,8 @@
 
 import { useId, useRef, useState, type Ref } from 'react';
 import { useClockNow } from '../live/clock';
-import { slideAt } from '../labs/carousel';
-import { Slides } from '../labs/timingParts';
+import { slideAt } from '../labs/timing/carousel';
+import { Slides } from '../labs/timing/timingParts';
 import type { CriterionRecord, LiveExample } from './types';
 
 /*

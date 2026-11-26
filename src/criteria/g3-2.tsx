@@ -1,18 +1,18 @@
 /**
  * Guideline 3.2 — Predictable.
  *
- * The shared rule: the interface may not change under you. Something you did not ask for, or a
+ * The shared idea: the interface may not change under you. Something you did not ask for, or a
  * thing that moves between pages, costs a sighted mouse user a moment of confusion and costs a
  * screen magnifier or screen reader user their entire orientation.
  */
 
 import { useEffect, useId, useRef, useState } from 'react';
-import { ADDRESS, COUNTRIES, OI_NAME, type Country } from '../labs/onInput';
+import { ADDRESS, COUNTRIES, OI_NAME, type Country } from '../labs/on-input/onInput';
 import type { CriterionRecord, LiveExample } from './types';
 import { MockSite } from '../live/SiteWindow';
-import { SHUFFLED_SITE, STEADY_SITE } from '../labs/consistentNav';
-import { FICKLE_SEARCH_SITE, STEADY_SEARCH_SITE } from '../labs/consistentId';
-import { ROAMING_HELP_SITE, STEADY_HELP_SITE } from '../labs/consistentHelp';
+import { SHUFFLED_SITE, STEADY_SITE } from '../labs/consistent-navigation/consistentNav';
+import { FICKLE_SEARCH_SITE, STEADY_SEARCH_SITE } from '../labs/consistent-identification/consistentId';
+import { ROAMING_HELP_SITE, STEADY_HELP_SITE } from '../labs/consistent-help/consistentHelp';
 
 type HelpPage = 'help' | 'delivery' | 'returns';
 type Section = Exclude<HelpPage, 'help'>;

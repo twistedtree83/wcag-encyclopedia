@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { readdirSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { contrastRatio, formatRatio, meetsAA, requiredRatio } from '../src/color/contrast';
 import { palettes, light, dark, THEMES, TOKEN_PAIRS, type Token } from '../src/theme/tokens';
 import { tokensCss } from '../src/theme/css';
@@ -165,9 +165,16 @@ describe('the emitted token CSS', () => {
 });
 
 describe('the stylesheets do not defeat their own audit', () => {
-  const sheets = readdirSync('src/styles')
-    .filter((f) => f.endsWith('.css'))
-    .map((f) => ({ file: f, css: readFileSync(`src/styles/${f}`, 'utf8') }));
+  // The shared stylesheets and every lab's own lab.css (ADR 0004).
+  const labSheets = readdirSync('src/labs')
+    .map((d) => `src/labs/${d}/lab.css`)
+    .filter((f) => existsSync(f));
+  const sheets = [
+    ...readdirSync('src/styles')
+      .filter((f) => f.endsWith('.css'))
+      .map((f) => `src/styles/${f}`),
+    ...labSheets,
+  ].map((file) => ({ file, css: readFileSync(file, 'utf8') }));
 
   it('never fade text with opacity', () => {
     // Opacity composites a token against its background, so the pair the audit measured is
@@ -180,9 +187,11 @@ describe('the stylesheets do not defeat their own audit', () => {
 
   it('write no literal hex colour in the site stylesheet, so every pairing can be audited', () => {
     // examples.css depicts other products and is audited through its own ex-* tokens.
-    const swatch = readFileSync('src/styles/swatch.css', 'utf8');
-    const literals = swatch.match(/:\s*[^;{}]*#[0-9a-f]{3,8}\b/gi) ?? [];
-    expect(literals, 'swatch.css: use a token from tokens.ts').toEqual([]);
+    // Each lab's lab.css is part of the site stylesheet, split out by lab.
+    for (const file of ['src/styles/swatch.css', ...labSheets]) {
+      const literals = readFileSync(file, 'utf8').match(/:\s*[^;{}]*#[0-9a-f]{3,8}\b/gi) ?? [];
+      expect(literals, `${file}: use a token from tokens.ts`).toEqual([]);
+    }
   });
 
   it('audits the pair tiles’ Passes/Fails badge', () => {

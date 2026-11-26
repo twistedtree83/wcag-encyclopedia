@@ -9,7 +9,7 @@ import AxeBuilder from '@axe-core/playwright';
  *   Fixed   the same catalogue reflowing. Real: its window is a scroll box the keyboard scrolls.
  *   Lab     the reader zooms the frame and switches the layout; the verdict follows.
  *
- * The shared lab bar (verdicts by keyboard, Reset, axe, motion) is the `labs.spec.ts` entry.
+ * The shared lab bar (verdicts by keyboard, Reset, axe, motion) is the lab's `e2e/labs/<lab>.lab.spec.ts`.
  */
 
 const URL = '/criteria/1.4.10/';

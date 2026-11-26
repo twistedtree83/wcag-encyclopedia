@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { announce, spoken } from '../src/labs/announce';
-import { ALT_START, altSaid, altVerdict, markupOfAlt, presetOf, type AltModel } from '../src/labs/altText';
-import { AltMock } from '../src/labs/AltTextLab';
-import { altFromSearch, searchFromAlt } from '../src/labs/altQuery';
+import { announce, spoken } from '../src/labs/shared/announce';
+import { ALT_START, altSaid, altVerdict, markupOfAlt, presetOf, type AltModel } from '../src/labs/alt-text/altText';
+import { AltMock } from '../src/labs/alt-text/AltTextLab';
+import { altFromSearch, searchFromAlt } from '../src/labs/alt-text/altQuery';
 import { parseMarkup } from './markup';
 
 /**

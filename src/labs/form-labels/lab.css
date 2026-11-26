@@ -1,0 +1,18 @@
+/* The form-labels lab's own styles, imported by its lab.ts. Shared lab styles stay in src/styles. */
+
+.flab__type {
+  display: grid;
+  gap: 6px;
+  font-weight: 600;
+  font-size: var(--small);
+}
+.flab__type input {
+  min-height: 44px;
+  padding: 0 12px;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 400;
+}

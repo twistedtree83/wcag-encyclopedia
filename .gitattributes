@@ -1,0 +1,2 @@
+# Generated, one row per lab: keep both sides, then `npm run labs:index` if the test says stale.
+src/labs/INDEX.md merge=union

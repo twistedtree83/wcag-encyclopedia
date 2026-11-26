@@ -8,7 +8,7 @@
  */
 
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
-import { isDayMonthYear } from '../labs/errorSuggestion';
+import { isDayMonthYear } from '../labs/error-suggestion/errorSuggestion';
 import type { CriterionRecord, LiveExample } from './types';
 
 /*
@@ -534,7 +534,7 @@ export const G3_3: readonly CriterionRecord[] = [
       ),
     },
     pass: {
-      caption: 'Persistent labels, with the rules stated up front.',
+      caption: 'Persistent labels, with the format stated up front.',
       live: { Example: LabelledFields, keys: LABEL_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>

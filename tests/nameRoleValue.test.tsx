@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { announce, spoken } from '../src/labs/announce';
+import { announce, spoken } from '../src/labs/shared/announce';
 import {
   CONTROLS,
   NAMES,
@@ -10,9 +10,9 @@ import {
   nrvVerdict,
   saidFor,
   type Nrv,
-} from '../src/labs/nameRoleValue';
-import { NrvMock } from '../src/labs/NameRoleValueLab';
-import { nrvFromSearch, searchFromNrv } from '../src/labs/nrvQuery';
+} from '../src/labs/name-role-value/nameRoleValue';
+import { NrvMock } from '../src/labs/name-role-value/NameRoleValueLab';
+import { nrvFromSearch, searchFromNrv } from '../src/labs/name-role-value/nrvQuery';
 import { parseMarkup } from './markup';
 
 /**

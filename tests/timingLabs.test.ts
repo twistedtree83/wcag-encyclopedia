@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { storyAt, storyEnd, storySaid } from '../src/labs/clockStory';
+import { storyAt, storyEnd, storySaid } from '../src/labs/timing/clockStory';
 import {
   carouselAt,
   carouselSaid,
   carouselStory,
   carouselVerdict,
-} from '../src/labs/carousel';
-import { audioSaid, audioStory, audioVerdict, playingAt } from '../src/labs/autoplay';
-import { flashFrames, flashSaid, flashVerdict, RATES } from '../src/labs/flashRate';
+} from '../src/labs/timing/carousel';
+import { audioSaid, audioStory, audioVerdict, playingAt } from '../src/labs/timing/autoplay';
+import { flashFrames, flashSaid, flashVerdict, RATES } from '../src/labs/timing/flashRate';
 
 /*
  * The timing labs (#62). Expected beats and verdicts are worked by hand from the criteria:

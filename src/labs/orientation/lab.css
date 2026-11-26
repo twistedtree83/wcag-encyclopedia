@@ -1,0 +1,37 @@
+/* The orientation lab's own styles, imported by its lab.ts. Shared lab styles stay in src/styles. */
+
+.orient-mock {
+  max-width: 440px;
+}
+/* The order page is its own size container: its CSS asks the frame's window which way up it is. */
+.opage {
+  box-sizing: border-box;
+  height: 100%;
+  container-type: size;
+}
+.opage__body {
+  padding: 1.25em 1.5em;
+}
+.opage p {
+  margin: 0 0 0.75em;
+}
+.opage__title {
+  font-size: 1.5em;
+  font-weight: 700;
+}
+.opage__steps {
+  margin: 0;
+  padding-left: 1.25em;
+  line-height: 1.6;
+}
+.opage__prompt {
+  display: none;
+  box-sizing: border-box;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 2em;
+  text-align: center;
+  font-size: 1.25em;
+  font-weight: 700;
+}

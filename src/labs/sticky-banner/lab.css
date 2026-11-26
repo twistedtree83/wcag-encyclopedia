@@ -1,0 +1,42 @@
+/* The sticky-banner lab's own styles, imported by its lab.ts. Shared lab styles stay in src/styles. */
+
+/* The 2.4.11 lab: a 200px window drawn in percent, so it scales at any width. */
+.nob-mock {
+  position: relative;
+  height: 200px;
+  padding: 0;
+  overflow: hidden;
+  border: var(--bwid) solid var(--line-2);
+}
+.nob-mock__line,
+.nob-mock__field,
+.nob-mock__banner {
+  position: absolute;
+  right: 16px;
+  left: 16px;
+}
+.nob-mock__line {
+  height: 10px;
+  border-radius: 4px;
+  background: var(--line-2);
+}
+.nob-mock__field {
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  background: var(--bg);
+  font-weight: 600;
+}
+.nob-mock__banner {
+  right: 0;
+  left: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--ink);
+  color: var(--bg);
+  font-weight: 700;
+}

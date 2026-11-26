@@ -1,0 +1,71 @@
+/* The focus-order lab's own styles, imported by its lab.ts. Shared lab styles stay in src/styles. */
+
+.fo-mock {
+  display: grid;
+  grid-template-areas:
+    'name email'
+    'phone postcode'
+    'send send';
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.fo-part {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  min-height: 44px;
+  padding: 6px 12px;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  background: var(--bg);
+  font-weight: 600;
+}
+.fo-part--name {
+  grid-area: name;
+}
+.fo-part--email {
+  grid-area: email;
+}
+.fo-part--phone {
+  grid-area: phone;
+}
+.fo-part--postcode {
+  grid-area: postcode;
+}
+.fo-part--send {
+  grid-area: send;
+  justify-self: start;
+}
+.fo-num {
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--ink-2);
+  border-radius: 50%;
+  font: 700 13px var(--fh), sans-serif;
+  transition: border-color var(--speed-state) var(--ease-out);
+}
+/* Out of step with the layout: the number is ringed in the error colour, and dashed. */
+.fo-part.is-off .fo-num {
+  border-color: var(--err-text);
+  border-style: dashed;
+}
+.fo-visits {
+  display: block;
+  padding: 8px 12px;
+  border-left: 3px solid var(--line-2);
+  border-radius: 4px;
+  background: var(--card-bg);
+}
+.fo-src {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding-left: 1.5em;
+}
+.fo-src code {
+  padding: 2px 8px;
+}

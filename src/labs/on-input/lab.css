@@ -1,0 +1,10 @@
+/* The on-input lab's own styles, imported by its lab.ts. Shared lab styles stay in src/styles. */
+
+.olab__page {
+  display: grid;
+  gap: 12px;
+}
+.olab__out {
+  margin: 0;
+  font-weight: 600;
+}

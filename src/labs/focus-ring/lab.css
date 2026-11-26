@@ -1,0 +1,36 @@
+/* The focus-ring lab's own styles, imported by its lab.ts. Shared lab styles stay in src/styles. */
+
+/* The 2.4.7 lab: a depicted page (fixed colours, set inline) with a focused Save button. */
+.ring-mock {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  padding: 36px 24px;
+  border: 1px solid var(--line-2);
+  border-radius: calc(var(--rad) * 0.65);
+}
+.ring-mock__btn {
+  display: inline-block;
+  padding: 10px 24px;
+  border-radius: 6px;
+  font: 700 17px/1.2 var(--fh), sans-serif;
+}
+.ring-controls {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px 24px;
+}
+.ring-swatch {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--line-2);
+  border-radius: 4px;
+}
+
+@media (max-width: 900px) {
+  .ring-controls {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

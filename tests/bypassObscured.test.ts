@@ -1,12 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { BYPASS_START, bypassSaid, bypassVerdict, pressesToMain } from '../src/labs/bypass';
+import { BYPASS_START, bypassSaid, bypassVerdict, pressesToMain } from '../src/labs/skip-link/bypass';
 import {
   OBSCURE_START,
   hiddenShare,
   obscureSaid,
   obscureVerdict,
   type Banner,
-} from '../src/labs/obscured';
+} from '../src/labs/sticky-banner/obscured';
 
 /**
  * The 2.4.1 and 2.4.11 labs' models (#46). Counts and overlaps are worked out by hand from the

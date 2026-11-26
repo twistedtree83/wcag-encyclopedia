@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { DESKTOP, ZOOMS, scrollsOf, scrollLine, viewportAt } from '../src/labs/zoom';
-import { REFLOW_START, reflowSaid, reflowVerdict } from '../src/labs/reflow';
-import { reflowFromSearch, searchFromReflow } from '../src/labs/reflowQuery';
+import { DESKTOP, ZOOMS, scrollsOf, scrollLine, viewportAt } from '../src/labs/shared/zoom';
+import { REFLOW_START, reflowSaid, reflowVerdict } from '../src/labs/reflow/reflow';
+import { reflowFromSearch, searchFromReflow } from '../src/labs/reflow/reflowQuery';
 import { zoomSaid } from '../src/live/events';
 
 /**

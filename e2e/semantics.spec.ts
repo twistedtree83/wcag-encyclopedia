@@ -4,7 +4,7 @@ import AxeBuilder from '@axe-core/playwright';
 /**
  * The semantics flagships (#48) in the built page: the 1.1.1 alt text lab and the 1.3.1
  * structure lab (log, URL state), and both criteria's live examples (ADR 0002). The shared lab
- * bar (verdicts, Reset, axe when failing, motion) is in `labs.spec.ts`.
+ * bar (verdicts, Reset, axe when failing, motion) is in `e2e/labs/`.
  */
 
 const ALT = '/criteria/1.1.1/';

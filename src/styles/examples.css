@@ -275,7 +275,7 @@
   flex: 0 0 auto;
 }
 .reflow__brand {
-  font-family: 'Figtree', system-ui, sans-serif;
+  font-family: var(--fh), system-ui, sans-serif;
   font-size: clamp(0.5rem, 2.2cqw, 1rem);
   color: var(--ink);
   white-space: nowrap;
@@ -532,7 +532,7 @@
 .fauxdoc__fake-h,
 .fauxdoc__real-h {
   margin: 0;
-  font-family: 'Onest', system-ui, sans-serif;
+  font-family: var(--fb), system-ui, sans-serif;
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--ink);
@@ -652,7 +652,7 @@
   padding: 0.5rem 0.625rem;
   background: var(--deep);
   border: 1px dashed var(--line-2);
-  font-family: 'Figtree', system-ui, sans-serif;
+  font-family: var(--fh), system-ui, sans-serif;
   font-size: 1.125rem;
   color: var(--ink-2);
   /* Blurred to stand in for a bitmap enlarged past its native size. */
@@ -664,7 +664,7 @@
   padding: 0.5rem 0.625rem;
   background: var(--deep);
   border: 1px solid var(--line-2);
-  font-family: 'Figtree', system-ui, sans-serif;
+  font-family: var(--fh), system-ui, sans-serif;
   font-size: 1.125rem;
   color: var(--ink);
 }
@@ -730,7 +730,7 @@
   color: var(--card-bg);
   border: none;
   border-radius: 0.1875rem;
-  font-family: 'Onest', system-ui, sans-serif;
+  font-family: var(--fb), system-ui, sans-serif;
   font-size: 0.875rem;
   font-weight: 600;
 }
@@ -1494,7 +1494,6 @@
   border: 1px solid var(--line-2);
   font-size: 0.625rem;
   color: var(--ink);
-  transition: width 0.2s linear, height 0.2s linear;
 }
 /* A fingertip contact patch, drawn to scale against the targets. */
 .tdem__tip {
@@ -1506,7 +1505,6 @@
   border-radius: 50%;
   border: 2px dashed var(--accent-text);
   background: color-mix(in srgb, var(--accent-text) 14%, transparent);
-  transition: left 0.25s linear;
 }
 
 .cdem__stage {
@@ -1547,9 +1545,3 @@
   color: var(--card-bg);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .tdem__target,
-  .tdem__tip {
-    transition: none;
-  }
-}

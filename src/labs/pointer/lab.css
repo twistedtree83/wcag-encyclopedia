@@ -1,0 +1,86 @@
+/* The pointer lab's own styles, imported by its lab.ts. Shared lab styles stay in src/styles. */
+
+/* The four labs: a depicted mock, then the choices and readouts. */
+.ptr-mock {
+  padding: 16px;
+  border: 1px solid var(--line-2);
+  border-radius: calc(var(--rad) * 0.65);
+  background: var(--deep);
+  color: var(--ink);
+}
+.ptr-map {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  min-height: 96px;
+  padding: 10px;
+  border: 1px solid var(--line-2);
+  background: var(--card-bg);
+}
+.ptr-map__hint,
+.ptr-note {
+  color: var(--ink-2);
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: var(--small);
+}
+.ptr-map__zoom,
+.ptr-list__moves {
+  display: flex;
+  gap: 6px;
+}
+.ptr-key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  min-height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--ink-2);
+  border-radius: 3px;
+  background: var(--card-bg);
+}
+.ptr-press,
+.ptr-phone {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+}
+.ptr-draft.is-gone {
+  color: var(--ink-2);
+  text-decoration: line-through;
+  transition: color var(--speed-state) var(--ease-out);
+}
+.ptr-phone {
+  max-width: 16rem;
+  padding: 12px;
+  border: 1.5px solid var(--ink-2);
+  border-radius: 12px;
+  background: var(--card-bg);
+  transition: transform var(--speed-state) var(--ease-out);
+}
+.ptr-phone.is-shaken {
+  transform: rotate(-4deg);
+}
+.ptr-list {
+  display: grid;
+  gap: 4px;
+}
+.ptr-list__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border: 1px solid var(--line-2);
+  background: var(--card-bg);
+}
+.ptr-list__handle {
+  color: var(--ink-2);
+}
+.ptr-list__moves {
+  margin-left: auto;
+}
+.ptr-try {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+}

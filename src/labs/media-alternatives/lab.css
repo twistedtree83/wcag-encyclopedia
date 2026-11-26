@@ -1,0 +1,16 @@
+/* The media-alternatives lab's own styles, imported by its lab.ts. Shared lab styles stay in src/styles. */
+
+.mplayer-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+}
+.media-alt-lab .transcript {
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .mplayer-pair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

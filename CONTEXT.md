@@ -1,7 +1,8 @@
 # CONTEXT — WCAG Encyclopedia domain model
 
 The vocabulary of this project. Use these words exactly; they map one-to-one onto types and
-modules. If you need a noun that isn't here, stop and ask rather than inventing one.
+modules. A task that needs a noun that isn't here adds it, with a one-line definition, in the
+same commit (see `scripts2/RALPH_PROMPT.md`).
 
 ---
 
@@ -102,6 +103,10 @@ to the reader. A lab adds to a criterion's fail and pass examples and never repl
 colour check is a lab. Every criterion has at least one lab: readers see each criterion pass and
 fail by changing it themselves. The motion a lab shows is the reader's change taking effect —
 never something that plays on its own.
+
+**Lab folder** — `src/labs/<name>/`: one lab (or the few that share a component file) with its
+component, models, query module, `lab.ts` registration and `lab.css`. The registry finds it
+by its `lab.ts`; `src/labs/shared/` holds the parts every lab uses and is not a lab folder.
 
 **Verdict** — the line in a lab stating whether the lab's current state passes or fails, naming
 the criterion by number and carrying a glyph as well as colour: "1.4.3 fails". Every lab has

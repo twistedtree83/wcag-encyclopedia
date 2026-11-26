@@ -1,0 +1,48 @@
+/* The on-focus lab's own styles, imported by its lab.ts. Shared lab styles stay in src/styles. */
+
+.fl-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 12px;
+}
+.fl-stop {
+  display: grid;
+  gap: 4px;
+  border-radius: 4px;
+  outline: 3px solid transparent;
+  outline-offset: 3px;
+  transition: outline-color var(--speed-state) var(--ease-out);
+}
+.fl-stop[data-on='true'] {
+  outline-color: var(--focus);
+}
+.fl-label {
+  font-size: var(--small);
+  font-weight: 600;
+}
+.fl-box {
+  display: block;
+  width: 9rem;
+  max-width: 100%;
+  height: 36px;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  background: var(--bg);
+}
+.fl-stop--send {
+  padding: 8px 18px;
+  border-radius: var(--rad-sm);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-weight: 600;
+}
+.fl-page {
+  display: grid;
+  gap: 6px;
+}
+.fl-keys {
+  display: grid;
+  justify-items: start;
+  gap: 10px;
+}
