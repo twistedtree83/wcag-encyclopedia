@@ -94,7 +94,8 @@ test('each principle card is one link to All criteria filtered to that principle
   await open(page);
   const cards = page.locator('.princ a');
   await expect(cards).toHaveCount(4);
-  await expect(cards.locator('.shape')).toHaveCount(4);
+  await expect(cards.locator('.mark')).toHaveText(['1', '2', '3', '4']);
+  await expect(cards.locator('.shape')).toHaveCount(0);
   await cards.nth(1).click();
   await expect(page).toHaveURL(/\/criteria\/\?p=2$/);
   await page.waitForFunction(() => document.documentElement.dataset.hydrated === 'true');

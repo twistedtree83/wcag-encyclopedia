@@ -1295,7 +1295,7 @@ footer.foot p {
   font-size: var(--small);
 }
 
-/* Principle cards: one link each, in the principle's colour, with its shape in ink. */
+/* Principle cards: one link each, in the principle's colour, marked by its number in ink. */
 .princ {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1337,24 +1337,10 @@ footer.foot p {
   background: var(--a4);
   box-shadow: inset 0 0 0 1.5px var(--line);
 }
-.princ .n {
-  font: 800 18px/1 var(--fh), sans-serif;
-}
-.princ .shape {
+.princ .mark {
   display: block;
-  width: 44px;
-  height: 44px;
-  margin-bottom: 22px;
-  background: var(--on-a);
-}
-.princ .p2 .shape {
-  border-radius: 50%;
-}
-.princ .p3 .shape {
-  clip-path: polygon(50% 0, 100% 100%, 0 100%);
-}
-.princ .p4 .shape {
-  transform: rotate(45deg) scale(0.8);
+  font: 800 calc(var(--num) * 1.5) / 0.9 var(--fh), sans-serif;
+  letter-spacing: -0.02em;
 }
 .princ h3 {
   margin: 0 0 12px;

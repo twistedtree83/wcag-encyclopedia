@@ -142,7 +142,7 @@ function Principles() {
           <p>
             WCAG groups every success criterion under four principles: content has to be
             perceivable, operable, understandable and robust. Each principle has a colour and a
-            shape here, so the grouping survives greyscale.
+            number here, so the grouping survives greyscale.
           </p>
         </div>
       </div>
@@ -152,9 +152,8 @@ function Principles() {
           return (
             <li key={p.num}>
               <a href={href(`${PATHS.criteria}?p=${p.num}`)} className={`pc p${p.num}`}>
-                <span className="n">{p.num}</span>
+                <span className="mark">{p.num}</span>
                 <div className="pc__body">
-                  <span className="shape" aria-hidden="true" />
                   <h3>{p.name}</h3>
                   <p>{p.tagline}</p>
                   <span className="ct">{`${count} criteria`}</span>

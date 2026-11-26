@@ -70,7 +70,8 @@ describe('the structure', () => {
 
   it('gives every principle a distinct accent *and* a distinct marker shape', () => {
     // Hue alone must never carry the grouping (CONTEXT.md; 1.4.1 applied to the site itself).
-    // Principle marks live in swatch.css: `.mk.pN` (inline markers) and `.princ .pN .shape`.
+    // Principle marks live in swatch.css: `.mk.pN` (inline markers). Home's principle cards are
+    // marked by the principle's number instead (homePage.test.tsx).
     const css = readFileSync('src/styles/swatch.css', 'utf8');
     const block = (selector: string) => {
       const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -90,8 +91,6 @@ describe('the structure', () => {
     expect(accents).toEqual(['a1', 'a2', 'a3', 'a4']);
     expect(new Set(marks.map(shapeOf)).size).toBe(4);
 
-    const cardShapes = nums.map((n) => shapeOf(block(`.princ .p${n} .shape`)));
-    expect(new Set(cardShapes).size).toBe(4);
     for (const theme of THEMES) {
       const hexes = accents.map((a) => palettes[theme][a as Token]);
       expect(new Set(hexes).size, theme).toBe(4);
