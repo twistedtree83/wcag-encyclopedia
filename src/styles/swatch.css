@@ -2415,9 +2415,10 @@ footer.foot p {
 .fd-dialog {
   position: absolute;
   z-index: 2;
-  top: 36px;
-  right: 0;
-  left: 0;
+  /* Covers the whole page below the opener, whatever the font, so the Broken stage always
+     hides the links that focus moves to. */
+  inset: 36px 0 0;
+  align-content: flex-start;
   display: flex;
   flex-wrap: wrap;
   align-items: center;

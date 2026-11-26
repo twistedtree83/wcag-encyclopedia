@@ -19,6 +19,8 @@ async function open(page: Page, url: string) {
   const response = await page.goto(url);
   expect(response?.status(), `${url} was not built`).toBe(200);
   await page.waitForFunction(() => document.documentElement.dataset.hydrated === 'true');
+  // Geometry checks below measure laid-out text: wait for the web fonts, not the fallback.
+  await page.evaluate(() => document.fonts.ready);
 }
 
 const broken = (page: Page) => page.locator('figure.stage.bad');
