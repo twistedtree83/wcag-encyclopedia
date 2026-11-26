@@ -21,10 +21,19 @@ export type Cue = {
   readonly heard: string;
   /** Each track's caption for it. `null` when the track shows nothing (auto drops sounds). */
   readonly captions: { readonly accurate: string | null; readonly auto: string | null };
+  /**
+   * The description cue for this moment (#66): the visual information the soundtrack leaves
+   * out, written into a gap in the dialogue. The player is silent, so a description track shows
+   * it on screen. Absent when nothing needs describing.
+   */
+  readonly described?: string;
 };
 
-/** A clip: a timeline of cues. `live` streams can't be scrubbed. */
-export type Clip = Timeline<Cue> & { readonly live: boolean };
+/**
+ * A clip: a timeline of cues. `live` streams can't be scrubbed. An `audioOnly` clip has no
+ * picture (a podcast); its keyframe captions say so.
+ */
+export type Clip = Timeline<Cue> & { readonly live: boolean; readonly audioOnly?: boolean };
 
 /** What a hearing viewer hears at `t`. */
 export function heardAt(clip: Clip, t: number): string {
@@ -47,6 +56,27 @@ export function captionAt(clip: Clip, t: number, track: Track, lag = 0): string 
   return frameAt(clip, at).state.captions[track];
 }
 
+/** The description cue at `t`, or null when nothing is described at this moment. */
+export function describedAt(clip: Clip, t: number): string | null {
+  return frameAt(clip, t).state.described ?? null;
+}
+
+/** Whether the clip shows anything the soundtrack doesn't say: anything a description adds. */
+export function hasDescription(clip: Clip): boolean {
+  return clip.keyframes.some((k) => k.state.described !== undefined);
+}
+
+/**
+ * A clip as text, one entry per moment, in order (#66): `heard` is a transcript, `shown` is a
+ * text description of the picture, and `described` is both, what is shown before what is heard
+ * (a described transcript: a full media alternative).
+ */
+export function transcriptOf(clip: Clip, kind: 'heard' | 'shown' | 'described'): string[] {
+  return clip.keyframes.map((k) =>
+    kind === 'heard' ? k.state.heard : kind === 'shown' ? k.caption : `[${k.caption}] ${k.state.heard}`,
+  );
+}
+
 /**
  * What the player shows now, as read from its DOM (`playerSeenIn`), for the stage's events.
  * `at` is whole seconds, so a playing clip changes it once a second, not once a frame.
@@ -57,6 +87,11 @@ export type PlayerSeen = {
   readonly heard: string;
   readonly caption: string | null;
   readonly live: boolean;
+  /**
+   * The description cue on screen (#66): absent when the clip has nothing to describe, null
+   * when it has but no cue shows (no description track, or switched off).
+   */
+  readonly described?: string | null;
 };
 
 type PlayerEvent = Extract<StageEvent, { kind: 'player' }>;
@@ -75,8 +110,10 @@ export function playerNow(events: readonly StageEvent[]): string {
 }
 
 /** One line of the instrument: the time, what was heard, and the caption shown with it. */
-export function playerLine({ at, heard, caption }: PlayerSeen): string {
-  return `${formatTime(at)} Heard: ${heard} Captions: ${caption === null ? 'none' : `“${caption}”`}.`;
+export function playerLine({ at, heard, caption, described }: PlayerSeen): string {
+  const quote = (s: string | null) => (s === null ? 'none' : `“${s}”`);
+  const line = `${formatTime(at)} Heard: ${heard} Captions: ${quote(caption)}.`;
+  return described === undefined ? line : `${line} Described: ${quote(described)}.`;
 }
 
 /**
@@ -87,7 +124,7 @@ export function playerLines(events: readonly StageEvent[], max = 4): string[] {
   const lines: string[] = [];
   let last = '';
   for (const s of seenOf(events)) {
-    const key = `${s.heard}\n${s.caption ?? ''}`;
+    const key = `${s.heard}\n${s.caption ?? ''}\n${s.described ?? ''}`;
     if (key === last) continue;
     last = key;
     lines.push(playerLine(s));

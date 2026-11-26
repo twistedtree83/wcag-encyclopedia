@@ -1,5 +1,6 @@
 import { test, expect, type Locator, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { ROUTES } from '../src/site/routes';
 
 /**
  * Live examples (#43, ADR 0002), piloted on 4.1.2. The Broken stage is operated only through
@@ -141,12 +142,17 @@ test('the drawn ring moves with a transition, and instantly under reduced motion
   expect(await duration(page)).toMatch(/^0s(, 0s)*$/);
 });
 
-test('criteria without live examples keep their static stages', async ({ page }) => {
-  // 2.4.11 went live in L-06 (#46); 1.2.1 (prerecorded media) has no live example yet.
-  await open(page, '/criteria/1.2.1/');
-  await expect(page.locator('.inbar')).toHaveCount(0);
-  await expect(page.locator('.ex--live')).toHaveCount(0);
-  await expect(page.locator('figure.stage .stage__example')).toHaveCount(2);
+test('every criterion page swaps in its live examples after hydration', async ({ page }) => {
+  // The static-stages check (1.2.1, then 2.3.1) ran out of subjects once L-22 (#62) and L-26
+  // (#66) landed: every criterion now has live examples. Assert that instead, page by page.
+  test.setTimeout(180_000);
+  const criteria = ROUTES.filter((r) => r.page === 'criterion');
+  expect(criteria.length).toBeGreaterThan(0);
+  for (const { path, num } of criteria) {
+    await open(page, `/${path}`);
+    await expect(page.locator('.ex--live'), `${num} has no live examples`).toHaveCount(1);
+    await expect(page.locator('figure.stage.bad .inbar'), `${num} has no input bar`).toHaveCount(1);
+  }
 });
 
 const MODES = [

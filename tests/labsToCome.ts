@@ -8,10 +8,4 @@
  * One criterion per line with a blank line between entries, so tickets running in parallel each
  * delete their own line without a merge conflict. Keep it that way.
  */
-export const LABS_TO_COME: readonly string[] = [
-  '1.2.1',
-
-  '1.2.3',
-
-  '1.2.5',
-];
+export const LABS_TO_COME: readonly string[] = [];

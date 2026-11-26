@@ -79,3 +79,4 @@ Graph: `scripts2/prd-labs.json` · Parent: #40 · Integration branch: `labs`
 - [x] **L-25** #65 — Mock player, with 1.2.2 and 1.2.4 (L-03)
 - [x] **L-24** #64 — Consistency: 3.2.4 and 3.2.6 (L-23)
 - [x] **L-22** #62 — Timing, audio and flashing: 2.2.2, 1.4.2 and 2.3.1 (L-21)
+- [x] **L-26** #66 — Media alternatives: 1.2.1, 1.2.3 and 1.2.5 (L-25)

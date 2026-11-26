@@ -54,6 +54,7 @@ import {
 import { NonTextContrastLab, SensoryLab, UseOfColourLab } from './VisionLabs';
 import { TooltipLab } from './TooltipLab';
 import { CaptionsLab, LiveCaptionsLab } from './CaptionLabs';
+import { DescriptionLab, MediaAlternativeLab, MediaOnlyLab } from './MediaAltLabs';
 import { MultipleWaysLab } from './MultipleWaysLab';
 import { ConsistentNavLab } from './ConsistentNavLab';
 import { ConsistentIdLab } from './ConsistentIdLab';
@@ -150,6 +151,9 @@ export const LABS: readonly LabEntry[] = [
   { id: 'stop-carousel', title: 'Try it: stop the carousel', Lab: CarouselLab },
   { id: 'audio-control', title: 'Try it: quiet the autoplay', Lab: AudioLab },
   { id: 'flash-rate', title: 'Try it: raise the flash rate', Lab: FlashLab },
+  { id: 'media-only', title: 'Try it: give each clip its alternative', Lab: MediaOnlyLab },
+  { id: 'media-alternative', title: 'Try it: carry what the camera shows', Lab: MediaAlternativeLab },
+  { id: 'description', title: 'Try it: describe into the gaps', Lab: DescriptionLab },
 ];
 
 export function labById(id: string): LabEntry | undefined {
