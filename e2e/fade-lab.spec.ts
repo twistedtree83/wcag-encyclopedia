@@ -39,7 +39,7 @@ test('the slider is labelled, described, and works with the keyboard', async ({ 
   await expect(lab.getByText('0% faded')).toBeVisible();
 });
 
-test('fading the text updates the exhibit, ratio, bar and results', async ({ page }) => {
+test('fading the text updates the exhibit, ratio, scale and results', async ({ page }) => {
   const lab = await open(page);
   await expect(lab.locator('output')).toHaveText('11.94 : 1');
   await expect(lab.locator('.lab-res li.ok')).toHaveCount(3);
@@ -49,15 +49,22 @@ test('fading the text updates the exhibit, ratio, bar and results', async ({ pag
   await expect(lab.locator('output')).toHaveText('2.78 : 1');
   await expect(lab.locator('.lab-res li.bad')).toHaveCount(3);
   await expect(lab.locator('.lab__exhibit h4')).toHaveCSS('color', 'rgb(92, 92, 92)');
-  // The fill stops just short of the 3 tick: log(2.78) / log(21) ≈ 33.6% of the bar.
+  // The pointer sits just short of the 3 mark: log(2.78) / log(21) ≈ 33.6% of the scale.
   await expect
     .poll(() =>
       lab.evaluate((el) => {
-        const fill = el.querySelector('.scale__fill')!.getBoundingClientRect().width;
-        return Math.round((fill / el.querySelector('.scale')!.getBoundingClientRect().width) * 100);
+        const bar = el.querySelector('.ratio-scale__bar')!.getBoundingClientRect();
+        const now = el.querySelector('.ratio-scale__now')!.getBoundingClientRect();
+        return Math.round(((now.left + now.width / 2 - bar.left) / bar.width) * 100);
       }),
     )
     .toBe(34);
+  await expect(lab.locator('.ratio-scale__said')).toHaveText(
+    'On the scale from 1 : 1 to 21 : 1, 2.78 : 1 is below 3 : 1: too low for text, borders or icons.',
+  );
+  await expect(lab.locator('.lab-res li').first()).toContainText(
+    'Body text needs at least 4.5 : 1. This text has 2.78 : 1.',
+  );
 });
 
 test('announces once the slider rests, not on every step', async ({ page }) => {
@@ -84,7 +91,7 @@ test('nothing moves on its own', async ({ page }) => {
   const snapshot = () =>
     lab.evaluate((el) => ({
       text: el.textContent,
-      fill: (el.querySelector('.scale__fill') as HTMLElement).style.width,
+      now: (el.querySelector('.ratio-scale__now') as HTMLElement).style.left,
       animations: el.getAnimations({ subtree: true }).length,
     }));
   const before = await snapshot();
@@ -93,10 +100,9 @@ test('nothing moves on its own', async ({ page }) => {
   expect(before.animations).toBe(0);
 });
 
-test('the bar does not transition under reduced motion', async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: 'reduce' });
+test('the scale pointer never transitions, so it moves at once', async ({ page }) => {
   const lab = await open(page);
-  await expect(lab.locator('.scale__fill')).toHaveCSS('transition-duration', '0s');
+  await expect(lab.locator('.ratio-scale__now')).toHaveCSS('transition-duration', '0s');
 });
 
 for (const theme of ['light', 'dark'] as const) {

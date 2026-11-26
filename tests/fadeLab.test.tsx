@@ -47,10 +47,12 @@ describe('the fade model', () => {
     expect(mixed).toBeDefined();
   });
 
-  it('places ratios on a log scale out of 21 (bar position, percent)', () => {
-    expect(fadeState(0).position).toBeGreaterThan(fadeState(50).position);
-    // 2.78:1 sits at log(2.78)/log(21) ≈ 33.6% of the bar, just left of the 3 tick (36.1%).
-    expect(fadeState(75).position).toBeCloseTo(33.6, 0);
+  it('phrases each result as a sentence', () => {
+    expect(fadeState(75).results.map((r) => r.sentence)).toEqual([
+      'Body text needs at least 4.5 : 1. This text has 2.78 : 1.',
+      'Large text needs at least 3 : 1. This text has 2.78 : 1.',
+      'Body text at AAA needs at least 7 : 1. This text has 2.78 : 1.',
+    ]);
   });
 
   it('describes the state in one sentence for the live region', () => {

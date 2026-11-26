@@ -259,7 +259,7 @@ The mockup also loads Gabarito, Golos Text, Bricolage Grotesque, Familjen Grotes
 
 Motion only ever shows a change the reader caused, and never carries meaning on its own:
 
-- **Only opacity, transform and colour animate.** Never width, height, position or layout. (Two older transitions predate this rule: the fade lab's scale fill and the colour preview's greyscale filter.)
+- **Only opacity, transform and colour animate.** Never width, height, position or layout. (One older transition predates this rule: the colour preview's greyscale filter.)
 - **Hover and press use `--speed`.** Buttons return to rest when pressed.
 - **State changes use `--speed-state` with `--ease-out`.** A lab or stage changing because the reader changed something.
 - **A verdict flip settles.** The verdict line changes colour and its text scales from 0.94 back to 1 (`.settle`, keyframes `lab-settle`). No shake, no bounce, no overshoot. The first render never animates.

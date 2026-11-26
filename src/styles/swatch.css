@@ -787,10 +787,6 @@ footer.foot p {
 .labout output {
   font: var(--hw) calc(var(--num) * 0.75 * var(--ts)) / 1 var(--fh), sans-serif;
 }
-.scale {
-  position: relative;
-  height: 56px;
-}
 .lab-res {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3337,6 +3333,94 @@ footer.foot p {
 }
 .mplayer-out--3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* --- Ratio explained ------------------------------------------------------------------- */
+
+/* What a contrast ratio means, under the ratio in every contrast lab (RatioExplained.tsx). The
+   scale's marks and pointer are placed by inline `left` and never transition. */
+.ratio-x {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0 0 16px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.ratio-x p {
+  margin: 0;
+}
+.ratio-scale__bar {
+  position: relative;
+  height: 64px;
+  margin: 0 18px;
+}
+.ratio-scale__track {
+  position: absolute;
+  top: 26px;
+  right: 0;
+  left: 0;
+  height: 8px;
+  border: 1.5px solid var(--ink-2);
+  border-radius: 99px;
+}
+.ratio-scale__mark {
+  position: absolute;
+  top: 22px;
+  width: 2px;
+  height: 16px;
+  margin-left: -1px;
+  background: var(--ink-2);
+}
+.ratio-scale__mark span,
+.ratio-scale__end {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--ink-2);
+  font-size: 13px;
+  white-space: nowrap;
+}
+.ratio-scale__end {
+  top: 40px;
+}
+.ratio-scale__end--min {
+  left: 0;
+}
+.ratio-scale__end--max {
+  left: 100%;
+}
+/* The ratio on screen: a heavy pointer in ink with its number above, a shape as well as a colour. */
+.ratio-scale__now {
+  position: absolute;
+  top: 18px;
+  width: 4px;
+  height: 24px;
+  margin-left: -2px;
+  border-radius: 2px;
+  background: var(--ink);
+}
+.ratio-scale__now span {
+  position: absolute;
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  font: 800 14px/1 var(--fh), sans-serif;
+  white-space: nowrap;
+}
+.ratio-why summary {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.ratio-why ul {
+  display: grid;
+  gap: 6px;
+  margin: 4px 0 0;
+  padding-left: 20px;
 }
 
 /* --- Breakpoints ------------------------------------------------------------------------ */

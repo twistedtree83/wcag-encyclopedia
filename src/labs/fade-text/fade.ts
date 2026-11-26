@@ -11,15 +11,13 @@
 
 import {
   AA_BODY,
-  AA_LARGE,
-  AAA_BODY,
   contrastRatio,
   formatScore,
   passesThreshold,
 } from '../../color/contrast';
 import { dark } from '../../theme/tokens';
 import type { Verdict } from '../shared/LabShell';
-import { TEXT_CHECKS } from '../shared/thresholds';
+import { TEXT_CHECKS, checkSentence } from '../shared/thresholds';
 
 export const FADE_DEFAULT = 18;
 export const EXHIBIT_BG = dark.exhibit;
@@ -27,13 +25,12 @@ export const EXHIBIT_BG = dark.exhibit;
 const LIGHTEST = 0xf3;
 const DARKEST = 0x2a;
 
-/** The ticks on the scale bar: the three text thresholds and the maximum. */
-export const SCALE_TICKS = [AA_LARGE, AA_BODY, AAA_BODY, 21] as const;
-
 export type FadeResult = {
   readonly name: string;
   readonly level: string;
   readonly passes: boolean;
+  /** "Body text needs at least 4.5 : 1. This text has 2.78 : 1." */
+  readonly sentence: string;
 };
 
 export type FadeState = {
@@ -43,19 +40,12 @@ export type FadeState = {
   readonly ratio: number;
   /** "11.94 : 1" — two decimals, truncated so it never over-claims. */
   readonly ratioText: string;
-  /** Where the ratio sits on the log-scale bar, 0..100 (percent of its width). */
-  readonly position: number;
   readonly results: readonly FadeResult[];
   /** The lab's verdict: 1.4.3, judged on body text (4.5 : 1). */
   readonly verdict: Verdict;
   /** One sentence for the polite live region. */
   readonly announcement: string;
 };
-
-/** Position of a ratio on the scale bar: log(ratio) / log(21), as a percentage. */
-export function scalePosition(ratio: number): number {
-  return (Math.log(ratio) / Math.log(21)) * 100;
-}
 
 export function fadeState(faded: number): FadeState {
   const level = Math.round(LIGHTEST - ((LIGHTEST - DARKEST) * faded) / 100);
@@ -67,6 +57,7 @@ export function fadeState(faded: number): FadeState {
     name: c.appliesTo,
     level: c.level,
     passes: passesThreshold(ratio, c.threshold),
+    sentence: checkSentence(c, ratio, 'This text has'),
   }));
   const verdicts = TEXT_CHECKS.map(
     (c, i) => `${results[i]!.passes ? 'passes' : 'fails'} ${c.spoken}`,
@@ -77,7 +68,6 @@ export function fadeState(faded: number): FadeState {
     colour,
     ratio,
     ratioText,
-    position: scalePosition(ratio),
     results,
     verdict: { criterion: '1.4.3', passes: passesThreshold(ratio, AA_BODY) },
     announcement: `${faded}% faded. Contrast ratio ${ratioText}. ${sentence[0]!.toUpperCase()}${sentence.slice(1)}.`,

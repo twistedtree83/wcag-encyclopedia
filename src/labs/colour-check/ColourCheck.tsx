@@ -16,7 +16,8 @@ import { PATHS } from '../../site/routes';
 import { LabShell, type Said, type Verdict } from '../shared/LabShell';
 import { DEFAULT_PAIR, type ColourPair } from './pairs';
 import { searchFromPair } from './pairQuery';
-import { THRESHOLD_CHECKS } from '../shared/thresholds';
+import { RatioExplained } from '../shared/RatioExplained';
+import { THRESHOLD_CHECKS, checkSentence } from '../shared/thresholds';
 
 /**
  * The colour check, the site's signature lab (design guide §8.4). Built once, mounted on the
@@ -217,8 +218,11 @@ export function ColourCheck({ state, id: given, wide = false, title, criterion =
         </output>
       </div>
 
+      <RatioExplained ratio={ratio} open={wide} />
+
       <ul className="res">
-        {THRESHOLD_CHECKS.map(({ threshold, appliesTo, level }) => {
+        {THRESHOLD_CHECKS.map((check) => {
+          const { threshold, appliesTo, level } = check;
           const ok = passesThreshold(ratio, threshold);
           return (
             <li className={ok ? 'ok' : 'bad'} key={`${appliesTo} ${level}`}>
@@ -227,7 +231,7 @@ export function ColourCheck({ state, id: given, wide = false, title, criterion =
                 {ok ? 'Passes' : 'Fails'}
               </strong>
               <span>{`${appliesTo}, ${level}`}</span>
-              <span>{`Threshold ${threshold} : 1`}</span>
+              <span>{checkSentence(check, ratio, 'This pair has')}</span>
             </li>
           );
         })}

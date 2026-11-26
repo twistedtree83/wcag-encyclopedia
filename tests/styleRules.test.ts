@@ -70,9 +70,8 @@ describe('motion (design guide §7)', () => {
     'stroke',
   ]);
 
-  // The two transitions §7 names as predating the rule. Nothing else joins this list.
+  // The one transition §7 names as predating the rule. Nothing else joins this list.
   const GRANDFATHERED: readonly { selector: string; prop: string; reason: string }[] = [
-    { selector: '.scale__fill', prop: 'width', reason: "§7: the fade lab's scale fill" },
     { selector: '.prev', prop: 'filter', reason: "§7: the colour preview's greyscale filter" },
   ];
 

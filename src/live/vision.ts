@@ -103,6 +103,7 @@ export type Cue = {
 
 export type CueSeen = {
   readonly label: string;
+  readonly ratio: number;
   readonly ratioText: string;
   /** It stands out through the filter: by lightness against `against`, or by its other mark. */
   readonly found: boolean;
@@ -117,6 +118,7 @@ export function seeCue(cue: Cue, f: VisionFilter): CueSeen {
   const how = cue.also ? `, and ${cue.also}` : bright ? '' : `, needs ${cue.need} : 1`;
   return {
     label: cue.label,
+    ratio,
     ratioText,
     found,
     line: `${cue.label[0]!.toUpperCase()}${cue.label.slice(1)}: ${ratioText} against ${cue.vs}${how}. ${found ? 'Stands out.' : 'Lost.'}`,
