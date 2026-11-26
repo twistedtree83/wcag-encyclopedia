@@ -9,7 +9,7 @@
 
 import { filterName, seeCue, type VisionFilter } from '../../live/vision';
 import type { Verdict } from '../shared/LabShell';
-import { THRESHOLD_CHECKS } from '../shared/thresholds';
+import { THRESHOLD_CHECKS, checkSentence } from '../shared/thresholds';
 
 export const NT_BG = '#FFFFFF';
 const DARKEST = 0x6a;
@@ -24,8 +24,15 @@ export const NT_START: NonText = { faded: 0, filter: 'none' };
 export type NonTextState = {
   /** The edge colour, `#RRGGBB`. */
   readonly edge: string;
+  readonly ratio: number;
   readonly ratioText: string;
-  readonly result: { readonly name: string; readonly level: string; readonly passes: boolean };
+  readonly result: {
+    readonly name: string;
+    readonly level: string;
+    readonly passes: boolean;
+    /** "Borders and icons need at least 3 : 1. These edges have 1.30 : 1." */
+    readonly sentence: string;
+  };
   readonly verdict: Verdict;
   readonly said: string;
 };
@@ -48,8 +55,14 @@ export function ntState({ faded, filter }: NonText): NonTextState {
   const passes = cue.found;
   return {
     edge,
+    ratio: cue.ratio,
     ratioText: cue.ratioText,
-    result: { name: UI_CHECK.appliesTo, level: UI_CHECK.level, passes },
+    result: {
+      name: UI_CHECK.appliesTo,
+      level: UI_CHECK.level,
+      passes,
+      sentence: checkSentence(UI_CHECK, cue.ratio, 'These edges have'),
+    },
     verdict: { criterion: '1.4.11', passes },
     said:
       `${faded}% faded. The edges are ${cue.ratioText} against the background, in ` +

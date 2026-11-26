@@ -1,5 +1,6 @@
 import { PRINCIPLES } from '../criteria/structure';
 import { Brand } from './Brand';
+import { FEEDBACK_FORM_URL } from './config';
 import { useRoute } from './RouteContext';
 import { PATHS } from './routes';
 
@@ -24,7 +25,7 @@ export function Footer() {
       links: [
         { to: href(`${PATHS.about}#how-we-test`), label: 'How we test' },
         { to: href(`${PATHS.about}#accessibility-statement`), label: 'Accessibility statement' },
-        { to: href(`${PATHS.about}#source-code`), label: 'Source code' },
+        { to: FEEDBACK_FORM_URL, label: 'Report a problem with this site' },
       ],
     },
   ];
@@ -34,8 +35,8 @@ export function Footer() {
       <div>
         <Brand />
         <p>
-          Every Level A and AA criterion of WCAG 2.2, explained in plain language and shown
-          working and broken.
+          The WCAG 2.2 Level A and AA success criteria, the testable checks a web page has to
+          pass, explained in plain language and shown broken and then fixed.
         </p>
       </div>
       {columns.map(({ heading, links }) => (

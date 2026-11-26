@@ -4,6 +4,7 @@ import { VISION_FILTERS, type CueSeen, type VisionFilter } from '../../live/visi
 import { VisionDefs, filterPrefix, visionStyle } from '../../live/VisionDefs';
 import { AnnouncementLog, useAnnouncementLog } from '../shared/AnnouncementLog';
 import { LabChoice } from '../shared/LabChoice';
+import { RatioExplained } from '../shared/RatioExplained';
 import { LabShell, type Said } from '../shared/LabShell';
 import { NT_BG, NT_START, ntState, type NonText } from './nonText';
 import { BUTTON_NAME, INSTRUCTIONS, OTHER_NAME, SENSE_START, senseState, type Sensory } from './sensory';
@@ -189,6 +190,7 @@ export function NonTextContrastLab() {
           {s.ratioText}
         </output>
       </div>
+      <RatioExplained ratio={s.ratio} />
       <ul className="lab-res">
         <li className={s.result.passes ? 'ok' : 'bad'}>
           <strong>
@@ -198,6 +200,7 @@ export function NonTextContrastLab() {
           <span>
             {s.result.name}, {s.result.level}
           </span>
+          <span>{s.result.sentence}</span>
         </li>
       </ul>
     </LabShell>

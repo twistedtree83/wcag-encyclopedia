@@ -1,7 +1,8 @@
 import { useId, useState } from 'react';
 import { FailIcon, PassIcon } from '../../components/Icons';
-import { FADE_DEFAULT, SCALE_TICKS, fadeState, scalePosition } from './fade';
+import { FADE_DEFAULT, fadeState } from './fade';
 import { LabShell, type Said } from '../shared/LabShell';
+import { RatioExplained } from '../shared/RatioExplained';
 
 /**
  * The fade-the-text lab (design guide §8.10): the reader drags "Fade the text" and the exhibit
@@ -75,15 +76,7 @@ export function FadeLab() {
         </output>
       </div>
 
-      <div className="scale" aria-hidden="true">
-        <div className="scale__track" />
-        <div className="scale__fill" style={{ width: `${s.position}%` }} />
-        {SCALE_TICKS.map((t) => (
-          <div className="scale__tick" key={t} style={{ left: `calc(${scalePosition(t)}% - 1px)` }}>
-            <span>{t}</span>
-          </div>
-        ))}
-      </div>
+      <RatioExplained ratio={s.ratio} />
 
       <ul className="lab-res">
         {s.results.map((r) => (
@@ -95,6 +88,7 @@ export function FadeLab() {
             <span>
               {r.name}, {r.level}
             </span>
+            <span>{r.sentence}</span>
           </li>
         ))}
       </ul>

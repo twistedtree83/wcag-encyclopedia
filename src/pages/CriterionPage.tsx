@@ -4,6 +4,7 @@ import { LiveStage } from '../live/LiveStage';
 import { principleFor } from '../criteria/structure';
 import { demoById } from '../demo/registry';
 import { labById } from '../labs/registry';
+import { LabStepsProvider } from '../labs/shared/LabShell';
 import { Breadcrumb } from '../components/Breadcrumb';
 import { Facts } from '../components/Facts';
 import { FailIcon, PassIcon } from '../components/Icons';
@@ -113,13 +114,19 @@ export function CriterionPage({ record }: { record: CriterionRecord }) {
           <div className="bh">
             <div>
               <h2 id="lab-title">Try it yourself</h2>
-              <p>Change the interface yourself and watch where it starts to fail.</p>
+              <p>
+                A lab is a small working piece of interface that you change yourself. Read its
+                steps, use the controls under it, and watch the verdict line at the bottom: it
+                says whether the criterion passes or fails as you go. Reset puts it back.
+              </p>
             </div>
           </div>
-          {labs.map(({ id, title, Lab }) => (
+          {labs.map(({ id, title, steps, Lab }) => (
             <div className="lab-slot" key={id}>
               <h3>{title}</h3>
-              <Lab criterion={record.num} />
+              <LabStepsProvider steps={steps}>
+                <Lab criterion={record.num} />
+              </LabStepsProvider>
             </div>
           ))}
         </section>

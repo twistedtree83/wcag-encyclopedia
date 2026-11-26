@@ -81,7 +81,7 @@ function Hero({ children }: { children: ReactNode }) {
           Every WCAG criterion, <em>shown.</em>
         </h1>
         <p className="lede">
-          {`The Web Content Accessibility Guidelines are the standard most accessibility laws and audits point to. This encyclopedia covers all ${TOTAL} Level A and AA success criteria: each one restated in plain language, shown failing and then passing, and filed under the principle it belongs to.`}
+          {`The Web Content Accessibility Guidelines are the standard most accessibility laws and audits point to. This encyclopedia covers all ${TOTAL} Level A and AA success criteria, the testable checks a web page has to pass: each one restated in plain language, shown broken and then fixed, and filed under the principle it belongs to.`}
         </p>
         <div className="cta">
           <a className="btn p" href={href(PATHS.criteria)}>
@@ -142,7 +142,7 @@ function Principles() {
           <p>
             WCAG groups every success criterion under four principles: content has to be
             perceivable, operable, understandable and robust. Each principle has a colour and a
-            shape here, so the grouping survives greyscale.
+            number here, so the grouping survives greyscale.
           </p>
         </div>
       </div>
@@ -152,9 +152,8 @@ function Principles() {
           return (
             <li key={p.num}>
               <a href={href(`${PATHS.criteria}?p=${p.num}`)} className={`pc p${p.num}`}>
-                <span className="n">{p.num}</span>
+                <span className="mark">{p.num}</span>
                 <div className="pc__body">
-                  <span className="shape" aria-hidden="true" />
                   <h3>{p.name}</h3>
                   <p>{p.tagline}</p>
                   <span className="ct">{`${count} criteria`}</span>

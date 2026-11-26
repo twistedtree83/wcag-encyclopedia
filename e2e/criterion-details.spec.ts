@@ -78,8 +78,9 @@ test('measured contrast badges are computed from the live palette, per theme', a
   // A ratio is shown, and it is on the correct side of the threshold it names.
   expect(lightFail).toMatch(/\d+\.\d:1/);
   expect(lightPass).toMatch(/\d+\.\d:1/);
-  expect(lightFail).toContain('needs');
-  expect(lightPass).toContain('meets');
+  // Each badge is a sentence: what the threshold needs, then what this example has.
+  expect(lightFail).toMatch(/needs at least 4\.5:1\. This text has \d+\.\d:1\./);
+  expect(lightPass).toMatch(/needs at least 4\.5:1\. This text has \d+\.\d:1\./);
 
   // The dark palette uses different colours, so a computed badge reports different numbers.
   // A hand-typed ratio would be identical in both themes.

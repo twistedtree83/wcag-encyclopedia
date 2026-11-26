@@ -1,9 +1,19 @@
-import { useEffect, useState, type HTMLAttributes, type ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type HTMLAttributes,
+  type ReactNode,
+} from 'react';
 import { FailIcon, PassIcon } from '../../components/Icons';
+import type { LabSteps } from './labEntry';
 
 /**
  * The lab shell: the one layout every lab shares, as the demo player is for demos (#41).
  *
+ *   steps        "How to use this lab", the four steps from the lab's registration, when the
+ *                page shows the lab under "Try it yourself" (`LabStepsProvider`)
  *   children     the lab's mock, then its controls row and any readouts, in the lab's layout
  *   verdict      exactly one line, "1.4.3 fails", with a glyph as well as colour
  *   Reset        returns the lab to its starting state; the lab does the work in `onReset`
@@ -34,6 +44,42 @@ export function verdictText({ criterion, passes }: Verdict): string {
   return `${criterion} ${passes ? 'passes' : 'fails'}`;
 }
 
+/** The steps of the lab being shown, set by the criterion page around each registered lab. */
+const StepsContext = createContext<LabSteps | null>(null);
+
+export function LabStepsProvider({
+  steps,
+  children,
+}: {
+  readonly steps: LabSteps;
+  readonly children: ReactNode;
+}) {
+  return <StepsContext.Provider value={steps}>{children}</StepsContext.Provider>;
+}
+
+/** "How to use this lab": goal, controls, what to try, what the result means. */
+export function LabStepsList({ steps }: { readonly steps: LabSteps }) {
+  return (
+    <div className="lab-steps">
+      <h4>How to use this lab</h4>
+      <ol>
+        <li>
+          <b>Goal.</b> {steps.goal}
+        </li>
+        <li>
+          <b>The controls.</b> {steps.controls}
+        </li>
+        <li>
+          <b>Try this.</b> {steps.tryThis}
+        </li>
+        <li>
+          <b>What it means.</b> {steps.result}
+        </li>
+      </ol>
+    </div>
+  );
+}
+
 type Props = Omit<HTMLAttributes<HTMLElement>, 'children'> & {
   /** The root element. The colour check is a form; most labs are a div. */
   readonly as?: 'div' | 'form';
@@ -51,12 +97,14 @@ export function LabShell({
   children,
   ...root
 }: Props) {
+  const steps = useContext(StepsContext);
   const live = useAnnouncement(said);
   const flips = useFlips(verdict.passes);
   const form = Root === 'form' ? { onSubmit: (e: { preventDefault(): void }) => e.preventDefault() } : {};
 
   return (
     <Root {...root} {...form}>
+      {steps ? <LabStepsList steps={steps} /> : null}
       {children}
       <div className="lab-foot">
         <p className={verdict.passes ? 'lab-verdict ok' : 'lab-verdict bad'}>

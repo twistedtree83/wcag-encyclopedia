@@ -10,11 +10,20 @@
  * the server and client render identical markup.
  *
  * The badge states pass or fail with a glyph and a word as well as colour, so it does not
- * lean on hue any more than the rest of the page does.
+ * lean on hue any more than the rest of the page does. It reads as two sentences, what the
+ * threshold needs and then what this example has: "Body text needs at least 4.5:1. This text
+ * has 2.8:1."
  */
 
 import { contrastRatio, formatRatio, meetsAA, requiredRatio, type TextKind } from '../color/contrast';
 import { palettes, THEMES, type Token } from '../theme/tokens';
+
+/** What each kind of threshold applies to, as the start of its sentence. */
+function needs(kind: TextKind, label: string | undefined): string {
+  if (kind === 'body') return 'Body text needs';
+  if (kind === 'large') return 'Large text needs';
+  return label === 'border' ? 'Borders need' : 'Borders and icons need';
+}
 
 export function MeasuredRatio({
   fg,
@@ -44,11 +53,10 @@ export function MeasuredRatio({
               {passes ? '✓' : '✕'}
             </span>
             <span className="visually-hidden">{passes ? 'Passes: ' : 'Fails: '}</span>
-            {label ? `${label} ` : ''}
-            {formatRatio(ratio)}
             <span className="measured__need">
-              {passes ? 'meets' : 'needs'} {requiredRatio(kind)}:1
+              {`${needs(kind, label)} at least ${requiredRatio(kind)}:1.`}
             </span>
+            {` This ${label ?? 'text'} has ${formatRatio(ratio)}.`}
           </p>
         );
       })}

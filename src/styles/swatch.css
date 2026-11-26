@@ -787,10 +787,6 @@ footer.foot p {
 .labout output {
   font: var(--hw) calc(var(--num) * 0.75 * var(--ts)) / 1 var(--fh), sans-serif;
 }
-.scale {
-  position: relative;
-  height: 56px;
-}
 .lab-res {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1295,7 +1291,7 @@ footer.foot p {
   font-size: var(--small);
 }
 
-/* Principle cards: one link each, in the principle's colour, with its shape in ink. */
+/* Principle cards: one link each, in the principle's colour, marked by its number in ink. */
 .princ {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1337,24 +1333,10 @@ footer.foot p {
   background: var(--a4);
   box-shadow: inset 0 0 0 1.5px var(--line);
 }
-.princ .n {
-  font: 800 18px/1 var(--fh), sans-serif;
-}
-.princ .shape {
+.princ .mark {
   display: block;
-  width: 44px;
-  height: 44px;
-  margin-bottom: 22px;
-  background: var(--on-a);
-}
-.princ .p2 .shape {
-  border-radius: 50%;
-}
-.princ .p3 .shape {
-  clip-path: polygon(50% 0, 100% 100%, 0 100%);
-}
-.princ .p4 .shape {
-  transform: rotate(45deg) scale(0.8);
+  font: 800 calc(var(--num) * 1.5) / 0.9 var(--fh), sans-serif;
+  letter-spacing: -0.02em;
 }
 .princ h3 {
   margin: 0 0 12px;
@@ -3351,6 +3333,119 @@ footer.foot p {
 }
 .mplayer-out--3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* --- Lab steps ------------------------------------------------------------------------- */
+
+/* "How to use this lab", the lab shell's ordered list above each lab on a criterion page. */
+.lab-steps {
+  margin: 0 0 18px;
+  padding: 16px 18px;
+  border: var(--bwid) solid var(--line);
+  border-radius: var(--rad-sm);
+  font-size: 15px;
+  line-height: 1.55;
+}
+.lab-steps h4 {
+  margin: 0 0 8px;
+  font: 700 16px/1.3 var(--fh), sans-serif;
+}
+.lab-steps ol {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 22px;
+}
+.lab .lab-steps {
+  margin: 0;
+}
+
+/* --- Ratio explained ------------------------------------------------------------------- */
+
+/* What a contrast ratio means, under the ratio in every contrast lab (RatioExplained.tsx). The
+   scale's marks and pointer are placed by inline `left` and never transition. */
+.ratio-x {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0 0 16px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.ratio-x p {
+  margin: 0;
+}
+.ratio-scale__bar {
+  position: relative;
+  height: 64px;
+  margin: 0 18px;
+}
+.ratio-scale__track {
+  position: absolute;
+  top: 26px;
+  right: 0;
+  left: 0;
+  height: 8px;
+  border: 1.5px solid var(--ink-2);
+  border-radius: 99px;
+}
+.ratio-scale__mark {
+  position: absolute;
+  top: 22px;
+  width: 2px;
+  height: 16px;
+  margin-left: -1px;
+  background: var(--ink-2);
+}
+.ratio-scale__mark span,
+.ratio-scale__end {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--ink-2);
+  font-size: 13px;
+  white-space: nowrap;
+}
+.ratio-scale__end {
+  top: 40px;
+}
+.ratio-scale__end--min {
+  left: 0;
+}
+.ratio-scale__end--max {
+  left: 100%;
+}
+/* The ratio on screen: a heavy pointer in ink with its number above, a shape as well as a colour. */
+.ratio-scale__now {
+  position: absolute;
+  top: 18px;
+  width: 4px;
+  height: 24px;
+  margin-left: -2px;
+  border-radius: 2px;
+  background: var(--ink);
+}
+.ratio-scale__now span {
+  position: absolute;
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  font: 800 14px/1 var(--fh), sans-serif;
+  white-space: nowrap;
+}
+.ratio-why summary {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.ratio-why ul {
+  display: grid;
+  gap: 6px;
+  margin: 4px 0 0;
+  padding-left: 20px;
 }
 
 /* --- Breakpoints ------------------------------------------------------------------------ */

@@ -83,7 +83,7 @@ describe('the home page', () => {
     expect(html).toMatch(/<section class="band" id="principles"/);
   });
 
-  it('makes each principle card one link to All criteria filtered to it, with its shape', () => {
+  it('makes each principle card one link to All criteria filtered to it, marked by its number', () => {
     const cards = [...main(home().html).matchAll(/<li><a href="([^"]+)" class="pc p(\d)">(.*?)<\/a><\/li>/g)];
     expect(cards.map((c) => c[1])).toEqual([
       'criteria/?p=1',
@@ -93,7 +93,19 @@ describe('the home page', () => {
     ]);
     const counts = cards.map((c) => text(c[3]!.match(/<span class="ct">(.*?)<\/span>/)![1]!));
     expect(counts).toEqual(['20 criteria', '20 criteria', '13 criteria', '2 criteria']);
-    for (const card of cards) expect(card[3]).toContain('class="shape"');
+    const marks = cards.map((c) => text(c[3]!.match(/<span class="mark">(.*?)<\/span>/)![1]!));
+    expect(marks).toEqual(['1', '2', '3', '4']);
+    for (const card of cards) {
+      expect(card[3]).not.toContain('class="shape"');
+      expect(card[3]).not.toContain('class="n"');
+    }
+  });
+
+  it('says the principle grouping is carried by colour and number', () => {
+    const html = main(home().html);
+    const intro = text(html.slice(html.indexOf('id="principles"'), html.indexOf('<ul class="princ"')));
+    expect(intro).toContain('Each principle has a colour and a number here');
+    expect(intro).not.toContain('shape');
   });
 
   it('shows six index cards and a link to all 55', () => {

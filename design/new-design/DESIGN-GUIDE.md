@@ -120,7 +120,7 @@ Four palettes are available in the tweak bar. Karma is the default.
 
 ### 3.3 Principle colours and shapes
 
-Each principle has a colour **and** a shape, so the grouping survives greyscale and colour blindness. Use them together everywhere a principle is marked: index cards, filters, facts tables, principle cards.
+Each principle has a colour **and** a shape, so the grouping survives greyscale and colour blindness. Use them together everywhere a principle is marked: index cards, filters, facts tables. The home page's principle cards pair the colour with the principle's number, set large, instead of the shape.
 
 | Principle | Colour | Shape | Criteria |
 |---|---|---|---|
@@ -259,7 +259,7 @@ The mockup also loads Gabarito, Golos Text, Bricolage Grotesque, Familjen Grotes
 
 Motion only ever shows a change the reader caused, and never carries meaning on its own:
 
-- **Only opacity, transform and colour animate.** Never width, height, position or layout. (Two older transitions predate this rule: the fade lab's scale fill and the colour preview's greyscale filter.)
+- **Only opacity, transform and colour animate.** Never width, height, position or layout. (One older transition predates this rule: the colour preview's greyscale filter.)
 - **Hover and press use `--speed`.** Buttons return to rest when pressed.
 - **State changes use `--speed-state` with `--ease-out`.** A lab or stage changing because the reader changed something.
 - **A verdict flip settles.** The verdict line changes colour and its text scales from 0.94 back to 1 (`.settle`, keyframes `lab-settle`). No shake, no bounce, no overshoot. The first render never animates.
@@ -372,11 +372,11 @@ On the Colour check page the card is wide: inputs and results on the left, a lar
 
 ![Principle cards](screenshots/components/principle-cards-dark.png)
 
-- Four cards in the principle colours. Each has its number, a 44px shape in ink, the name (h3, 1.55× card-title size), a one-line idea, and an underlined count link ("20 criteria").
+- Four cards in the principle colours. Each is marked by its number, set large (1.5× `--num`) in ink in place of a shape, then the name (h3, 1.55× card-title size), a one-line idea, and an underlined count link ("20 criteria").
 - The whole card is one link to the filtered index (`criteria.html?p=1` and so on).
 - Minimum height `--pc-h` 340px (×0.68 on phones).
 - The Robust card is white, so it gets a `--line` inner edge.
-- A plain alternative (`data-princ="mono"`) shows the cards in the card colour with the shapes in ink.
+- A plain alternative (`data-princ="mono"`) shows the cards in the card colour with the numbers in ink.
 
 ### 8.7 Filters and chips
 
