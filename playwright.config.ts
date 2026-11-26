@@ -9,8 +9,14 @@ export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: 0,
-  reporter: process.env.CI ? 'github' : 'list',
+  // E2E_WORKERS: Playwright workers (default 2; the suite times out under heavier parallel load).
+  workers: Number(process.env.E2E_WORKERS ?? 2),
+  // One local retry absorbs load flakes; scripts/flaky.mjs lists them so they stay visible.
+  retries: process.env.CI ? 0 : 1,
+  reporter: [
+    [process.env.CI ? 'github' : 'list'],
+    ['json', { outputFile: 'test-results/results.json' }],
+  ],
   use: { baseURL: url },
   webServer: {
     command: `npx vite preview --port ${port} --strictPort`,

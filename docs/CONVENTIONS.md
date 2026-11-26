@@ -196,9 +196,16 @@ per line so parallel work merges cleanly, and check each step:
 - Several checkouts (git worktrees) can't share the default port 4173: `reuseExistingServer`
   makes one checkout's scan silently test another checkout's build. Give each its own port with
   `E2E_PORT=4505 npm run verify`.
+- `E2E_WORKERS` sets Playwright's workers (default 2). Locally a failed test is retried once
+  (never on CI), and `test:a11y` ends by printing every test that passed only on retry and the
+  15 slowest (`scripts/flaky.mjs`, reading `test-results/results.json`). Treat a flaky test as a
+  bug to fix, not a pass.
+- `npm run verify:changed` runs lint, types, unit tests and the build, then only the e2e spec
+  files changed since `labs` (`playwright test --only-changed=labs`). Iterate with it; commit
+  only on a green `npm run verify`.
 - e2e waits for hydration before interacting:
   `page.waitForFunction(() => document.documentElement.dataset.hydrated === 'true')`.
-- The suite covers about 535 tests across 59 pages. On a heavily loaded machine, tests fail on
+- The suite covers about 1,500 tests across 59 pages. On a heavily loaded machine, tests fail on
   the 30s timeout rather than on assertions. Re-run those with
   `npx playwright test --last-failed --workers=1` before treating them as real. Assertion
   failures are always real.

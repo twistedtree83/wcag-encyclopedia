@@ -53,10 +53,15 @@ Read these before your first task, and re-read the relevant part whenever a task
 
 `npm run verify` is the single gate. It runs, in order:
 
-1. `tsc --noEmit` — types
-2. `vitest run` — unit tests
-3. `vite build` — the production build
-4. `playwright test` — the axe-core accessibility scan against the built page
+1. `stylelint` — CSS syntax and validity (`npm run lint`)
+2. `tsc --noEmit` — types
+3. `vitest run` — unit tests
+4. `vite build` — the production build
+5. `playwright test` — the axe-core accessibility scan against the built page
+
+While iterating, `npm run verify:changed` runs the same stages but only the e2e specs changed
+since `labs`. It is a shortcut for the loop, never the gate: commit only on a green
+`npm run verify`.
 
 **Bootstrap exception, T-02 only.** The repository starts empty; `package.json` does not exist
 yet. T-02's slice *creates* the verify gate. For T-02 alone, "green" means: after your changes,
