@@ -11,55 +11,55 @@
 
 import type { ReactNode } from 'react';
 import type { CriterionRecord } from '../criteria/types';
-import { AltTextLab } from './AltTextLab';
-import { BypassLab } from './BypassLab';
-import { FocusOrderLab } from './FocusOrderLab';
-import { ObscuredLab } from './ObscuredLab';
-import { ColourCheckLab } from './ColourCheck';
-import { FadeLab } from './FadeLab';
-import { FocusRingLab } from './FocusRingLab';
-import { FormErrorsLab } from './FormErrorsLab';
-import { FormLabelsLab } from './FormLabelsLab';
-import { OnInputLab } from './OnInputLab';
-import { ErrorSuggestionLab } from './ErrorSuggestionLab';
-import { ErrorPreventionLab } from './ErrorPreventionLab';
-import { RedundantEntryLab } from './RedundantEntryLab';
-import { AccessibleAuthLab } from './AccessibleAuthLab';
-import { HeadingsLab } from './HeadingsLab';
-import { InputPurposeLab } from './InputPurposeLab';
-import { KeyboardLab } from './KeyboardLab';
-import { KeyboardTrapLab } from './KeyboardTrapLab';
-import { ShortcutLab } from './ShortcutLab';
-import { LabelInNameLab } from './LabelInNameLab';
-import { LinkPurposeLab } from './LinkPurposeLab';
-import { NameRoleValueLab } from './NameRoleValueLab';
-import { OnFocusLab } from './OnFocusLab';
-import { PageTitleLab } from './PageTitleLab';
-import { ReflowLab } from './ReflowLab';
-import { SessionLab } from './SessionLab';
-import { ResizeTextLab, TextSpacingLab } from './TextFitLabs';
-import { OrientationLab } from './OrientationLab';
-import { ImagesOfTextLab } from './ImagesOfTextLab';
-import { PageLanguageLab, PartsLanguageLab } from './LanguageLabs';
-import { StatusLab } from './StatusLab';
-import { SequenceLab } from './SequenceLab';
-import { StructureLab } from './StructureLab';
-import { TargetSizeLab } from './TargetSizeLab';
+import { AltTextLab } from './alt-text/AltTextLab';
+import { BypassLab } from './skip-link/BypassLab';
+import { FocusOrderLab } from './focus-order/FocusOrderLab';
+import { ObscuredLab } from './sticky-banner/ObscuredLab';
+import { ColourCheckLab } from './colour-check/ColourCheck';
+import { FadeLab } from './fade-text/FadeLab';
+import { FocusRingLab } from './focus-ring/FocusRingLab';
+import { FormErrorsLab } from './form-errors/FormErrorsLab';
+import { FormLabelsLab } from './form-labels/FormLabelsLab';
+import { OnInputLab } from './on-input/OnInputLab';
+import { ErrorSuggestionLab } from './error-suggestion/ErrorSuggestionLab';
+import { ErrorPreventionLab } from './error-prevention/ErrorPreventionLab';
+import { RedundantEntryLab } from './redundant-entry/RedundantEntryLab';
+import { AccessibleAuthLab } from './accessible-auth/AccessibleAuthLab';
+import { HeadingsLab } from './headings-labels/HeadingsLab';
+import { InputPurposeLab } from './input-purpose/InputPurposeLab';
+import { KeyboardLab } from './keyboard-control/KeyboardLab';
+import { KeyboardTrapLab } from './keyboard-trap/KeyboardTrapLab';
+import { ShortcutLab } from './character-shortcuts/ShortcutLab';
+import { LabelInNameLab } from './label-in-name/LabelInNameLab';
+import { LinkPurposeLab } from './link-purpose/LinkPurposeLab';
+import { NameRoleValueLab } from './name-role-value/NameRoleValueLab';
+import { OnFocusLab } from './on-focus/OnFocusLab';
+import { PageTitleLab } from './page-title/PageTitleLab';
+import { ReflowLab } from './reflow/ReflowLab';
+import { SessionLab } from './session-timeout/SessionLab';
+import { ResizeTextLab, TextSpacingLab } from './text-fit/TextFitLabs';
+import { OrientationLab } from './orientation/OrientationLab';
+import { ImagesOfTextLab } from './images-of-text/ImagesOfTextLab';
+import { PageLanguageLab, PartsLanguageLab } from './language/LanguageLabs';
+import { StatusLab } from './status-message/StatusLab';
+import { SequenceLab } from './meaningful-sequence/SequenceLab';
+import { StructureLab } from './structure/StructureLab';
+import { TargetSizeLab } from './target-size/TargetSizeLab';
 import {
   DraggingMovementsLab,
   MotionActuationLab,
   PointerCancellationLab,
   PointerGesturesLab,
-} from './PointerLabs';
-import { NonTextContrastLab, SensoryLab, UseOfColourLab } from './VisionLabs';
-import { TooltipLab } from './TooltipLab';
-import { CaptionsLab, LiveCaptionsLab } from './CaptionLabs';
-import { DescriptionLab, MediaAlternativeLab, MediaOnlyLab } from './MediaAltLabs';
-import { MultipleWaysLab } from './MultipleWaysLab';
-import { ConsistentNavLab } from './ConsistentNavLab';
-import { ConsistentIdLab } from './ConsistentIdLab';
-import { ConsistentHelpLab } from './ConsistentHelpLab';
-import { AudioLab, CarouselLab, FlashLab } from './TimingLabs';
+} from './pointer/PointerLabs';
+import { NonTextContrastLab, SensoryLab, UseOfColourLab } from './vision/VisionLabs';
+import { TooltipLab } from './tame-tooltip/TooltipLab';
+import { CaptionsLab, LiveCaptionsLab } from './captions/CaptionLabs';
+import { DescriptionLab, MediaAlternativeLab, MediaOnlyLab } from './media-alternatives/MediaAltLabs';
+import { MultipleWaysLab } from './multiple-ways/MultipleWaysLab';
+import { ConsistentNavLab } from './consistent-navigation/ConsistentNavLab';
+import { ConsistentIdLab } from './consistent-identification/ConsistentIdLab';
+import { ConsistentHelpLab } from './consistent-help/ConsistentHelpLab';
+import { AudioLab, CarouselLab, FlashLab } from './timing/TimingLabs';
 
 export type LabProps = {
   /** The number of the criterion page showing the lab, e.g. "1.4.11". */

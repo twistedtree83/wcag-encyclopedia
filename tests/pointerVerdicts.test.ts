@@ -14,7 +14,7 @@ import {
   motionVerdict,
   shake,
   slideOff,
-} from '../src/labs/pointerVerdicts';
+} from '../src/labs/pointer/pointerVerdicts';
 
 /**
  * The four pointer labs (#58). Expected verdicts from the criteria themselves: 2.5.1 wants a

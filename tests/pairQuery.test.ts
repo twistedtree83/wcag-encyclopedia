@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { pairFromSearch, searchFromPair } from '../src/labs/pairQuery';
+import { pairFromSearch, searchFromPair } from '../src/labs/colour-check/pairQuery';
 
 /**
  * The Colour check page takes a pair from the URL, `?fg=` and `?bg=`, and the colour check

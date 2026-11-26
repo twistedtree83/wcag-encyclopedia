@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { announce, liveRegionLines, spoken, type AxNode } from '../src/labs/announce';
-import { basketMessage, statusSaid, statusVerdict, toggleSaid } from '../src/labs/statusMessage';
-import { StatusMock } from '../src/labs/StatusLab';
+import { announce, liveRegionLines, spoken, type AxNode } from '../src/labs/shared/announce';
+import { basketMessage, statusSaid, statusVerdict, toggleSaid } from '../src/labs/status-message/statusMessage';
+import { StatusMock } from '../src/labs/status-message/StatusLab';
 import { parseMarkup } from './markup';
 
 /**

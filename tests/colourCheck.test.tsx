@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, ROUTES } from '../src/entry-server';
 import { criterionPath, PATHS } from '../src/site/routes';
-import { initialPairModel, nextPairModel, resetPairModel } from '../src/labs/ColourCheck';
+import { initialPairModel, nextPairModel, resetPairModel } from '../src/labs/colour-check/ColourCheck';
 
 /**
  * The colour check as the build writes it: the Colour check page and the lab on the contrast

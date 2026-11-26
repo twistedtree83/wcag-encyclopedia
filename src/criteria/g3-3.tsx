@@ -8,7 +8,7 @@
  */
 
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
-import { isDayMonthYear } from '../labs/errorSuggestion';
+import { isDayMonthYear } from '../labs/error-suggestion/errorSuggestion';
 import type { CriterionRecord, LiveExample } from './types';
 
 /*

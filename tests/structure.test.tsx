@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { announce, spoken } from '../src/labs/announce';
+import { announce, spoken } from '../src/labs/shared/announce';
 import {
   PARTS,
   STRUCTURE_START,
@@ -9,9 +9,9 @@ import {
   structureVerdict,
   type Part,
   type Structure,
-} from '../src/labs/structure';
-import { StructureMock } from '../src/labs/StructureLab';
-import { structureFromSearch, searchFromStructure } from '../src/labs/structureQuery';
+} from '../src/labs/structure/structure';
+import { StructureMock } from '../src/labs/structure/StructureLab';
+import { structureFromSearch, searchFromStructure } from '../src/labs/structure/structureQuery';
 import { parseMarkup } from './markup';
 
 /**

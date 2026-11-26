@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { RING_START, ringCheck, ringSaid, ringVerdict, type Ring } from '../src/labs/focusRing';
-import { ringFromSearch, searchFromRing } from '../src/labs/ringQuery';
+import { RING_START, ringCheck, ringSaid, ringVerdict, type Ring } from '../src/labs/focus-ring/focusRing';
+import { ringFromSearch, searchFromRing } from '../src/labs/focus-ring/ringQuery';
 
 /**
  * The 2.4.7 flagship lab's model (#44): the reader styles a focus ring on a dark button on a

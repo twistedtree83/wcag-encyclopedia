@@ -1,4 +1,4 @@
-import type { AxNode } from '../src/labs/announce';
+import type { AxNode } from '../src/labs/shared/announce';
 
 /**
  * A test-only reader for the well-formed HTML React writes (`renderToStaticMarkup`), into the

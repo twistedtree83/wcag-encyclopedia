@@ -7,12 +7,12 @@
  */
 
 import { useEffect, useId, useRef, useState } from 'react';
-import { ADDRESS, COUNTRIES, OI_NAME, type Country } from '../labs/onInput';
+import { ADDRESS, COUNTRIES, OI_NAME, type Country } from '../labs/on-input/onInput';
 import type { CriterionRecord, LiveExample } from './types';
 import { MockSite } from '../live/SiteWindow';
-import { SHUFFLED_SITE, STEADY_SITE } from '../labs/consistentNav';
-import { FICKLE_SEARCH_SITE, STEADY_SEARCH_SITE } from '../labs/consistentId';
-import { ROAMING_HELP_SITE, STEADY_HELP_SITE } from '../labs/consistentHelp';
+import { SHUFFLED_SITE, STEADY_SITE } from '../labs/consistent-navigation/consistentNav';
+import { FICKLE_SEARCH_SITE, STEADY_SEARCH_SITE } from '../labs/consistent-identification/consistentId';
+import { ROAMING_HELP_SITE, STEADY_HELP_SITE } from '../labs/consistent-help/consistentHelp';
 
 type HelpPage = 'help' | 'delivery' | 'returns';
 type Section = Exclude<HelpPage, 'help'>;

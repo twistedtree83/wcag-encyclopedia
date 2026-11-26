@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { LIN_START, linName, linSaid, linVerdict, voiceMatches } from '../src/labs/labelInName';
+import { LIN_START, linName, linSaid, linVerdict, voiceMatches } from '../src/labs/label-in-name/labelInName';
 
 /**
  * Label in Name (#49): does a voice command made of the visible label ("click Send") match the

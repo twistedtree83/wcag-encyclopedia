@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { DescriptionLab, MediaAlternativeLab, MediaOnlyLab } from '../src/labs/MediaAltLabs';
+import { DescriptionLab, MediaAlternativeLab, MediaOnlyLab } from '../src/labs/media-alternatives/MediaAltLabs';
 import { MockPlayer, Transcript } from '../src/live/PlayerWindow';
-import { BUDGET, EPISODE, FOLD } from '../src/labs/mediaAlternatives';
+import { BUDGET, EPISODE, FOLD } from '../src/labs/media-alternatives/mediaAlternatives';
 
 /** Description cues, transcripts and the media alternative labs on the server (#66). */
 describe('the mock player with description', () => {

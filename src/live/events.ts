@@ -1,7 +1,7 @@
-import { spoken, type Announcement } from '../labs/announce';
+import { spoken, type Announcement } from '../labs/shared/announce';
 import type { FocusMap } from './focusTrack';
 import type { CueSeen, VisionFilter } from './vision';
-import { scrollLine } from '../labs/zoom';
+import { scrollLine } from '../labs/shared/zoom';
 import { colourLine, sharpLine } from './readouts';
 import type { GestureEvent } from './gesture';
 import type { PlayerSeen } from './mockPlayer';

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { announce, liveRegionLines, spoken } from '../src/labs/announce';
+import { announce, liveRegionLines, spoken } from '../src/labs/shared/announce';
 import { parseMarkup } from './markup';
 
 /**

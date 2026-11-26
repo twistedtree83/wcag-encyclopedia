@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { autofillValue, ipSaid, ipVerdict, purposeOf, IP_START } from '../src/labs/inputPurpose';
+import { autofillValue, ipSaid, ipVerdict, purposeOf, IP_START } from '../src/labs/input-purpose/inputPurpose';
 
 /**
  * Identify Input Purpose (#49): which autocomplete values name a purpose a browser can fill, and

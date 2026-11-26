@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { UC_START, ucState } from '../src/labs/useOfColour';
-import { NT_START, ntState } from '../src/labs/nonText';
-import { SENSE_START, senseState } from '../src/labs/sensory';
+import { UC_START, ucState } from '../src/labs/vision/useOfColour';
+import { NT_START, ntState } from '../src/labs/vision/nonText';
+import { SENSE_START, senseState } from '../src/labs/vision/sensory';
 
 /**
  * The vision-filter labs (#56): 1.4.1 (links and an error marked by hue), 1.4.11 (fading control

@@ -1,4 +1,4 @@
-import { clips } from '../labs/textFit';
+import { clips } from '../labs/shared/textFit';
 
 /**
  * Whether a notice card's boxes (`data-box`, #54) cut off their text. Shared by the 1.4.4 and

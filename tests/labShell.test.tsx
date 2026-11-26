@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { render, ROUTES } from '../src/entry-server';
 import { criterionPath, PATHS } from '../src/site/routes';
-import { fadeState } from '../src/labs/fade';
-import { pairVerdict } from '../src/labs/ColourCheck';
-import { verdictText } from '../src/labs/LabShell';
+import { fadeState } from '../src/labs/fade-text/fade';
+import { pairVerdict } from '../src/labs/colour-check/ColourCheck';
+import { verdictText } from '../src/labs/shared/LabShell';
 
 /**
  * The lab shell (#41) as the build writes it: every lab has exactly one verdict line naming a

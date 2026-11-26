@@ -16,7 +16,7 @@ import {
   idVerdict,
   nameOn,
   showIdPage,
-} from '../src/labs/consistentId';
+} from '../src/labs/consistent-identification/consistentId';
 import {
   HELP_START,
   helpLine,
@@ -25,7 +25,7 @@ import {
   helpVerdict,
   placeOn,
   showHelpPage,
-} from '../src/labs/consistentHelp';
+} from '../src/labs/consistent-help/consistentHelp';
 
 /**
  * 3.2.4 and 3.2.6 on the mock site (#64): a search button named per page, a help link placed per

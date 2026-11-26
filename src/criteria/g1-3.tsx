@@ -8,8 +8,8 @@
 
 import { useId } from 'react';
 import type { CriterionRecord, LiveExample } from './types';
-import { OrderPage } from '../labs/OrientationLab';
-import { PHONE } from '../labs/orientation';
+import { OrderPage } from '../labs/orientation/OrientationLab';
+import { PHONE } from '../labs/orientation/orientation';
 
 /** 1.3.4's live examples (#55): an order page on a phone in the zoom frame, locked or adapting. */
 function LockedOrder() {

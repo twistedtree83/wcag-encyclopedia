@@ -5,7 +5,7 @@
  * from the browser's own focusability, because an inert example can't be focused at all.
  */
 
-import type { AxNode } from '../labs/announce';
+import type { AxNode } from '../labs/shared/announce';
 import type { FocusMap } from './focusTrack';
 
 const NATIVE = new Set(['button', 'select', 'textarea', 'summary', 'iframe']);

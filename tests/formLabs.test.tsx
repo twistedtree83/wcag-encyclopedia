@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { announce, spoken } from '../src/labs/announce';
-import { FE_START, feSaid, feVerdict, type FormErrors } from '../src/labs/formErrors';
-import { FormErrorsMock } from '../src/labs/FormErrorsLab';
-import { FL_START, flSaid, flVerdict, onScreen, type FormLabels } from '../src/labs/formLabels';
-import { FormLabelsMock } from '../src/labs/FormLabelsLab';
+import { announce, spoken } from '../src/labs/shared/announce';
+import { FE_START, feSaid, feVerdict, type FormErrors } from '../src/labs/form-errors/formErrors';
+import { FormErrorsMock } from '../src/labs/form-errors/FormErrorsLab';
+import { FL_START, flSaid, flVerdict, onScreen, type FormLabels } from '../src/labs/form-labels/formLabels';
+import { FormLabelsMock } from '../src/labs/form-labels/FormLabelsLab';
 import { parseMarkup } from './markup';
 
 /**

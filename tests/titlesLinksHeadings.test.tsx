@@ -1,12 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { announce, spoken } from '../src/labs/announce';
+import { announce, spoken } from '../src/labs/shared/announce';
 import { listOf } from '../src/live/lists';
-import { TITLE_START, titleSaid, titleText, titleVerdict } from '../src/labs/pageTitle';
-import { LINK_START, linkSaid, linkVerdict, type Links } from '../src/labs/linkPurpose';
-import { LinkMock } from '../src/labs/LinkPurposeLab';
-import { DOC_START, docSaid, docVerdict, type Doc } from '../src/labs/headingsLabels';
-import { HeadingsMock } from '../src/labs/HeadingsLab';
+import { TITLE_START, titleSaid, titleText, titleVerdict } from '../src/labs/page-title/pageTitle';
+import { LINK_START, linkSaid, linkVerdict, type Links } from '../src/labs/link-purpose/linkPurpose';
+import { LinkMock } from '../src/labs/link-purpose/LinkPurposeLab';
+import { DOC_START, docSaid, docVerdict, type Doc } from '../src/labs/headings-labels/headingsLabels';
+import { HeadingsMock } from '../src/labs/headings-labels/HeadingsLab';
 import { parseMarkup } from './markup';
 
 /**

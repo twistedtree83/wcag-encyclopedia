@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import type { LiveExample, SimKey } from '../criteria/types';
-import { announce, focusLine, fromDom, liveRegionLines, spoken } from '../labs/announce';
-import { autofillValue } from '../labs/inputPurpose';
-import { voiceMatches } from '../labs/labelInName';
-import { ZOOMS, viewportAt, type Scrolls } from '../labs/zoom';
-import { ZoomFrame } from '../labs/ZoomFrame';
+import { announce, focusLine, fromDom, liveRegionLines, spoken } from '../labs/shared/announce';
+import { autofillValue } from '../labs/input-purpose/inputPurpose';
+import { voiceMatches } from '../labs/label-in-name/labelInName';
+import { ZOOMS, viewportAt, type Scrolls } from '../labs/shared/zoom';
+import { ZoomFrame } from '../labs/shared/ZoomFrame';
 import { clippedIn } from './clip';
-import { SCALES } from '../labs/textFit';
+import { SCALES } from '../labs/shared/textFit';
 import { ReaderColours } from './ReaderColours';
 import { onActions } from './actions';
 import { between, gestureSaid, hitAt, tapPlan, type Point } from './gesture';

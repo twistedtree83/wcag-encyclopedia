@@ -1,4 +1,4 @@
-import type { Announcement } from '../labs/announce';
+import type { Announcement } from '../labs/shared/announce';
 
 /**
  * A screen reader's own readings, out of context (#50): the links list and the headings list a

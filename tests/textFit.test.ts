@@ -7,9 +7,9 @@ import {
   resizeVerdict,
   spacingSaid,
   spacingVerdict,
-} from '../src/labs/textFit';
+} from '../src/labs/shared/textFit';
 import { textFitSaid } from '../src/live/events';
-import { searchFromSpacing, spacingFromSearch } from '../src/labs/spacingQuery';
+import { searchFromSpacing, spacingFromSearch } from '../src/labs/text-fit/spacingQuery';
 
 /**
  * Text that has to fit (#54): the 1.4.12 flagship lab (text-spacing overrides on fixed-height

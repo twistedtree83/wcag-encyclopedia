@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { TARGETS_START, targetCheck, targetSaid, targetVerdict } from '../src/labs/targetSize';
-import { searchFromTargets, targetsFromSearch } from '../src/labs/targetQuery';
+import { TARGETS_START, targetCheck, targetSaid, targetVerdict } from '../src/labs/target-size/targetSize';
+import { searchFromTargets, targetsFromSearch } from '../src/labs/target-size/targetQuery';
 
 /**
  * The 2.5.8 flagship lab (#57): three equal square targets in a row, `size` px wide and `gap` px

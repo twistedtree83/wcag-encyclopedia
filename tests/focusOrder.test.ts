@@ -5,8 +5,8 @@ import {
   orderSaid,
   orderVerdict,
   type Order,
-} from '../src/labs/focusOrder';
-import { orderFromSearch, searchFromOrder } from '../src/labs/orderQuery';
+} from '../src/labs/focus-order/focusOrder';
+import { orderFromSearch, searchFromOrder } from '../src/labs/focus-order/orderQuery';
 
 /**
  * The 2.4.3 flagship lab's model (#46): a five-part form laid out in a fixed grid (Name and Email,

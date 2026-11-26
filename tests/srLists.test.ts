@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { announce, spoken } from '../src/labs/announce';
+import { announce, spoken } from '../src/labs/shared/announce';
 import { listOf, tabSwitchLine } from '../src/live/lists';
 import { parseMarkup } from './markup';
 

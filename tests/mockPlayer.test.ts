@@ -16,7 +16,7 @@ import {
   liveCaptionVerdict,
   liveTrack,
   trackVerdict,
-} from '../src/labs/captions';
+} from '../src/labs/captions/captions';
 
 /**
  * The mock player's pure parts (#65): which line the clip plays and which caption shows at a

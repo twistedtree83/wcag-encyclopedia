@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { CaptionsLab, LiveCaptionsLab } from '../src/labs/CaptionLabs';
+import { CaptionsLab, LiveCaptionsLab } from '../src/labs/captions/CaptionLabs';
 import { MockPlayer } from '../src/live/PlayerWindow';
-import { BRIEFING } from '../src/labs/captions';
+import { BRIEFING } from '../src/labs/captions/captions';
 
 /** The mock player and the caption labs on the server (#65): paused at 0:00, no media element. */
 describe('the mock player, pre-rendered', () => {

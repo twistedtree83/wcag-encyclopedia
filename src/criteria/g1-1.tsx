@@ -6,7 +6,7 @@
  * mistake is giving all of them one treatment.
  */
 
-import { CHART, DIVIDER, PHOTO } from '../labs/pictures';
+import { CHART, DIVIDER, PHOTO } from '../labs/alt-text/pictures';
 import type { CriterionRecord, LiveExample } from './types';
 
 /** A small depiction of an image in some other product's page. */

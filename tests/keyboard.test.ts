@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { KB_START, kbPress, kbSaid, kbVerdict, kbChoose } from '../src/labs/keyboard';
+import { KB_START, kbPress, kbSaid, kbVerdict, kbChoose } from '../src/labs/keyboard-control/keyboard';
 
 /**
  * The 2.1.1 lab's model (#45): an "Add to basket" control built as a click-only div, a div with

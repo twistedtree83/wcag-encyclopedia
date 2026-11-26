@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
 import type { ComponentType } from 'react';
-import { announce, spoken } from '../src/labs/announce';
-import { RE_START, reOnScreen, reVerdict, type RedundantEntry } from '../src/labs/redundantEntry';
-import { AA_START, aaOnScreen, aaVerdict, type AccessibleAuth } from '../src/labs/accessibleAuth';
+import { announce, spoken } from '../src/labs/shared/announce';
+import { RE_START, reOnScreen, reVerdict, type RedundantEntry } from '../src/labs/redundant-entry/redundantEntry';
+import { AA_START, aaOnScreen, aaVerdict, type AccessibleAuth } from '../src/labs/accessible-auth/accessibleAuth';
 import { criterion } from '../src/criteria/corpus';
 import { parseMarkup } from './markup';
 

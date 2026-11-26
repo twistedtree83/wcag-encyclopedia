@@ -1,12 +1,12 @@
 import type { ComponentType, ReactNode } from 'react';
-import { AnnouncementLog } from '../labs/AnnouncementLog';
-import { spoken } from '../labs/announce';
+import { AnnouncementLog } from '../labs/shared/AnnouncementLog';
+import { spoken } from '../labs/shared/announce';
 import { contextLog, keyLines, lastOf, logOf, pointerLog, type StageEvent } from './events';
 import { trackOf } from './focusTrack';
 import { gestureLines } from './gesture';
-import { withVoices } from '../labs/language';
+import { withVoices } from '../labs/language/language';
 import { filterName } from './vision';
-import { scrollLine } from '../labs/zoom';
+import { scrollLine } from '../labs/shared/zoom';
 import { colourLine, sharpLine } from './readouts';
 import { PlayerLog } from './PlayerWindow';
 import { helpPlaceLines, menuOrderLines, searchNameLines, siteLines } from './mockSite';

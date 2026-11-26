@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { readingOrder, screenOrder, seqSaid, seqVerdict } from '../src/labs/sequence';
+import { readingOrder, screenOrder, seqSaid, seqVerdict } from '../src/labs/meaningful-sequence/sequence';
 
 /**
  * The 1.3.2 lab's model (#49): the checkout steps' source order, and whether CSS sorts them on

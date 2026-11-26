@@ -9,7 +9,7 @@
 import { useEffect, useId, useRef, useState, type MouseEvent } from 'react';
 import type { CriterionRecord, LiveExample } from './types';
 import { MockSite } from '../live/SiteWindow';
-import { SUPPORT_SITE, SUPPORT_SITE_FOUND } from '../labs/multipleWays';
+import { SUPPORT_SITE, SUPPORT_SITE_FOUND } from '../labs/multiple-ways/multipleWays';
 
 /*
  * 2.4.7's live examples (#44): three fields, as in the static examples. The broken row removes

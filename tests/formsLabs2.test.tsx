@@ -1,16 +1,16 @@
 import { describe, it, expect } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { announce, spoken } from '../src/labs/announce';
+import { announce, spoken } from '../src/labs/shared/announce';
 import {
   ES_START,
   esSaid,
   esVerdict,
   isDayMonthYear,
   type ErrorSuggestion,
-} from '../src/labs/errorSuggestion';
-import { ErrorSuggestionMock } from '../src/labs/ErrorSuggestionLab';
-import { OI_START, oiChoose, oiGo, oiVerdict, oiWhen } from '../src/labs/onInput';
-import { EP_START, epBack, epConfirm, epGuard, epPay, epUndo, epVerdict } from '../src/labs/errorPrevention';
+} from '../src/labs/error-suggestion/errorSuggestion';
+import { ErrorSuggestionMock } from '../src/labs/error-suggestion/ErrorSuggestionLab';
+import { OI_START, oiChoose, oiGo, oiVerdict, oiWhen } from '../src/labs/on-input/onInput';
+import { EP_START, epBack, epConfirm, epGuard, epPay, epUndo, epVerdict } from '../src/labs/error-prevention/errorPrevention';
 import { parseMarkup } from './markup';
 
 /**

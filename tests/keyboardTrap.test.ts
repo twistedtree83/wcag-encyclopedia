@@ -7,7 +7,7 @@ import {
   trapSaid,
   trapVerdict,
   whereText,
-} from '../src/labs/keyboardTrap';
+} from '../src/labs/keyboard-trap/keyboardTrap';
 
 /**
  * The 2.1.2 lab's model (#45): a newsletter widget drawn inside the mock, with an Email field

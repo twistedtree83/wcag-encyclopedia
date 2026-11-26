@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { WORD, scDictate, scSaid, scTypedSaid, scVerdict } from '../src/labs/shortcuts';
+import { WORD, scDictate, scSaid, scTypedSaid, scVerdict } from '../src/labs/character-shortcuts/shortcuts';
 
 /**
  * The 2.1.4 lab's model (#45): "e" archives the message. It is always on, remapped to Alt+E, or

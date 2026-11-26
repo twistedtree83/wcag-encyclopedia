@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { renderToString } from 'react-dom/server';
-import { fadeState, FADE_DEFAULT } from '../src/labs/fade';
-import { FadeLab } from '../src/labs/FadeLab';
+import { fadeState, FADE_DEFAULT } from '../src/labs/fade-text/fade';
+import { FadeLab } from '../src/labs/fade-text/FadeLab';
 import { labById } from '../src/labs/registry';
 import { criterion } from '../src/criteria/corpus';
 import { render, ROUTES } from '../src/entry-server';
