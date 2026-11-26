@@ -59,9 +59,9 @@ describe('the lab folders', () => {
     expect([...registered].sort()).toEqual(folders.filter((f) => !NOT_LABS.has(f)).sort());
   });
 
-  it('keep only folders at the top of src/labs, apart from the registry', () => {
+  it('keep only folders at the top of src/labs, apart from the registry and its index', () => {
     const files = readdirSync(LABS_DIR).filter((n) => statSync(join(LABS_DIR, n)).isFile());
-    expect(files.sort()).toEqual(['registry.ts']);
+    expect(files.sort()).toEqual(['INDEX.md', 'registry.ts']);
   });
 });
 
