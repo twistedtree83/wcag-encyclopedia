@@ -104,6 +104,10 @@ colour check is a lab. Every criterion has at least one lab: readers see each cr
 fail by changing it themselves. The motion a lab shows is the reader's change taking effect —
 never something that plays on its own.
 
+**Lab folder** — `src/labs/<name>/`: one lab (or the few that share a component file) with its
+component, models, query module, `lab.ts` registration and `lab.css`. The registry finds it
+by its `lab.ts`; `src/labs/shared/` holds the parts every lab uses and is not a lab folder.
+
 **Verdict** — the line in a lab stating whether the lab's current state passes or fails, naming
 the criterion by number and carrying a glyph as well as colour: "1.4.3 fails". Every lab has
 exactly one, and it is announced politely after the reader stops changing things.
