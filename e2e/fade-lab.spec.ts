@@ -34,9 +34,9 @@ test('the slider is labelled, described, and works with the keyboard', async ({ 
   await page.keyboard.press('ArrowRight');
   await expect(slider).toHaveAttribute('aria-valuetext', '19% faded');
   await page.keyboard.press('End');
-  await expect(lab.getByText('100% faded')).toBeVisible();
+  await expect(lab.getByText('100% faded', { exact: true })).toBeVisible();
   await page.keyboard.press('Home');
-  await expect(lab.getByText('0% faded')).toBeVisible();
+  await expect(lab.getByText('0% faded', { exact: true })).toBeVisible();
 });
 
 test('fading the text updates the exhibit, ratio, scale and results', async ({ page }) => {

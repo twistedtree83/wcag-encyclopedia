@@ -7,10 +7,28 @@ export type LabProps = {
   readonly criterion: string;
 };
 
+/**
+ * "How to use this lab": the four steps the lab shell shows above every lab on a criterion page,
+ * as an ordered list. Plain sentences in the site's voice, naming each control by its visible
+ * label, so a reader knows what to do before they touch anything.
+ */
+export type LabSteps = {
+  /** 1. What the reader is trying to do: "Reach the VAT invoices page from Home." */
+  readonly goal: string;
+  /** 2. What each control changes, by its visible label. */
+  readonly controls: string;
+  /** 3. What to try: the changes that cross the line between pass and fail. */
+  readonly tryThis: string;
+  /** 4. What to look for, and what it means: when the criterion passes, when it fails, and why. */
+  readonly result: string;
+};
+
 export type LabEntry = {
   readonly id: string;
   /** The section heading the lab is shown under, e.g. "Try it: fade the text". */
   readonly title: string;
+  /** How to use the lab, shown by the lab shell above it. Every lab has them. */
+  readonly steps: LabSteps;
   /**
    * The criteria whose pages show the lab: exactly the records whose `labs` name this id. The
    * record's list sets the order on its page; the data-integrity test holds the two equal.

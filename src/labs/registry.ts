@@ -18,7 +18,7 @@
 import type { CriterionRecord } from '../criteria/types';
 import type { LabEntry, LabModule } from './shared/labEntry';
 
-export type { LabEntry, LabModule, LabProps } from './shared/labEntry';
+export type { LabEntry, LabModule, LabProps, LabSteps } from './shared/labEntry';
 
 /** One registered lab and the folder it lives in, e.g. `fade-text`. */
 export type FolderLab = { readonly folder: string; readonly lab: LabEntry };

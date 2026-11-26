@@ -97,8 +97,9 @@ and the one polite region. To add a lab:
 3. `verdict` is `{ criterion, passes }` for what's on screen. `said` is a new `{ text }` object
    for each change the reader makes, and `null` (or unchanged) otherwise. Reset sets it to
    `null`, so it is never announced. Don't add a live region of your own.
-4. Register it in `src/labs/<name>/lab.ts`: `export default { id, title, criteria, Lab } satisfies
-   LabEntry;` with `flagshipFor: '<num>'` if it is that criterion's flagship, and
+4. Register it in `src/labs/<name>/lab.ts`: `export default { id, title, criteria, steps, Lab } satisfies
+   LabEntry;`. `steps` is "How to use this lab" (goal, controls, what to try, what the result
+   means), which the shell shows above the lab on criterion pages; `tests/labSteps.test.tsx` holds every lab to it. with `flagshipFor: '<num>'` if it is that criterion's flagship, and
    `import './lab.css';` if it has styles. Then add its id to each record in `criteria` (the
    record's `labs` sets the order on the page). Every criterion has at least one lab and live
    fail and pass examples; the data-integrity test fails on any gap, and

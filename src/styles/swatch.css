@@ -3335,6 +3335,31 @@ footer.foot p {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+/* --- Lab steps ------------------------------------------------------------------------- */
+
+/* "How to use this lab", the lab shell's ordered list above each lab on a criterion page. */
+.lab-steps {
+  margin: 0 0 18px;
+  padding: 16px 18px;
+  border: var(--bwid) solid var(--line);
+  border-radius: var(--rad-sm);
+  font-size: 15px;
+  line-height: 1.55;
+}
+.lab-steps h4 {
+  margin: 0 0 8px;
+  font: 700 16px/1.3 var(--fh), sans-serif;
+}
+.lab-steps ol {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 22px;
+}
+.lab .lab-steps {
+  margin: 0;
+}
+
 /* --- Ratio explained ------------------------------------------------------------------- */
 
 /* What a contrast ratio means, under the ratio in every contrast lab (RatioExplained.tsx). The

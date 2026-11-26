@@ -17,6 +17,7 @@ const lab = (id: string, criteria: readonly string[] = ['1.4.3']): LabEntry => (
   id,
   title: `Try it: ${id}`,
   criteria,
+  steps: { goal: 'Goal.', controls: 'Controls.', tryThis: 'Try.', result: 'Result.' },
   Lab: () => null,
 });
 
