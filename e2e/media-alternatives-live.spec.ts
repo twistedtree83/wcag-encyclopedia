@@ -7,7 +7,7 @@ import AxeBuilder from '@axe-core/playwright';
  * Play, Enter); each Fixed stage's player takes real keys and the same bar. The "Heard and
  * captioned" instrument adds what is described wherever the picture says more than the
  * soundtrack. Description cues are drawn on screen: nothing plays sound. The labs' verdicts,
- * Reset and motion are covered by `labs.spec.ts`.
+ * Reset and motion are covered by `e2e/labs/`.
  */
 
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa', 'best-practice'];

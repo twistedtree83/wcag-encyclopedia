@@ -5,7 +5,7 @@ import AxeBuilder from '@axe-core/playwright';
  * 3.3.7 and 3.3.8's live examples and labs (#60), in the built site. The Broken checkout and
  * sign-in are operated only through simulated input over inert, hidden markup (ADR 0002); the
  * Fixed ones take real keys and the same input bar. The labs' verdicts are covered by
- * `labs.spec.ts`; this file checks what the stages and the labs show.
+ * `e2e/labs/`; this file checks what the stages and the labs show.
  */
 
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa', 'best-practice'];

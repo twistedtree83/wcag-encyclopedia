@@ -9,7 +9,7 @@ import AxeBuilder from '@axe-core/playwright';
  *   Fixed   the same fields with the site's ring. Real Tab and the bar move real focus.
  *   Lab     the reader styles the ring; the verdict flips with contrast against what it touches.
  *
- * The shared lab bar (verdicts by keyboard, Reset, axe, motion) is the `labs.spec.ts` entry.
+ * The shared lab bar (verdicts by keyboard, Reset, axe, motion) is the lab's `e2e/labs/<lab>.lab.spec.ts`.
  */
 
 const URL = '/criteria/2.4.7/';

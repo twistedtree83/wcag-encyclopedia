@@ -7,7 +7,7 @@ import AxeBuilder from '@axe-core/playwright';
  * player takes real keys and the same bar. The "Heard and captioned" instrument under each stage
  * lists what a hearing viewer heard and the caption shown with it. Nothing plays until the
  * reader starts it, in any motion mode. The labs' verdicts, Reset and motion are covered by
- * `labs.spec.ts`.
+ * `e2e/labs/`.
  */
 
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa', 'best-practice'];

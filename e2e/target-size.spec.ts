@@ -9,7 +9,7 @@ import AxeBuilder from '@axe-core/playwright';
  *   Fixed   the same at 24px. The bar's tap presses the icon it aimed at; a real pointer works.
  *   Lab     the reader sizes and spaces the targets; the verdict follows the 24px rule.
  *
- * The shared lab bar (verdicts by keyboard, Reset, axe, motion) is the `labs.spec.ts` entry.
+ * The shared lab bar (verdicts by keyboard, Reset, axe, motion) is the lab's `e2e/labs/<lab>.lab.spec.ts`.
  */
 
 const URL = '/criteria/2.5.8/';

@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { ROUTES } from '../src/site/routes';
+import { MODES, SITE_TAGS, axeStates } from './labs/support';
 
 /**
  * The axe scan.
@@ -18,8 +19,6 @@ import { ROUTES } from '../src/site/routes';
  * would break the build.
  */
 
-const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
-
 /* --- The pre-rendered pages (ADR 0001) --------------------------------------------------- */
 
 /**
@@ -27,14 +26,7 @@ const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
  * prerender step writes, so a new page is scanned the moment it exists. These pages are also
  * held to axe's best-practice rules (design guide §2).
  */
-const SITE_TAGS = [...TAGS, 'wcag22a', 'best-practice'];
 const SITE_PAGES = ROUTES.map((r) => `/${r.path}`);
-const MODES = [
-  { name: 'light theme', colorScheme: 'light', width: 1280 },
-  { name: 'dark theme', colorScheme: 'dark', width: 1280 },
-  { name: 'light theme at 320px', colorScheme: 'light', width: 320 },
-  { name: 'dark theme at 320px', colorScheme: 'dark', width: 320 },
-] as const;
 
 async function openSitePage(page: import('@playwright/test').Page, url: string) {
   const response = await page.goto(url);
@@ -101,76 +93,8 @@ test('the deliberate-failure exclusion is in use', async ({ page }) => {
 });
 
 /**
- * Pages whose content changes after load: scan the states too, not only the first paint.
- * The All criteria index filtered to one principle, and with nothing matching. The 4.1.2 lab's
- * URL states (#42): passing, a native toggle button, and broken markup (a state the role doesn't
- * support, and no name); its start is the page itself, scanned above. The flagship labs that keep
- * their state in the URL (#40): 1.4.10, 1.4.12, 2.2.1 and 2.5.8 in a failing and a passing state,
- * and the Colour check page (the 1.4.3 check reads no query; this page does) with a failing and a
- * passing pair. A failing pair's preview is a lab mock marked `data-depicts-failure`.
+ * Pages whose content changes after load: scan the states too, not only the first paint. The All
+ * criteria index filtered to one principle, and with nothing matching. A lab that keeps its state
+ * in the URL declares its states in its own `e2e/labs/<lab>.lab.spec.ts` (ADR 0004).
  */
-const STATE_PAGES = [
-  '/criteria/?p=2',
-  '/criteria/?q=zzzz',
-  '/criteria/4.1.2/?el=switch&name=aria-label&state=aria-checked&on=1',
-  '/criteria/4.1.2/?el=button&name=content&state=aria-pressed&on=0',
-  '/criteria/4.1.2/?el=role-button&name=labelledby&state=aria-checked&on=1',
-  '/criteria/4.1.2/?el=switch&name=none&state=aria-pressed&on=0',
-  '/criteria/2.4.7/?w=0&off=2&c=blue',
-  '/criteria/2.4.7/?w=6&off=0&c=yellow',
-  '/criteria/2.4.7/?w=1&off=6&c=grey',
-  '/criteria/1.1.1/?img=photo&alt=',
-  '/criteria/1.1.1/?img=divider&alt=swirl-divider.svg',
-  '/criteria/1.3.1/?mock=table',
-  '/criteria/1.3.1/?mock=form&real=heading,list,labels',
-  '/criteria/2.4.3/?src=columns&ti=none',
-  '/criteria/2.4.3/?src=send-first&ti=postcode',
-  '/criteria/2.4.3/?src=layout&ti=send',
-  '/criteria/1.4.10/?zoom=400&layout=fixed',
-  '/criteria/1.4.10/?zoom=400&layout=reflow',
-  '/criteria/1.4.12/?spacing=line,paragraph,letter,word&boxes=fixed',
-  '/criteria/1.4.12/?spacing=line,paragraph,letter,word&boxes=flexible',
-  '/criteria/2.2.1/?limit=60&help=none',
-  '/criteria/2.2.1/?limit=120&help=adjust',
-  '/criteria/2.5.8/?size=8&gap=0',
-  '/criteria/2.5.8/?size=44&gap=8',
-  '/colour-check/?fg=999999&bg=FFFFFF',
-  '/colour-check/?fg=595959&bg=FFFFFF',
-];
-
-for (const url of STATE_PAGES) {
-  for (const mode of MODES) {
-    test(`${url} has no accessibility violations (${mode.name})`, async ({ page }) => {
-      test.slow();
-      await page.setViewportSize({ width: mode.width, height: 800 });
-      await page.emulateMedia({ colorScheme: mode.colorScheme });
-      await openSitePage(page, url);
-      const results = await new AxeBuilder({ page })
-        .withTags(SITE_TAGS)
-        .exclude('[data-depicts-failure]')
-        .analyze();
-      expect(
-        results.violations,
-        results.violations.map((v) => `${v.id}: ${v.help}`).join('\n'),
-      ).toEqual([]);
-    });
-  }
-
-  // A state can mark more than the page's start does (a failing pair in a lab mock), so the
-  // marks are held to the Broken stage or a lab mock here too.
-  test(`${url} keeps every deliberate failure inside the Broken stage or a lab mock`, async ({
-    page,
-  }) => {
-    await openSitePage(page, url);
-    const marked = page.locator('[data-depicts-failure]');
-    const count = await marked.count();
-    for (let i = 0; i < count; i++) {
-      const inside = await marked
-        .nth(i)
-        .evaluate((el) => !!el.closest('figure.bad') || !!el.closest('[data-lab-mock]'));
-      expect(inside, `excluded element ${i} is outside the Broken stage and every lab mock`).toBe(
-        true,
-      );
-    }
-  });
-}
+axeStates(['/criteria/?p=2', '/criteria/?q=zzzz']);

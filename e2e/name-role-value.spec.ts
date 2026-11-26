@@ -3,7 +3,7 @@ import { test, expect, type Locator, type Page } from '@playwright/test';
 /**
  * The 4.1.2 flagship lab (#42) in the built page: the announcement log follows the mock's markup
  * as the reader edits role, name and state by keyboard, and the lab's state lives in the URL.
- * The shared lab bar (verdicts, Reset, axe, motion) is in `labs.spec.ts`.
+ * The shared lab bar (verdicts, Reset, axe, motion) is in `e2e/labs/`.
  */
 
 const URL = '/criteria/4.1.2/';

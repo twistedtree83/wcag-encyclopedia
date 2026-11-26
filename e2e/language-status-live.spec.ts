@@ -6,7 +6,7 @@ import AxeBuilder from '@axe-core/playwright';
  * Each Broken stage is operated only through its input bar over inert, hidden markup; each Fixed
  * stage takes real input and the same bar. The announcement log under each stage names the
  * voice each line is read in (3.1.x), or shows the status message announced while focus stays
- * on the button (4.1.3). The labs' verdicts, Reset and motion are covered by `labs.spec.ts`.
+ * on the button (4.1.3). The labs' verdicts, Reset and motion are covered by `e2e/labs/`.
  */
 
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa', 'best-practice'];

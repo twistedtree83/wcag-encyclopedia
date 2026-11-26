@@ -5,7 +5,7 @@ import AxeBuilder from '@axe-core/playwright';
  * 3.3.1 and 3.3.2's live examples and labs (#52), in the built site. The Broken forms are
  * operated only through simulated input over inert, hidden markup (ADR 0002); the Fixed forms
  * take real keys and the same input bar. The announcement log under each stage says what a screen
- * reader heard. The labs' verdicts are covered by `labs.spec.ts`; this file checks what they show.
+ * reader heard. The labs' verdicts are covered by `e2e/labs/`; this file checks what they show.
  */
 
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa', 'best-practice'];

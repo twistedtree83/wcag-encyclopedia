@@ -5,7 +5,7 @@ import AxeBuilder from '@axe-core/playwright';
  * 3.2.4 and 3.2.6 on the mock site (#64), in the shape of `mock-site-live.spec.ts`. Each Broken
  * stage is driven only through its input bar over inert, hidden markup; each Fixed stage takes
  * real keys as well as the bar. Moving between mock pages never changes the real page. The labs'
- * verdicts, Reset and motion are covered by `labs.spec.ts`; this file checks what they show.
+ * verdicts, Reset and motion are covered by `e2e/labs/`; this file checks what they show.
  */
 
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa', 'best-practice'];

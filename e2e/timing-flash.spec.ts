@@ -10,7 +10,7 @@ import AxeBuilder from '@axe-core/playwright';
  *          never flashes: the luminance check below samples every element while clocks run
  *
  * The clock never runs on load. The shared lab bar (verdicts by keyboard, Reset, axe, motion)
- * is in `labs.spec.ts`.
+ * is in `e2e/labs/`.
  */
 
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa', 'best-practice'];

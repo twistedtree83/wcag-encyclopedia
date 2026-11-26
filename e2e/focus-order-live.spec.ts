@@ -4,7 +4,7 @@ import AxeBuilder from '@axe-core/playwright';
 /**
  * 2.4.1, 2.4.3 and 2.4.11 (#46): live examples under the focus tracker, and the 2.4.3 flagship
  * lab's URL state. The shared lab bar (verdicts by keyboard, Reset, axe, motion) for all three
- * labs is in `labs.spec.ts`.
+ * labs is in `e2e/labs/`.
  *
  *   2.4.1   a shop page with an eight-link menu. Broken has no skip link; Fixed has one, and
  *           Enter on it puts focus on the article.

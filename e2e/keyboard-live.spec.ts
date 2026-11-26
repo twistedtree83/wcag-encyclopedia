@@ -7,7 +7,7 @@ import AxeBuilder from '@axe-core/playwright';
  * hidden markup; each Fixed stage takes real keys as well as the bar. Instruments: the focus
  * tracker, the announcement log (2.1.1) and the key log (2.1.2, 2.1.4).
  *
- * The shared lab bar (verdicts by keyboard, Reset, axe, motion) is in `labs.spec.ts`; this file
+ * The shared lab bar (verdicts by keyboard, Reset, axe, motion) is in `e2e/labs/`; this file
  * drives the labs' simulated keys and checks real focus is never trapped by the 2.1.2 lab.
  */
 

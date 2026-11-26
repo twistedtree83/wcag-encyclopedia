@@ -10,7 +10,7 @@ import AxeBuilder from '@axe-core/playwright';
  *   1.4.5  Broken: the sale heading is an image. "Zoom in" stretches its pixels and "Use my
  *          colours" can't reach them. Fixed: the heading is text. Lab: heading, zoom, colours.
  *
- * The shared lab bar (verdicts by keyboard, Reset, axe, motion) is each lab's `labs.spec.ts` entry.
+ * The shared lab bar (verdicts by keyboard, Reset, axe, motion) is each lab's `e2e/labs/<lab>.lab.spec.ts`.
  */
 
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa', 'best-practice'];
