@@ -29,9 +29,6 @@ export const PATHS = {
   about: 'about/',
 } as const;
 
-/** The site's source repository. The About page links to it. */
-export const SOURCE_CODE = 'https://github.com/twistedtree83/wcag-encyclopedia';
-
 export function criterionPath(num: string): string {
   return `criteria/${num}/`;
 }

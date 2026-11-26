@@ -1,12 +1,12 @@
 import { test, expect, type Page } from '@playwright/test';
+import { FEEDBACK_FORM_URL } from '../src/site/config';
 
 /**
- * The About page: what the site is, its accessibility statement, and where the source lives.
+ * The About page: what the site is, its accessibility statement, and where to report a problem.
  * Reached from the nav and the footer of every page.
  */
 
 const PAGE = '/about/';
-const REPO = 'https://github.com/twistedtree83/wcag-encyclopedia';
 
 async function open(page: Page, url = PAGE) {
   const response = await page.goto(url);
@@ -27,7 +27,6 @@ test('the footer links land on the About page and their sections', async ({ page
   for (const [name, hash] of [
     ['Accessibility statement', '#accessibility-statement'],
     ['How we test', '#how-we-test'],
-    ['Source code', '#source-code'],
   ] as const) {
     await open(page, '/criteria/1.4.3/');
     await page.getByRole('contentinfo').getByRole('link', { name }).click();
@@ -85,10 +84,19 @@ test.describe('before any script runs', () => {
     await expect(howWeTest).toContainText('3:1');
   });
 
-  test('links to the source code on GitHub', async ({ page }) => {
+  test('links to the feedback form to report a problem, and not to any source code', async ({
+    page,
+  }) => {
     await page.goto(PAGE);
     await expect(
-      page.locator('#source-code').getByRole('link', { name: /source code on GitHub/i }),
-    ).toHaveAttribute('href', REPO);
+      page.locator('#accessibility-statement').getByRole('link', {
+        name: 'Report a problem with this site',
+      }),
+    ).toHaveAttribute('href', FEEDBACK_FORM_URL);
+    await expect(
+      page.getByRole('contentinfo').getByRole('link', { name: 'Report a problem with this site' }),
+    ).toHaveAttribute('href', FEEDBACK_FORM_URL);
+    await expect(page.locator('#source-code')).toHaveCount(0);
+    await expect(page.locator('a[href*="github.com"]')).toHaveCount(0);
   });
 });

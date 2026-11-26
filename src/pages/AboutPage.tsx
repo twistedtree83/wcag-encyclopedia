@@ -1,10 +1,10 @@
 import { Pledge } from '../components/Pledge';
-import { SOURCE_CODE } from '../site/routes';
+import { FEEDBACK_FORM_URL } from '../site/config';
 
 /**
- * The About page: what the site is, the accessibility statement (the pledge in full, then how
- * each commitment is checked), and the source code. The footer links to the three sections
- * by id: `#accessibility-statement`, `#how-we-test` and `#source-code`.
+ * The About page: what the site is, and the accessibility statement (the pledge in full, then
+ * how each commitment is checked, then where to report a problem). The footer links to the
+ * sections by id: `#accessibility-statement` and `#how-we-test`.
  */
 export function AboutPage() {
   return (
@@ -54,8 +54,8 @@ export function AboutPage() {
           <h3>How we test</h3>
           <p className="checks__intro">
             Every claim above is checked by the same command, <code>npm run verify</code>, which
-            runs on every pull request and again before each deploy to GitHub Pages. If any
-            check fails, nothing is published.
+            runs on every change and again before each release. If any check fails, nothing is
+            published.
           </p>
           <ul>
             <li>
@@ -103,26 +103,14 @@ export function AboutPage() {
           </ul>
           <p className="checks__intro">
             Automated checks find a lot, but not everything. If something on the site is hard
-            to use, please report it on GitHub, linked below.
+            to use, please tell us through the feedback form.
+          </p>
+          <p>
+            <a className="btn o" href={FEEDBACK_FORM_URL}>
+              Report a problem with this site
+            </a>
           </p>
         </div>
-      </section>
-
-      <section className="band" id="source-code" aria-labelledby="source-title">
-        <div className="bh">
-          <div>
-            <h2 id="source-title">Source code</h2>
-            <p>
-              The site, its tests and its design guide are public. Read how a page is built,
-              check a claim for yourself, or report a problem.
-            </p>
-          </div>
-        </div>
-        <p>
-          <a className="btn o" href={SOURCE_CODE}>
-            Source code on GitHub
-          </a>
-        </p>
       </section>
     </>
   );
