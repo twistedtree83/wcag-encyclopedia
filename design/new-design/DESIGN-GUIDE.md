@@ -266,6 +266,7 @@ Motion only ever shows a change the reader caused, and never carries meaning on 
 - **Every animated change ends in a readable state and a text verdict**, so missing the animation loses nothing.
 - **Banned:** scroll-triggered entrances, parallax, page transitions, loops, and anything that runs without the reader causing it. The dashed loop lines are static.
 - The colour preview fades to greyscale over 0.2s when that option is checked.
+- New work never transitions `filter`: the vision filter on labs and stages switches instantly.
 - **`prefers-reduced-motion: reduce` and `data-motion="off"` make every change instant**: no transitions, no animations, no smooth scrolling. `data-motion="off"` also sets the lift to 0.
 
 ---

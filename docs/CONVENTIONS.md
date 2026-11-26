@@ -80,6 +80,9 @@ Reset button and the one polite region. To add a lab:
    announcement) in a separate `.ts` file, as `fade.ts` does, and unit-test that.
 2. Render `<LabShell className verdict said onReset>` with the mock first, then the controls row.
    Mark the mock `data-lab-mock`. Ids come from `useId`, since a page may show a lab twice.
+   The mock passes axe in every state like the rest of the lab. Only a mock that depicts a
+   failure axe would flag (failing contrast) carries `data-depicts-failure`, on exactly the
+   depicted content and only while it fails.
 3. `verdict` is `{ criterion, passes }` for what's on screen. `said` is a new `{ text }` object
    for each change the reader makes, and `null` (or unchanged) otherwise. Reset sets it to
    `null`, so it is never announced. Don't add a live region of your own.
@@ -107,6 +110,66 @@ reads attributes. e2e pattern: `e2e/live-examples.spec.ts`.
 Motion follows design guide §7: `--speed-state` and `--ease-out` for state changes; only
 opacity, transform and colour animate. Reduced motion and `data-motion="off"` are handled
 globally at the end of `swatch.css`.
+
+## Instruments
+
+`CONTEXT.md` lists every registered id under the eight instruments it belongs to. Each is a pure
+view of the stage's events. "Fail" is the inert stage, driven by the bar only; "pass" is real.
+
+| Ids | Model and drawing | Reads (`StageEvent` kind) | Simulated vs real |
+|---|---|---|---|
+| `announcement-log`, `voice-log` | `src/labs/announce.ts`, `logOf` in `src/live/events.ts`, `src/labs/language.ts` | `focus`, `change`, `read`, `status` | Fail: the bar steps a model over `tabStops` (attributes, not real focus). Pass: real `focusin`/`change`. Live-region text from a MutationObserver on both. |
+| `focus-tracker` | `src/live/focusTrack.ts`, `src/live/focus.ts` | `focus` with `map` | As above, with the same output on both stages. |
+| `key-log` | `keyLines` in `events.ts`, `didAction` in `src/live/actions.ts` | `keys` | The bar dispatches real `keydown`s on both. Pass also logs real keys whose handler calls `didAction`. |
+| `pointer-log`, `context` | `src/live/pointer.ts` | `pointer`, `popup`, `context` | The bar's Hover dispatches `mouseover`/`mouseout`. Pass also logs the real mouse. Tooltips (`role="tooltip"`) and `[data-context]` come from a MutationObserver. |
+| `zoom-meter`, `text-fit`, `orientation-meter`, `text-look` | `src/labs/ZoomFrame.tsx`, `src/labs/zoom.ts`, `src/labs/textFit.ts`, `src/live/clip.ts`, `src/live/ReaderColours.tsx` | `zoom`, `text-fit`, `rotate`, `look` | The frame is real layout on both stages and only the bar changes it. On the pass stage the window is a real scrollable region. |
+| `vision-filter` | `src/live/vision.ts`, `src/live/cues.ts`, `src/live/VisionDefs.tsx` | `vision` | Identical on both: the filter is depicted, and `[data-cue]` colours are read from computed style. |
+| `clock` | `src/live/clock.ts` | `clock` | Mock time from the bar's Wait and Run only. It never starts on its own. |
+| `gesture-pad`, `voice-control`, `autofill` | `src/live/gesture.ts`, `src/labs/labelInName.ts`, `src/labs/inputPurpose.ts` | `gesture`, `voice`, `autofill` | The bar sends real `PointerEvent`s (touch, not primary) and hit-tests Tab stops with `hitAt`. A real pointer on the pass stage is logged but not spoken. |
+| `mock-player` | `src/live/mockPlayer.ts`, `src/live/PlayerWindow.tsx` | `player` | `[data-player-*]` attributes read by a MutationObserver on both. Play runs in real time. |
+| `mock-site`, `menu-order`, `search-name`, `help-place` | `src/live/mockSite.ts`, `src/live/SiteWindow.tsx` | `site` | `[data-site-*]` attributes read by a MutationObserver on both. |
+
+## Changing the shared lab files
+
+A new key, event, instrument or lab touches files every lab shares. Keep each edit to one entry
+per line so parallel work merges cleanly, and check each step:
+
+1. **Key:** a `SimKey` member in `src/criteria/types.ts`, its label in `KEY_LABEL` and a
+   self-contained branch in `press` (`src/live/LiveStage.tsx`). A record lists the same `keys`
+   on both stages, and the data-integrity test checks that.
+2. **Event:** a `StageEvent` member in `src/live/events.ts`, produced in `press` and in the
+   stage's real listeners or MutationObserver. If the stage should speak it, add a
+   `<kind>Said` function and a branch in `push`. Never speak real focus: the reader's own screen
+   reader does that.
+3. **Instrument:** one line in `INSTRUMENTS` (`src/live/instruments.tsx`), which types
+   `live.instruments`. Add it to its group in `CONTEXT.md` and to the table above.
+4. **Lab:** a `LABS` entry in `src/labs/registry.ts`, the record's `labs` and a `LabCase` in
+   `e2e/labs.spec.ts`. A live example gets its own `e2e/<topic>-live.spec.ts`.
+5. **URL state:** one `*Query.ts` module, a line under "URL contracts" below, and its URLs in
+   `STATE_PAGES` (`e2e/axe.spec.ts`), which scans each in four modes.
+6. **CSS:** a `/* --- <Component> --- */` section in `swatch.css` before "Breakpoints", with
+   narrow-width rules in the shared `max-width` blocks.
+
+## Lab and live-example gotchas
+
+- macOS's disk is case-insensitive, so a component can't share a model's name with different
+  case: `mockPlayer.ts` and `MockPlayer.tsx` are one file there. Name the drawing differently
+  (`PlayerWindow.tsx`, `SiteWindow.tsx`).
+- The bar sends real events into the inert fail stage. `el.click()`, `keydown`, pointer events
+  and `focusin`/`focusout` all reach the example's own handlers. Hover is `mouseover`/`mouseout`,
+  so use `onMouseEnter`/`onMouseLeave`, not CSS `:hover`. A pass example that listens on
+  `document` must ignore untrusted events from outside itself, or the fail bar reaches it.
+- Hide a closed popup with the `hidden` attribute, and keep status regions in the DOM from the
+  start, never `display: none`. The stage reads attributes: a stop hidden by CSS alone still
+  counts as a Tab stop.
+- `aria-labelledby` and `<label for>` ids resolve only inside the example root, so keep labels
+  inside the example.
+- Memoise a lab's `said` on what it derives from. A new object every render restarts the 500 ms
+  timer, so the lab never announces.
+- axe's `color-contrast` skips inert content and `link-in-text-block` doesn't. A hue-only link
+  on the fail stage must be a `<span>`. `data-depicts-failure` is for depicted content axe would
+  otherwise fail. Tests hold every mark to `figure.bad` or a `[data-lab-mock]`, and a passing
+  lab start has none.
 
 ## URL contracts
 
@@ -136,3 +199,14 @@ globally at the end of `swatch.css`.
   the 30s timeout rather than on assertions. Re-run those with
   `npx playwright test --last-failed --workers=1` before treating them as real. Assertion
   failures are always real.
+- Press input-bar buttons by keyboard (`locator.press('Enter')`, or focus then Enter), not with
+  `click()`. A click leaves the real mouse resting on the page, and while the page smooth-scrolls
+  under it a stray real `mouseover` reaches the live example and overrides the bar's pointer.
+- Mark a test `test.slow()` if it runs more than one full-page axe scan. Two scans per test come
+  close to the 30s limit under load.
+- A lab announces `ANNOUNCE_DELAY_MS` (500 ms) after the reader's last change. Wait for an
+  announcement on its own budget (`heard` in `e2e/labs.spec.ts`, 15s). To show something was
+  *not* announced, wait past two delays first, then assert the region is unchanged.
+- Mock play and the running clock are real time. Reach a time with Wait presses or the player's
+  slider (ArrowRight is +1 s). Drive Play by the bar only on the fail stage, and poll with a long
+  timeout.
