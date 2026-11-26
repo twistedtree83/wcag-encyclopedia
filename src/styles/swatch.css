@@ -3597,11 +3597,8 @@ ul.st-list li::before {
   height: 0;
   overflow: hidden;
 }
-/* Greyscale fades in like the colour preview's (design guide §7, 0.2s). Instant under reduced
-   motion and data-motion="off" through the global rules at the end of this file. */
-.vis-target {
-  transition: filter 0.2s;
-}
+/* The vision filter switches instantly: only opacity, transform and colour animate (design
+   guide §7), so .vis-target carries no transition. */
 .vis-log__now {
   margin: 0 0 8px;
   font-weight: 600;

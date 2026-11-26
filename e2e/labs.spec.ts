@@ -932,21 +932,29 @@ for (const c of LABS) {
       await expect(verdict(lab)).toHaveText(end);
       await expect(live(lab)).toHaveText(c.said);
 
-      // In the failing state the mock (`data-lab-mock`) shows the failure, on purpose: the
-      // contrast labs draw text in the reader's colours. Everything else in the lab must pass.
+      // The whole lab passes axe in every state, mock included. Only content marked
+      // `data-depicts-failure` is left out, and the test below holds those marks to the mock.
       const scan = () =>
         new AxeBuilder({ page })
           .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'])
           .include(c.lab)
-          .exclude(`${c.lab} [data-lab-mock]`)
+          .exclude('[data-depicts-failure]')
           .analyze();
       const results = await scan();
       expect(results.violations.map((v) => `${v.id}: ${v.help}`)).toEqual([]);
+      // A mark sits on the mock and nowhere else in the lab.
+      const marks = lab.locator('[data-depicts-failure]');
+      const outside = await marks.evaluateAll(
+        (els) => els.filter((el) => !el.closest('[data-lab-mock]')).length,
+      );
+      expect(outside, 'a deliberate failure is marked outside the lab mock').toBe(0);
 
       // Back to the start with the keyboard: Reset is a button in the tab order.
       await lab.getByRole('button', { name: 'Reset' }).focus();
       await page.keyboard.press('Enter');
       await expect(verdict(lab)).toHaveText(start);
+      // A passing start depicts no failure, so nothing in it is left out of the scan.
+      if (!c.startsFailing) await expect(marks).toHaveCount(0);
       const again = await scan();
       expect(again.violations.map((v) => `${v.id}: ${v.help}`)).toEqual([]);
     });
@@ -991,6 +999,27 @@ for (const c of LABS) {
         await expect(verdict(lab)).toHaveText(end);
         await expect(verdict(lab).locator('span')).toHaveCSS('animation-name', 'none');
         await expect(verdict(lab)).toHaveCSS('transition-duration', '0s');
+        // Nothing anywhere in the lab or the live stages moves: instruments, ring, cursor, mock.
+        const moving = await page
+          .locator(`${c.lab}, .ex--live`)
+          .evaluateAll((roots) =>
+            roots
+              .flatMap((root) => [root, ...root.querySelectorAll('*')])
+              .flatMap((el) =>
+                [null, '::before', '::after'].map((pseudo) => ({
+                  el,
+                  pseudo,
+                  css: getComputedStyle(el, pseudo),
+                })),
+              )
+              .filter(
+                ({ css }) =>
+                  css.transitionDuration.split(',').some((d) => Number.parseFloat(d) > 0) ||
+                  css.animationName.split(',').some((n) => n.trim() !== 'none'),
+              )
+              .map(({ el, pseudo }) => `${el.tagName.toLowerCase()}.${el.getAttribute('class') ?? ''}${pseudo ?? ''}`),
+          );
+        expect(moving, 'these still move').toEqual([]);
       });
     }
   });

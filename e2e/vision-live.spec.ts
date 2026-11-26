@@ -86,11 +86,14 @@ test.describe('1.4.1', () => {
     await expect(stage.getByRole('link', { name: 'returns policy' })).toBeFocused();
   });
 
-  test('greyscale fades in over 0.2s, and is instant under reduced motion and motion off', async ({
-    page,
-  }) => {
+  // Design guide §7: only opacity, transform and colour animate, so the filter switches at once.
+  test('the filter switches instantly, in every motion mode', async ({ page }) => {
     await open(page, '/criteria/1.4.1/');
-    await expect(example(broken(page))).toHaveCSS('transition-duration', '0.2s');
+    await expect(example(broken(page))).toHaveCSS('transition-duration', '0s');
+    await expect(page.locator('.lab-slot .vis-lab [data-lab-mock]')).toHaveCSS(
+      'transition-duration',
+      '0s',
+    );
     await page.evaluate(() => document.documentElement.setAttribute('data-motion', 'off'));
     await expect(example(broken(page))).toHaveCSS('transition-duration', '0s');
     await page.emulateMedia({ reducedMotion: 'reduce' });

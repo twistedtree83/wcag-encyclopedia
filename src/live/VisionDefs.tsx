@@ -4,9 +4,8 @@ import { CVD_MATRICES, type VisionFilter } from './vision';
 /**
  * Draws the vision filter (#56). `VisionDefs` holds the three colour-vision SVG filters, built
  * from the same matrices `vision.ts` measures with; `visionStyle` puts one on an element.
- * Greyscale is the CSS function, so it fades in over 0.2s like the colour preview's greyscale
- * (design guide §7, `.vis-target`); the SVG filters switch at once. Reduced motion and
- * `data-motion="off"` make the fade instant through the global rules in swatch.css.
+ * Greyscale is the CSS function; every filter switches at once, since only opacity, transform
+ * and colour animate (design guide §7).
  *
  * `prefix` comes from the caller's `useId`, so two filtered things on one page don't share ids.
  */

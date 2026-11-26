@@ -188,9 +188,12 @@ export function ColourCheck({ state, id: given, wide = false, title, criterion =
         />
       </div>
 
+      {/* Below 4.5 : 1 the preview is the failure the reader asked to see, drawn in their own
+          colours: only then is it marked as a deliberate failure, and axe leaves it out. */}
       <div
         className={grey ? 'prev grey' : 'prev'}
         data-lab-mock
+        {...(bodyFails ? { 'data-depicts-failure': true } : {})}
         role="group"
         aria-label="Preview in the chosen colours"
         style={{ color: fg, background: bg }}
