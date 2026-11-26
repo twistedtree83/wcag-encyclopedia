@@ -293,7 +293,7 @@
       ],
       "importance": 26,
       "afk": true,
-      "passes": false
+      "passes": true
     },
     {
       "id": "L-27",

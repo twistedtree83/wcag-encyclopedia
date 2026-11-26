@@ -30,16 +30,19 @@ import {
  * carry the same text. The transport (Play, position) is the lab's own controls.
  */
 
-function Transport({
+/** A lab's transport: Play/Pause and the position. `label` names the slider (#66: two clips). */
+export function Transport({
   id,
   clip,
   player,
   onToggle,
+  label = `Position in ${clip.title}`,
 }: {
   readonly id: string;
   readonly clip: Clip;
   readonly player: ReturnType<typeof usePlayer>;
   readonly onToggle: () => void;
+  readonly label?: string;
 }) {
   const whole = Math.floor(player.t);
   return (
@@ -50,7 +53,7 @@ function Transport({
       {clip.live ? null : (
         <>
           <label className="sr" htmlFor={`${id}-pos`}>
-            Position in {clip.title}
+            {label}
           </label>
           <input
             id={`${id}-pos`}
@@ -93,7 +96,7 @@ function Readouts({ heard, caption }: { readonly heard: string; readonly caption
 }
 
 /** What is said when the reader plays or pauses. */
-const playSaid = (clip: Clip, playing: boolean, t: number) =>
+export const playSaid = (clip: Clip, playing: boolean, t: number) =>
   playing ? 'Paused at ' + playerTime(clip, Math.floor(t)) + '.' : clip.live ? 'Live.' : 'Playing.';
 
 type Model<C> = { readonly choice: C; readonly said: Said | null };

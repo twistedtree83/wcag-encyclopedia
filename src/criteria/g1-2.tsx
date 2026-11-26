@@ -8,8 +8,9 @@
  */
 
 import type { CriterionRecord } from './types';
-import { MockPlayer } from '../live/PlayerWindow';
+import { MockPlayer, Transcript } from '../live/PlayerWindow';
 import { ALL_HANDS, BRIEFING } from '../labs/captions';
+import { BUDGET, EPISODE, FOLD } from '../labs/mediaAlternatives';
 
 function Player({ caption, badge }: { caption?: string; badge?: string }) {
   return (
@@ -79,6 +80,92 @@ function CaptionedStream() {
   );
 }
 
+/* --- Live examples (#66): media alternatives on the mock player ---------------------------- */
+
+/** 1.2.1 broken: the episode as audio and nothing else. */
+function EpisodeAlone() {
+  return (
+    <>
+      <p className="swatch-label">Episode 14 — Supply chains</p>
+      <MockPlayer clip={EPISODE} track="none" />
+      <p className="example-note">
+        Speech with no transcript. A deaf listener gets the title. So does anyone on a train, in
+        an open office, or searching the site for a phrase they remember hearing.
+      </p>
+    </>
+  );
+}
+
+/** 1.2.1 fixed: the same episode with its transcript on the page. */
+function EpisodeTranscribed() {
+  return (
+    <>
+      <p className="swatch-label">Episode 14 — Supply chains</p>
+      <MockPlayer clip={EPISODE} track="none" />
+      <Transcript clip={EPISODE} kind="heard" label="Transcript" />
+      <p className="example-note">
+        Speaker-labelled, on the page rather than behind a download. It also happens to be the
+        only version a search engine can read.
+      </p>
+    </>
+  );
+}
+
+/** 1.2.3 broken: the demonstration, captioned, with nothing for what the hands do. */
+function DemoCaptionsOnly() {
+  return (
+    <>
+      <MockPlayer clip={FOLD} track="accurate" />
+      <p className="example-note">
+        “This” is a gesture. A blind viewer hears a complete sentence and learns nothing, and the
+        captions faithfully reproduce the same gap.
+      </p>
+    </>
+  );
+}
+
+/** 1.2.3 fixed: the same demonstration with a described transcript beside it. */
+function DemoDescribedTranscript() {
+  return (
+    <>
+      <MockPlayer clip={FOLD} track="accurate" />
+      <Transcript clip={FOLD} kind="described" label="Described transcript" />
+      <p className="example-note">
+        Either fix works: a script that stops saying “this”, or, as here, a described transcript
+        that carries what the camera showed.
+      </p>
+    </>
+  );
+}
+
+/** 1.2.5 broken: the review with a described transcript, but no description track. */
+function ReviewTranscriptOnly() {
+  return (
+    <>
+      <MockPlayer clip={BUDGET} track="accurate" />
+      <Transcript clip={BUDGET} kind="described" label="Described transcript" />
+      <p className="example-note">
+        Enough for 1.2.3 at Level A, not enough here. A blind viewer has to read a document
+        alongside the video instead of simply watching it.
+      </p>
+    </>
+  );
+}
+
+/** 1.2.5 fixed: the same review with its description track, cues on screen in the gaps. */
+function ReviewDescribed() {
+  return (
+    <>
+      <MockPlayer clip={BUDGET} track="accurate" description />
+      <p className="example-note">
+        Narration written into the natural pauses, offered as a track the viewer selects. This
+        page is silent, so the cues show on screen. The viewer watches the same video everyone
+        else does.
+      </p>
+    </>
+  );
+}
+
 const PLAYER_KEYS = ['tab', 'shift-tab', 'enter'] as const;
 
 export const G1_2: readonly CriterionRecord[] = [
@@ -88,12 +175,14 @@ export const G1_2: readonly CriterionRecord[] = [
     level: 'A',
     since: '2.0',
     guideline: '1.2',
+    labs: ['media-only'],
     plain:
       'A recording with only sound needs a transcript. A recording with only pictures needs ' +
       'either a transcript or an audio track describing it. Whichever sense the recording ' +
       'requires, offer the same content to someone who cannot use it.',
     fail: {
       caption: 'A podcast episode published as audio and nothing else.',
+      live: { Example: EpisodeAlone, keys: PLAYER_KEYS, instruments: ['mock-player'] },
       render: () => (
         <>
           <p className="swatch-label">Episode 14 — Supply chains</p>
@@ -108,6 +197,7 @@ export const G1_2: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'A full transcript sits beneath the player.',
+      live: { Example: EpisodeTranscribed, keys: PLAYER_KEYS, instruments: ['mock-player'] },
       render: () => (
         <>
           <p className="swatch-label">Episode 14 — Supply chains</p>
@@ -174,12 +264,14 @@ export const G1_2: readonly CriterionRecord[] = [
     level: 'A',
     since: '2.0',
     guideline: '1.2',
+    labs: ['media-alternative'],
     plain:
       'If the picture carries information the soundtrack does not, offer that information some ' +
       'other way — either an audio description track or a text alternative telling the whole ' +
       'story. Captions do not cover this: they carry what was said, not what was shown.',
     fail: {
       caption: 'The soundtrack alone does not carry the demonstration.',
+      live: { Example: DemoCaptionsOnly, keys: PLAYER_KEYS, instruments: ['mock-player'] },
       render: () => (
         <>
           <Player badge="video" caption="[Sam] Then you just do this, and it's ready." />
@@ -192,6 +284,7 @@ export const G1_2: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'A text alternative describes the action, not just the dialogue.',
+      live: { Example: DemoDescribedTranscript, keys: PLAYER_KEYS, instruments: ['mock-player'] },
       render: () => (
         <>
           <Player badge="video" caption="[Sam] Then you fold the corner under, and it's ready." />
@@ -255,12 +348,14 @@ export const G1_2: readonly CriterionRecord[] = [
     level: 'AA',
     since: '2.0',
     guideline: '1.2',
+    labs: ['description'],
     plain:
       'At AA the text alternative is no longer enough on its own: prerecorded video needs an ' +
       'actual audio description track, narrating the visual information into the gaps in the ' +
       'dialogue.',
     fail: {
       caption: 'A described transcript, but no described audio track.',
+      live: { Example: ReviewTranscriptOnly, keys: PLAYER_KEYS, instruments: ['mock-player'] },
       render: () => (
         <>
           <Player badge="video" />
@@ -273,6 +368,7 @@ export const G1_2: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'A selectable audio description track.',
+      live: { Example: ReviewDescribed, keys: PLAYER_KEYS, instruments: ['mock-player'] },
       render: () => (
         <>
           <Player badge="video" caption="[Description] She crosses out the second column." />

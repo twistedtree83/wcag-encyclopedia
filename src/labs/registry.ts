@@ -54,6 +54,7 @@ import {
 import { NonTextContrastLab, SensoryLab, UseOfColourLab } from './VisionLabs';
 import { TooltipLab } from './TooltipLab';
 import { CaptionsLab, LiveCaptionsLab } from './CaptionLabs';
+import { DescriptionLab, MediaAlternativeLab, MediaOnlyLab } from './MediaAltLabs';
 import { MultipleWaysLab } from './MultipleWaysLab';
 import { ConsistentNavLab } from './ConsistentNavLab';
 
@@ -142,6 +143,9 @@ export const LABS: readonly LabEntry[] = [
   { id: 'accessible-auth', title: 'Try it: sign in without a test', Lab: AccessibleAuthLab },
   { id: 'captions', title: 'Try it: caption the briefing', Lab: CaptionsLab },
   { id: 'live-captions', title: 'Try it: caption the live stream', Lab: LiveCaptionsLab },
+  { id: 'media-only', title: 'Try it: give each clip its alternative', Lab: MediaOnlyLab },
+  { id: 'media-alternative', title: 'Try it: carry what the camera shows', Lab: MediaAlternativeLab },
+  { id: 'description', title: 'Try it: describe into the gaps', Lab: DescriptionLab },
 ];
 
 export function labById(id: string): LabEntry | undefined {
