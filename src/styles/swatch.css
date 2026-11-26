@@ -3861,6 +3861,21 @@ ul.st-list li::before {
   font-weight: 600;
 }
 
+/* --- Mock site: search name and help link, 3.2.4 and 3.2.6 (L-24) ------------------------ */
+
+/* The help link, wherever the site puts it: after the menu, at the end of the page, the footer. */
+.msite__help {
+  margin: 0;
+  font-size: var(--small);
+}
+/* 24px tall at least (2.5.8). */
+.msite__help a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  font-weight: 600;
+}
+
 /* --- Clock and 2.2.1 (L-21) ---------------------------------------------------------------- */
 
 /* The 2.2.1 live examples: a one-field application, its warning, or its end. */

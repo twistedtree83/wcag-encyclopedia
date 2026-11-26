@@ -9,7 +9,7 @@ import { filterName } from './vision';
 import { scrollLine } from '../labs/zoom';
 import { colourLine, sharpLine } from '../labs/imagesOfText';
 import { PlayerLog } from './PlayerWindow';
-import { menuOrderLines, siteLines } from './mockSite';
+import { helpPlaceLines, menuOrderLines, searchNameLines, siteLines } from './mockSite';
 import { clockLines, clockNowLine } from './clock';
 
 /**
@@ -469,6 +469,39 @@ function MenuOrderInstrument({ id, events }: InstrumentProps) {
   );
 }
 
+/** A judged line per mock-site page (#64): a ✓ or ✕ glyph, hidden, then the words. */
+function JudgedLines({
+  id,
+  title,
+  className,
+  lines,
+}: {
+  id: string;
+  title: string;
+  className: string;
+  lines: readonly { text: string; kept: boolean }[];
+}) {
+  return (
+    <div className={`alog vis-log ${className}`}>
+      <p className="alog__h" id={`${id}-h`}>
+        {title}
+      </p>
+      {lines.length > 0 ? (
+        <ul aria-labelledby={`${id}-h`}>
+          {lines.map((l, i) => (
+            <li key={i} className={l.kept ? 'vis-log__ok' : 'vis-log__lost'}>
+              <span aria-hidden="true">{l.kept ? '✓ ' : '✕ '}</span>
+              {l.text}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="alog__empty">Not loaded yet.</p>
+      )}
+    </div>
+  );
+}
+
 /**
  * The clock (#61): the stage's mock time, whether it is running, and each time the example
  * changed on it (a warning, an expiry), with when. It never starts on its own.
@@ -490,6 +523,16 @@ function ClockInstrument({ id, events }: InstrumentProps) {
       ) : null}
     </div>
   );
+}
+
+/** The search button's name on each mock-site page visited (#64), against the first. */
+function SearchNameInstrument({ id, events }: InstrumentProps) {
+  return <JudgedLines id={id} title="Search control" className="sname" lines={searchNameLines(events)} />;
+}
+
+/** Where each mock-site page visited keeps its help link (#64), against the first with one. */
+function HelpPlaceInstrument({ id, events }: InstrumentProps) {
+  return <JudgedLines id={id} title="Help link" className="hplace" lines={helpPlaceLines(events)} />;
 }
 
 /** The frame's text size and spacing (#54), and whether any box now cuts its text off. */
@@ -535,6 +578,8 @@ export const INSTRUMENTS: Readonly<Record<string, ComponentType<InstrumentProps>
   context: ContextInstrument,
   'mock-site': MockSiteInstrument,
   'menu-order': MenuOrderInstrument,
+  'search-name': SearchNameInstrument,
+  'help-place': HelpPlaceInstrument,
 };
 
 /** The ids in `ids` that no registered instrument answers to. Empty when all resolve. */

@@ -57,6 +57,8 @@ import { CaptionsLab, LiveCaptionsLab } from './CaptionLabs';
 import { DescriptionLab, MediaAlternativeLab, MediaOnlyLab } from './MediaAltLabs';
 import { MultipleWaysLab } from './MultipleWaysLab';
 import { ConsistentNavLab } from './ConsistentNavLab';
+import { ConsistentIdLab } from './ConsistentIdLab';
+import { ConsistentHelpLab } from './ConsistentHelpLab';
 
 export type LabProps = {
   /** The number of the criterion page showing the lab, e.g. "1.4.11". */
@@ -134,6 +136,8 @@ export const LABS: readonly LabEntry[] = [
   { id: 'sensory-instruction', title: 'Try it: rewrite the instruction', Lab: SensoryLab },
   { id: 'multiple-ways', title: 'Try it: find the buried page', Lab: MultipleWaysLab },
   { id: 'consistent-navigation', title: 'Try it: shuffle the menu', Lab: ConsistentNavLab },
+  { id: 'consistent-identification', title: 'Try it: name the search button', Lab: ConsistentIdLab },
+  { id: 'consistent-help', title: 'Try it: move the help link', Lab: ConsistentHelpLab },
   { id: 'session-timeout', title: 'Try it: time out the session', Lab: SessionLab, flagshipFor: '2.2.1' },
   { id: 'pointer-gestures', title: 'Try it: give the map buttons', Lab: PointerGesturesLab },
   { id: 'pointer-cancellation', title: 'Try it: slide off the button', Lab: PointerCancellationLab },
