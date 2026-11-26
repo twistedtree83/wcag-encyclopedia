@@ -165,14 +165,11 @@ export function unresolvedLabs(record: Pick<CriterionRecord, 'labs'>): readonly 
   return (record.labs ?? []).filter((id) => labById(id) === undefined);
 }
 
-/** The criteria with no lab that are not on the `toCome` list. Empty when coverage is complete. */
+/** The criteria with no lab. Empty when coverage is complete, as it must be. */
 export function uncoveredCriteria(
   records: readonly Pick<CriterionRecord, 'num' | 'labs'>[],
-  toCome: readonly string[],
 ): readonly string[] {
-  return records
-    .filter((r) => (r.labs ?? []).length === 0 && !toCome.includes(r.num))
-    .map((r) => r.num);
+  return records.filter((r) => (r.labs ?? []).length === 0).map((r) => r.num);
 }
 
 /** The criteria that have a flagship lab built. */

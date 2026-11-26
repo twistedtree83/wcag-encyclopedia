@@ -326,7 +326,7 @@
       ],
       "importance": 27,
       "afk": true,
-      "passes": false
+      "passes": true
     }
   ]
 }

@@ -84,10 +84,9 @@ Reset button and the one polite region. To add a lab:
    for each change the reader makes, and `null` (or unchanged) otherwise. Reset sets it to
    `null`, so it is never announced. Don't add a live region of your own.
 4. Register it in `LABS` (`src/labs/registry.ts`), with `flagshipFor: '<num>'` if it is that
-   criterion's flagship, then add its id to the record's `labs`.
-5. Delete the criterion's line from `tests/labsToCome.ts`. The data-integrity test fails until
-   you do.
-6. Add a case to `LABS` in `e2e/labs.spec.ts`. It covers both verdicts by keyboard, axe in the
+   criterion's flagship, then add its id to the record's `labs`. Every criterion has at least
+   one lab and live fail and pass examples; the data-integrity test fails on any gap.
+5. Add a case to `LABS` in `e2e/labs.spec.ts`. It covers both verdicts by keyboard, axe in the
    failing state, Reset and the motion rules.
 
 A lab that shows what a screen reader would say uses the announcement log
