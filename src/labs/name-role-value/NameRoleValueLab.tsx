@@ -1,5 +1,6 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { AnnouncementLog, useAnnouncementLog } from '../shared/AnnouncementLog';
+import { Choice } from '../shared/Choice';
 import { LabShell, type Said } from '../shared/LabShell';
 import {
   CONTROLS,
@@ -65,38 +66,6 @@ export function NrvMock({ nrv, labelId }: { readonly nrv: Nrv; readonly labelId:
       )}
       {name === 'content' ? null : <span id={labelId}>{LABEL}</span>}
     </div>
-  );
-}
-
-export function Choice<T extends string>({
-  name,
-  legend,
-  options,
-  value,
-  onChange,
-}: {
-  name: string;
-  legend: string;
-  options: readonly { value: T; label: string }[];
-  value: T;
-  onChange: (v: T) => void;
-}) {
-  return (
-    <fieldset className="nrv-choice">
-      <legend>{legend}</legend>
-      {options.map((o) => (
-        <label key={o.value}>
-          <input
-            type="radio"
-            name={name}
-            value={o.value}
-            checked={value === o.value}
-            onChange={() => onChange(o.value)}
-          />
-          {o.label}
-        </label>
-      ))}
-    </fieldset>
   );
 }
 

@@ -13,7 +13,7 @@ import {
   type KbKey,
 } from './keyboard';
 import { LabShell, type Said } from '../shared/LabShell';
-import { Choice } from '../name-role-value/NameRoleValueLab';
+import { Choice } from '../shared/Choice';
 
 /**
  * The 2.1.1 lab (#45): the reader builds "Add to basket" as a click-only div, a div with

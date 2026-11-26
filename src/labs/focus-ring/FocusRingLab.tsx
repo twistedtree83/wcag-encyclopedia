@@ -15,6 +15,7 @@ import {
   type Ring,
 } from './focusRing';
 import { LabShell, type Said } from '../shared/LabShell';
+import { Slider } from '../shared/Slider';
 import { ringFromSearch, searchFromRing } from './ringQuery';
 
 /**
@@ -32,46 +33,6 @@ import { ringFromSearch, searchFromRing } from './ringQuery';
 type Model = { readonly ring: Ring; readonly said: Said | null };
 
 const START: Model = { ring: RING_START, said: null };
-
-/** A labelled range with its value in words. Shared with the 2.4.1 and 2.4.11 labs (#46). */
-export function Slider({
-  id,
-  label,
-  value,
-  text,
-  onChange,
-  min = 0,
-  max = MAX_PX,
-  step = 1,
-}: {
-  id: string;
-  label: string;
-  value: number;
-  text: string;
-  onChange: (v: number) => void;
-  min?: number;
-  max?: number;
-  step?: number;
-}) {
-  return (
-    <div className="slide">
-      <label htmlFor={id}>
-        <span>{label}</span>
-        <span>{text}</span>
-      </label>
-      <input
-        type="range"
-        id={id}
-        min={min}
-        max={max}
-        step={step}
-        value={value}
-        aria-valuetext={text}
-        onChange={(e) => onChange(Number(e.currentTarget.value))}
-      />
-    </div>
-  );
-}
 
 export function FocusRingLab() {
   const id = useId();
@@ -139,6 +100,7 @@ export function FocusRingLab() {
           id={`${id}-w`}
           label="Ring thickness"
           value={ring.width}
+          max={MAX_PX}
           text={px(ring.width)}
           onChange={(width) => change({ width })}
         />
@@ -146,6 +108,7 @@ export function FocusRingLab() {
           id={`${id}-off`}
           label="Gap from the button"
           value={ring.offset}
+          max={MAX_PX}
           text={ring.offset === 0 ? 'touching' : `${ring.offset}px`}
           onChange={(offset) => change({ offset })}
         />

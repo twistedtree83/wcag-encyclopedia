@@ -12,7 +12,7 @@ import {
   type Doc,
 } from './headingsLabels';
 import { LabShell, type Said } from '../shared/LabShell';
-import { Choice } from '../name-role-value/NameRoleValueLab';
+import { Choice } from '../shared/Choice';
 
 /**
  * The 2.4.6 lab (#50): the reader rewrites a mock returns page's headings and its field's label,

@@ -11,7 +11,7 @@ import {
   type FormLabels,
 } from './formLabels';
 import { LabShell, type Said } from '../shared/LabShell';
-import { Choice } from '../name-role-value/NameRoleValueLab';
+import { Choice } from '../shared/Choice';
 
 /**
  * The 3.3.2 lab (#52): the reader switches a field between a placeholder alone and a persistent

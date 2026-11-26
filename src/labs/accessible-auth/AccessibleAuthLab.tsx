@@ -1,7 +1,7 @@
 import { useId, useState } from 'react';
 import { AA_LENGTH, AA_START, METHODS, aaOnScreen, aaVerdict, type AccessibleAuth } from './accessibleAuth';
 import { LabShell, type Said } from '../shared/LabShell';
-import { Choice } from '../name-role-value/NameRoleValueLab';
+import { Choice } from '../shared/Choice';
 
 /**
  * The 3.3.8 lab (#60): the reader chooses what a mock sign-in asks of them, then tries to fill it

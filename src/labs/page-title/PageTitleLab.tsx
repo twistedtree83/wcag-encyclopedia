@@ -2,7 +2,7 @@ import { useId, useState } from 'react';
 import { tabSwitchLine } from '../../live/lists';
 import { AnnouncementLog } from '../shared/AnnouncementLog';
 import { LabShell, type Said } from '../shared/LabShell';
-import { Choice } from '../name-role-value/NameRoleValueLab';
+import { Choice } from '../shared/Choice';
 import {
   ADDRESS,
   TITLES,

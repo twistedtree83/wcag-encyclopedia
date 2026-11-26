@@ -1,6 +1,6 @@
 import { useId, useState } from 'react';
 import { LabShell, type Said } from '../shared/LabShell';
-import { Choice } from '../name-role-value/NameRoleValueLab';
+import { Choice } from '../shared/Choice';
 import {
   ADDRESS,
   COUNTRIES,

@@ -13,7 +13,7 @@ import {
   sentenceOf,
   type Links,
 } from './linkPurpose';
-import { Choice } from '../name-role-value/NameRoleValueLab';
+import { Choice } from '../shared/Choice';
 
 /**
  * The 2.4.4 lab (#50): the reader edits three news items' link text and the sentence before each

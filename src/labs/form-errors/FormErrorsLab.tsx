@@ -2,7 +2,7 @@ import { useId, useMemo, useRef, useState } from 'react';
 import { AnnouncementLog, useAnnouncementLog } from '../shared/AnnouncementLog';
 import { FE_ERROR, FE_START, FE_VALUE, SHOWN, feSaid, feVerdict, type FormErrors } from './formErrors';
 import { LabShell, type Said } from '../shared/LabShell';
-import { Choice } from '../name-role-value/NameRoleValueLab';
+import { Choice } from '../shared/Choice';
 
 /**
  * The 3.3.1 lab (#52): the reader picks how a rejected email is shown, submits the mock form, and

@@ -12,7 +12,7 @@ import {
   type TrapAt,
 } from './keyboardTrap';
 import { LabShell, type Said } from '../shared/LabShell';
-import { Choice } from '../name-role-value/NameRoleValueLab';
+import { Choice } from '../shared/Choice';
 
 /**
  * The 2.1.2 lab (#45): a newsletter widget drawn inside the mock traps simulated focus, traps it

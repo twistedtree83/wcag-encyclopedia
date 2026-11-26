@@ -8,7 +8,7 @@ import {
   pressesToMain,
   type Bypass,
 } from './bypass';
-import { Slider } from '../focus-ring/FocusRingLab';
+import { Slider } from '../shared/Slider';
 import { LabShell, type Said } from '../shared/LabShell';
 
 /**

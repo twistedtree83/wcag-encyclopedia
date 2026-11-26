@@ -1,7 +1,7 @@
 import { useId, useMemo, useRef, useState } from 'react';
 import { AnnouncementLog, useAnnouncementLog } from '../shared/AnnouncementLog';
 import { LabShell, type Said } from '../shared/LabShell';
-import { Choice } from '../name-role-value/NameRoleValueLab';
+import { Choice } from '../shared/Choice';
 import {
   PAGE_LANGS,
   PHRASE,

@@ -2,7 +2,7 @@ import { useId, useMemo, useRef, useState } from 'react';
 import { AnnouncementLog, useAnnouncementLog } from '../shared/AnnouncementLog';
 import { ES_START, ES_TEXT, ES_VALUE, MESSAGES, esSaid, esVerdict, type ErrorSuggestion } from './errorSuggestion';
 import { LabShell, type Said } from '../shared/LabShell';
-import { Choice } from '../name-role-value/NameRoleValueLab';
+import { Choice } from '../shared/Choice';
 
 /**
  * The 3.3.3 lab (#59): the reader submits a mock form with a two-digit year and picks what the

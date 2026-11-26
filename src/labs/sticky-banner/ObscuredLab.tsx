@@ -1,5 +1,5 @@
 import { useId, useState } from 'react';
-import { Slider } from '../focus-ring/FocusRingLab';
+import { Slider } from '../shared/Slider';
 import { LabShell, type Said } from '../shared/LabShell';
 import {
   FIELD,

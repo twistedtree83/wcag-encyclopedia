@@ -11,7 +11,7 @@ import {
   type Purposes,
 } from './inputPurpose';
 import { LabShell, type Said } from '../shared/LabShell';
-import { Choice } from '../name-role-value/NameRoleValueLab';
+import { Choice } from '../shared/Choice';
 
 /**
  * The 1.3.5 lab (#49): the reader gives each mock contact field an autocomplete token, the right
