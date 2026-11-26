@@ -1,0 +1,136 @@
+{
+ "name": "WCAG Encyclopedia \u2014 Swatch redesign",
+ "repoUrl": "https://github.com/twistedtree83/wcag-encyclopedia",
+ "branchName": "redesign",
+ "prdIssue": 27,
+ "verifyCommand": "npm run verify",
+ "bibles": [
+  "CONTEXT.md",
+  "docs/PRD.md",
+  "design/new-design/DESIGN-GUIDE.md"
+ ],
+ "tasks": [
+  {
+   "id": "R-01",
+   "issue": 28,
+   "title": "Redesign walking skeleton: Swatch tokens, page shell and one pre-rendered criterion page",
+   "depends": [],
+   "importance": 1,
+   "afk": true,
+   "passes": true
+  },
+  {
+   "id": "R-02",
+   "issue": 29,
+   "title": "Criterion records gain `since` and `lab?`",
+   "depends": [
+    "R-01"
+   ],
+   "importance": 2,
+   "afk": true,
+   "passes": true
+  },
+  {
+   "id": "R-03",
+   "issue": 30,
+   "title": "All 55 criterion pages with the full anatomy",
+   "depends": [
+    "R-02"
+   ],
+   "importance": 3,
+   "afk": true,
+   "passes": true
+  },
+  {
+   "id": "R-04",
+   "issue": 31,
+   "title": "Filter engine: principle, level, new in 2.2, and wider search",
+   "depends": [
+    "R-02"
+   ],
+   "importance": 4,
+   "afk": true,
+   "passes": true
+  },
+  {
+   "id": "R-06",
+   "issue": 33,
+   "title": "Colour check lab and the Colour check page",
+   "depends": [
+    "R-03"
+   ],
+   "importance": 5,
+   "afk": true,
+   "passes": true
+  },
+  {
+   "id": "R-07",
+   "issue": 34,
+   "title": "Fade-the-text lab on 1.4.3",
+   "depends": [
+    "R-03"
+   ],
+   "importance": 6,
+   "afk": true,
+   "passes": true
+  },
+  {
+   "id": "R-09",
+   "issue": 36,
+   "title": "About page with the accessibility statement",
+   "depends": [
+    "R-01"
+   ],
+   "importance": 7,
+   "afk": true,
+   "passes": true
+  },
+  {
+   "id": "R-05",
+   "issue": 32,
+   "title": "All criteria page",
+   "depends": [
+    "R-03",
+    "R-04"
+   ],
+   "importance": 8,
+   "afk": true,
+   "passes": true
+  },
+  {
+   "id": "R-08",
+   "issue": 35,
+   "title": "Home page",
+   "depends": [
+    "R-05",
+    "R-06",
+    "R-07"
+   ],
+   "importance": 9,
+   "afk": true,
+   "passes": true
+  },
+  {
+   "id": "R-10",
+   "issue": 37,
+   "title": "Delete the retired single-page modules",
+   "depends": [
+    "R-08"
+   ],
+   "importance": 10,
+   "afk": true,
+   "passes": true
+  },
+  {
+   "id": "R-11",
+   "issue": 38,
+   "title": "Cutover: owner's visual sign-off, then merge the redesign and deploy",
+   "depends": [
+    "R-10"
+   ],
+   "importance": 11,
+   "afk": false,
+   "passes": false
+  }
+ ]
+}

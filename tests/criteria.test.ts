@@ -1,7 +1,22 @@
+import { readFileSync } from 'node:fs';
 import { describe, it, expect } from 'vitest';
-import { CORPUS, criterion, criteriaFor, populatedGuidelines } from '../src/criteria/corpus';
+import {
+  CORPUS,
+  criterion,
+  criteriaFor,
+  criteriaInPrinciple,
+  populatedGuidelines,
+} from '../src/criteria/corpus';
 import { EXPECTED, EXPECTED_TOTAL, expectedFor } from '../src/criteria/manifest';
-import { GUIDELINES, PRINCIPLES, PRINCIPLE_MARKS, guidelineFor } from '../src/criteria/structure';
+import { GUIDELINES, PRINCIPLES, guidelineFor } from '../src/criteria/structure';
+import {
+  flagshipCriteria,
+  LABS,
+  uncoveredCriteria,
+  unresolvedLabs,
+} from '../src/labs/registry';
+import { unresolvedInstruments } from '../src/live/instruments';
+import { palettes, THEMES, type Token } from '../src/theme/tokens';
 
 /**
  * Data integrity.
@@ -54,10 +69,32 @@ describe('the structure', () => {
   });
 
   it('gives every principle a distinct accent *and* a distinct marker shape', () => {
-    const marks = Object.values(PRINCIPLE_MARKS);
-    // Hue alone must never carry the grouping — 1.4.1, applied to the site itself.
-    expect(new Set(marks.map((m) => m.shape)).size).toBe(4);
-    expect(new Set(marks.map((m) => m.token)).size).toBe(4);
+    // Hue alone must never carry the grouping (CONTEXT.md; 1.4.1 applied to the site itself).
+    // Principle marks live in swatch.css: `.mk.pN` (inline markers). Home's principle cards are
+    // marked by the principle's number instead (homePage.test.tsx).
+    const css = readFileSync('src/styles/swatch.css', 'utf8');
+    const block = (selector: string) => {
+      const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const m = new RegExp(`(?:^|\\n)${escaped}\\s*\\{([^}]*)\\}`).exec(css);
+      return m ? m[1]! : '';
+    };
+    const shapeOf = (body: string) =>
+      body
+        .split(';')
+        .map((d) => d.trim())
+        .filter((d) => /^(border-radius|clip-path|transform)\s*:/.test(d))
+        .join('; ');
+    const nums = PRINCIPLES.map((p) => p.num);
+
+    const marks = nums.map((n) => block(`.mk.p${n}`));
+    const accents = marks.map((b) => /background:\s*var\(--(a\d)\)/.exec(b)?.[1]);
+    expect(accents).toEqual(['a1', 'a2', 'a3', 'a4']);
+    expect(new Set(marks.map(shapeOf)).size).toBe(4);
+
+    for (const theme of THEMES) {
+      const hexes = accents.map((a) => palettes[theme][a as Token]);
+      expect(new Set(hexes).size, theme).toBe(4);
+    }
   });
 
   it('assigns every guideline to a real principle', () => {
@@ -119,6 +156,13 @@ describe('corpus lookups', () => {
   it('groups criteria by guideline', () => {
     for (const record of criteriaFor('1.4')) {
       expect(record.guideline).toBe('1.4');
+    }
+  });
+
+  it('counts criteria per principle, 20 / 20 / 13 / 2', () => {
+    expect(PRINCIPLES.map((p) => criteriaInPrinciple(p.num).length)).toEqual([20, 20, 13, 2]);
+    for (const record of criteriaInPrinciple(3)) {
+      expect(record.num.startsWith('3.'), record.num).toBe(true);
     }
   });
 
@@ -213,7 +257,8 @@ describe('2.3.1 is depicted, never reproduced', () => {
 
   it('has no animation anywhere in the strobe example styles', async () => {
     const { readFileSync } = await import('node:fs');
-    const css = readFileSync('src/styles/global.css', 'utf8');
+    const css = readFileSync('src/styles/examples.css', 'utf8');
+    expect(css.indexOf('.strobe {'), 'the strobe styles moved; point this test at them').toBeGreaterThan(-1);
     const block = css.slice(css.indexOf('.strobe {'));
     const strobeRules = block.slice(0, block.indexOf('/* ---'));
     // Reproducing this particular failure could cause a seizure in the reader the criterion
@@ -255,4 +300,151 @@ describe('the corpus is complete', () => {
       expect(count, `guideline ${g.num} ${g.name} has no criteria`).toBeGreaterThan(0);
     }
   });
+});
+
+/**
+ * Since: the WCAG version that introduced each criterion. It drives the facts card's
+ * "In WCAG since" and the "new in 2.2" filter, so it is typed once on the record and checked
+ * here against the standard's own lists of what 2.1 and 2.2 added.
+ */
+describe('since', () => {
+  const NEW_IN_2_1 = [
+    '1.3.4', '1.3.5', '1.4.10', '1.4.11', '1.4.12', '1.4.13',
+    '2.1.4', '2.5.1', '2.5.2', '2.5.3', '2.5.4', '4.1.3',
+  ];
+  const NEW_IN_2_2 = ['2.4.11', '2.5.7', '2.5.8', '3.2.6', '3.3.7', '3.3.8'];
+
+  it.each(CORPUS.map((c) => [c.num, c] as const))('%s has a valid since', (_num, record) => {
+    expect(['2.0', '2.1', '2.2']).toContain(record.since);
+  });
+
+  it('marks exactly six criteria as new in 2.2: 2.4.11, 2.5.7, 2.5.8, 3.2.6, 3.3.7, 3.3.8', () => {
+    const newIn22 = CORPUS.filter((c) => c.since === '2.2').map((c) => c.num);
+    expect(newIn22).toEqual(NEW_IN_2_2);
+  });
+
+  it('marks the twelve Level A and AA criteria that WCAG 2.1 added as 2.1', () => {
+    const newIn21 = CORPUS.filter((c) => c.since === '2.1').map((c) => c.num);
+    expect(newIn21).toEqual(NEW_IN_2_1);
+  });
+
+  it('marks the other 37 as 2.0', () => {
+    expect(CORPUS.filter((c) => c.since === '2.0')).toHaveLength(37);
+  });
+});
+
+/**
+ * Labs: interactive exhibits a record can point at. A lab adds to a criterion's fail and pass
+ * examples and never replaces them, so the completeness check above still applies to every
+ * record that carries one.
+ */
+describe('lab references', () => {
+  it('flags a reference that does not resolve to a real lab', () => {
+    expect(unresolvedLabs({ labs: ['no-such-lab'] })).toEqual(['no-such-lab']);
+  });
+
+  it('flags nothing on a record without labs', () => {
+    expect(unresolvedLabs({})).toEqual([]);
+  });
+
+  it('flags nothing for a lab that is registered', () => {
+    for (const lab of LABS) {
+      expect(unresolvedLabs({ labs: [lab.id] }), lab.id).toEqual([]);
+    }
+  });
+
+  it('registers every lab once', () => {
+    const ids = LABS.map((l) => l.id);
+    expect(ids.length).toBe(new Set(ids).size);
+  });
+
+  it.each(CORPUS.map((c) => [c.num, c] as const))(
+    '%s refers only to labs that exist, each once',
+    (_num, record) => {
+      expect(unresolvedLabs(record), 'unknown lab ids').toEqual([]);
+      const ids = record.labs ?? [];
+      expect(ids.length, 'a lab listed twice').toBe(new Set(ids).size);
+    },
+  );
+
+  it.each(CORPUS.filter((c) => c.labs).map((c) => [c.num, c] as const))(
+    '%s keeps its fail and pass examples alongside its labs',
+    (_num, record) => {
+      expect(record.labs!.length, 'an empty labs list: omit the field instead').toBeGreaterThan(0);
+      expect(typeof record.fail.render).toBe('function');
+      expect(typeof record.pass.render).toBe('function');
+    },
+  );
+});
+
+/**
+ * Lab coverage (#41, closed out by #67): every one of the 55 criteria has at least one lab, with
+ * no exceptions. The ten flagships are fixed by the PRD (#40).
+ */
+describe('lab coverage', () => {
+  it('flags a criterion with no lab', () => {
+    const records = [{ num: '9.9.9' }, { num: '9.9.8', labs: ['fade-text'] }];
+    expect(uncoveredCriteria(records)).toEqual(['9.9.9']);
+  });
+
+  it('gives every one of the 55 criteria a lab', () => {
+    expect(CORPUS.length).toBe(EXPECTED_TOTAL);
+    expect(uncoveredCriteria(CORPUS)).toEqual([]);
+  });
+
+  const FLAGSHIPS = [
+    '1.1.1',
+    '1.3.1',
+    '1.4.3',
+    '1.4.10',
+    '1.4.12',
+    '2.2.1',
+    '2.4.3',
+    '2.4.7',
+    '2.5.8',
+    '4.1.2',
+  ];
+
+  it('has exactly the ten flagships', () => {
+    expect([...flagshipCriteria()].sort()).toEqual([...FLAGSHIPS].sort());
+  });
+
+  it('shows each flagship lab on the criterion it is the flagship for', () => {
+    for (const lab of LABS.filter((l) => l.flagshipFor)) {
+      expect(criterion(lab.flagshipFor!)?.labs ?? [], lab.id).toContain(lab.id);
+    }
+  });
+});
+
+/**
+ * Live examples (#43): a record may give its fail and pass examples a live version. Both or
+ * neither, with the same input bar, and every instrument it names is registered.
+ */
+describe('live-example references', () => {
+  it('flags an instrument that is not registered', () => {
+    expect(unresolvedInstruments(['announcement-log', 'no-such-instrument'])).toEqual([
+      'no-such-instrument',
+    ]);
+  });
+
+  it('gives every criterion live fail and pass examples (#67)', () => {
+    const notLive = CORPUS.filter((c) => !c.fail.live || !c.pass.live).map((c) => c.num);
+    expect(notLive).toEqual([]);
+  });
+
+  it.each(CORPUS.filter((c) => c.fail.live || c.pass.live).map((c) => [c.num, c] as const))(
+    '%s makes both stages live, with one input bar and registered instruments',
+    (_num, record) => {
+      const fail = record.fail.live;
+      const pass = record.pass.live;
+      expect(fail, 'the fail example has no live version').toBeDefined();
+      expect(pass, 'the pass example has no live version').toBeDefined();
+      expect(pass!.keys, 'the two stages carry different input bars').toEqual(fail!.keys);
+      expect(fail!.keys.length).toBeGreaterThan(0);
+      for (const live of [fail!, pass!]) {
+        expect(unresolvedInstruments(live.instruments), 'unknown instruments').toEqual([]);
+        expect(live.instruments.length, 'a stage with no instrument').toBeGreaterThan(0);
+      }
+    },
+  );
 });

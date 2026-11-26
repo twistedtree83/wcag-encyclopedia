@@ -6,20 +6,169 @@
  * and nothing but a sighted reader will ever know it was meant as one.
  */
 
-import type { CriterionRecord } from './types';
+import { useId } from 'react';
+import type { CriterionRecord, LiveExample } from './types';
+import { OrderPage } from '../labs/orientation/OrientationLab';
+import { PHONE } from '../labs/orientation/orientation';
+
+/** 1.3.4's live examples (#55): an order page on a phone in the zoom frame, locked or adapting. */
+function LockedOrder() {
+  return <OrderPage lock="portrait" />;
+}
+function AdaptingOrder() {
+  return <OrderPage lock="adapts" />;
+}
+const ORIENT_LIVE = { keys: ['rotate'], instruments: ['orientation-meter'], zoomFrame: PHONE } as const;
+
+/*
+ * 1.3.1's live examples (#48): the static examples' shipping note, live. Read aloud, the styled
+ * spans run together as one line of text; the real elements say a heading and a list of two.
+ */
+
+function StyledDoc() {
+  return (
+    <div className="fauxdoc">
+      <span className="fauxdoc__fake-h">Shipping and returns</span>
+      <span className="fauxdoc__line">— Orders leave the warehouse within two days</span>
+      <span className="fauxdoc__line">— Returns are free within thirty days</span>
+    </div>
+  );
+}
+
+function RealDoc() {
+  return (
+    <div className="fauxdoc">
+      <h3 className="fauxdoc__real-h">Shipping and returns</h3>
+      <ul className="fauxdoc__list">
+        <li>Orders leave the warehouse within two days</li>
+        <li>Returns are free within thirty days</li>
+      </ul>
+    </div>
+  );
+}
+
+const DOC_KEYS: LiveExample['keys'] = ['read'];
+
+/*
+ * 1.3.2's live examples (#49): checkout steps as buttons. The broken row is sorted on screen by
+ * CSS `order`; Tab and a read-aloud follow the source, Confirm first. The fixed row's source is
+ * in the order it shows.
+ */
+
+function ReorderedSteps() {
+  return (
+    <div className="seq seq--reordered live-seq">
+      <button type="button" className="seq__step">
+        <b>3.</b> Confirm
+      </button>
+      <button type="button" className="seq__step">
+        <b>1.</b> Basket
+      </button>
+      <button type="button" className="seq__step">
+        <b>2.</b> Address
+      </button>
+    </div>
+  );
+}
+
+function OrderedSteps() {
+  return (
+    <div className="seq live-seq">
+      <button type="button" className="seq__step">
+        <b>1.</b> Basket
+      </button>
+      <button type="button" className="seq__step">
+        <b>2.</b> Address
+      </button>
+      <button type="button" className="seq__step">
+        <b>3.</b> Confirm
+      </button>
+    </div>
+  );
+}
+
+const STEP_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'read'];
+
+/*
+ * 1.3.5's live examples (#49): the diff's contact fields, labelled in both. "Autofill" fills only
+ * the fields whose autocomplete names a purpose, so only the fixed fields fill.
+ */
+
+function ContactFields({ purposes }: { purposes: boolean }) {
+  const id = useId();
+  return (
+    <div className="live-form">
+      <label htmlFor={`${id}-name`}>Full name</label>
+      <input id={`${id}-name`} type="text" autoComplete={purposes ? 'name' : undefined} />
+      <label htmlFor={`${id}-email`}>Email</label>
+      <input id={`${id}-email`} type="email" autoComplete={purposes ? 'email' : undefined} />
+    </div>
+  );
+}
+
+const UntaggedFields = () => <ContactFields purposes={false} />;
+const TaggedFields = () => <ContactFields purposes />;
+
+const FIELD_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'autofill', 'read'];
+
+/*
+ * 1.3.3's live examples (#56): the same checkout step under two instructions. The broken one
+ * points by place, shape and colour; through "Vision filter" the green button is lost, and read
+ * aloud nothing is round or green. The fixed one names the button, which survives both.
+ */
+
+function CheckoutStep({ named }: { named: boolean }) {
+  return (
+    <div className="vis-step">
+      <p className="vis-step__say">
+        {named ? (
+          <>
+            Fill in <b>Delivery details</b>, then press <b>Continue to payment</b>.
+          </>
+        ) : (
+          'Fill in the panel on the left, then press the round green button below it to continue.'
+        )}
+      </p>
+      <div className="vis-step__panel">
+        <b>Delivery details</b>
+        <span>12 Acacia Avenue, Leeds</span>
+      </div>
+      <div className="vis-step__buttons">
+        <button type="button" className="vis-btn vis-btn--stop" data-cue-peer="the red button">
+          Save for later
+        </button>
+        <button
+          type="button"
+          className="vis-btn vis-btn--go"
+          data-cue="the green button"
+          data-cue-part="fill"
+          data-cue-vs="peer"
+          {...(named ? { 'data-cue-also': 'named in the instruction' } : {})}
+        >
+          Continue to payment
+        </button>
+      </div>
+    </div>
+  );
+}
+
+const STEP_SENSE_KEYS: LiveExample['keys'] = ['vision', 'read', 'tab', 'shift-tab'];
 
 export const G1_3: readonly CriterionRecord[] = [
   {
     num: '1.3.1',
     name: 'Info and Relationships',
     level: 'A',
+    since: '2.0',
     guideline: '1.3',
+    labs: ['structure'],
     plain:
       'Structure you can see has to exist in the markup too. Headings marked up as headings, ' +
       'lists as lists, table headers as table headers, labels tied to their fields. Strip the ' +
       'stylesheet: if the relationships vanish, they were never really there.',
     fail: {
       caption: 'Styling stands in for structure.',
+      live: { Example: StyledDoc, keys: DOC_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="fauxdoc">
@@ -37,17 +186,18 @@ export const G1_3: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'The same appearance, built from real elements.',
+      live: { Example: RealDoc, keys: DOC_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="fauxdoc">
-            <h5 className="fauxdoc__real-h">Shipping and returns</h5>
+            <h3 className="fauxdoc__real-h">Shipping and returns</h3>
             <ul className="fauxdoc__list">
               <li>Orders leave the warehouse within two days</li>
               <li>Returns are free within thirty days</li>
             </ul>
           </div>
           <p className="example-note">
-            Identical on screen. Now it is announced as "heading level 5" and "list, 2 items",
+            Identical on screen. Now it is announced as "heading level 3" and "list, 2 items",
             and it survives a stylesheet that fails to load.
           </p>
         </>
@@ -71,13 +221,16 @@ export const G1_3: readonly CriterionRecord[] = [
     num: '1.3.2',
     name: 'Meaningful Sequence',
     level: 'A',
+    since: '2.0',
     guideline: '1.3',
+    labs: ['meaningful-sequence'],
     plain:
       'When the order of the content matters, the reading order in the markup has to match. ' +
       'CSS can move things around the screen; it does not move them in the document, and the ' +
       'document is what a screen reader and a keyboard follow.',
     fail: {
       caption: 'The visual order and the document order disagree.',
+      live: { Example: ReorderedSteps, keys: STEP_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="seq seq--reordered">
@@ -100,6 +253,7 @@ export const G1_3: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'Document order matches what is on screen.',
+      live: { Example: OrderedSteps, keys: STEP_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="seq">
@@ -126,13 +280,20 @@ export const G1_3: readonly CriterionRecord[] = [
     num: '1.3.3',
     name: 'Sensory Characteristics',
     level: 'A',
+    since: '2.0',
     guideline: '1.3',
+    labs: ['sensory-instruction'],
     plain:
       'Instructions cannot depend on shape, size, position, or sound alone. "The button on the ' +
       'right" means nothing to someone listening to the page, and nothing on a phone where it ' +
       'is now underneath.',
     fail: {
       caption: 'The instruction relies on where things happen to sit.',
+      live: {
+        Example: () => <CheckoutStep named={false} />,
+        keys: STEP_SENSE_KEYS,
+        instruments: ['vision-filter', 'announcement-log'],
+      },
       render: () => (
         <>
           <p className="example-prose">
@@ -148,6 +309,11 @@ export const G1_3: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'The instruction names the thing.',
+      live: {
+        Example: () => <CheckoutStep named />,
+        keys: STEP_SENSE_KEYS,
+        instruments: ['vision-filter', 'announcement-log'],
+      },
       render: () => (
         <>
           <p className="example-prose">
@@ -167,13 +333,16 @@ export const G1_3: readonly CriterionRecord[] = [
     num: '1.3.4',
     name: 'Orientation',
     level: 'AA',
+    since: '2.1',
     guideline: '1.3',
+    labs: ['orientation'],
     plain:
       'Do not lock the screen to portrait or landscape unless the orientation is essential — a ' +
       'piano keyboard, a cheque scanner. Someone whose wheelchair mount holds their phone ' +
       'sideways cannot simply turn it.',
     fail: {
       caption: 'The app refuses to work sideways.',
+      live: { Example: LockedOrder, ...ORIENT_LIVE },
       render: () => (
         <>
           <div className="orient">
@@ -190,6 +359,7 @@ export const G1_3: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'The same content reflows to whatever shape it is given.',
+      live: { Example: AdaptingOrder, ...ORIENT_LIVE },
       render: () => (
         <>
           <div className="orient">
@@ -215,13 +385,20 @@ export const G1_3: readonly CriterionRecord[] = [
     num: '1.3.5',
     name: 'Identify Input Purpose',
     level: 'AA',
+    since: '2.1',
     guideline: '1.3',
+    labs: ['input-purpose'],
     plain:
       'Fields collecting the user’s own information — name, email, address, phone — need to ' +
       'say which is which in the markup, via autocomplete. That is what lets a browser fill ' +
       'them, and what lets assistive tools show familiar icons or wording instead of yours.',
     fail: {
       caption: 'Nothing tells the browser what these fields are for.',
+      live: {
+        Example: UntaggedFields,
+        keys: FIELD_KEYS,
+        instruments: ['autofill', 'announcement-log'],
+      },
       render: () => (
         <>
           <p className="swatch-label">Contact</p>
@@ -240,6 +417,11 @@ export const G1_3: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'Each field declares its purpose from the standard list.',
+      live: {
+        Example: TaggedFields,
+        keys: FIELD_KEYS,
+        instruments: ['autofill', 'announcement-log'],
+      },
       render: () => (
         <>
           <p className="swatch-label">Contact</p>

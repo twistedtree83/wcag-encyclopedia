@@ -10,16 +10,21 @@ how tasks are selected — that is the runner's job.
 
 Read these before your first task, and re-read the relevant part whenever a task touches it:
 
-1. **`CONTEXT.md`** — the domain model and vocabulary. Use its terms exactly. If you need a
-   noun the project does not yet have a word for, that is a signal to stop and ask, not to
-   invent one silently.
-2. **The PRD, GitHub issue #1** — problem statement, user stories, implementation decisions,
-   testing decisions, out-of-scope. It is the authority on *what* and *why*.
+1. **`CONTEXT.md`** — the domain model and vocabulary. Use its terms exactly. A task that
+   needs a new domain noun adds it to `CONTEXT.md` in the same commit, with a one-line
+   definition. Stop to ask only when the run is attended and the noun is contested (it
+   overlaps an existing term, or the bibles suggest different words).
+2. **The PRD, `docs/PRD.md`** (the redesign, issue #27; the original single-page PRD, issue #1,
+   is archived at `docs/archive/PRD-single-page.md`) — problem statement, user stories,
+   implementation decisions, testing decisions, out-of-scope. It is the authority on *what* and
+   *why*. Decisions with lasting consequences are in `docs/adr/`.
 3. **The task's own GitHub issue** — the acceptance criteria there are the definition of done.
    Read the full body before writing code.
-4. **The design file** — `design/WCAG Encyclopedia.dc.html`, imported from Claude Design. It is
-   the **visual source of truth**: token palettes, type scale, card anatomy, and one composed
-   instance of each card variant. When the design and your instinct disagree, the design wins.
+4. **The design guide** — `design/new-design/DESIGN-GUIDE.md` and the Swatch prototype it points
+   to. It is the **visual source of truth**: tokens, measured-contrast table, type and page
+   anatomy. When the design and your instinct disagree, the design wins.
+5. **`docs/CONVENTIONS.md`** — how the build, routes, tokens, labs and e2e fit together, and the
+   gotchas earlier tasks hit.
 
 ---
 
@@ -35,7 +40,7 @@ Read these before your first task, and re-read the relevant part whenever a task
 - **One ledger per task, one commit per task.** Do not batch commits across tasks.
 - **Do not edit another task's scope.** If you find work that belongs to a different issue, note
   it in your ledger and leave it. Do not opportunistically fix it.
-- **Do not close or modify issue #1** (the PRD).
+- **Do not close or modify the PRD issues** (#1, #27).
 - **The page obeys the criteria it documents.** This is the project's central promise. If a
   change you are about to make would fail a WCAG criterion the site documents, choose
   differently. This outranks visual fidelity to the design.
@@ -48,10 +53,15 @@ Read these before your first task, and re-read the relevant part whenever a task
 
 `npm run verify` is the single gate. It runs, in order:
 
-1. `tsc --noEmit` — types
-2. `vitest run` — unit tests
-3. `vite build` — the production build
-4. `playwright test` — the axe-core accessibility scan against the built page
+1. `stylelint` — CSS syntax and validity (`npm run lint`)
+2. `tsc --noEmit` — types
+3. `vitest run` — unit tests
+4. `vite build` — the production build
+5. `playwright test` — the axe-core accessibility scan against the built page
+
+While iterating, `npm run verify:changed` runs the same stages but only the e2e specs changed
+since `labs`. It is a shortcut for the loop, never the gate: commit only on a green
+`npm run verify`.
 
 **Bootstrap exception, T-02 only.** The repository starts empty; `package.json` does not exist
 yet. T-02's slice *creates* the verify gate. For T-02 alone, "green" means: after your changes,
@@ -97,6 +107,10 @@ acceptance criterion, watch it fail for the right reason, make it pass, then cle
 `npm run verify`. Green or stop. Then walk the issue's acceptance criteria one by one and
 confirm each is actually satisfied — the gate proves the code works, not that you built the
 right thing.
+
+**Review check** (for the implementer and for anyone reviewing the commit): every new domain
+noun in the diff (a type, module, prop or copy term) is defined in `CONTEXT.md` in the same
+commit.
 
 ### 7. Commit
 On the graph's `branchName`. Message format:

@@ -1,0 +1,13 @@
+/* The page-title lab's own styles, imported by its lab.ts. Shared lab styles stay in src/styles. */
+
+.tlh-browser .tabs {
+  margin: 0;
+}
+.tlh-address {
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink-2);
+  font: 14px/1.4 ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  overflow-wrap: anywhere;
+}

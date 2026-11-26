@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Criterion: WCAG Encyclopedia</title>
+<meta name="description" content="A WCAG 2.2 success criterion in plain language, shown broken and fixed.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gabarito:wght@500;600;700;800&family=Golos+Text:wght@400;500;600&family=Bricolage+Grotesque:wght@500;600;700;800&family=Familjen+Grotesk:wght@500;600;700&family=Fraunces:wght@500;600;700;800&family=Instrument+Sans:wght@400;500;600;700&family=Atkinson+Hyperlegible:wght@400;700&family=Onest:wght@400;500;600;700&family=Figtree:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="swatch.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="wrap">
+<header class="top" id="hdr"></header>
+<nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="index.html">Home</a></li><li><a href="criteria.html">Criteria</a></li><li><span aria-current="page" id="cr-n"></span></li></ol></nav>
+<main id="main">
+<section class="ch" aria-labelledby="h1">
+
+  <div style="position:relative;z-index:1">
+    <p class="meta" id="meta"></p>
+    <h1 class="d" id="h1"></h1>
+    <p class="plain" id="plain"></p>
+  </div>
+  <dl class="facts surf" id="facts" aria-label="Facts about this criterion"></dl>
+</section>
+
+<section class="band" aria-labelledby="ex-h">
+  <div class="bh"><div><h2 id="ex-h">Broken, then fixed</h2><p>The live demo for this criterion runs here in the encyclopedia. Use it with a keyboard, a screen reader or your mouse, then switch to the fixed version.</p></div></div>
+  <div class="ex">
+    <figure class="bad"><div class="stage"><span class="lbl"></span><q id="ex-f"></q><small>Demo stage: the broken version</small></div><figcaption>What goes wrong, and who it stops.</figcaption></figure>
+    <figure class="good"><div class="stage"><span class="lbl"></span><q id="ex-p"></q><small>Demo stage: the fixed version</small></div><figcaption>The smallest change that fixes it.</figcaption></figure>
+  </div>
+</section>
+
+<section class="band" id="try" aria-labelledby="try-h" hidden>
+  <div class="bh"><div><h2 id="try-h">Try it with your own colours</h2><p>This criterion is about contrast, so the colour check applies directly.</p></div><a class="btn o" href="contrast.html">Open the full colour check</a></div>
+  <form class="chk" id="cc" onsubmit="return false" data-title="Check a colour pair"></form>
+</section>
+
+<section class="band" aria-labelledby="sib-h">
+  <div class="bh"><div><h2 id="sib-h"></h2><p>Criteria in the same guideline often fail together.</p></div></div>
+  <ul class="grid" id="sib"></ul>
+</section>
+
+<section class="band" aria-label="More criteria"><div class="pager" id="pager"></div></section>
+</main>
+<footer class="foot" id="ftr"></footer>
+</div>
+<script src="../corpus.js"></script>
+<script src="site.js"></script>
+<script src="tweak.js"></script>
+<script>
+chrome('Criteria');
+const V21 = ['1.3.4', '1.3.5', '1.4.10', '1.4.11', '1.4.12', '1.4.13', '2.1.4', '2.5.1', '2.5.2', '2.5.3', '2.5.4', '4.1.3'];
+const num = new URLSearchParams(location.search).get('c');
+const d = byNum(num) || byNum('1.4.3');
+document.title = `${d.num} ${d.name}: WCAG Encyclopedia`;
+$('#cr-n').textContent = `${d.num} ${d.name}`;
+$('#meta').innerHTML = `<span class="mk p${d.p}" aria-hidden="true"></span>${d.num} · ${PN[d.p]} ${lvTag(d.level)}${d.isNew ? '<span class="new-tag">New in 2.2</span>' : ''}`;
+$('#h1').textContent = d.name; $('#plain').textContent = d.plain;
+const g = d.num.split('.').slice(0, 2).join('.');
+$('#facts').innerHTML = [['Principle', `<span class="mk p${d.p}" aria-hidden="true"></span>${PN[d.p]}`], ['Guideline', g], ['Level', d.level], ['In WCAG since', d.isNew ? '2.2' : V21.includes(d.num) ? '2.1' : '2.0'], ['Number', d.num]].map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('');
+$('.bad .lbl').innerHTML = ICON_NO + 'Broken'; $('.good .lbl').innerHTML = ICON_OK + 'Fixed';
+$('#ex-f').textContent = d.fail; $('#ex-p').textContent = d.pass;
+if (['1.4.3', '1.4.11', '1.4.1'].includes(d.num)) { $('#try').hidden = false; checker($('#cc'), '#1F5E7A', '#FFFFFF'); }
+const sib = DATA.filter(x => x.num !== d.num && x.num.startsWith(g + '.'));
+$('#sib-h').textContent = sib.length ? `Also in guideline ${g}` : `More from ${PN[d.p]}`;
+$('#sib').innerHTML = (sib.length ? sib : DATA.filter(x => x.p === d.p && x.num !== d.num)).slice(0, 6).map(indexCard).join('');
+const i = DATA.indexOf(d), pv = DATA[i - 1], nx = DATA[i + 1];
+$('#pager').innerHTML = (pv ? `<a class="surf" href="${curl(pv.num)}"><span class="k"><span aria-hidden="true">←</span> Previous</span><b>${pv.num} ${esc(pv.name)}</b></a>` : '<span></span>') + (nx ? `<a class="surf nx" href="${curl(nx.num)}"><span class="k">Next <span aria-hidden="true">→</span></span><b>${nx.num} ${esc(nx.name)}</b></a>` : '');
+</script>
+</body>
+</html>

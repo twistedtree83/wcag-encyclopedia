@@ -3,10 +3,11 @@
  *
  * One criterion, and the one most often "done" badly: alt text that exists but says nothing.
  * The example contrasts three images that need three different treatments, because the common
- * mistake is applying one rule to all of them.
+ * mistake is giving all of them one treatment.
  */
 
-import type { CriterionRecord } from './types';
+import { CHART, DIVIDER, PHOTO } from '../labs/alt-text/pictures';
+import type { CriterionRecord, LiveExample } from './types';
 
 /** A small depiction of an image in some other product's page. */
 function Thumb({ label }: { label: string }) {
@@ -17,12 +18,42 @@ function Thumb({ label }: { label: string }) {
   );
 }
 
+/*
+ * 1.1.1's live examples (#48): the same three images as the static examples, as real <img>s.
+ * Read aloud, the broken set says "image", a file name and a name for decoration; the fixed set
+ * says what the photo and the chart are for, and skips the divider.
+ */
+
+function AltImages({ alts }: { readonly alts: readonly [string, string, string] }) {
+  return (
+    <div className="live-alts">
+      <img src={PHOTO} alt={alts[0]} width={160} height={120} />
+      <img src={CHART} alt={alts[1]} width={160} height={120} />
+      <img src={DIVIDER} alt={alts[2]} width={160} height={120} />
+    </div>
+  );
+}
+
+function BrokenAlts() {
+  return <AltImages alts={['image', 'chart.png', 'decorative swirl']} />;
+}
+
+function FixedAlts() {
+  return (
+    <AltImages alts={['Wool overshirt in rust, worn open', 'Sales rose 12% in Q3, then flattened', '']} />
+  );
+}
+
+const ALT_KEYS: LiveExample['keys'] = ['read'];
+
 export const G1_1: readonly CriterionRecord[] = [
   {
     num: '1.1.1',
     name: 'Non-text Content',
     level: 'A',
+    since: '2.0',
     guideline: '1.1',
+    labs: ['alt-text'],
     plain:
       'Anything that is not text — an image, an icon, a chart, a video thumbnail — needs a ' +
       'text equivalent that serves the same purpose. Decoration needs an empty alt so screen ' +
@@ -30,6 +61,7 @@ export const G1_1: readonly CriterionRecord[] = [
       'this end up knowing the same thing".',
     fail: {
       caption: 'Alt text exists, and tells the reader nothing.',
+      live: { Example: BrokenAlts, keys: ALT_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <ul className="alt-list">
@@ -44,7 +76,7 @@ export const G1_1: readonly CriterionRecord[] = [
               <span className="example-note">A sales chart, described by its filename.</span>
             </li>
             <li>
-              <Thumb label="rule" />
+              <Thumb label="divider" />
               <code className="alt-code">alt="decorative swirl"</code>
               <span className="example-note">
                 A divider, announced to every screen reader user who passes it.
@@ -60,6 +92,7 @@ export const G1_1: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'Each image is described by what it is for, not by what it is.',
+      live: { Example: FixedAlts, keys: ALT_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <ul className="alt-list">
@@ -76,7 +109,7 @@ export const G1_1: readonly CriterionRecord[] = [
               </span>
             </li>
             <li>
-              <Thumb label="rule" />
+              <Thumb label="divider" />
               <code className="alt-code">alt=""</code>
               <span className="example-note">
                 Empty, not missing. The image is removed from the accessibility tree entirely.

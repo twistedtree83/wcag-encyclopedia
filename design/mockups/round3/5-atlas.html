@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>An Atlas of the Accessible Page</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Onest:wght@400;500;600&display=swap">
+<style>
+:root{--paper:#F4F1EA;--ink:#1C1D1F;--ink-2:#4E4E4A;--land:#DCD8CE;--edge:#F4F1EA;--line:#CFC9BC;--sky:#9CCADE;--sun:#F8D17D;--rose:#FFB3A9;--sage:#BFD8B0;--deep:#1F5E7A}
+*{box-sizing:border-box}
+html{background:var(--paper)}
+body{margin:0;color:var(--ink);font:400 17px/1.6 "Onest",system-ui,sans-serif}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px;border-radius:3px}
+.skip{position:absolute;left:16px;top:-60px;background:var(--ink);color:var(--paper);padding:10px 14px;z-index:9}
+.skip:focus{top:12px}
+.wrap{max-width:1320px;margin:0 auto;padding:0 56px}
+.k{font:600 13px/1.3 "Onest";letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+header.top{display:flex;justify-content:space-between;align-items:center;padding:26px 0;border-bottom:1px solid var(--ink)}
+.brand{font:400 21px/1 "Young Serif";text-decoration:none}
+nav ul{display:flex;gap:30px;list-style:none;margin:0;padding:0;font-weight:500}
+nav a{text-decoration:none;padding:10px 0}
+nav a:hover,nav [aria-current]{text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:2px}
+.hero{display:grid;grid-template-columns:5fr 7fr;gap:64px;padding:64px 0 72px;align-items:start}
+h1{font:400 clamp(48px,5.6vw,86px)/1.02 "Young Serif",serif;letter-spacing:-.02em;margin:18px 0 26px}
+.lede{margin:0 0 34px;color:var(--ink-2);max-width:42ch;font-size:19px}
+.find label{display:block;font-weight:600;margin:0 0 8px}
+.find .box{display:flex;border:1.5px solid var(--ink);border-radius:999px;overflow:hidden;background:#fff;max-width:440px}
+.find input{flex:1;border:0;padding:0 20px;font:400 17px "Onest";min-height:52px;background:transparent;color:var(--ink);min-width:0}
+.find button{border:0;background:var(--ink);color:var(--paper);font:600 16px "Onest";padding:0 22px;cursor:pointer}
+.find p{font-size:15px;color:var(--ink-2);margin:10px 0 0}
+.regions{margin:40px 0 0}
+.regions ul{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.regions button{font:500 15px "Onest";border:1.5px solid var(--ink);background:transparent;color:var(--ink);border-radius:999px;padding:0 16px;min-height:44px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.regions button i{width:12px;height:12px;border-radius:50%;border:1.5px solid var(--ink)}
+.regions button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.regions button[aria-pressed="true"] i{border-color:var(--paper)}
+/* map */
+.map{margin:0;position:relative}
+.map svg{width:100%;height:auto;display:block}
+.map .r{fill:var(--land);stroke:var(--edge);stroke-width:3;transition:fill .25s}
+.map .r.on{fill:var(--sky)}
+.map .cl{fill:none;stroke:#fff;stroke-width:1;opacity:.7}
+.map text{font:500 14px "Onest";fill:var(--ink)}
+.map .lbl{font:400 19px "Young Serif"}
+.map .lead{stroke:var(--ink);stroke-width:1}
+.map .grat{stroke:var(--line);stroke-width:1;stroke-dasharray:2 6}
+.map figcaption{display:flex;justify-content:space-between;border-top:1px solid var(--ink);padding:10px 0 0;margin-top:14px;font-size:14px;color:var(--ink-2)}
+/* plate */
+.plate{border-top:1px solid var(--ink);display:grid;grid-template-columns:5fr 7fr;gap:64px;padding:56px 0 90px}
+.plate h2{font:400 clamp(40px,4.4vw,64px)/1 "Young Serif";margin:14px 0 18px;letter-spacing:-.01em}
+.plate .side p{color:var(--ink-2);margin:0 0 20px;max-width:40ch}
+.stat{display:flex;gap:36px;margin-top:30px}
+.stat div{border-top:2px solid var(--ink);padding-top:10px;min-width:110px}
+.stat b{display:block;font:400 44px/1 "Young Serif"}
+.crit{list-style:none;margin:0;padding:0;columns:2;column-gap:40px}
+.crit li{break-inside:avoid;border-bottom:1px solid var(--line)}
+.crit a{display:grid;grid-template-columns:62px 1fr auto;gap:12px;align-items:center;padding:14px 0;text-decoration:none}
+.crit a:hover .n{text-decoration:underline;text-underline-offset:4px}
+.crit .num{font:600 14px "Onest";color:var(--ink-2)}
+.crit .n{font-weight:500}
+.lv{font:600 12px "Onest";letter-spacing:.06em;border:1.5px solid var(--ink);border-radius:4px;padding:3px 6px;min-width:34px;text-align:center}
+.lv.aa{background:var(--ink);color:var(--paper)}
+/* key */
+.key{border-top:1px solid var(--ink);padding:56px 0 80px}
+.key h2{font:400 40px/1 "Young Serif";margin:0 0 30px}
+.key table{width:100%;border-collapse:collapse}
+.key th{text-align:left;font:600 13px "Onest";letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);padding:0 0 12px;border-bottom:2px solid var(--ink)}
+.key td{padding:20px 16px 20px 0;border-bottom:1px solid var(--line);vertical-align:middle}
+.key td:first-child{width:64px}
+.sym{width:34px;height:34px;display:block;border:1.5px solid var(--ink)}
+.key .nm{font:400 26px/1.1 "Young Serif"}
+.key .tg{color:var(--ink-2)}
+.key .bar{width:220px;height:12px;background:#E6E1D6;border-radius:99px;overflow:hidden}
+.key .bar i{display:block;height:100%;background:var(--ink);border-radius:99px}
+.key .ct{font-weight:600;text-align:right;white-space:nowrap}
+footer{border-top:1px solid var(--ink);padding:22px 0 44px;display:flex;justify-content:space-between;font-size:14px;color:var(--ink-2)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:900px){
+  .wrap{padding:0 18px}
+  header.top{flex-direction:column;align-items:flex-start;gap:8px}
+  nav ul{gap:18px;flex-wrap:wrap}
+  .hero,.plate{grid-template-columns:minmax(0,1fr);gap:36px}
+  .map{order:2}
+  .crit{columns:1}
+  .key .bar,.key th:nth-child(4),.key td:nth-child(4){display:none}
+  .key .tg{display:block;font-size:15px}
+  .key th:nth-child(3),.key td:nth-child(3){display:none}
+  .key .nm{font-size:21px}.key td{padding-right:10px}.key td:first-child{width:46px}
+  .find .box{max-width:100%}
+  .stat{gap:16px}.stat div{min-width:0;flex:1}
+  footer{flex-direction:column;gap:6px}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="wrap">
+<header class="top">
+  <a class="brand" href="#">Atlas of the Accessible Page</a>
+  <nav aria-label="Main"><ul><li><a href="#" aria-current="page">Map</a></li><li><a href="#">All criteria</a></li><li><a href="#">Demos</a></li><li><a href="#">About</a></li></ul></nav>
+</header>
+<main id="main">
+<section class="hero" aria-labelledby="h1">
+  <div>
+    <p class="k">WCAG 2.2 · 55 criteria · 7 regions</p>
+    <h1 id="h1">An atlas of the accessible page.</h1>
+    <p class="lede">Every web page has the same regions. Pick one to see which success criteria apply there, with a working example of each.</p>
+    <form class="find" role="search" onsubmit="return false">
+      <label for="q">Find a criterion</label>
+      <div class="box"><input id="q" type="search" placeholder="Try “focus” or “captions”"><button type="submit">Search</button></div>
+      <p>Search by number, name, or what went wrong.</p>
+    </form>
+    <div class="regions">
+      <p class="k" id="reg-h" style="margin:0">Regions</p>
+      <ul aria-labelledby="reg-h" id="reg"></ul>
+    </div>
+  </div>
+  <figure class="map" aria-labelledby="map-c">
+    <svg viewBox="0 0 720 640" role="img" aria-labelledby="map-t"><title id="map-t">Map of a web page divided into six regions. The selected region is highlighted.</title>
+      <g aria-hidden="true">
+      <line class="grat" x1="0" y1="160" x2="720" y2="160"/><line class="grat" x1="0" y1="320" x2="720" y2="320"/><line class="grat" x1="0" y1="480" x2="720" y2="480"/>
+      <line class="grat" x1="180" y1="0" x2="180" y2="640"/><line class="grat" x1="360" y1="0" x2="360" y2="640"/><line class="grat" x1="540" y1="0" x2="540" y2="640"/>
+      <path class="r" data-r="header" d="M60 40 H660 Q668 40 668 48 V96 Q600 108 520 98 T300 102 T60 96 Z"/>
+      <path class="r" data-r="nav" d="M60 112 Q160 104 240 112 L232 380 Q150 392 60 382 Z"/>
+      <path class="r" data-r="content" d="M252 112 Q400 100 668 114 V300 Q520 290 400 304 T252 300 Z"/>
+      <path class="r" data-r="media" d="M252 316 Q330 306 420 318 L414 520 Q330 530 252 520 Z"/>
+      <path class="r" data-r="forms" d="M436 316 Q560 304 668 318 V520 Q560 532 430 520 Z"/>
+      <path class="r" data-r="nav2" d="M60 396 Q150 404 232 396 V520 Q150 530 60 520 Z" style="display:none"/>
+      <path class="r" data-r="footer" d="M60 536 Q300 548 668 534 V592 Q668 600 660 600 H68 Q60 600 60 592 Z"/>
+      <path class="cl" d="M90 70 Q200 60 300 74 M480 66 Q560 76 640 64 M84 160 Q140 170 210 156 M84 230 Q150 240 214 228 M84 300 Q140 310 210 298 M300 160 Q420 150 620 170 M300 220 Q440 236 630 214 M290 380 Q340 370 390 384 M290 450 Q340 460 390 448 M470 380 Q560 370 640 386 M470 430 Q560 440 640 428 M470 480 Q560 470 640 482 M100 570 Q360 580 630 566"/>
+      <path class="cl" d="M84 440 Q150 450 214 438 M84 480 Q150 470 214 486"/>
+      <path class="r" data-r="aside" d="M60 396 Q150 404 232 396 V520 Q150 530 60 520 Z"/>
+      <text class="lbl" x="80" y="80">Header</text>
+      <text class="lbl" x="78" y="150">Navigation</text>
+      <text class="lbl" x="276" y="150">Content</text>
+      <text class="lbl" x="272" y="356">Media</text>
+      <text class="lbl" x="456" y="356">Forms</text>
+      <text class="lbl" x="78" y="436">Sidebar</text>
+      <text class="lbl" x="80" y="574">Footer</text>
+      <line class="lead" x1="620" y1="470" x2="700" y2="600"/><circle cx="620" cy="470" r="4" fill="#1C1D1F"/>
+      <text x="610" y="626" text-anchor="end" id="lead-t">11 criteria</text>
+      </g>
+    </svg>
+    <figcaption id="map-c"><span>Plate 7, the generic web page</span><span>Region sizes are not to scale</span></figcaption>
+  </figure>
+</section>
+
+<section class="plate" aria-labelledby="plate-h" aria-live="polite">
+  <div class="side">
+    <p class="k" id="plate-k">Region 5 of 7</p>
+    <h2 id="plate-h">Forms</h2>
+    <p id="plate-p"></p>
+    <div class="stat"><div><b id="st-n"></b><span class="k">Criteria</span></div><div><b id="st-a"></b><span class="k">Level A</span></div><div><b id="st-aa"></b><span class="k">Level AA</span></div></div>
+  </div>
+  <ul class="crit" id="crit"></ul>
+</section>
+
+<section class="key" aria-labelledby="key-h">
+  <h2 id="key-h">Key to the four principles</h2>
+  <table>
+    <thead><tr><th scope="col"><span class="sr" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Symbol</span></th><th scope="col">Principle</th><th scope="col">What it asks</th><th scope="col">Share of the 55</th><th scope="col" style="text-align:right">Criteria</th></tr></thead>
+    <tbody>
+      <tr><td><span class="sym" style="background:var(--sky)" aria-hidden="true"></span></td><td class="nm">Perceivable</td><td class="tg">If you can't perceive it, it isn't there for you.</td><td><div class="bar" aria-hidden="true"><i style="width:36%"></i></div></td><td class="ct">20</td></tr>
+      <tr><td><span class="sym" style="background:var(--sun);border-radius:50%" aria-hidden="true"></span></td><td class="nm">Operable</td><td class="tg">Every control reachable by whatever you drive it with.</td><td><div class="bar" aria-hidden="true"><i style="width:36%"></i></div></td><td class="ct">20</td></tr>
+      <tr><td><svg width="36" height="34" aria-hidden="true"><path d="M18 2 L34 32 H2 Z" fill="#FFB3A9" stroke="#1C1D1F" stroke-width="1.5"/></svg></td><td class="nm">Understandable</td><td class="tg">Perceivable and operable can still mean nothing.</td><td><div class="bar" aria-hidden="true"><i style="width:24%"></i></div></td><td class="ct">13</td></tr>
+      <tr><td><span class="sym" style="background:var(--sage);transform:rotate(45deg) scale(.78)" aria-hidden="true"></span></td><td class="nm">Robust</td><td class="tg">Assistive technology relays only what the markup says.</td><td><div class="bar" aria-hidden="true"><i style="width:4%"></i></div></td><td class="ct">2</td></tr>
+    </tbody>
+  </table>
+</section>
+</main>
+<footer><span>Atlas of the Accessible Page · WCAG 2.2</span><span>This page passes every criterion it describes.</span></footer>
+</div>
+<script>
+const R={
+ header:{n:'Header',p:'The first thing on every page. Where people learn what site they are on and how to skip past it.',c:[['2.4.1','Bypass Blocks','A'],['2.4.2','Page Titled','A'],['3.1.1','Language of Page','A'],['1.3.1','Info and Relationships','A'],['2.4.7','Focus Visible','AA']]},
+ nav:{n:'Navigation',p:'Menus and links. They must work by keyboard, stay in the same place, and say where they go.',c:[['2.1.1','Keyboard','A'],['2.4.3','Focus Order','A'],['2.4.4','Link Purpose (In Context)','A'],['3.2.3','Consistent Navigation','AA'],['3.2.4','Consistent Identification','AA'],['2.4.5','Multiple Ways','AA'],['2.4.11','Focus Not Obscured','AA']]},
+ content:{n:'Content',p:'Headings, paragraphs and tables. Text that has to survive zoom, reflow and a bright room.',c:[['1.4.3','Contrast (Minimum)','AA'],['1.4.4','Resize Text','AA'],['1.4.10','Reflow','AA'],['1.4.12','Text Spacing','AA'],['2.4.6','Headings and Labels','AA'],['1.3.2','Meaningful Sequence','A'],['1.4.1','Use of Color','A']]},
+ media:{n:'Media',p:'Images, audio and video. Everything here needs a text version that does the same job.',c:[['1.1.1','Non-text Content','A'],['1.2.1','Audio-only and Video-only','A'],['1.2.2','Captions (Prerecorded)','A'],['1.2.5','Audio Description','AA'],['1.4.2','Audio Control','A'],['2.2.2','Pause, Stop, Hide','A'],['2.3.1','Three Flashes','A']]},
+ forms:{n:'Forms',p:'Where people give you something: an email, a payment, a booking. Most failures that stop people finishing a task happen here.',c:[['1.3.5','Identify Input Purpose','AA'],['3.3.1','Error Identification','A'],['3.3.2','Labels or Instructions','A'],['3.3.3','Error Suggestion','AA'],['3.3.4','Error Prevention','AA'],['3.3.7','Redundant Entry','A'],['3.3.8','Accessible Authentication','AA'],['4.1.2','Name, Role, Value','A'],['1.4.11','Non-text Contrast','AA'],['2.5.8','Target Size (Minimum)','AA'],['3.2.2','On Input','A']]},
+ aside:{n:'Sidebar',p:'Pop-ups, help panels and status messages. Content that appears on its own must not trap or surprise.',c:[['1.4.13','Content on Hover or Focus','AA'],['2.1.2','No Keyboard Trap','A'],['4.1.3','Status Messages','AA'],['3.2.6','Consistent Help','A'],['2.2.1','Timing Adjustable','A']]},
+ footer:{n:'Footer',p:'Contact, help and legal links. Help has to be in the same place on every page.',c:[['3.2.6','Consistent Help','A'],['2.4.4','Link Purpose (In Context)','A'],['1.4.3','Contrast (Minimum)','AA']]}
+};
+const keys=Object.keys(R);let cur='forms';
+const ul=document.getElementById('reg');
+ul.innerHTML=keys.map(k=>`<li><button type="button" data-k="${k}" aria-pressed="${k===cur}"><i aria-hidden="true" style="background:${k===cur?'var(--sky)':'transparent'}"></i>${R[k].n}</button></li>`).join('');
+function show(k){cur=k;const d=R[k];
+ document.querySelectorAll('.map .r').forEach(p=>p.classList.toggle('on',p.dataset.r===k));
+ ul.querySelectorAll('button').forEach(b=>{const on=b.dataset.k===k;b.setAttribute('aria-pressed',on);b.querySelector('i').style.background=on?'var(--sky)':'transparent'});
+ document.getElementById('plate-k').textContent=`Region ${keys.indexOf(k)+1} of ${keys.length}`;
+ document.getElementById('plate-h').textContent=d.n;document.getElementById('plate-p').textContent=d.p;
+ const a=d.c.filter(x=>x[2]==='A').length;
+ document.getElementById('st-n').textContent=d.c.length;document.getElementById('st-a').textContent=a;document.getElementById('st-aa').textContent=d.c.length-a;
+ document.getElementById('lead-t').textContent=d.c.length+' criteria';
+ document.getElementById('crit').innerHTML=d.c.map(c=>`<li><a href="#"><span class="num">${c[0]}</span><span class="n">${c[1]}</span><span class="lv ${c[2]==='AA'?'aa':''}">${c[2]}</span></a></li>`).join('');
+ const box=document.querySelector(`.map .r[data-r="${k}"]`).getBBox();const dot=document.querySelector('.map circle');const ln=document.querySelector('.map .lead');
+ const cx=box.x+box.width*.75,cy=box.y+box.height*.6;dot.setAttribute('cx',cx);dot.setAttribute('cy',cy);ln.setAttribute('x1',cx);ln.setAttribute('y1',cy)}
+ul.addEventListener('click',e=>{const b=e.target.closest('button');if(b)show(b.dataset.k)});
+show(cur);
+</script>
+</body>
+</html>

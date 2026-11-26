@@ -1,0 +1,919 @@
+<!doctype html>
+<html lang="en" data-type="software" data-hero="split" data-texture="grid" data-ticks="on" data-cards="side" data-verdict="tint" data-hl="marker" data-label="caps" data-slots="show" data-shadow="off" data-surface="white" data-diffs="on" data-plain="on" style="--line-mix: 16%; --grid: 56px; --f-display: &quot;Gloock&quot;, Georgia, serif; --f-text: &quot;Funnel Sans&quot;, system-ui, sans-serif; --f-num: &quot;Doto&quot;, ui-monospace, monospace; --d-scale: 1; --d-track: -0.02em; --d-lh: 1; --d-weight: 400; --fs: 18px; --lh: 1.55; --measure: 58ch; --u: 8px; --sec: 1; --maxw: 1240px; --gutter: 24px; --gap: 20px; --radius: 12px; --bw: 1px; --speed: 1; --chrome: 78px;"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bureau — every WCAG 2.2 criterion, shown broken and fixed</title>
+<meta name="description" content="A visual reference to WCAG 2.2: all 55 Level A and AA success criteria as live interface, the failing version beside the fixed one.">
+<meta name="page-type" content="software">
+<meta name="site-kind" content="software">
+<meta name="theme-color" content="#FBF8F1">
+<meta property="og:title" content="Bureau — every WCAG 2.2 criterion, shown broken and fixed">
+<meta property="og:description" content="All 55 Level A and AA criteria as live interface, failing beside fixed.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300..800;1,300..800&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Doto:wght@100..900&amp;display=swap">
+<script src="corpus.js"></script>
+<style>
+/* ============================================================
+   Direction C — "Bureau", round 3 (taste pass).
+   Plan: kind software (a reference product). One section per screen at 1440x900,
+   hero alone on the first screen with its two actions, every section on the .wrap edges,
+   two boxes deep at most, one button pair, hover/press layer, hero enters once on load.
+   Everything visual is a custom property or a data-attribute on <html> so the tweak
+   panel (bottom right, or press \) can change it live.
+   ============================================================ */
+:root{
+  --paper:#FBF8F1; --ink:#1B1712; --ink-2:#5A5246; --signal:#F2600C; --signal-ink:#A63C00; --hi:#FFE3A3;
+  --fail:#B3261E; --pass:#1E6B3C; --line-mix:16%;
+  --paper-2:color-mix(in srgb, var(--ink) 5%, var(--paper));
+  --line:color-mix(in srgb, var(--ink) var(--line-mix), var(--paper));
+  --f-display:"Gloock", Georgia, serif; --f-text:"Funnel Sans", system-ui, sans-serif; --f-num:"Doto", ui-monospace, monospace;
+  --d-scale:1; --d-track:-0.02em; --d-lh:1; --d-weight:400; --fs:18px; --lh:1.55; --measure:58ch;
+  --u:8px; --sec:1; --maxw:1240px; --gutter:24px; --gap:20px; --radius:12px; --bw:1px; --grid:56px;
+  --s1:calc(var(--u)*1); --s2:calc(var(--u)*2); --s3:calc(var(--u)*3); --s4:calc(var(--u)*4);
+  --s5:calc(var(--u)*6); --s6:calc(var(--u)*8); --s7:calc(var(--u)*12);
+  --speed:1; --chrome:77px; --cg:var(--s4);
+  /* motion tokens */
+  --m-in:150ms; --m-out:120ms; --m-press:90ms; --ease:cubic-bezier(.2,.8,.2,1); --ease-enter:cubic-bezier(.22,1,.36,1);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#15120E;--ink:#F5EFE3;--ink-2:#C2B8A6;--signal-ink:#FF9A5C;--fail:#FF8A80;--pass:#7FD39B;--hi:#5A4210}}
+:root[data-theme="dark"]{--paper:#15120E;--ink:#F5EFE3;--ink-2:#C2B8A6;--signal-ink:#FF9A5C;--fail:#FF8A80;--pass:#7FD39B;--hi:#5A4210}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:88px}
+body{margin:0;background-color:var(--paper);color:var(--ink);font-family:var(--f-text);font-size:var(--fs);line-height:var(--lh);-webkit-font-smoothing:antialiased}
+[data-texture="grid"] body{background-image:linear-gradient(var(--paper-2) 1px,transparent 1px),linear-gradient(90deg,var(--paper-2) 1px,transparent 1px);background-size:var(--grid) var(--grid)}
+[data-texture="dots"] body{background-image:radial-gradient(var(--line) 1.2px,transparent 1.4px);background-size:var(--grid) var(--grid)}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--signal);outline-offset:3px;border-radius:4px}
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.skip{position:absolute;left:var(--gutter);top:8px;transform:translateY(-200%);background:var(--ink);color:var(--paper);padding:10px 14px;z-index:999;border-radius:var(--radius)}
+.skip:focus{transform:none}
+.wrap{width:min(var(--maxw),calc(100% - 2*var(--gutter)));margin:0 auto}
+/* one 12-column grid, one column gap, for every split */
+.g12{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--cg);row-gap:var(--s3);align-items:start}
+.s3{grid-column:span 3}.s4{grid-column:span 4}.s5{grid-column:span 5}.s6{grid-column:span 6}.s7{grid-column:span 7}.s8{grid-column:span 8}.s9{grid-column:span 9}.s12{grid-column:1/-1}
+.label{font-size:12px;font-weight:650;letter-spacing:.08em;text-transform:uppercase}
+[data-label="small"] .label{text-transform:none;letter-spacing:.01em;font-size:13px}
+[data-label="plain"] .label{text-transform:none;letter-spacing:0;font-size:15px;font-weight:500}
+.num{font-family:var(--f-num);font-weight:700;font-variant-numeric:tabular-nums}
+p{max-width:var(--measure)}
+.muted{color:var(--ink-2)}
+.mk{display:inline-block;width:12px;height:12px;flex:none;vertical-align:baseline}
+[data-shadow="on"] .card,[data-shadow="on"] .g,[data-shadow="on"] .today,[data-shadow="on"] .lvcard{box-shadow:0 1px 0 var(--line),0 18px 40px -24px rgba(0,0,0,.35)}
+
+/* ---------- motion layer: hover, press, drawn underlines ---------- */
+.btn,.lvcard,.today,.chap,.pick button,.demo-list button{transition:transform var(--m-out) var(--ease),background-color var(--m-out) var(--ease),border-color var(--m-out) var(--ease),color var(--m-out) var(--ease)}
+.btn:hover{transform:translateY(-1px);transition-duration:var(--m-in)}
+.btn:active{transform:translateY(0) scale(.98);transition-duration:var(--m-press)}
+.today:hover,.lvcard:hover{transform:translateY(-2px);transition-duration:var(--m-in)}
+.lvcard:active{transform:translateY(0);transition-duration:var(--m-press)}
+.draw{text-decoration:none;background:linear-gradient(currentColor,currentColor) 0 100%/0 1.5px no-repeat;transition:background-size 200ms var(--ease);padding-bottom:1px}
+a:hover .draw,a:focus-visible .draw,a.draw:hover,a.draw:focus-visible,summary:hover .draw{background-size:100% 1.5px}
+.link{text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px;transition:text-decoration-thickness var(--m-in)}
+.link:hover{text-decoration-thickness:2px}
+/* hero entrance, once on load */
+@keyframes enter{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+[data-enter] .e{animation:enter 700ms var(--ease-enter) both}
+[data-enter] .e:nth-child(2){animation-delay:120ms}[data-enter] .e:nth-child(3){animation-delay:220ms}[data-enter] .e:nth-child(4){animation-delay:320ms}
+[data-enter] .hero-side.e{animation-delay:380ms}[data-enter] .stats.e{animation-delay:480ms}
+
+/* ---------- announce + nav ---------- */
+.navbar{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(10px);border-bottom:var(--bw) solid var(--line)}
+nav.top{display:flex;align-items:center;gap:var(--s2);padding:var(--s2) 0}
+.mark{display:flex;align-items:center;gap:var(--s1);font-family:var(--f-display);font-size:24px;line-height:1;text-decoration:none;min-height:44px}
+.links{display:flex;gap:2px;list-style:none;margin:0 0 0 var(--s2);padding:4px;border:var(--bw) solid var(--line);border-radius:var(--radius)}
+.links a{display:flex;align-items:center;text-decoration:none;font-size:15px;padding:6px 12px;border-radius:calc(var(--radius) - 4px);min-height:34px;transition:background-color var(--m-out) var(--ease)}
+.links a:hover{background:var(--paper-2)}
+.links a[aria-current="true"]{box-shadow:inset 0 -2px 0 var(--signal)}
+.news{display:inline-flex;align-items:center;gap:8px;font-size:14px;border:var(--bw) solid var(--line);border-radius:99px;padding:6px 12px 6px 10px;text-decoration:none;min-height:34px;margin-left:var(--s1)}
+.news i{width:8px;height:8px;border-radius:50%;background:var(--pass)}
+@media (max-width:1240px){.news{display:none}}
+nav.top .sp{flex:1}
+.btn{font:inherit;font-size:15px;font-weight:650;border-radius:var(--radius);padding:10px 18px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:var(--s1);border:var(--bw) solid var(--ink);background:var(--ink);color:var(--paper);cursor:pointer;text-decoration:none;white-space:nowrap}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.ghost:hover{background:var(--paper-2)}
+.icon-btn{width:44px;height:44px;border-radius:var(--radius);border:var(--bw) solid var(--line);background:transparent;color:var(--ink);cursor:pointer;display:grid;place-items:center}
+
+/* ---------- sections: one or two screens each ---------- */
+main > section{border-bottom:var(--bw) solid var(--line)}
+.sec{min-height:calc(var(--h,1) * 100svh);padding:calc(var(--s6)*var(--sec)) 0;display:flex;align-items:center}
+.sec > .wrap{display:flex;flex-direction:column;gap:var(--s4)}
+.sec-head p{padding-top:.4em}
+h1,h2,h3{font-family:var(--f-display);font-weight:var(--d-weight);letter-spacing:var(--d-track);margin:0}
+h2{font-size:calc(clamp(34px,4.4vw,64px)*var(--d-scale));line-height:calc(var(--d-lh)*1.02)}
+.sec-head p{margin:0;font-size:calc(var(--fs)*1.05);color:var(--ink-2)}
+
+/* ---------- hero: one screen under the nav ---------- */
+.hero{min-height:calc(100svh - var(--chrome));display:flex;flex-direction:column;justify-content:center;padding:var(--s4) 0}
+.hero > .wrap{display:flex;flex-direction:column;gap:var(--s4)}
+.hero-side .slot{min-height:236px}
+[data-hero="stacked"] .hero-grid > *,[data-hero="centered"] .hero-grid > *{grid-column:1/-1}
+[data-hero="stacked"] .hero-side{flex-direction:row;align-items:stretch}
+[data-hero="stacked"] .hero-side > *{flex:1}
+[data-hero="centered"] .hero-grid{text-align:center;justify-items:center}
+[data-hero="centered"] .hero-main p,[data-hero="centered"] .ask{margin-left:auto;margin-right:auto}
+[data-hero="centered"] .actions{justify-content:center}
+[data-hero="centered"] .hero-side{flex-direction:row;text-align:left;width:100%}
+[data-hero="centered"] .hero-side > *{flex:1}
+.hero-main{display:flex;flex-direction:column;gap:var(--s3)}
+h1{font-size:calc(clamp(44px,6.2vw,96px)*var(--d-scale));line-height:var(--d-lh)}
+.inline-ex{display:inline-flex;vertical-align:middle;width:1.9em;height:.92em;margin:0 .06em;border-radius:min(.14em,var(--radius));overflow:hidden;position:relative;background:#fff;box-shadow:inset 0 0 0 2px var(--line);transform:translateY(-.06em)}
+.inline-ex[hidden]{display:none}
+.mini{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;gap:.1em;padding:.12em .16em;font-family:var(--f-text);font-size:.15em;line-height:1.2;letter-spacing:0;text-align:left;color:#1B1712}
+.mini .f{border:1.5px solid #9A9182;border-radius:4px;padding:.25em .45em;background:#fff}
+.mini .f.on{outline:3px solid #F2600C;outline-offset:2px}
+.mini .tag{align-self:flex-start;border-radius:99px;padding:.15em .6em;font-weight:700;color:#fff}
+.lead{font-size:calc(var(--fs)*1.2);margin:0;max-width:44ch}
+.hl{font-weight:600}
+[data-hl="marker"] .hl{background:var(--hi);padding:0 .15em;border-radius:2px}
+[data-hl="underline"] .hl{text-decoration:underline wavy var(--signal);text-underline-offset:.2em;text-decoration-thickness:2px}
+.actions{display:flex;flex-wrap:wrap;gap:var(--s1)}
+.ask{max-width:560px;position:relative}
+.ask .lbl{display:block;font-size:14px;font-weight:600;margin-bottom:6px}
+.ask-box{display:flex;align-items:center;gap:var(--s1);border:1.5px solid var(--line);border-radius:var(--radius);background:var(--paper);padding:4px 4px 4px var(--s2)}
+.ask-box svg.lens{flex:none;color:var(--ink-2)}
+.ask-box input,.search input{outline-offset:2px}
+.ask-box input{flex:1;font:inherit;font-size:16px;padding:10px 0;min-width:0;border:0;background:transparent;color:inherit}
+.ask-box:focus-within{border-color:var(--signal);box-shadow:0 0 0 3px color-mix(in srgb,var(--signal) 35%,transparent)}
+.results{list-style:none;margin:var(--s1) 0 0;padding:0;border:var(--bw) solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--paper);text-align:left;position:absolute;left:0;right:0;top:100%;z-index:10;box-shadow:0 20px 40px -20px rgba(0,0,0,.3)}
+.results:empty{display:none}
+.results a{display:grid;grid-template-columns:72px 1fr;gap:var(--s2);padding:12px var(--s2);text-decoration:none;border-top:var(--bw) solid var(--line)}
+.results li:first-child a{border-top:0}
+.results a:hover,.results a:focus-visible{background:var(--paper-2)}
+.results .num{color:var(--signal-ink)}
+.results small{display:block;color:var(--ink-2);font-size:13px}
+.hero-side{display:flex;flex-direction:column;gap:var(--s2)}
+.slot{border:1.5px dashed var(--signal);border-radius:var(--radius);display:grid;place-items:center;position:relative;background:color-mix(in srgb,var(--signal) 5%,var(--paper));min-height:200px;padding:var(--s3)}
+.slot-tag{position:absolute;top:-12px;left:12px;background:var(--paper);border:1px solid var(--signal);color:var(--signal-ink);font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;padding:2px 8px;border-radius:99px}
+[data-slots="hide"] .slot{border-color:transparent;background:none}
+[data-slots="hide"] .slot-tag{display:none}
+.today{display:flex;flex-direction:column;gap:6px;border:var(--bw) solid var(--line);border-radius:var(--radius);padding:var(--s2) var(--s3);background:var(--paper);text-decoration:none}
+.today:hover{border-color:var(--ink)}
+.today .row{display:flex;align-items:center;gap:var(--s1)}
+.today .t{font-family:var(--f-display);font-size:calc(24px*var(--d-scale));line-height:1.1;letter-spacing:var(--d-track)}
+.today p{margin:0;font-size:15px;color:var(--ink-2)}
+.today .go{font-size:14px;font-weight:650;color:var(--signal-ink)}
+.shuffle{align-self:flex-end;font:inherit;font-size:14px;font-weight:600;background:none;border:0;color:var(--ink-2);cursor:pointer;min-height:44px;padding:0 4px;text-decoration:underline;text-underline-offset:3px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:var(--bw) solid var(--line);background:var(--paper);position:relative;border-radius:min(var(--radius),4px)}
+.stats > div{padding:var(--s2) var(--s3);border-right:var(--bw) solid var(--line);display:flex;align-items:baseline;gap:var(--s2)}
+.stats > div:last-of-type{border-right:0}
+.stats .num{font-size:calc(40px*var(--d-scale));line-height:1;font-weight:800;flex:none}
+.stats span.d{font-size:14px;color:var(--ink-2);line-height:1.3}
+.tick{position:absolute;width:7px;height:7px;background:var(--signal)}
+[data-ticks="off"] .tick{display:none}
+.tick.tl{left:0;top:0}.tick.tr{right:0;top:0}.tick.bl{left:0;bottom:0}.tick.br{right:0;bottom:0}
+
+/* ---------- card: two boxes deep (card > screen) ---------- */
+.card,.frame,.screen,.hero-main,.hero-side,.pick-wrap > *{min-width:0}
+.card{border:var(--bw) solid var(--line);border-radius:var(--radius);background:var(--paper);padding:var(--s4);display:flex;flex-direction:column;gap:var(--s3)}
+.card-h{display:flex;align-items:baseline;gap:var(--s1) var(--s2);flex-wrap:wrap}
+.card-h .num{font-size:26px;color:var(--signal-ink)}
+.card-h h3{font-size:calc(24px*var(--d-scale));line-height:1.1;flex:1 1 12ch}
+.badge{display:inline-flex;align-items:center;gap:6px;border:1.5px solid currentColor;border-radius:99px;padding:2px 10px 2px 7px;font-size:13px;font-weight:700;letter-spacing:.04em;line-height:1.3;white-space:nowrap}
+.badge svg{width:auto;height:10px}
+.badge.aa{color:var(--signal-ink)}
+.plain{margin:0;color:var(--ink-2)}
+.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s3)}
+[data-cards="stacked"] .pair{grid-template-columns:minmax(0,1fr)}
+.frame{margin:0;display:flex;flex-direction:column;gap:var(--s1)}
+.frame .v{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:14px}
+.frame.fail .v{color:var(--fail)}.frame.pass .v{color:var(--pass)}
+.screen{background:#fff;color:#1B1712;border-radius:calc(var(--radius) - 2px);padding:var(--s2);min-height:150px;display:flex;flex-direction:column;justify-content:center;gap:10px;font-size:16px;line-height:1.45;border:1.5px solid #E5DFD3}
+[data-surface="paper"] .screen{background:#F6F1E6}
+[data-verdict="tint"] .frame.fail .screen{border-color:color-mix(in srgb,var(--fail) 55%,#fff);box-shadow:0 0 0 4px color-mix(in srgb,var(--fail) 10%,transparent)}
+[data-verdict="tint"] .frame.pass .screen{border-color:color-mix(in srgb,var(--pass) 55%,#fff);box-shadow:0 0 0 4px color-mix(in srgb,var(--pass) 10%,transparent)}
+[data-verdict="outline"] .frame.fail .screen{border:2px dashed var(--fail)}
+[data-verdict="outline"] .frame.pass .screen{border:2px solid var(--pass)}
+.frame figcaption{font-size:14px;color:var(--ink-2)}
+.measure{font-family:var(--f-num);font-size:13px;font-weight:700;color:#5A5246}
+.diff{margin:0;font:13px/1.7 ui-monospace,"SF Mono",Menlo,monospace;border-top:var(--bw) solid var(--line);padding-top:var(--s2)}
+.diff span{display:block;padding:0 var(--s1) 0 2.2em;text-indent:-1.4em;white-space:pre-wrap;word-break:break-word;border-radius:4px}
+.diff .del{background:color-mix(in srgb,var(--fail) 12%,transparent)}
+.diff .add{background:color-mix(in srgb,var(--pass) 12%,transparent)}
+[data-diffs="off"] .diff{display:none}
+[data-plain="off"] .card .plain{display:none}
+.ex-link{color:#1A5FD1}
+.ex-link.u{text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1.5px}
+.ex-field{border:1.5px solid #9A9182;border-radius:8px;padding:10px 12px;background:#fff;color:#1B1712;font-size:15px}
+.ex-lab{font-size:13px;font-weight:600;margin-bottom:-4px}
+.ex-err{color:#9B0E1F;font-size:14px;font-weight:600;display:flex;gap:6px}
+.sr{font:13px/1.4 ui-monospace,Menlo,monospace;background:#1B1712;color:#F5EFE3;border-radius:6px;padding:8px 10px}
+.sr b{color:#FFB37A}
+.tgt{display:flex;align-items:center}
+.tgt i{display:block;background:#1B1712;border-radius:4px}
+input[type=range]{accent-color:var(--signal);width:100%;height:44px;margin:0}
+.pin{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--signal);color:#fff;font:700 11px var(--f-text);flex:none;margin-right:6px;vertical-align:2px}
+.card [data-part]{transition:outline-color .2s;outline:2px solid transparent;outline-offset:4px;border-radius:4px}
+.card [data-part].lit{outline-color:var(--signal)}
+
+/* ---------- anatomy ---------- */
+
+.anat ol{list-style:none;margin:0;padding:0;display:grid}
+.anat li button{font:inherit;color:inherit;text-align:left;background:none;border:0;border-top:var(--bw) solid var(--line);cursor:pointer;display:grid;grid-template-columns:32px 1fr;gap:var(--s1);padding:8px 0;width:100%;min-height:44px;transition:background-color var(--m-out) var(--ease)}
+.anat li button:hover b,.anat li button[aria-pressed="true"] b{color:var(--signal-ink)}
+.anat li b{display:block;font-weight:650;font-size:16px}
+.anat li span.d{color:var(--ink-2);font-size:14px}
+.anat li .pin{width:24px;height:24px;font-size:12px;margin:0}
+
+/* ---------- principles ---------- */
+.chapters{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:var(--bw) solid var(--line);border-radius:var(--radius) var(--radius) 0 0;overflow:hidden}
+.chap{padding:var(--s2) var(--s3);border:0;border-right:var(--bw) solid var(--line);cursor:pointer;background:var(--paper);text-align:left;font:inherit;color:inherit;display:grid;grid-template-columns:auto 1fr;gap:2px var(--s2);align-items:center;min-height:44px}
+.chap:last-child{border-right:0}
+.chap:hover{background:var(--paper-2)}
+.chap[aria-selected="true"]{background:var(--ink);color:var(--paper)}
+.chap .num{font-size:34px;line-height:1;grid-row:span 2}
+.chap .nm{font-family:var(--f-display);font-size:calc(24px*var(--d-scale));letter-spacing:var(--d-track);line-height:1.1;display:flex;gap:var(--s1);align-items:center}
+.chap .c{font-size:14px;opacity:.85}
+.panel{border:var(--bw) solid var(--line);border-top:0;border-radius:0 0 var(--radius) var(--radius);padding:var(--s3) var(--s4) var(--s4);background:var(--paper);display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--s3) var(--cg)}
+.panel .tagline{grid-column:span 5}.panel .blurb{grid-column:span 7}
+.panel .tagline{font-family:var(--f-display);font-size:calc(28px*var(--d-scale));line-height:1.1;margin:0;letter-spacing:var(--d-track)}
+.panel .blurb{margin:0;color:var(--ink-2);font-size:16px}
+.gl{grid-column:1/-1;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:var(--gap) var(--s3);align-items:start}
+.g{border-top:var(--bw) solid var(--ink);padding-top:var(--s1)}
+.g .label{color:var(--signal-ink);display:flex;justify-content:space-between}
+.g h3{font-size:calc(24px*var(--d-scale));margin:2px 0 6px}
+.g ul{list-style:none;margin:0;padding:0;font-size:15px}
+.g li a{display:grid;grid-template-columns:52px 1fr;gap:var(--s1);text-decoration:none;align-items:center;min-height:28px}
+.g li .num{font-size:13px;color:var(--ink-2)}
+
+/* ---------- specimens: pick one, see it big ---------- */
+
+.pick{list-style:none;margin:0;padding:0;display:grid}
+.pick button,.demo-list button{font:inherit;color:inherit;text-align:left;background:none;border:0;border-top:var(--bw) solid var(--line);width:100%;cursor:pointer;padding:10px 0;display:grid;grid-template-columns:52px 1fr auto;gap:0 var(--s1);align-items:baseline;min-height:44px}
+.pick button::after,.demo-list button::after{content:'';grid-column:3}
+.pick button[aria-selected="true"]::after,.demo-list button[aria-pressed="true"]::after{content:'→';color:var(--signal-ink);font-weight:700}
+.pick button:hover b,.demo-list button:not(.soon):hover b{text-decoration:underline;text-underline-offset:3px}
+.pick button[aria-selected="true"] .num,.demo-list button[aria-pressed="true"] .num{color:var(--signal-ink)}
+.pick button[aria-selected="true"] b,.demo-list button[aria-pressed="true"] b{font-weight:750}
+.pick .num,.demo-list .num{font-size:14px}
+.pick b,.demo-list b{font-weight:600}
+.demo-list{list-style:none;margin:0;padding:0;display:grid}
+.demo-list .s{grid-column:2;font-size:13px;color:var(--ink-2);display:none}
+.demo-list button[aria-pressed="true"] .s{display:block}
+.demo-list button.soon{cursor:default;color:var(--ink-2)}
+
+
+/* ---------- demos ---------- */
+.player{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--cg)}
+.stage{border:var(--bw) solid var(--line);border-radius:var(--radius);padding:var(--s2);background:var(--paper)}
+.stage .hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--s2);gap:var(--s2)}
+.verdict{font-weight:700;display:inline-flex;gap:6px;align-items:center;font-size:15px}
+.verdict.fail{color:var(--fail)}.verdict.pass{color:var(--pass)}
+.form{background:#fff;border:1.5px solid #E5DFD3;border-radius:10px;padding:var(--s2);display:grid;gap:10px;color:#1B1712;align-content:start}
+.form .fld{border:1.5px solid #A79E8E;border-radius:8px;padding:9px 12px;font-size:15px}
+.form .row2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.form .buy{background:#1B1712;color:#fff;border-radius:8px;padding:11px;text-align:center;font-weight:700}
+.form .iconrow{display:flex;gap:12px}
+.form .ib{width:48px;height:48px;border-radius:10px;border:1.5px solid #A79E8E;display:grid;place-items:center}
+.with .cur{outline:3px solid #F2600C;outline-offset:2px}
+.stage .say{margin-top:var(--s2);font-size:14px;color:var(--ink-2);min-height:40px}
+.stage .say .sr{display:block}
+.transport label{flex:none}
+.transport{display:flex;align-items:center;gap:var(--s2);margin-top:var(--s2);border:var(--bw) solid var(--line);border-radius:var(--radius);padding:4px var(--s2) 4px 4px;background:var(--paper)}
+.transport button{width:44px;height:44px;border-radius:calc(var(--radius) - 4px);border:0;background:var(--ink);color:var(--paper);cursor:pointer;display:grid;place-items:center;flex:none}
+.transport .t{font-size:18px;min-width:56px;text-align:right}
+
+/* ---------- index with level filter cards ---------- */
+.levels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--cg)}
+.lvcard{font:inherit;color:inherit;text-align:left;cursor:pointer;border:var(--bw) solid var(--line);border-radius:var(--radius);padding:var(--s2) var(--s3);background:var(--paper);display:grid;grid-template-columns:auto 1fr;gap:4px var(--s2);align-items:center}
+.lvcard:hover{border-color:var(--ink)}
+.lvcard[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink);background:var(--paper-2)}
+.lvcard .num{font-size:calc(44px*var(--d-scale));line-height:1;font-weight:800;grid-row:span 2}
+.lvcard b{font-weight:650;display:flex;gap:var(--s1);align-items:center}
+.lvcard span.d{font-size:14px;color:var(--ink-2);line-height:1.35}
+.toolbar{display:flex;flex-wrap:wrap;gap:var(--s2);align-items:center;padding:var(--s1) 0;background:var(--paper)}
+@media (min-width:901px){.toolbar{position:sticky;top:77px;z-index:5;border-bottom:var(--bw) solid var(--line)}}
+.search{flex:1 1 260px;display:flex;align-items:center;gap:var(--s1);border:var(--bw) solid var(--line);border-radius:var(--radius);padding:0 var(--s2);background:var(--paper)}
+.search input{flex:1;font:inherit;font-size:16px;padding:11px 0;min-width:0;border:0;background:transparent;color:inherit}
+.search:focus-within{border-color:var(--signal);box-shadow:0 0 0 3px color-mix(in srgb,var(--signal) 35%,transparent)}
+.seg{display:inline-flex;border:var(--bw) solid var(--line);border-radius:var(--radius);padding:3px;gap:2px}
+.seg button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0 12px;border-radius:calc(var(--radius) - 3px);font-size:14px;font-weight:600;min-height:38px;min-width:44px;display:inline-flex;align-items:center;gap:6px;justify-content:center}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.count{margin-left:auto;font-size:14px;color:var(--ink-2)}
+.ix{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s3) var(--cg);align-items:start}
+.ix-g h3{font-size:calc(24px*var(--d-scale));line-height:1.1;display:flex;gap:var(--s1);align-items:center;padding-bottom:var(--s1);border-bottom:var(--bw) solid var(--ink)}
+.ix-g .label{color:var(--signal-ink);display:block;margin-bottom:4px}
+details.row{border-bottom:var(--bw) solid var(--line)}
+details.row summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:44px 1fr auto;gap:var(--s1);align-items:center;padding:6px 0;min-height:36px;font-size:15px;line-height:1.3}
+details.row summary::-webkit-details-marker{display:none}
+details.row .nm{font-weight:600}
+details.row .num{font-size:13px}
+details.row .badge{font-size:11px;padding:1px 7px 1px 5px}
+details.row .body{padding:0 0 var(--s2);display:grid;gap:var(--s1);font-size:15px}
+details.row .body p{margin:0}
+.cap-line{display:flex;gap:var(--s1);font-size:14px}
+.cap-line b{flex:none}
+.cap-line.f b{color:var(--fail)}.cap-line.p b{color:var(--pass)}
+.empty{padding:var(--s4) 0;color:var(--ink-2)}
+
+/* ---------- self audit ---------- */
+.spl .slot{grid-column:span 6}.spl .copy{grid-column:span 6}
+.spl .slot{min-height:460px}
+.ring3d{width:220px;height:220px;border-radius:50%;border:2px solid var(--ink);position:relative;transform-style:preserve-3d;transition:transform 1.2s var(--ease-enter)}
+.spl .slot:hover .ring3d{transform:rotateX(20deg) rotateY(30deg)}
+.ring3d::before,.ring3d::after{content:"";position:absolute;inset:-2px;border-radius:50%;border:2px solid var(--signal);transform:rotateX(70deg)}
+.ring3d::after{border-color:var(--ink-2);transform:rotateY(70deg)}
+.audit{list-style:none;margin:0;padding:0;border-top:var(--bw) solid var(--line)}
+.audit li{display:grid;grid-template-columns:24px 1fr auto;gap:var(--s2);padding:12px 0;border-bottom:var(--bw) solid var(--line);font-size:16px;align-items:center}
+.audit .ok{color:var(--pass);font-weight:800}.audit .no{color:var(--fail);font-weight:800}
+.audit .num{font-size:15px;text-align:right}
+.spl .copy{display:flex;flex-direction:column;gap:var(--s3);align-items:flex-start}
+.spl .copy p{margin:0}
+
+footer{padding:var(--s4) 0 var(--s6);font-size:14px;color:var(--ink-2)}
+footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:var(--s2)}
+[data-still] *{animation-play-state:paused!important}
+[data-sec].off{display:none!important}
+
+/* ---------- responsive ---------- */
+@media (max-width:1080px){
+  .pick-wrap > *{grid-column:1/-1}
+  .ix{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .gl{grid-auto-flow:row;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .pick{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+  .demo-list{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+}
+@media (max-width:900px){
+  .links{display:none}
+  .g12 > *,.panel > *{grid-column:1/-1!important}
+  .hero-side{flex-direction:column!important}
+  .gl{grid-template-columns:minmax(0,1fr)}
+  .stats,.chapters{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stats > div:nth-of-type(2){border-right:0}.stats > div:nth-of-type(-n+2){border-bottom:var(--bw) solid var(--line)}
+  .chap:nth-child(2){border-right:0}.chap:nth-child(-n+2){border-bottom:var(--bw) solid var(--line)}
+  .levels{grid-template-columns:minmax(0,1fr)}
+  .sec{min-height:0}
+}
+@media (max-width:600px){
+  :root{--gutter:16px}
+  .pair,.player,.ix{grid-template-columns:minmax(0,1fr)}
+  details.row summary{min-height:44px}
+  .stats,.chapters{grid-template-columns:minmax(0,1fr)}.stats > div{border-right:0!important;border-bottom:var(--bw) solid var(--line)}
+  .chap{border-right:0;border-bottom:var(--bw) solid var(--line)}
+  nav.top .btn{display:none}
+  .actions .btn{flex:1 1 100%}
+  .card{padding:var(--s2)}
+  .g li a{min-height:44px}
+  .seg button{min-height:44px}
+}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* ============================================================
+   Tweak panel. A design tool, not part of the page: NOT themed by the tweaks.
+   ============================================================ */
+#tw-toggle{position:fixed;right:16px;bottom:16px;z-index:1001;font:600 14px/1 system-ui,sans-serif;background:#111;color:#fff;border:0;border-radius:999px;padding:12px 16px;min-height:44px;display:flex;gap:8px;align-items:center;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,.3)}
+#tw-toggle[aria-expanded="true"]{display:none}
+#tw-toggle:focus-visible{outline:3px solid #F2600C;outline-offset:3px}
+#tw-toggle .k{font:11px ui-monospace,monospace;border:1px solid #555;border-radius:4px;padding:2px 5px;color:#ccc}
+#tw-toggle .dot{background:#F2600C;color:#111;border-radius:99px;padding:2px 7px;font-size:12px}
+#tw{position:fixed;top:0;right:0;bottom:0;width:380px;max-width:100vw;z-index:1000;background:#141414;color:#EDEDED;font:13px/1.4 system-ui,-apple-system,sans-serif;display:flex;flex-direction:column;border-left:1px solid #2A2A2A;box-shadow:-20px 0 60px rgba(0,0,0,.25)}
+#tw[hidden]{display:none}
+body.tw-open{padding-right:380px}
+@media (max-width:1100px){body.tw-open{padding-right:0}}
+#tw header{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid #2A2A2A}
+#tw header h2{font:600 15px system-ui,sans-serif;letter-spacing:0;margin:0;flex:1}
+#tw .tw-x{background:none;border:1px solid #333;color:#eee;border-radius:8px;width:32px;height:32px;cursor:pointer}
+#tw .tw-body{flex:1;overflow:auto;padding:6px 0 80px}
+#tw details{border-bottom:1px solid #222}
+#tw summary{cursor:pointer;padding:12px 14px;font-weight:600;font-size:13px;display:flex;justify-content:space-between;list-style:none}
+#tw summary::-webkit-details-marker{display:none}
+#tw summary::after{content:"▸";color:#888}
+#tw details[open] summary::after{content:"▾"}
+#tw summary .ch{color:#F2600C;font-weight:500;margin-left:auto;margin-right:8px;font-size:12px}
+#tw .ctl{display:grid;grid-template-columns:118px 1fr;gap:8px;align-items:center;padding:6px 14px}
+#tw .ctl > label,#tw .ctl > .lab{color:#B5B5B5}
+#tw .ctl.changed > label,#tw .ctl.changed > .lab{color:#FFB37A}
+#tw .ctl .rng{display:grid;grid-template-columns:1fr 54px;gap:6px;align-items:center}
+#tw input[type=range]{height:20px;accent-color:#F2600C;width:100%}
+#tw output{font:11px ui-monospace,monospace;color:#ddd;text-align:right}
+#tw select,#tw textarea{width:100%;background:#1E1E1E;color:#eee;border:1px solid #333;border-radius:6px;padding:6px 8px;font:inherit}
+#tw textarea{min-height:90px;resize:vertical}
+#tw .clr{display:flex;gap:6px;align-items:center}
+#tw input[type=color]{width:36px;height:28px;border:1px solid #333;border-radius:6px;background:none;padding:0;cursor:pointer}
+#tw .clr code{font:11px ui-monospace,monospace;color:#aaa;flex:1}
+#tw .clr button{background:none;border:0;color:#888;cursor:pointer;font-size:12px}
+#tw .sg{display:flex;flex-wrap:wrap;gap:3px;background:#1E1E1E;border:1px solid #333;border-radius:7px;padding:2px}
+#tw .sg button{flex:1;background:none;border:0;color:#bbb;padding:5px 6px;border-radius:5px;cursor:pointer;font:inherit;font-size:12px;min-height:24px}
+#tw .sg button[aria-pressed="true"]{background:#EDEDED;color:#111}
+#tw .tg{justify-self:start;width:38px;height:22px;border-radius:99px;background:#333;border:0;position:relative;cursor:pointer}
+#tw .tg::after{content:"";position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#bbb;transition:left .15s}
+#tw .tg[aria-checked="true"]{background:#F2600C}
+#tw .tg[aria-checked="true"]::after{left:19px;background:#fff}
+#tw :focus-visible{outline:2px solid #F2600C;outline-offset:2px}
+#tw .presets{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:6px 14px 12px}
+#tw .presets button{background:#1E1E1E;border:1px solid #333;color:#eee;border-radius:8px;padding:8px;cursor:pointer;text-align:left;font:inherit}
+#tw .presets button:hover{border-color:#F2600C}
+#tw .presets small{display:block;color:#999;font-size:11px}
+#tw .cr{padding:4px 14px 10px;display:grid;gap:4px}
+#tw .cr div{display:grid;grid-template-columns:1fr auto auto;gap:8px;font:11px ui-monospace,monospace}
+#tw .cr .ok{color:#7FD39B}#tw .cr .bad{color:#FF8A80}
+#tw footer.tw-f{position:absolute;bottom:0;left:0;right:0;display:flex;gap:6px;padding:10px 14px;background:#141414;border-top:1px solid #2A2A2A;color:inherit;font-size:12px}
+#tw footer.tw-f button{flex:1;background:#EDEDED;color:#111;border:0;border-radius:8px;padding:9px;font:600 12px system-ui,sans-serif;cursor:pointer}
+#tw footer.tw-f button.sec{background:#262626;color:#eee}
+#tw .note{padding:0 14px 8px;color:#888;font-size:12px}
+#tw .toast{position:absolute;bottom:62px;left:14px;right:14px;background:#F2600C;color:#111;padding:8px 10px;border-radius:8px;font-weight:600;display:none}
+#tw .toast.show{display:block}
+</style>
+</head>
+<body>
+<!-- Deal: kind software (a reference product, free; main action: find a criterion).
+     Palette: warm paper + ink with one signal orange, kept from the chosen direction.
+     Pairing: Gloock / Funnel Sans / Doto. Hero: split, the work in the headline (live inline example).
+     Moments: the inline headline example (plays twice on load, again on hover) and the live
+     1.4.3 contrast slider. Effect: none; Rive and Spline slots hold the client's files. -->
+<header class="nav navbar">
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="wrap">
+    <nav class="top" aria-label="Primary">
+      <a class="mark" href="#top"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1v18M1 10h18M3.6 3.6l12.8 12.8M16.4 3.6L3.6 16.4" stroke="currentColor" stroke-width="2.4"></path></svg>Bureau</a>
+      <ul class="links">
+        <li><a href="#read" aria-current="false">Card anatomy</a></li>
+        <li><a href="#principles" aria-current="false">Principles</a></li>
+        <li><a href="#specimens" aria-current="false">Specimens</a></li>
+        <li><a href="#demos" aria-current="false">Demos</a></li>
+        <li><a href="#index" aria-current="true">Index</a></li>
+      </ul>
+      <a class="news" href="#index" data-sec="announce"><i aria-hidden="true"></i>All 55 A and AA criteria are in</a>
+      <span class="sp"></span>
+      <button class="icon-btn" id="theme" aria-label="Switch to dark theme"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9A7 7 0 0 1 12 3z" fill="currentColor"></path></svg></button>
+      <a class="btn" href="#index">Find a criterion</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- HERO -->
+<section class="hero" id="top" data-sec="hero" data-enter="" aria-labelledby="h1">
+  <div class="wrap">
+    <div class="hero-grid g12">
+      <div class="hero-main s8">
+        <h1 id="h1" class="e">Every WCAG 2.2 rule, <span class="inline-ex" data-ui="" aria-hidden="true"><span class="mini" id="m1"><span class="f">jo@example.com</span><span class="tag" style="background:#B3261E">✕ fail</span></span></span> broken and fixed.</h1>
+        <p class="lead e">All 55 Level A and AA criteria as <span class="hl">live interface</span>: the failing version next to the fixed one, with the change named.</p>
+        <div class="actions e"><a class="btn" href="#index">Browse all 55 criteria</a><a class="btn ghost" href="#read">See how a card works</a></div>
+        <div class="ask e" id="ask">
+          <label class="lbl" for="q">Look up a criterion</label>
+          <div class="ask-box"><svg class="lens" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="2"></circle><path d="M15 15l6 6" stroke="currentColor" stroke-width="2"></path></svg><input id="q" placeholder="A number, a name or a symptom: “focus ring gone”" autocomplete="off" aria-controls="res"></div>
+          <ul class="results" id="res" aria-live="polite"></ul>
+        </div>
+      </div>
+      <div class="hero-side s4 e">
+        <div class="slot" data-sec="rive" role="img" aria-label="Rive character that reacts to what you type (placeholder)">
+          <span class="slot-tag">Rive · clerk.riv</span>
+          <svg width="110" height="140" viewBox="0 0 120 150" aria-hidden="true"><rect x="20" y="30" width="80" height="80" rx="18" fill="var(--signal)"></rect><rect x="34" y="48" width="52" height="40" rx="8" fill="#1B1712"></rect><circle id="e1" cx="50" cy="68" r="5" fill="#fff"></circle><circle id="e2" cx="70" cy="68" r="5" fill="#fff"></circle><rect x="40" y="112" width="40" height="26" rx="6" fill="var(--ink-2)"></rect></svg>
+        </div>
+        <div data-sec="today" style="display:flex;flex-direction:column">
+          <a class="today" id="today-a" href="#ix-2.5.3" data-open="2.5.3">
+            <span class="row"><span class="num" id="today-n" style="font-size:18px;color:var(--signal-ink)">2.5.3</span><span id="today-b"><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></span><span class="label muted" style="margin-left:auto">Criterion of the day</span></span>
+            <span class="t" id="today-h">Label in Name</span>
+            <p id="today-p">A control’s accessible name must contain the text shown on it.</p>
+            <span class="go"><span class="draw">Open in the index</span> <span aria-hidden="true">→</span></span>
+          </a>
+          <button class="shuffle" id="shuffle">Show another criterion</button>
+        </div>
+      </div>
+    </div>
+    <div class="stats e" data-sec="stats">
+      <span class="tick tl"></span><span class="tick tr"></span><span class="tick bl"></span><span class="tick br"></span>
+      <div><span class="num">55</span><span class="d">success criteria at Level A and AA</span></div>
+      <div><span class="num">13</span><span class="d">guidelines under four principles</span></div>
+      <div><span class="num">9</span><span class="d">demos for criteria that move</span></div>
+      <div><span class="num">0</span><span class="d">axe violations on this site, checked on every deploy</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ANATOMY -->
+<section class="sec" id="read" data-sec="read" aria-labelledby="read-h" style="--h:1">
+  <div class="wrap">
+    <div class="sec-head g12">
+      <h2 id="read-h" class="s8">The anatomy of a criterion card</h2>
+      <p class="s4">Every card has the same eight parts. Pick a part to find it on the card.</p>
+    </div>
+    <div class="anat g12">
+      <div id="anat-card" class="s8"><article class="card" aria-labelledby="a-1.4.11">
+  <div class="card-h"><span class="num" data-part="1"><span class="pin" aria-hidden="true">1</span>1.4.11</span><h3 id="a-1.4.11" data-part="2"><span class="pin" aria-hidden="true">2</span>Non-text Contrast</h3><span data-part="3"><span class="pin" aria-hidden="true">3</span><span class="badge aa" title="Level AA"><svg viewBox="0 0 22 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" fill="currentColor"></rect><rect x="12.5" y=".5" width="9" height="9" fill="currentColor"></rect></svg>AA</span></span></div>
+  <p class="plain" data-part="4"><span class="pin" aria-hidden="true">4</span>The parts of a control that tell you it is a control — the input’s edge, the checkbox box, the focus ring, the chart key — need 3:1 against whatever sits behind them.</p>
+  <div class="pair">
+   <figure class="frame fail" data-part="5"><span class="v"><span class="pin" aria-hidden="true">5</span><span aria-hidden="true">✕</span> Fail</span><div class="screen" data-ui="" role="group" aria-label="Failing example"><span class="ex-lab">Email</span><span class="ex-field" style="border-color:#DDD8CE">jo@example.com</span><span class="measure">1.42:1 against white</span></div><figcaption data-part="7"><span class="pin" aria-hidden="true">7</span>The field and checkbox edges vanish; only the placeholder hints anything is editable.</figcaption></figure>
+   <figure class="frame pass" data-part="6"><span class="v"><span class="pin" aria-hidden="true">6</span><span aria-hidden="true">✓</span> Pass</span><div class="screen" data-ui="" role="group" aria-label="Passing example"><span class="ex-lab">Email</span><span class="ex-field" style="border-color:#857C6E">jo@example.com</span><span class="measure">4.11:1 against white</span></div><figcaption>One border colour, changed on every control at once.</figcaption></figure>
+  </div><pre class="diff" data-part="8" aria-label="Markup diff"><span class="del"><span class="pin" aria-hidden="true">8</span>- .field { border: 1.5px solid #DDD8CE; }</span><span class="add">+ .field { border: 1.5px solid #857C6E; }</span></pre></article></div>
+      <ol id="anat-list" class="s4" aria-label="Parts of a card"><li><button aria-pressed="false" data-p="1"><span class="pin" aria-hidden="true">1</span><span><b>Number</b><span class="d">The criterion’s dotted triple, and its link.</span></span></button></li><li><button aria-pressed="false" data-p="2"><span class="pin" aria-hidden="true">2</span><span><b>Name</b><span class="d">The short name used in the spec.</span></span></button></li><li><button aria-pressed="false" data-p="3"><span class="pin" aria-hidden="true">3</span><span><b>Level badge</b><span class="d">A or AA, told apart by shape as well as colour.</span></span></button></li><li><button aria-pressed="false" data-p="4"><span class="pin" aria-hidden="true">4</span><span><b>Plain English</b><span class="d">What the criterion asks, in one paragraph.</span></span></button></li><li><button aria-pressed="false" data-p="5"><span class="pin" aria-hidden="true">5</span><span><b>Fail example</b><span class="d">Real interface, rendered live, showing the violation.</span></span></button></li><li><button aria-pressed="false" data-p="6"><span class="pin" aria-hidden="true">6</span><span><b>Pass example</b><span class="d">The same interface with the fix applied.</span></span></button></li><li><button aria-pressed="false" data-p="7"><span class="pin" aria-hidden="true">7</span><span><b>Caption</b><span class="d">The single thing that is wrong, or that changed.</span></span></button></li><li><button aria-pressed="false" data-p="8"><span class="pin" aria-hidden="true">8</span><span><b>Diff</b><span class="d">The exact markup change, marked − and + as well as tinted.</span></span></button></li></ol>
+    </div>
+  </div>
+</section>
+
+<!-- PRINCIPLES -->
+<section class="sec" id="principles" data-sec="principles" aria-labelledby="pr-h" style="--h:1">
+  <div class="wrap">
+    <div class="sec-head g12">
+      <h2 id="pr-h" class="s8">The four principles of WCAG</h2>
+      <p class="s4">Each principle splits into guidelines, and each guideline into the criteria you test against. The shape beside each name survives greyscale.</p>
+    </div>
+    <div>
+      <div class="chapters" role="tablist" aria-label="Principles" id="tabs"><button class="chap" role="tab" id="tab-0" aria-selected="true" aria-controls="panel" tabindex="0"><span class="num">01</span><span class="nm"><svg class="mk" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><rect x="1" y="1" width="10" height="10"></rect></svg>Perceivable</span><span class="c">Can people take it in? · 20 criteria</span></button><button class="chap" role="tab" id="tab-1" aria-selected="false" aria-controls="panel" tabindex="-1"><span class="num">02</span><span class="nm"><svg class="mk" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><circle cx="6" cy="6" r="5"></circle></svg>Operable</span><span class="c">Can people work it? · 20 criteria</span></button><button class="chap" role="tab" id="tab-2" aria-selected="false" aria-controls="panel" tabindex="-1"><span class="num">03</span><span class="nm"><svg class="mk" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 .8l5.4 10.2H.6z"></path></svg>Understandable</span><span class="c">Does it make sense? · 13 criteria</span></button><button class="chap" role="tab" id="tab-3" aria-selected="false" aria-controls="panel" tabindex="-1"><span class="num">04</span><span class="nm"><svg class="mk" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 .5L11.5 6 6 11.5.5 6z"></path></svg>Robust</span><span class="c">Can the tools read it? · 2 criteria</span></button></div>
+      <div class="panel" id="panel" role="tabpanel" tabindex="0" aria-labelledby="tab-0"><p class="tagline">If you can't perceive it, it isn't there for you.</p><p class="blurb">Information and interface components must be presentable in ways every user can sense. Text that can be read aloud or enlarged; contrast that survives a bright room; structure that survives losing the layout.</p><div class="gl"><article class="g"><span class="label"><span>Guideline 1.1</span><span>1</span></span><h3>Text Alternatives</h3><ul><li><a href="#ix-1.1.1" data-open="1.1.1"><span class="num">1.1.1</span><span class="draw">Non-text Content</span></a></li></ul></article><article class="g"><span class="label"><span>Guideline 1.2</span><span>5</span></span><h3>Time-based Media</h3><ul><li><a href="#ix-1.2.1" data-open="1.2.1"><span class="num">1.2.1</span><span class="draw">Audio-only and Video-only (Prerecorded)</span></a></li><li><a href="#ix-1.2.2" data-open="1.2.2"><span class="num">1.2.2</span><span class="draw">Captions (Prerecorded)</span></a></li><li><a href="#ix-1.2.3" data-open="1.2.3"><span class="num">1.2.3</span><span class="draw">Audio Description or Media Alternative (Prerecorded)</span></a></li><li><a href="#ix-1.2.4" data-open="1.2.4"><span class="num">1.2.4</span><span class="draw">Captions (Live)</span></a></li><li><a href="#ix-1.2.5" data-open="1.2.5"><span class="num">1.2.5</span><span class="draw">Audio Description (Prerecorded)</span></a></li></ul></article><article class="g"><span class="label"><span>Guideline 1.3</span><span>5</span></span><h3>Adaptable</h3><ul><li><a href="#ix-1.3.1" data-open="1.3.1"><span class="num">1.3.1</span><span class="draw">Info and Relationships</span></a></li><li><a href="#ix-1.3.2" data-open="1.3.2"><span class="num">1.3.2</span><span class="draw">Meaningful Sequence</span></a></li><li><a href="#ix-1.3.3" data-open="1.3.3"><span class="num">1.3.3</span><span class="draw">Sensory Characteristics</span></a></li><li><a href="#ix-1.3.4" data-open="1.3.4"><span class="num">1.3.4</span><span class="draw">Orientation</span></a></li><li><a href="#ix-1.3.5" data-open="1.3.5"><span class="num">1.3.5</span><span class="draw">Identify Input Purpose</span></a></li></ul></article><article class="g"><span class="label"><span>Guideline 1.4</span><span>9</span></span><h3>Distinguishable</h3><ul><li><a href="#ix-1.4.1" data-open="1.4.1"><span class="num">1.4.1</span><span class="draw">Use of Color</span></a></li><li><a href="#ix-1.4.11" data-open="1.4.11"><span class="num">1.4.11</span><span class="draw">Non-text Contrast</span></a></li><li><a href="#ix-1.4.10" data-open="1.4.10"><span class="num">1.4.10</span><span class="draw">Reflow</span></a></li><li><a href="#ix-1.4.2" data-open="1.4.2"><span class="num">1.4.2</span><span class="draw">Audio Control</span></a></li><li><a href="#ix-1.4.3" data-open="1.4.3"><span class="num">1.4.3</span><span class="draw">Contrast (Minimum)</span></a></li><li><a href="#ix-1.4.4" data-open="1.4.4"><span class="num">1.4.4</span><span class="draw">Resize Text</span></a></li><li><a href="#ix-1.4.5" data-open="1.4.5"><span class="num">1.4.5</span><span class="draw">Images of Text</span></a></li><li><a href="#ix-1.4.12" data-open="1.4.12"><span class="num">1.4.12</span><span class="draw">Text Spacing</span></a></li><li><a href="#ix-1.4.13" data-open="1.4.13"><span class="num">1.4.13</span><span class="draw">Content on Hover or Focus</span></a></li></ul></article></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SPECIMENS -->
+<section class="sec" id="specimens" data-sec="specimens" aria-labelledby="sp-h" style="--h:1">
+  <div class="wrap">
+    <div class="sec-head g12">
+      <h2 id="sp-h" class="s8">Six criterion cards to try</h2>
+      <p class="s4">Ratios are measured from the colours on screen. On 1.4.3, drag the slider until the text passes.</p>
+    </div>
+    <div class="pick-wrap g12">
+      <ul class="pick s4" role="tablist" aria-label="Specimen cards" aria-orientation="vertical" id="pick"><li role="presentation"><button role="tab" id="pk-0" aria-controls="spec" aria-selected="true" tabindex="0"><span class="num">1.4.3</span><b>Contrast (Minimum)</b></button></li><li role="presentation"><button role="tab" id="pk-1" aria-controls="spec" aria-selected="false" tabindex="-1"><span class="num">1.1.1</span><b>Non-text Content</b></button></li><li role="presentation"><button role="tab" id="pk-2" aria-controls="spec" aria-selected="false" tabindex="-1"><span class="num">1.4.1</span><b>Use of Color</b></button></li><li role="presentation"><button role="tab" id="pk-3" aria-controls="spec" aria-selected="false" tabindex="-1"><span class="num">1.4.11</span><b>Non-text Contrast</b></button></li><li role="presentation"><button role="tab" id="pk-4" aria-controls="spec" aria-selected="false" tabindex="-1"><span class="num">2.5.8</span><b>Target Size (Minimum)</b></button></li><li role="presentation"><button role="tab" id="pk-5" aria-controls="spec" aria-selected="false" tabindex="-1"><span class="num">3.3.1</span><b>Error Identification</b></button></li></ul>
+      <div id="spec" class="s8" role="tabpanel" aria-labelledby="pk-0"><article class="card" aria-labelledby="h-1.4.3">
+  <div class="card-h"><span class="num" data-part="1">1.4.3</span><h3 id="h-1.4.3" data-part="2">Contrast (Minimum)</h3><span data-part="3"><span class="badge aa" title="Level AA"><svg viewBox="0 0 22 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" fill="currentColor"></rect><rect x="12.5" y=".5" width="9" height="9" fill="currentColor"></rect></svg>AA</span></span></div>
+  <p class="plain" data-part="4">Body text needs at least 4.5:1 against its background. Text at 24px, or 18.66px and bold, needs 3:1. Measure it rather than judging by eye — a screen at full brightness in a dim room is the most forgiving possible viewing condition, and it is the one you are designing in.</p>
+  <div class="pair">
+   <figure class="frame fail" data-part="5"><span class="v"><span aria-hidden="true">✕</span> Fail</span><div class="screen" data-ui="" role="group" aria-label="Failing example"><div class="c143" style="font-weight: 600; font-size: 18px; color: rgb(184, 180, 174);">Your order has shipped</div><div class="c143" style="font-size: 15px; color: rgb(184, 180, 174);">Track it from your account page.</div><label class="measure" for="c143r" style="display:flex;justify-content:space-between;margin-top:4px"><span>Text lightness</span><span id="c143v">2.06:1</span></label><input id="c143r" type="range" min="0" max="92" value="72"></div><figcaption data-part="7">Hierarchy built by fading text out.</figcaption></figure>
+   <figure class="frame pass" data-part="6"><span class="v"><span aria-hidden="true">✓</span> Pass</span><div class="screen" data-ui="" role="group" aria-label="Passing example"><div style="font-weight:600;font-size:18px;color:#3A3F3B">Your order has shipped</div><div style="font-size:15px;color:#3A3F3B">Track it from your account page.</div><span class="measure">10.75:1 against white</span></div><figcaption>Hierarchy moved from lightness to weight and scale.</figcaption></figure>
+  </div></article></div>
+    </div>
+  </div>
+</section>
+
+<!-- DEMOS -->
+<section class="sec" id="demos" data-sec="demos" aria-labelledby="dm-h" style="--h:1">
+  <div class="wrap">
+    <div class="sec-head g12">
+      <h2 id="dm-h" class="s8">Demos for the criteria that move</h2>
+      <p class="s4">The same scene runs twice, failing and passing. Play it or drag the playhead.</p>
+    </div>
+    <div class="pick-wrap g12">
+      <ul class="demo-list s4" id="demo-list" aria-label="Demos"><li><button aria-pressed="true" data-i="0"><span class="num">2.4.7</span><b>Focus Visible</b><span class="s">A keyboard tour of a checkout</span></button></li><li><button aria-pressed="false" data-i="1"><span class="num">4.1.2</span><b>Name, Role, Value</b><span class="s">A screen reader on icon buttons</span></button></li><li><button aria-pressed="false" data-i="2" aria-disabled="true" class="soon"><span class="num">1.4.10</span><b>Reflow</b><span class="s">1280px down to 320px · in the full build</span></button></li><li><button aria-pressed="false" data-i="3" aria-disabled="true" class="soon"><span class="num">2.4.7</span><b>Focus, removed</b><span class="s">The tour with outlines stripped · in the full build</span></button></li><li><button aria-pressed="false" data-i="4" aria-disabled="true" class="soon"><span class="num">2.4.11</span><b>Focus Not Obscured</b><span class="s">A sticky header hiding focus · in the full build</span></button></li><li><button aria-pressed="false" data-i="5" aria-disabled="true" class="soon"><span class="num">3.3.1</span><b>Error Identification</b><span class="s">Named, linked errors · in the full build</span></button></li><li><button aria-pressed="false" data-i="6" aria-disabled="true" class="soon"><span class="num">4.1.3</span><b>Status Messages</b><span class="s">A live region on a basket update · in the full build</span></button></li><li><button aria-pressed="false" data-i="7" aria-disabled="true" class="soon"><span class="num">2.5.8</span><b>Target Size</b><span class="s">18px versus 24px under a fingertip · in the full build</span></button></li><li><button aria-pressed="false" data-i="8" aria-disabled="true" class="soon"><span class="num">2.2.2</span><b>Pause, Stop, Hide</b><span class="s">A carousel you can pause · in the full build</span></button></li></ul>
+      <div class="s8">
+        <div class="player" id="player"><div class="stage without"><div class="hdr"><span class="label">2.4.7 · Focus styles removed</span><span class="verdict fail"><span aria-hidden="true">✕</span> Fail</span></div><div data-ui=""><div class="form"><div class="fld cur">Full name</div><div class="fld">Email</div><div class="row2"><div class="fld">Card number</div><div class="fld">Expiry</div></div><div class="buy">Pay now</div></div></div><div class="say" aria-live="off">Where is focus? You can’t tell.</div></div><div class="stage with"><div class="hdr"><span class="label">2.4.7 · Visible focus ring</span><span class="verdict pass"><span aria-hidden="true">✓</span> Pass</span></div><div data-ui=""><div class="form"><div class="fld cur">Full name</div><div class="fld">Email</div><div class="row2"><div class="fld">Card number</div><div class="fld">Expiry</div></div><div class="buy">Pay now</div></div></div><div class="say" aria-live="off">Focus: Full name</div></div></div>
+        <div class="transport">
+          <button id="play" aria-label="Play demo"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path id="pi" d="M3 1l10 6-10 6z" fill="currentColor"></path></svg></button>
+          <label for="scrub" class="label muted">Playhead</label>
+          <input id="scrub" type="range" min="0" max="1000" value="0">
+          <span class="t num" id="tc">0:00</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INDEX -->
+<section class="sec" id="index" data-sec="index" aria-labelledby="ix-h" style="--h:2">
+  <div class="wrap">
+    <div class="sec-head g12">
+      <h2 id="ix-h" class="s8">The index of all 55 criteria</h2>
+      <p class="s4">Level A is the floor; AA is the usual legal target and includes every A. AAA is out of scope here. Pick a level to filter.</p>
+    </div>
+    <div class="levels" id="lvls" role="group" aria-label="Filter by level" data-sec="levels"><button class="lvcard" aria-pressed="true" data-v="all"><span class="num">55</span><b>Every level</b><span class="d">A and AA together: the usual conformance target.</span></button><button class="lvcard" aria-pressed="false" data-v="A"><span class="num">31</span><b><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span>Level A</b><span class="d">The floor. Fail one and some people can’t use the page at all.</span></button><button class="lvcard" aria-pressed="false" data-v="AA"><span class="num">24</span><b><span class="badge aa" title="Level AA"><svg viewBox="0 0 22 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" fill="currentColor"></rect><rect x="12.5" y=".5" width="9" height="9" fill="currentColor"></rect></svg>AA</span>Level AA</b><span class="d">The usual target in law and procurement.</span></button></div>
+    <div class="toolbar">
+      <label class="search"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="2"></circle><path d="M15 15l6 6" stroke="currentColor" stroke-width="2"></path></svg><span class="sr-only">Search criteria</span><input id="ixq" type="search" placeholder="Search “1.4” or “keyboard”" autocomplete="off"></label>
+      <div class="seg" role="group" aria-label="Filter by principle" id="ixp"><button aria-pressed="true" data-v="all">All</button><button aria-pressed="false" data-v="1" aria-label="Perceivable"><svg class="mk" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><rect x="1" y="1" width="10" height="10"></rect></svg>1</button><button aria-pressed="false" data-v="2" aria-label="Operable"><svg class="mk" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><circle cx="6" cy="6" r="5"></circle></svg>2</button><button aria-pressed="false" data-v="3" aria-label="Understandable"><svg class="mk" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 .8l5.4 10.2H.6z"></path></svg>3</button><button aria-pressed="false" data-v="4" aria-label="Robust"><svg class="mk" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 .5L11.5 6 6 11.5.5 6z"></path></svg>4</button></div>
+      <span class="count" id="ixc" aria-live="polite">Showing 55 of 55</span>
+    </div>
+    <div class="ix" id="ix"><div class="ix-g"><span class="label">Guideline 1.1</span><h3><svg class="mk" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><rect x="1" y="1" width="10" height="10"></rect></svg>Text Alternatives</h3><details class="row" id="ix-1.1.1"><summary><span class="num">1.1.1</span><span class="nm"><span class="draw">Non-text Content</span></span><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></summary><div class="body"><p>Anything that is not text — an image, an icon, a chart, a video thumbnail — needs a text equivalent that serves the same purpose. Decoration needs an empty alt so screen readers skip it. The test is not "is there alt text" but "would someone who cannot see this end up knowing the same thing".</p><div class="cap-line f"><b>✕ Fail</b><span>Alt text exists, and tells the reader nothing.</span></div><div class="cap-line p"><b>✓ Pass</b><span>Each image is described by what it is for, not by what it is.</span></div></div></details></div><div class="ix-g"><span class="label">Guideline 1.2</span><h3><svg class="mk" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><rect x="1" y="1" width="10" height="10"></rect></svg>Time-based Media</h3><details class="row" id="ix-1.2.1"><summary><span class="num">1.2.1</span><span class="nm"><span class="draw">Audio-only and Video-only (Prerecorded)</span></span><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></summary><div class="body"><p>A recording with only sound needs a transcript. A recording with only pictures needs either a transcript or an audio track describing it. Whichever sense the recording requires, offer the same content to someone who cannot use it.</p><div class="cap-line f"><b>✕ Fail</b><span>A podcast episode published as audio and nothing else.</span></div><div class="cap-line p"><b>✓ Pass</b><span>A full transcript sits beneath the player.</span></div></div></details><details class="row" id="ix-1.2.2"><summary><span class="num">1.2.2</span><span class="nm"><span class="draw">Captions (Prerecorded)</span></span><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></summary><div class="body"><p>Prerecorded video with sound needs captions: the dialogue, who is speaking, and the sounds that carry meaning. Auto-generated captions count only once someone has corrected them.</p><div class="cap-line f"><b>✕ Fail</b><span>Auto-captions, uncorrected.</span></div><div class="cap-line p"><b>✓ Pass</b><span>Corrected captions, with speakers and meaningful sound.</span></div></div></details><details class="row" id="ix-1.2.3"><summary><span class="num">1.2.3</span><span class="nm"><span class="draw">Audio Description or Media Alternative (Prerecorded)</span></span><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></summary><div class="body"><p>If the picture carries information the soundtrack does not, offer that information some other way — either an audio description track or a text alternative telling the whole story. Captions do not cover this: they carry what was said, not what was shown.</p><div class="cap-line f"><b>✕ Fail</b><span>The soundtrack alone does not carry the demonstration.</span></div><div class="cap-line p"><b>✓ Pass</b><span>A text alternative describes the action, not just the dialogue.</span></div></div></details><details class="row" id="ix-1.2.4"><summary><span class="num">1.2.4</span><span class="nm"><span class="draw">Captions (Live)</span></span><span class="badge aa" title="Level AA"><svg viewBox="0 0 22 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" fill="currentColor"></rect><rect x="12.5" y=".5" width="9" height="9" fill="currentColor"></rect></svg>AA</span></summary><div class="body"><p>Live video with sound needs live captions. Real time, as it happens — a transcript published afterwards is a different thing and does not satisfy this.</p><div class="cap-line f"><b>✕ Fail</b><span>Captions promised for "later today".</span></div><div class="cap-line p"><b>✓ Pass</b><span>Captions appear during the broadcast.</span></div></div></details><details class="row" id="ix-1.2.5"><summary><span class="num">1.2.5</span><span class="nm"><span class="draw">Audio Description (Prerecorded)</span></span><span class="badge aa" title="Level AA"><svg viewBox="0 0 22 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" fill="currentColor"></rect><rect x="12.5" y=".5" width="9" height="9" fill="currentColor"></rect></svg>AA</span></summary><div class="body"><p>At AA the text alternative is no longer enough on its own: prerecorded video needs an actual audio description track, narrating the visual information into the gaps in the dialogue.</p><div class="cap-line f"><b>✕ Fail</b><span>A described transcript, but no described audio track.</span></div><div class="cap-line p"><b>✓ Pass</b><span>A selectable audio description track.</span></div></div></details></div><div class="ix-g"><span class="label">Guideline 1.3</span><h3><svg class="mk" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><rect x="1" y="1" width="10" height="10"></rect></svg>Adaptable</h3><details class="row" id="ix-1.3.1"><summary><span class="num">1.3.1</span><span class="nm"><span class="draw">Info and Relationships</span></span><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></summary><div class="body"><p>Structure you can see has to exist in the markup too. Headings marked up as headings, lists as lists, table headers as table headers, labels tied to their fields. Strip the stylesheet: if the relationships vanish, they were never really there.</p><div class="cap-line f"><b>✕ Fail</b><span>Styling stands in for structure.</span></div><div class="cap-line p"><b>✓ Pass</b><span>The same appearance, built from real elements.</span></div></div></details><details class="row" id="ix-1.3.2"><summary><span class="num">1.3.2</span><span class="nm"><span class="draw">Meaningful Sequence</span></span><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></summary><div class="body"><p>When the order of the content matters, the reading order in the markup has to match. CSS can move things around the screen; it does not move them in the document, and the document is what a screen reader and a keyboard follow.</p><div class="cap-line f"><b>✕ Fail</b><span>The visual order and the document order disagree.</span></div><div class="cap-line p"><b>✓ Pass</b><span>Document order matches what is on screen.</span></div></div></details><details class="row" id="ix-1.3.3"><summary><span class="num">1.3.3</span><span class="nm"><span class="draw">Sensory Characteristics</span></span><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></summary><div class="body"><p>Instructions cannot depend on shape, size, position, or sound alone. "The button on the right" means nothing to someone listening to the page, and nothing on a phone where it is now underneath.</p><div class="cap-line f"><b>✕ Fail</b><span>The instruction relies on where things happen to sit.</span></div><div class="cap-line p"><b>✓ Pass</b><span>The instruction names the thing.</span></div></div></details><details class="row" id="ix-1.3.4"><summary><span class="num">1.3.4</span><span class="nm"><span class="draw">Orientation</span></span><span class="badge aa" title="Level AA"><svg viewBox="0 0 22 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" fill="currentColor"></rect><rect x="12.5" y=".5" width="9" height="9" fill="currentColor"></rect></svg>AA</span></summary><div class="body"><p>Do not lock the screen to portrait or landscape unless the orientation is essential — a piano keyboard, a cheque scanner. Someone whose wheelchair mount holds their phone sideways cannot simply turn it.</p><div class="cap-line f"><b>✕ Fail</b><span>The app refuses to work sideways.</span></div><div class="cap-line p"><b>✓ Pass</b><span>The same content reflows to whatever shape it is given.</span></div></div></details><details class="row" id="ix-1.3.5"><summary><span class="num">1.3.5</span><span class="nm"><span class="draw">Identify Input Purpose</span></span><span class="badge aa" title="Level AA"><svg viewBox="0 0 22 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" fill="currentColor"></rect><rect x="12.5" y=".5" width="9" height="9" fill="currentColor"></rect></svg>AA</span></summary><div class="body"><p>Fields collecting the user’s own information — name, email, address, phone — need to say which is which in the markup, via autocomplete. That is what lets a browser fill them, and what lets assistive tools show familiar icons or wording instead of yours.</p><div class="cap-line f"><b>✕ Fail</b><span>Nothing tells the browser what these fields are for.</span></div><div class="cap-line p"><b>✓ Pass</b><span>Each field declares its purpose from the standard list.</span></div></div></details></div><div class="ix-g"><span class="label">Guideline 1.4</span><h3><svg class="mk" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><rect x="1" y="1" width="10" height="10"></rect></svg>Distinguishable</h3><details class="row" id="ix-1.4.1"><summary><span class="num">1.4.1</span><span class="nm"><span class="draw">Use of Color</span></span><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></summary><div class="body"><p>Colour can carry meaning, but never on its own. If removing all colour from the screen would lose information, add a shape, a label, an underline, or an icon.</p><div class="cap-line f"><b>✕ Fail</b><span>Hue is the only signal.</span></div><div class="cap-line p"><b>✓ Pass</b><span>A persistent underline was added.</span></div></div></details><details class="row" id="ix-1.4.11"><summary><span class="num">1.4.11</span><span class="nm"><span class="draw">Non-text Contrast</span></span><span class="badge aa" title="Level AA"><svg viewBox="0 0 22 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" fill="currentColor"></rect><rect x="12.5" y=".5" width="9" height="9" fill="currentColor"></rect></svg>AA</span></summary><div class="body"><p>The parts of a control that tell you it is a control — the input’s edge, the checkbox box, the focus ring, the chart key — need 3:1 against whatever sits behind them.</p><div class="cap-line f"><b>✕ Fail</b><span>The field and checkbox edges vanish; only the placeholder hints anything is editable.</span></div><div class="cap-line p"><b>✓ Pass</b><span>One border colour, changed on every control at once.</span></div></div></details><details class="row" id="ix-1.4.10"><summary><span class="num">1.4.10</span><span class="nm"><span class="draw">Reflow</span></span><span class="badge aa" title="Level AA"><svg viewBox="0 0 22 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" fill="currentColor"></rect><rect x="12.5" y=".5" width="9" height="9" fill="currentColor"></rect></svg>AA</span></summary><div class="body"><p>At 320 CSS pixels wide, content must not require scrolling in two directions. Same content, one column, no horizontal scrollbar.</p><div class="cap-line f"><b>✕ Fail</b><span>Fixed 110px columns force a horizontal scrollbar — two-direction scrolling.</span></div><div class="cap-line p"><b>✓ Pass</b><span>minmax(0, 1fr) replaced the fixed track width.</span></div></div></details><details class="row" id="ix-1.4.2"><summary><span class="num">1.4.2</span><span class="nm"><span class="draw">Audio Control</span></span><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></summary><div class="body"><p>If sound plays automatically for more than three seconds, there has to be a way to stop it — a control on the page, not just the operating system volume. Screen reader users cannot hear their own screen reader over it.</p><div class="cap-line f"><b>✕ Fail</b><span>Autoplaying audio with no control on the page.</span></div><div class="cap-line p"><b>✓ Pass</b><span>It does not autoplay — and if it must, a stop control comes first.</span></div></div></details><details class="row" id="ix-1.4.3"><summary><span class="num">1.4.3</span><span class="nm"><span class="draw">Contrast (Minimum)</span></span><span class="badge aa" title="Level AA"><svg viewBox="0 0 22 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" fill="currentColor"></rect><rect x="12.5" y=".5" width="9" height="9" fill="currentColor"></rect></svg>AA</span></summary><div class="body"><p>Body text needs at least 4.5:1 against its background. Text at 24px, or 18.66px and bold, needs 3:1. Measure it rather than judging by eye — a screen at full brightness in a dim room is the most forgiving possible viewing condition, and it is the one you are designing in.</p><div class="cap-line f"><b>✕ Fail</b><span>Hierarchy built by fading text out.</span></div><div class="cap-line p"><b>✓ Pass</b><span>Hierarchy moved from lightness to weight and scale.</span></div></div></details><details class="row" id="ix-1.4.4"><summary><span class="num">1.4.4</span><span class="nm"><span class="draw">Resize Text</span></span><span class="badge aa" title="Level AA"><svg viewBox="0 0 22 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" fill="currentColor"></rect><rect x="12.5" y=".5" width="9" height="9" fill="currentColor"></rect></svg>AA</span></summary><div class="body"><p>Text has to survive being enlarged to 200% without losing content or function. That means no fixed pixel heights around text, and no boxes that clip when their contents grow.</p><div class="cap-line f"><b>✕ Fail</b><span>A fixed-height box clips its own text when enlarged.</span></div><div class="cap-line p"><b>✓ Pass</b><span>The box grows with its contents.</span></div></div></details><details class="row" id="ix-1.4.5"><summary><span class="num">1.4.5</span><span class="nm"><span class="draw">Images of Text</span></span><span class="badge aa" title="Level AA"><svg viewBox="0 0 22 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" fill="currentColor"></rect><rect x="12.5" y=".5" width="9" height="9" fill="currentColor"></rect></svg>AA</span></summary><div class="body"><p>Use real text, not a picture of text. Pictures of text do not reflow, do not respond to a reader’s font or colour settings, blur when enlarged, and cannot be selected, searched, or translated. Logos are exempt.</p><div class="cap-line f"><b>✕ Fail</b><span>A headline exported as an image.</span></div><div class="cap-line p"><b>✓ Pass</b><span>The same headline as live text.</span></div></div></details><details class="row" id="ix-1.4.12"><summary><span class="num">1.4.12</span><span class="nm"><span class="draw">Text Spacing</span></span><span class="badge aa" title="Level AA"><svg viewBox="0 0 22 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" fill="currentColor"></rect><rect x="12.5" y=".5" width="9" height="9" fill="currentColor"></rect></svg>AA</span></summary><div class="body"><p>A reader must be able to increase line height to 1.5×, paragraph spacing to 2×, letter spacing to 0.12em, and word spacing to 0.16em without losing content. People with dyslexia and low vision use exactly these overrides.</p><div class="cap-line f"><b>✕ Fail</b><span>Loosened spacing pushes text out of a rigid container.</span></div><div class="cap-line p"><b>✓ Pass</b><span>The container is sized by its contents.</span></div></div></details><details class="row" id="ix-1.4.13"><summary><span class="num">1.4.13</span><span class="nm"><span class="draw">Content on Hover or Focus</span></span><span class="badge aa" title="Level AA"><svg viewBox="0 0 22 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" fill="currentColor"></rect><rect x="12.5" y=".5" width="9" height="9" fill="currentColor"></rect></svg>AA</span></summary><div class="body"><p>Anything that appears on hover or focus — a tooltip, a popover, a dropdown — has to be dismissable without moving the pointer, stay visible while the pointer travels into it, and remain until it is dismissed or stops being relevant.</p><div class="cap-line f"><b>✕ Fail</b><span>The tooltip vanishes before it can be read or reached.</span></div><div class="cap-line p"><b>✓ Pass</b><span>Hoverable, dismissable, and persistent.</span></div></div></details></div><div class="ix-g"><span class="label">Guideline 2.1</span><h3><svg class="mk" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><circle cx="6" cy="6" r="5"></circle></svg>Keyboard Accessible</h3><details class="row" id="ix-2.1.1"><summary><span class="num">2.1.1</span><span class="nm"><span class="draw">Keyboard</span></span><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></summary><div class="body"><p>Everything the interface can do must be doable from a keyboard. Not "most things", and not "there is an alternative path" — every control, every menu, every drag.</p><div class="cap-line f"><b>✕ Fail</b><span>A div pretending to be a button.</span></div><div class="cap-line p"><b>✓ Pass</b><span>A real button element.</span></div></div></details><details class="row" id="ix-2.1.2"><summary><span class="num">2.1.2</span><span class="nm"><span class="draw">No Keyboard Trap</span></span><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></summary><div class="body"><p>If focus can get into something, it has to be able to get out using the keyboard alone. A trap does not merely inconvenience a keyboard user — it ends their session, because there is nothing else they can do.</p><div class="cap-line f"><b>✕ Fail</b><span>A hand-rolled focus trap with no way out.</span></div><div class="cap-line p"><b>✓ Pass</b><span>The loop has an exit.</span></div></div></details><details class="row" id="ix-2.1.4"><summary><span class="num">2.1.4</span><span class="nm"><span class="draw">Character Key Shortcuts</span></span><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></summary><div class="body"><p>A shortcut bound to a single letter, number, or symbol must be switchable off, remappable, or active only while the relevant control has focus. Speech-input users trigger these constantly just by talking.</p><div class="cap-line f"><b>✕ Fail</b><span>Single-key shortcuts, always listening.</span></div><div class="cap-line p"><b>✓ Pass</b><span>Scoped to focus, or remappable, or off.</span></div></div></details></div><div class="ix-g"><span class="label">Guideline 2.2</span><h3><svg class="mk" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><circle cx="6" cy="6" r="5"></circle></svg>Enough Time</h3><details class="row" id="ix-2.2.1"><summary><span class="num">2.2.1</span><span class="nm"><span class="draw">Timing Adjustable</span></span><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></summary><div class="body"><p>If something is on a timer, the reader must be able to turn it off, adjust it to at least ten times the default, or extend it — with at least twenty seconds’ warning and a simple action to get more time. Real-time events and hard security limits are exempt.</p><div class="cap-line f"><b>✕ Fail</b><span>Session ends without warning, taking the form with it.</span></div><div class="cap-line p"><b>✓ Pass</b><span>A warning, an extension, and the work preserved.</span></div></div></details><details class="row" id="ix-2.2.2"><summary><span class="num">2.2.2</span><span class="nm"><span class="draw">Pause, Stop, Hide</span></span><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></summary><div class="body"><p>Anything that moves, blinks, scrolls, or auto-updates for more than five seconds needs a way to pause, stop, or hide it — provided it runs alongside other content. Motion in the periphery is genuinely disabling for people with ADHD, vestibular disorders, or low vision using magnification.</p><div class="cap-line f"><b>✕ Fail</b><span>A carousel that advances on its own, with no control.</span></div><div class="cap-line p"><b>✓ Pass</b><span>A pause control, present before the motion starts.</span></div></div></details></div><div class="ix-g"><span class="label">Guideline 2.3</span><h3><svg class="mk" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><circle cx="6" cy="6" r="5"></circle></svg>Seizures &amp; Physical Reactions</h3><details class="row" id="ix-2.3.1"><summary><span class="num">2.3.1</span><span class="nm"><span class="draw">Three Flashes or Below Threshold</span></span><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></summary><div class="body"><p>Nothing may flash more than three times per second, unless the flashing area is very small or the flash is low-contrast. Red flashes are held to a stricter limit, because saturated red triggers photosensitive seizures at intensities other colours do not.</p><div class="cap-line f"><b>✕ Fail</b><span>A full-width banner strobing several times a second.</span></div><div class="cap-line p"><b>✓ Pass</b><span>The attention is drawn without flashing.</span></div></div></details></div><div class="ix-g"><span class="label">Guideline 2.4</span><h3><svg class="mk" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><circle cx="6" cy="6" r="5"></circle></svg>Navigable</h3><details class="row" id="ix-2.4.1"><summary><span class="num">2.4.1</span><span class="nm"><span class="draw">Bypass Blocks</span></span><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></summary><div class="body"><p>Give people a way past the things that repeat on every page. A skip link is the usual answer; real landmarks and a sane heading structure also count, because screen reader users navigate by those.</p><div class="cap-line f"><b>✕ Fail</b><span>Forty links before the article, on every page.</span></div><div class="cap-line p"><b>✓ Pass</b><span>One link, first in the tab order.</span></div></div></details><details class="row" id="ix-2.4.2"><summary><span class="num">2.4.2</span><span class="nm"><span class="draw">Page Titled</span></span><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></summary><div class="body"><p>Every page needs a title that describes it. It is the first thing a screen reader announces, and the only thing distinguishing twenty open tabs or twenty history entries.</p><div class="cap-line f"><b>✕ Fail</b><span>The same title on every page.</span></div><div class="cap-line p"><b>✓ Pass</b><span>Specific first, site name last.</span></div></div></details><details class="row" id="ix-2.4.3"><summary><span class="num">2.4.3</span><span class="nm"><span class="draw">Focus Order</span></span><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></summary><div class="body"><p>Focus has to move in an order that preserves meaning. Usually that means source order — and when something opens on top, like a dialog, focus goes into it and comes back out where it started.</p><div class="cap-line f"><b>✕ Fail</b><span>A dialog opens and focus stays behind it.</span></div><div class="cap-line p"><b>✓ Pass</b><span>Focus follows the dialog in and back out.</span></div></div></details><details class="row" id="ix-2.4.4"><summary><span class="num">2.4.4</span><span class="nm"><span class="draw">Link Purpose (In Context)</span></span><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></summary><div class="body"><p>What a link does has to be clear from its text, or from the sentence, list item, cell, or paragraph around it. Screen reader users often pull up a list of every link on the page, where that surrounding context is gone.</p><div class="cap-line f"><b>✕ Fail</b><span>Eleven links that all say the same thing.</span></div><div class="cap-line p"><b>✓ Pass</b><span>The link text names its destination.</span></div></div></details><details class="row" id="ix-2.4.5"><summary><span class="num">2.4.5</span><span class="nm"><span class="draw">Multiple Ways</span></span><span class="badge aa" title="Level AA"><svg viewBox="0 0 22 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" fill="currentColor"></rect><rect x="12.5" y=".5" width="9" height="9" fill="currentColor"></rect></svg>AA</span></summary><div class="body"><p>Offer more than one route to each page — navigation plus search, or a sitemap, or an index. People navigate differently; some scan structure, others go straight to search. Steps within a process are exempt.</p><div class="cap-line f"><b>✕ Fail</b><span>A deep hierarchy and nothing else.</span></div><div class="cap-line p"><b>✓ Pass</b><span>Two independent routes, at least.</span></div></div></details><details class="row" id="ix-2.4.6"><summary><span class="num">2.4.6</span><span class="nm"><span class="draw">Headings and Labels</span></span><span class="badge aa" title="Level AA"><svg viewBox="0 0 22 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" fill="currentColor"></rect><rect x="12.5" y=".5" width="9" height="9" fill="currentColor"></rect></svg>AA</span></summary><div class="body"><p>Where headings and labels exist, they have to describe the topic or purpose. This is about being informative, not merely present — 1.3.1 asks whether a heading is marked up as one; this asks whether it says anything.</p><div class="cap-line f"><b>✕ Fail</b><span>Headings that describe nothing.</span></div><div class="cap-line p"><b>✓ Pass</b><span>Headings that answer "what is under here".</span></div></div></details><details class="row" id="ix-2.4.7"><summary><span class="num">2.4.7</span><span class="nm"><span class="draw">Focus Visible</span></span><span class="badge aa" title="Level AA"><svg viewBox="0 0 22 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" fill="currentColor"></rect><rect x="12.5" y=".5" width="9" height="9" fill="currentColor"></rect></svg>AA</span></summary><div class="body"><p>Keyboard focus has to be visible. Removing the outline because it is ugly is the single most common accessibility failure on the web, and it makes a site unusable rather than merely awkward.</p><div class="cap-line f"><b>✕ Fail</b><span>The outline was removed and nothing replaced it.</span></div><div class="cap-line p"><b>✓ Pass</b><span>A ring with its own contrast and an offset.</span></div></div></details><details class="row" id="ix-2.4.11"><summary><span class="num">2.4.11</span><span class="nm"><span class="draw">Focus Not Obscured (Minimum)</span></span><span class="badge aa" title="Level AA"><svg viewBox="0 0 22 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" fill="currentColor"></rect><rect x="12.5" y=".5" width="9" height="9" fill="currentColor"></rect></svg>AA</span></summary><div class="body"><p>When something receives focus, it must not be entirely hidden behind other content. New in WCAG 2.2, and almost always caused by a sticky header swallowing whatever you just tabbed to.</p><div class="cap-line f"><b>✕ Fail</b><span>The sticky header covers the field that just took focus.</span></div><div class="cap-line p"><b>✓ Pass</b><span>Scroll padding reserves room for the header.</span></div></div></details></div><div class="ix-g"><span class="label">Guideline 2.5</span><h3><svg class="mk" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><circle cx="6" cy="6" r="5"></circle></svg>Input Modalities</h3><details class="row" id="ix-2.5.1"><summary><span class="num">2.5.1</span><span class="nm"><span class="draw">Pointer Gestures</span></span><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></summary><div class="body"><p>Anything driven by a multi-finger or path-based gesture — pinch, two-finger rotate, swipe along a track — needs a single-pointer alternative, unless the path itself is the point. A pinch-to-zoom map still needs plus and minus buttons.</p><div class="cap-line f"><b>✕ Fail</b><span>Zoom and rotate are gesture-only.</span></div><div class="cap-line p"><b>✓ Pass</b><span>Buttons do everything the gestures do.</span></div></div></details><details class="row" id="ix-2.5.2"><summary><span class="num">2.5.2</span><span class="nm"><span class="draw">Pointer Cancellation</span></span><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></summary><div class="body"><p>Actions should fire on release, not on press — so someone who lands on the wrong control can slide off it and nothing happens. Firing on down-press removes the chance to change your mind, which matters most to people with tremors or imprecise pointing.</p><div class="cap-line f"><b>✕ Fail</b><span>Deleting fires the moment the pointer goes down.</span></div><div class="cap-line p"><b>✓ Pass</b><span>It fires on release, over the control.</span></div></div></details><details class="row" id="ix-2.5.3"><summary><span class="num">2.5.3</span><span class="nm"><span class="draw">Label in Name</span></span><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></summary><div class="body"><p>A control’s accessible name must contain the text shown on it. Voice-control users say what they see — "click Send" — and if the accessible name is something else, nothing happens.</p><div class="cap-line f"><b>✕ Fail</b><span>The visible text and the accessible name disagree.</span></div><div class="cap-line p"><b>✓ Pass</b><span>The accessible name starts with the visible text.</span></div></div></details><details class="row" id="ix-2.5.4"><summary><span class="num">2.5.4</span><span class="nm"><span class="draw">Motion Actuation</span></span><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></summary><div class="body"><p>If moving the device does something — shake to undo, tilt to steer — there has to be a normal control that does it too, and a way to switch the motion trigger off. Someone whose phone is mounted to a wheelchair cannot shake it; someone with a tremor shakes it constantly.</p><div class="cap-line f"><b>✕ Fail</b><span>Shake to undo, and no other way.</span></div><div class="cap-line p"><b>✓ Pass</b><span>A button too, and a setting to disable the gesture.</span></div></div></details><details class="row" id="ix-2.5.7"><summary><span class="num">2.5.7</span><span class="nm"><span class="draw">Dragging Movements</span></span><span class="badge aa" title="Level AA"><svg viewBox="0 0 22 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" fill="currentColor"></rect><rect x="12.5" y=".5" width="9" height="9" fill="currentColor"></rect></svg>AA</span></summary><div class="body"><p>Anything you drag needs a way to do the same thing without dragging. New in WCAG 2.2. Dragging demands sustained precise pressure along a path — hard with a tremor, a head pointer, or a switch.</p><div class="cap-line f"><b>✕ Fail</b><span>Reordering works by drag and drop only.</span></div><div class="cap-line p"><b>✓ Pass</b><span>Move up and move down, alongside the drag.</span></div></div></details><details class="row" id="ix-2.5.8"><summary><span class="num">2.5.8</span><span class="nm"><span class="draw">Target Size (Minimum)</span></span><span class="badge aa" title="Level AA"><svg viewBox="0 0 22 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" fill="currentColor"></rect><rect x="12.5" y=".5" width="9" height="9" fill="currentColor"></rect></svg>AA</span></summary><div class="body"><p>Targets need to be at least 24 by 24 CSS pixels, or spaced so that a 24px circle centred on each does not overlap its neighbours. New in WCAG 2.2. Inline links in a sentence are exempt.</p><div class="cap-line f"><b>✕ Fail</b><span>Sixteen-pixel icons, packed edge to edge.</span></div><div class="cap-line p"><b>✓ Pass</b><span>The same icons in 24px targets.</span></div></div></details></div><div class="ix-g"><span class="label">Guideline 3.1</span><h3><svg class="mk" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 .8l5.4 10.2H.6z"></path></svg>Readable</h3><details class="row" id="ix-3.1.1"><summary><span class="num">3.1.1</span><span class="nm"><span class="draw">Language of Page</span></span><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></summary><div class="body"><p>Declare the page’s language in the markup. It is what tells a screen reader which voice and pronunciation rules to use, and what lets a browser offer to translate.</p><div class="cap-line f"><b>✕ Fail</b><span>No language declared.</span></div><div class="cap-line p"><b>✓ Pass</b><span>One attribute.</span></div></div></details><details class="row" id="ix-3.1.2"><summary><span class="num">3.1.2</span><span class="nm"><span class="draw">Language of Parts</span></span><span class="badge aa" title="Level AA"><svg viewBox="0 0 22 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" fill="currentColor"></rect><rect x="12.5" y=".5" width="9" height="9" fill="currentColor"></rect></svg>AA</span></summary><div class="body"><p>Passages in another language need their own lang attribute, so a screen reader switches voice for them. Proper names and words that have been absorbed into the surrounding language are exempt.</p><div class="cap-line f"><b>✕ Fail</b><span>A French quotation read with an English voice.</span></div><div class="cap-line p"><b>✓ Pass</b><span>The passage declares its own language.</span></div></div></details></div><div class="ix-g"><span class="label">Guideline 3.2</span><h3><svg class="mk" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 .8l5.4 10.2H.6z"></path></svg>Predictable</h3><details class="row" id="ix-3.2.1"><summary><span class="num">3.2.1</span><span class="nm"><span class="draw">On Focus</span></span><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></summary><div class="body"><p>Focusing something must not change the context — no navigating away, no opening a dialog, no submitting. Focus happens by accident all the time, because tabbing through a page focuses everything on the way past.</p><div class="cap-line f"><b>✕ Fail</b><span>Tabbing onto the select navigates immediately.</span></div><div class="cap-line p"><b>✓ Pass</b><span>Focus does nothing; an explicit action navigates.</span></div></div></details><details class="row" id="ix-3.2.2"><summary><span class="num">3.2.2</span><span class="nm"><span class="draw">On Input</span></span><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></summary><div class="body"><p>Changing a setting must not change the context either, unless you warned the reader first. Picking an option is not the same as committing to it.</p><div class="cap-line f"><b>✕ Fail</b><span>Choosing a country reloads the page mid-form.</span></div><div class="cap-line p"><b>✓ Pass</b><span>The change is applied by a button, or announced in advance.</span></div></div></details><details class="row" id="ix-3.2.3"><summary><span class="num">3.2.3</span><span class="nm"><span class="draw">Consistent Navigation</span></span><span class="badge aa" title="Level AA"><svg viewBox="0 0 22 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" fill="currentColor"></rect><rect x="12.5" y=".5" width="9" height="9" fill="currentColor"></rect></svg>AA</span></summary><div class="body"><p>Navigation repeated across pages has to stay in the same relative order. You may add and remove items; you may not shuffle them.</p><div class="cap-line f"><b>✕ Fail</b><span>The order changes from page to page.</span></div><div class="cap-line p"><b>✓ Pass</b><span>The same order everywhere.</span></div></div></details><details class="row" id="ix-3.2.4"><summary><span class="num">3.2.4</span><span class="nm"><span class="draw">Consistent Identification</span></span><span class="badge aa" title="Level AA"><svg viewBox="0 0 22 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" fill="currentColor"></rect><rect x="12.5" y=".5" width="9" height="9" fill="currentColor"></rect></svg>AA</span></summary><div class="body"><p>The same function needs the same name and icon everywhere. Three words for one action means three things to learn, and no way to be sure they are the same thing.</p><div class="cap-line f"><b>✕ Fail</b><span>One action, three names.</span></div><div class="cap-line p"><b>✓ Pass</b><span>One action, one name.</span></div></div></details><details class="row" id="ix-3.2.6"><summary><span class="num">3.2.6</span><span class="nm"><span class="draw">Consistent Help</span></span><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></summary><div class="body"><p>If help is offered — a contact link, a chat widget, a help page — it has to appear in the same relative place on every page that has it. New in WCAG 2.2. People look for help when they are already stuck, which is the worst moment to have to hunt for it.</p><div class="cap-line f"><b>✕ Fail</b><span>Help moves around.</span></div><div class="cap-line p"><b>✓ Pass</b><span>Help sits in the same relative position throughout.</span></div></div></details></div><div class="ix-g"><span class="label">Guideline 3.3</span><h3><svg class="mk" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 .8l5.4 10.2H.6z"></path></svg>Input Assistance</h3><details class="row" id="ix-3.3.1"><summary><span class="num">3.3.1</span><span class="nm"><span class="draw">Error Identification</span></span><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></summary><div class="body"><p>When input is rejected, say so in text, and say which field. A red outline is not an error message — it is invisible to a screen reader and to anyone who cannot distinguish the colour.</p><div class="cap-line f"><b>✕ Fail</b><span>A colour and a generic banner.</span></div><div class="cap-line p"><b>✓ Pass</b><span>The error names the field, in text, and links to it.</span></div></div></details><details class="row" id="ix-3.3.2"><summary><span class="num">3.3.2</span><span class="nm"><span class="draw">Labels or Instructions</span></span><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></summary><div class="body"><p>Fields need labels, and any format requirement has to be stated before the reader types rather than after they get it wrong. A placeholder is not a label: it disappears the moment focus arrives, exactly when it is needed.</p><div class="cap-line f"><b>✕ Fail</b><span>Placeholders standing in for labels.</span></div><div class="cap-line p"><b>✓ Pass</b><span>Persistent labels, with the rules stated up front.</span></div></div></details><details class="row" id="ix-3.3.3"><summary><span class="num">3.3.3</span><span class="nm"><span class="draw">Error Suggestion</span></span><span class="badge aa" title="Level AA"><svg viewBox="0 0 22 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" fill="currentColor"></rect><rect x="12.5" y=".5" width="9" height="9" fill="currentColor"></rect></svg>AA</span></summary><div class="body"><p>When you know what is wrong and you know how to fix it, say so. Naming the problem is Level A; suggesting the correction is this.</p><div class="cap-line f"><b>✕ Fail</b><span>The error names the field and stops there.</span></div><div class="cap-line p"><b>✓ Pass</b><span>The error says what to do instead.</span></div></div></details><details class="row" id="ix-3.3.4"><summary><span class="num">3.3.4</span><span class="nm"><span class="draw">Error Prevention (Legal, Financial, Data)</span></span><span class="badge aa" title="Level AA"><svg viewBox="0 0 22 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" fill="currentColor"></rect><rect x="12.5" y=".5" width="9" height="9" fill="currentColor"></rect></svg>AA</span></summary><div class="body"><p>For anything legally binding, financial, or destructive, give the reader a way out: make it reversible, check the input and let them correct it, or offer a confirmation step they must actively take.</p><div class="cap-line f"><b>✕ Fail</b><span>One irreversible click.</span></div><div class="cap-line p"><b>✓ Pass</b><span>Review, confirm, and a window to undo.</span></div></div></details><details class="row" id="ix-3.3.7"><summary><span class="num">3.3.7</span><span class="nm"><span class="draw">Redundant Entry</span></span><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></summary><div class="body"><p>Do not ask for the same information twice in one process. Either carry it forward or offer it for selection. New in WCAG 2.2. Re-entry is a memory and dexterity tax, and it is a pure one — the site already has the answer.</p><div class="cap-line f"><b>✕ Fail</b><span>The address is typed twice.</span></div><div class="cap-line p"><b>✓ Pass</b><span>It is offered back rather than asked for again.</span></div></div></details><details class="row" id="ix-3.3.8"><summary><span class="num">3.3.8</span><span class="nm"><span class="draw">Accessible Authentication (Minimum)</span></span><span class="badge aa" title="Level AA"><svg viewBox="0 0 22 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" fill="currentColor"></rect><rect x="12.5" y=".5" width="9" height="9" fill="currentColor"></rect></svg>AA</span></summary><div class="body"><p>Signing in must not depend on a cognitive function test — remembering a password, transcribing a code, solving a puzzle — unless there is an alternative, a mechanism to help, or the test is recognising an object or a photo you provided. New in WCAG 2.2, and this is the one that outlaws blocking paste into password fields.</p><div class="cap-line f"><b>✕ Fail</b><span>A puzzle, and paste disabled.</span></div><div class="cap-line p"><b>✓ Pass</b><span>Paste allowed, and a route that tests nothing.</span></div></div></details></div><div class="ix-g"><span class="label">Guideline 4.1</span><h3><svg class="mk" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 .5L11.5 6 6 11.5.5 6z"></path></svg>Compatible</h3><details class="row" id="ix-4.1.2"><summary><span class="num">4.1.2</span><span class="nm"><span class="draw">Name, Role, Value</span></span><span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"></circle></svg>A</span></summary><div class="body"><p>Every control has to expose three things programmatically: what it is called, what kind of thing it is, and what state it is in — and it has to update as that state changes. This is the criterion that custom components fail.</p><div class="cap-line f"><b>✕ Fail</b><span>A custom toggle that exposes nothing.</span></div><div class="cap-line p"><b>✓ Pass</b><span>Name, role, and state, all present and live.</span></div></div></details><details class="row" id="ix-4.1.3"><summary><span class="num">4.1.3</span><span class="nm"><span class="draw">Status Messages</span></span><span class="badge aa" title="Level AA"><svg viewBox="0 0 22 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" fill="currentColor"></rect><rect x="12.5" y=".5" width="9" height="9" fill="currentColor"></rect></svg>AA</span></summary><div class="body"><p>When something important changes without moving focus — a result count, a saved confirmation, an error appearing — it has to be announced. Moving focus to it would be a change of context; this is how you tell people without interrupting them.</p><div class="cap-line f"><b>✕ Fail</b><span>The basket updates silently.</span></div><div class="cap-line p"><b>✓ Pass</b><span>A live region announces it, without stealing focus.</span></div></div></details></div></div>
+  </div>
+</section>
+
+<!-- SELF AUDIT -->
+<section class="sec" id="audit" data-sec="audit" aria-labelledby="au-h" style="--h:1">
+  <div class="wrap">
+    <div class="spl g12" style="align-items:center">
+      <div class="slot" data-sec="spline" role="img" aria-label="Spline gyroscope whose rings are the four principles (placeholder)">
+        <span class="slot-tag">Spline · gyroscope.splinecode</span><div class="ring3d" aria-hidden="true"></div>
+      </div>
+      <div class="copy">
+        <h2 id="au-h">This page’s own accessibility audit</h2>
+        <p class="muted">If a design choice would fail a criterion here, the design changes. These ratios are measured from the page as it looks right now.</p>
+        <ul class="audit" id="audit-list" style="width:100%"><li><span class="ok" aria-hidden="true">✓</span><span>Ink on paper <span class="muted">needs 4.5:1</span></span><span class="num">16.81:1<span class="sr-only">, passes</span></span></li><li><span class="ok" aria-hidden="true">✓</span><span>Secondary ink <span class="muted">needs 4.5:1</span></span><span class="num">7.25:1<span class="sr-only">, passes</span></span></li><li><span class="ok" aria-hidden="true">✓</span><span>Signal text <span class="muted">needs 4.5:1</span></span><span class="num">6.06:1<span class="sr-only">, passes</span></span></li><li><span class="ok" aria-hidden="true">✓</span><span>Signal (graphics) <span class="muted">needs 3:1</span></span><span class="num">3.07:1<span class="sr-only">, passes</span></span></li><li><span class="ok" aria-hidden="true">✓</span><span>Every control at least 44px tall</span><span class="num">44px</span></li><li><span class="ok" aria-hidden="true">✓</span><span>Focus ring, always visible</span><span class="num">3px</span></li></ul>
+        <a class="btn" href="#index">Browse all 55 criteria</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="closing"><div class="wrap"><span>Bureau — mockup C, round 3</span><span id="colophon">Set in Gloock, Funnel Sans and Doto</span></div></footer>
+
+<!-- TWEAK PANEL -->
+<button id="tw-toggle" aria-expanded="false" aria-controls="tw">Tweaks <span class="dot" id="tw-count" hidden="">0</span><span class="k" aria-hidden="true">\</span></button>
+<aside id="tw" aria-label="Tweaks" hidden="">
+  <header><h2>Tweaks</h2><button class="tw-x" id="tw-close" aria-label="Close tweaks">✕</button></header>
+  <div class="tw-body" id="tw-body"><div class="note">Changes save in this browser. Press <b>\</b> to toggle. Copy feedback exports only what you changed, plus your notes.</div><details open=""><summary>Presets</summary><div class="presets"><button data-preset="Bureau">Bureau<small>The default</small></button><button data-preset="Night shift">Night shift<small>Dark, hotter orange</small></button><button data-preset="Newsprint">Newsprint<small>Square, serif-heavy</small></button><button data-preset="Lab">Lab<small>Grotesk, blue, gridded</small></button><button data-preset="Soft">Soft<small>Round and rosy</small></button><button data-preset="Poster">Poster<small>Condensed, loud, tight</small></button></div></details><details open="" data-g="Colour"><summary>Colour<span class="ch"></span></summary><div class="cr" id="tw-cr"><div><span>Ink on paper</span><span>16.81:1</span><span class="ok">✓ 4.5</span></div><div><span>Secondary ink</span><span>7.25:1</span><span class="ok">✓ 4.5</span></div><div><span>Signal text</span><span>6.06:1</span><span class="ok">✓ 4.5</span></div><div><span>Signal (graphics)</span><span>3.07:1</span><span class="ok">✓ 3</span></div></div><div class="ctl" data-c="theme"><span class="lab">Theme</span><div class="sg" role="group" aria-label="Theme" id="tw-theme"><button data-v="auto" aria-pressed="true">auto</button><button data-v="light" aria-pressed="false">light</button><button data-v="dark" aria-pressed="false">dark</button></div></div><div class="ctl" data-c="paper"><label for="tw-paper">Paper</label><div class="clr"><input type="color" id="tw-paper"><code id="tw-paper-o">#FBF8F1 · theme</code><button data-reset="paper" aria-label="Reset Paper">reset</button></div></div><div class="ctl" data-c="ink"><label for="tw-ink">Ink</label><div class="clr"><input type="color" id="tw-ink"><code id="tw-ink-o">#1B1712 · theme</code><button data-reset="ink" aria-label="Reset Ink">reset</button></div></div><div class="ctl" data-c="ink2"><label for="tw-ink2">Secondary ink</label><div class="clr"><input type="color" id="tw-ink2"><code id="tw-ink2-o">#5A5246 · theme</code><button data-reset="ink2" aria-label="Reset Secondary ink">reset</button></div></div><div class="ctl" data-c="signal"><label for="tw-signal">Signal</label><div class="clr"><input type="color" id="tw-signal"><code id="tw-signal-o">#F2600C · theme</code><button data-reset="signal" aria-label="Reset Signal">reset</button></div></div><div class="ctl" data-c="signalInk"><label for="tw-signalInk">Signal (text)</label><div class="clr"><input type="color" id="tw-signalInk"><code id="tw-signalInk-o">#A63C00 · theme</code><button data-reset="signalInk" aria-label="Reset Signal (text)">reset</button></div></div><div class="ctl" data-c="hi"><label for="tw-hi">Highlighter</label><div class="clr"><input type="color" id="tw-hi"><code id="tw-hi-o">#FFE3A3 · theme</code><button data-reset="hi" aria-label="Reset Highlighter">reset</button></div></div><div class="ctl" data-c="lineMix"><label for="tw-lineMix">Line strength</label><div class="rng"><input type="range" id="tw-lineMix" min="4" max="50" step="1"><output for="tw-lineMix" id="tw-lineMix-o">16%</output></div></div><div class="ctl" data-c="texture"><span class="lab">Background</span><div class="sg" role="group" aria-label="Background" id="tw-texture"><button data-v="none" aria-pressed="false">none</button><button data-v="grid" aria-pressed="true">grid</button><button data-v="dots" aria-pressed="false">dots</button></div></div><div class="ctl" data-c="gridSize"><label for="tw-gridSize">Grid size</label><div class="rng"><input type="range" id="tw-gridSize" min="16" max="120" step="4"><output for="tw-gridSize" id="tw-gridSize-o">56px</output></div></div></details><details open="" data-g="Fonts"><summary>Fonts<span class="ch"></span></summary><div class="ctl" data-c="fDisplay"><label for="tw-fDisplay">Display</label><select id="tw-fDisplay"><option value="Gloock">Gloock</option><option value="Young Serif">Young Serif</option><option value="Libre Caslon Display">Libre Caslon Display</option><option value="Bodoni Moda">Bodoni Moda</option><option value="Newsreader">Newsreader</option><option value="Rozha One">Rozha One</option><option value="Gupter">Gupter</option><option value="Big Shoulders Display">Big Shoulders Display</option><option value="Host Grotesk">Host Grotesk</option><option value="Instrument Serif (common, for comparison)">Instrument Serif (common, for comparison)</option></select></div><div class="ctl" data-c="fText"><label for="tw-fText">Text</label><select id="tw-fText"><option value="Funnel Sans">Funnel Sans</option><option value="Host Grotesk">Host Grotesk</option><option value="Atkinson Hyperlegible Next">Atkinson Hyperlegible Next</option><option value="Schibsted Grotesk">Schibsted Grotesk</option><option value="Hanken Grotesk">Hanken Grotesk</option><option value="Onest">Onest</option><option value="Geologica">Geologica</option><option value="Literata">Literata</option><option value="Inter (common, for comparison)">Inter (common, for comparison)</option></select></div><div class="ctl" data-c="fNum"><label for="tw-fNum">Numerals</label><select id="tw-fNum"><option value="Doto">Doto</option><option value="Martian Mono">Martian Mono</option><option value="Sometype Mono">Sometype Mono</option><option value="Azeret Mono">Azeret Mono</option><option value="Handjet">Handjet</option><option value="Jersey 10">Jersey 10</option><option value="Silkscreen">Silkscreen</option><option value="Same as display">Same as display</option><option value="Same as text">Same as text</option></select></div></details><details data-g="Type"><summary>Type<span class="ch"></span></summary><div class="ctl" data-c="dScale"><label for="tw-dScale">Display size</label><div class="rng"><input type="range" id="tw-dScale" min="0.6" max="1.5" step="0.05"><output for="tw-dScale" id="tw-dScale-o">1×</output></div></div><div class="ctl" data-c="dTrack"><label for="tw-dTrack">Display tracking</label><div class="rng"><input type="range" id="tw-dTrack" min="-0.08" max="0.06" step="0.005"><output for="tw-dTrack" id="tw-dTrack-o">-0.02em</output></div></div><div class="ctl" data-c="dLh"><label for="tw-dLh">Display leading</label><div class="rng"><input type="range" id="tw-dLh" min="0.8" max="1.3" step="0.02"><output for="tw-dLh" id="tw-dLh-o">1</output></div></div><div class="ctl" data-c="dWeight"><label for="tw-dWeight">Display weight</label><div class="rng"><input type="range" id="tw-dWeight" min="200" max="900" step="50"><output for="tw-dWeight" id="tw-dWeight-o">400</output></div></div><div class="note" style="padding-top:0">Only variable fonts respond.</div><div class="ctl" data-c="fs"><label for="tw-fs">Body size</label><div class="rng"><input type="range" id="tw-fs" min="14" max="22" step="0.5"><output for="tw-fs" id="tw-fs-o">18px</output></div></div><div class="ctl" data-c="lh"><label for="tw-lh">Body leading</label><div class="rng"><input type="range" id="tw-lh" min="1.2" max="1.9" step="0.05"><output for="tw-lh" id="tw-lh-o">1.55</output></div></div><div class="ctl" data-c="measure"><label for="tw-measure">Line length</label><div class="rng"><input type="range" id="tw-measure" min="36" max="90" step="2"><output for="tw-measure" id="tw-measure-o">58ch</output></div></div><div class="ctl" data-c="label"><span class="lab">Small labels</span><div class="sg" role="group" aria-label="Small labels" id="tw-label"><button data-v="caps" aria-pressed="true">caps</button><button data-v="small" aria-pressed="false">small</button><button data-v="plain" aria-pressed="false">plain</button></div></div></details><details data-g="Spacing &amp; layout"><summary>Spacing &amp; layout<span class="ch"></span></summary><div class="ctl" data-c="u"><label for="tw-u">Base unit</label><div class="rng"><input type="range" id="tw-u" min="4" max="14" step="1"><output for="tw-u" id="tw-u-o">8px</output></div></div><div class="note" style="padding-top:0">Scales every gap and padding together.</div><div class="ctl" data-c="sec"><label for="tw-sec">Section padding</label><div class="rng"><input type="range" id="tw-sec" min="0.4" max="2" step="0.05"><output for="tw-sec" id="tw-sec-o">1×</output></div></div><div class="ctl" data-c="maxw"><label for="tw-maxw">Max width</label><div class="rng"><input type="range" id="tw-maxw" min="880" max="1680" step="20"><output for="tw-maxw" id="tw-maxw-o">1240px</output></div></div><div class="ctl" data-c="gutter"><label for="tw-gutter">Side gutter</label><div class="rng"><input type="range" id="tw-gutter" min="12" max="80" step="2"><output for="tw-gutter" id="tw-gutter-o">24px</output></div></div><div class="ctl" data-c="gap"><label for="tw-gap">Card gap</label><div class="rng"><input type="range" id="tw-gap" min="8" max="56" step="2"><output for="tw-gap" id="tw-gap-o">20px</output></div></div></details><details data-g="Shape &amp; lines"><summary>Shape &amp; lines<span class="ch"></span></summary><div class="ctl" data-c="radius"><label for="tw-radius">Corner radius</label><div class="rng"><input type="range" id="tw-radius" min="0" max="32" step="1"><output for="tw-radius" id="tw-radius-o">12px</output></div></div><div class="ctl" data-c="bw"><label for="tw-bw">Border width</label><div class="rng"><input type="range" id="tw-bw" min="1" max="3" step="0.5"><output for="tw-bw" id="tw-bw-o">1px</output></div></div><div class="ctl" data-c="ticks"><span class="lab">Corner ticks</span><button class="tg" role="switch" id="tw-ticks" aria-checked="true" aria-label="Corner ticks"></button></div><div class="ctl" data-c="shadow"><span class="lab">Card shadows</span><button class="tg" role="switch" id="tw-shadow" aria-checked="false" aria-label="Card shadows"></button></div></details><details data-g="Hero"><summary>Hero<span class="ch"></span></summary><div class="ctl" data-c="headline"><label for="tw-headline">Headline</label><select id="tw-headline"><option value="every">Every WCAG 2.2 rule…</option><option value="breaks">How WCAG 2.2 breaks…</option><option value="shown">WCAG 2.2, shown…</option><option value="see">The reference you can see</option></select></div><div class="ctl" data-c="mini"><span class="lab">Inline example</span><div class="sg" role="group" aria-label="Inline example" id="tw-mini"><button data-v="focus" aria-pressed="true">focus</button><button data-v="contrast" aria-pressed="false">contrast</button><button data-v="error" aria-pressed="false">error</button><button data-v="none" aria-pressed="false">none</button></div></div><div class="ctl" data-c="hero"><span class="lab">Layout</span><div class="sg" role="group" aria-label="Layout" id="tw-hero"><button data-v="split" aria-pressed="true">split</button><button data-v="stacked" aria-pressed="false">stacked</button><button data-v="centered" aria-pressed="false">centered</button></div></div><div class="ctl" data-c="hl"><span class="lab">Highlight</span><div class="sg" role="group" aria-label="Highlight" id="tw-hl"><button data-v="marker" aria-pressed="true">marker</button><button data-v="underline" aria-pressed="false">underline</button><button data-v="none" aria-pressed="false">none</button></div></div></details><details data-g="Cards"><summary>Cards<span class="ch"></span></summary><div class="ctl" data-c="cards"><span class="lab">Fail/pass layout</span><div class="sg" role="group" aria-label="Fail/pass layout" id="tw-cards"><button data-v="side" aria-pressed="true">side</button><button data-v="stacked" aria-pressed="false">stacked</button></div></div><div class="ctl" data-c="verdict"><span class="lab">Fail/pass style</span><div class="sg" role="group" aria-label="Fail/pass style" id="tw-verdict"><button data-v="tint" aria-pressed="true">tint</button><button data-v="outline" aria-pressed="false">outline</button><button data-v="label" aria-pressed="false">label</button></div></div><div class="ctl" data-c="surface"><span class="lab">Example surface</span><div class="sg" role="group" aria-label="Example surface" id="tw-surface"><button data-v="white" aria-pressed="true">white</button><button data-v="paper" aria-pressed="false">paper</button></div></div><div class="ctl" data-c="diffs"><span class="lab">Show diffs</span><button class="tg" role="switch" id="tw-diffs" aria-checked="true" aria-label="Show diffs"></button></div><div class="ctl" data-c="plain"><span class="lab">Show plain text</span><button class="tg" role="switch" id="tw-plain" aria-checked="true" aria-label="Show plain text"></button></div></details><details data-g="Motion &amp; media"><summary>Motion &amp; media<span class="ch"></span></summary><div class="ctl" data-c="speed"><label for="tw-speed">Animation speed</label><div class="rng"><input type="range" id="tw-speed" min="0.25" max="2.5" step="0.25"><output for="tw-speed" id="tw-speed-o">1×</output></div></div><div class="ctl" data-c="still"><span class="lab">Freeze all motion</span><button class="tg" role="switch" id="tw-still" aria-checked="false" aria-label="Freeze all motion"></button></div><div class="ctl" data-c="slots"><span class="lab">Rive/Spline boxes</span><div class="sg" role="group" aria-label="Rive/Spline boxes" id="tw-slots"><button data-v="show" aria-pressed="true">show</button><button data-v="hide" aria-pressed="false">hide</button></div></div><div class="note" style="padding-top:0">Hide draws the stand-in art without the dashed outline.</div></details><details data-g="Sections"><summary>Sections<span class="ch"></span></summary><div class="ctl" data-c="sec_announce"><span class="lab">“All 55 are in” pill</span><button class="tg" role="switch" id="tw-sec_announce" aria-checked="true" aria-label="“All 55 are in” pill"></button></div><div class="ctl" data-c="sec_rive"><span class="lab">Rive character</span><button class="tg" role="switch" id="tw-sec_rive" aria-checked="true" aria-label="Rive character"></button></div><div class="ctl" data-c="sec_today"><span class="lab">Criterion of the day</span><button class="tg" role="switch" id="tw-sec_today" aria-checked="true" aria-label="Criterion of the day"></button></div><div class="ctl" data-c="sec_stats"><span class="lab">Stats strip</span><button class="tg" role="switch" id="tw-sec_stats" aria-checked="true" aria-label="Stats strip"></button></div><div class="ctl" data-c="sec_read"><span class="lab">Card anatomy</span><button class="tg" role="switch" id="tw-sec_read" aria-checked="true" aria-label="Card anatomy"></button></div><div class="ctl" data-c="sec_principles"><span class="lab">Principles</span><button class="tg" role="switch" id="tw-sec_principles" aria-checked="true" aria-label="Principles"></button></div><div class="ctl" data-c="sec_specimens"><span class="lab">Specimens</span><button class="tg" role="switch" id="tw-sec_specimens" aria-checked="true" aria-label="Specimens"></button></div><div class="ctl" data-c="sec_demos"><span class="lab">Demos</span><button class="tg" role="switch" id="tw-sec_demos" aria-checked="true" aria-label="Demos"></button></div><div class="ctl" data-c="sec_levels"><span class="lab">Level cards</span><button class="tg" role="switch" id="tw-sec_levels" aria-checked="true" aria-label="Level cards"></button></div><div class="ctl" data-c="sec_index"><span class="lab">Index</span><button class="tg" role="switch" id="tw-sec_index" aria-checked="true" aria-label="Index"></button></div><div class="ctl" data-c="sec_audit"><span class="lab">Self-audit</span><button class="tg" role="switch" id="tw-sec_audit" aria-checked="true" aria-label="Self-audit"></button></div><div class="ctl" data-c="sec_spline"><span class="lab">Spline slot</span><button class="tg" role="switch" id="tw-sec_spline" aria-checked="true" aria-label="Spline slot"></button></div></details><details data-g="Feedback"><summary>Feedback<span class="ch"></span></summary><div style="padding:6px 14px"><label for="tw-notes" style="color:#b5b5b5;display:block;margin-bottom:4px">What do you like, what's off? It goes out with Copy feedback.</label><textarea id="tw-notes"></textarea></div></details></div>
+  <div class="toast" id="tw-toast" role="status"></div>
+  <footer class="tw-f"><button id="tw-copy">Copy feedback</button><button class="sec" id="tw-dl">Download</button><button class="sec" id="tw-reset">Reset</button></footer>
+</aside>
+
+<script>
+/* ================================================================= Data */
+const C = window.CORPUS || [];
+const byNum = Object.fromEntries(C.map(c=>[c[0],c]));
+const PRINCIPLES=[
+ {n:1,name:'Perceivable',q:'Can people take it in?',tag:"If you can't perceive it, it isn't there for you.",blurb:'Information and interface components must be presentable in ways every user can sense. Text that can be read aloud or enlarged; contrast that survives a bright room; structure that survives losing the layout.'},
+ {n:2,name:'Operable',q:'Can people work it?',tag:'Every control has to be reachable by whatever you drive it with.',blurb:'Interface components and navigation must be operable by keyboard, by pointer, by voice, by switch. Nothing may trap you, rush you, or demand a gesture you cannot make.'},
+ {n:3,name:'Understandable',q:'Does it make sense?',tag:'A thing you can perceive and operate can still be incomprehensible.',blurb:'Information and the operation of the interface must be understandable. Readable language, predictable behaviour, and mistakes that are easy to notice, understand, and undo.'},
+ {n:4,name:'Robust',q:'Can the tools read it?',tag:'Assistive technology can only relay what the markup actually says.',blurb:'Content must be robust enough to be interpreted reliably by a wide variety of user agents, including assistive technologies, now and as they change.'}];
+const GUIDELINES=[['1.1','Text Alternatives'],['1.2','Time-based Media'],['1.3','Adaptable'],['1.4','Distinguishable'],['2.1','Keyboard Accessible'],['2.2','Enough Time'],['2.3','Seizures & Physical Reactions'],['2.4','Navigable'],['2.5','Input Modalities'],['3.1','Readable'],['3.2','Predictable'],['3.3','Input Assistance'],['4.1','Compatible']];
+const inG=g=>C.filter(c=>c[0].split('.').slice(0,2).join('.')===g);
+const SYN={'1.1.1':'alt image icon picture chart','1.4.1':'link colour color red green','1.4.3':'grey gray faint light text contrast','1.4.10':'zoom mobile sideways scroll 320','1.4.11':'border input icon faint','1.4.12':'line height spacing','2.1.1':'mouse only','2.1.2':'trap stuck','2.2.2':'carousel autoplay marquee moving','2.4.3':'tab order jumps','2.4.7':'focus ring outline disappeared','2.4.11':'sticky header hides focus cookie banner','2.5.8':'small button tap tiny touch','3.3.1':'error red border form invalid','3.3.8':'captcha password puzzle login','4.1.2':'screen reader button label unlabelled icon','4.1.3':'toast live region announce'};
+const esc=s=>String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+const firstSentence=s=>{const m=s.match(/^.*?[.!?](\s|$)/);return (m?m[0]:s).trim()};
+/* principle markers from src/criteria/structure.ts: square, circle, triangle, diamond */
+const MK=['<rect x="1" y="1" width="10" height="10"/>','<circle cx="6" cy="6" r="5"/>','<path d="M6 .8l5.4 10.2H.6z"/>','<path d="M6 .5L11.5 6 6 11.5.5 6z"/>'];
+const mark=n=>`<svg class="mk" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true">${MK[n-1]}</svg>`;
+const badge=l=>l==='A'
+ ? `<span class="badge" title="Level A"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="currentColor"/></svg>A</span>`
+ : `<span class="badge aa" title="Level AA"><svg viewBox="0 0 22 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" fill="currentColor"/><rect x="12.5" y=".5" width="9" height="9" fill="currentColor"/></svg>AA</span>`;
+const V={fail:'<span aria-hidden="true">✕</span> Fail',pass:'<span aria-hidden="true">✓</span> Pass'};
+
+/* contrast engine */
+const lin=c=>{c/=255;return c<=.03928?c/12.92:Math.pow((c+.055)/1.055,2.4)};
+const lum=([r,g,b])=>.2126*lin(r)+.7152*lin(g)+.0722*lin(b);
+const ratio=(a,b)=>{const x=lum(a),y=lum(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)};
+const hex=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
+const probe=document.createElement('i');probe.style.display='none';document.body.appendChild(probe);
+function resolve(v){probe.style.color=`var(${v})`;const s=getComputedStyle(probe).color;const m=s.match(/[\d.]+/g)||[0,0,0];return s.startsWith('color(')?m.slice(0,3).map(x=>Math.round(x*255)):m.slice(0,3).map(Number)}
+const toHex=a=>'#'+a.map(x=>Math.round(x).toString(16).padStart(2,'0')).join('').toUpperCase();
+const root=document.documentElement;
+
+/* chrome height so the hero ends exactly at the fold */
+function chrome(){const nb=document.querySelector('.navbar');root.style.setProperty('--chrome',(nb.offsetTop+nb.offsetHeight)+'px')}
+addEventListener('resize',chrome);
+
+/* ================================================================= Hero */
+const HEADLINES={
+ every:'Every WCAG 2.2 rule, [x] broken and fixed.',
+ breaks:'How WCAG 2.2 [x] breaks, and how it’s fixed.',
+ shown:'WCAG 2.2, [x] shown instead of told.',
+ see:'The WCAG 2.2 reference [x] you can see.'};
+const MINI={
+ focus:s=>s?'<span class="f on">jo@example.com</span><span class="tag" style="background:#1E6B3C">✓ pass</span>':'<span class="f">jo@example.com</span><span class="tag" style="background:#B3261E">✕ fail</span>',
+ contrast:s=>s?'<span style="color:#3A3F3B;font-weight:600">Order shipped</span><span class="tag" style="background:#1E6B3C">10.8:1</span>':'<span style="color:#C9C4BA;font-weight:600">Order shipped</span><span class="tag" style="background:#B3261E">1.7:1</span>',
+ error:s=>s?'<span class="f" style="border-color:#B3261E">jo@example</span><span style="color:#9B0E1F;font-weight:700">Add a domain</span>':'<span class="f" style="border-color:#B3261E">jo@example</span><span class="tag" style="background:#B3261E">✕ fail</span>'};
+let miniKind='focus',miniState=0,miniTimer=null;
+function renderHero(){const h=document.getElementById('h1');h.innerHTML=HEADLINES[S.headline].replace('[x]','<span class="inline-ex" data-ui aria-hidden="true"><span class="mini" id="m1"></span></span>');h.onmouseenter=playMini;drawMini()}
+function drawMini(){const ex=document.querySelector('.inline-ex');if(!ex)return;ex.hidden=miniKind==='none';const m=document.getElementById('m1');if(m&&MINI[miniKind])m.innerHTML=MINI[miniKind](miniState)}
+/* plays fail → pass twice (under 5s), then rests on pass; hovering the headline plays it again */
+function playMini(){clearInterval(miniTimer);miniState=0;drawMini();if(still()){miniState=1;drawMini();return}let n=0;miniTimer=setInterval(()=>{miniState^=1;drawMini();if(++n>=3)clearInterval(miniTimer)},1400/S.speed)}
+
+/* search */
+const q=document.getElementById('q'),res=document.getElementById('res');
+function search(s){s=s.trim().toLowerCase();if(!s)return[];const words=s.split(/\s+/);return C.map(c=>{const hay=(c[0]+' '+c[1]+' '+(SYN[c[0]]||'')+' '+c[3]).toLowerCase();let sc=0;words.forEach(w=>{if(c[0].startsWith(w))sc+=5;if(c[1].toLowerCase().includes(w))sc+=3;if(hay.includes(w))sc+=1});return[c,sc]}).filter(x=>x[1]).sort((a,b)=>b[1]-a[1]).map(x=>x[0])}
+q.oninput=()=>{const out=search(q.value).slice(0,5);res.innerHTML=!q.value.trim()?'':out.map(c=>`<li><a href="#ix-${c[0]}" data-open="${c[0]}"><span class="num">${c[0]}</span><span>${esc(c[1])}<small>${esc(firstSentence(c[3]))}</small></span></a></li>`).join('')||'<li style="padding:12px 16px">Nothing matches yet. Try a number like 2.4.</li>';document.querySelectorAll('#e1,#e2').forEach(e=>e.setAttribute('cy',out.length?62:72))};
+q.onkeydown=e=>{if(e.key==='Enter'){const a=res.querySelector('a');if(a)a.click()}if(e.key==='Escape'){q.value='';res.innerHTML=''}};
+document.addEventListener('click',e=>{const a=e.target.closest('[data-open]');if(a){openRow(a.dataset.open);res.innerHTML=''}});
+function openRow(num){ixL='all';ixP='all';ixq.value='';syncFilters();renderIx();const d=document.getElementById('ix-'+num);if(d)d.open=true}
+
+/* today */
+function today(){const c=C[Math.floor(Math.random()*C.length)];if(!c)return;document.getElementById('today-n').textContent=c[0];document.getElementById('today-b').innerHTML=badge(c[2]);document.getElementById('today-h').textContent=c[1];document.getElementById('today-p').textContent=firstSentence(c[3]);const a=document.getElementById('today-a');a.href='#ix-'+c[0];a.dataset.open=c[0]}
+document.getElementById('shuffle').onclick=today;today();
+
+/* ================================================================= Cards */
+const SPECIMENS={
+ '1.4.3':{fail:`<div class="c143" style="font-weight:600;font-size:18px">Your order has shipped</div><div class="c143" style="font-size:15px">Track it from your account page.</div><label class="measure" for="c143r" style="display:flex;justify-content:space-between;margin-top:4px"><span>Text lightness</span><span id="c143v"></span></label><input id="c143r" type="range" min="0" max="92" value="72">`,
+          pass:`<div style="font-weight:600;font-size:18px;color:#3A3F3B">Your order has shipped</div><div style="font-size:15px;color:#3A3F3B">Track it from your account page.</div><span class="measure"></span>`,live:true},
+ '1.1.1':{fail:`<svg viewBox="0 0 160 60" width="160" height="60" aria-hidden="true"><rect x="10" y="34" width="22" height="20" fill="#C9C4BA"/><rect x="42" y="26" width="22" height="28" fill="#C9C4BA"/><rect x="74" y="12" width="22" height="42" fill="#F2600C"/></svg><div class="sr">Screen reader: <b>“Image, chart”</b></div>`,
+          pass:`<svg viewBox="0 0 160 60" width="160" height="60" aria-hidden="true"><rect x="10" y="34" width="22" height="20" fill="#C9C4BA"/><rect x="42" y="26" width="22" height="28" fill="#C9C4BA"/><rect x="74" y="12" width="22" height="42" fill="#F2600C"/></svg><div class="sr">Screen reader: <b>“Image, sign-ups doubled in March, to 2,400”</b></div>`,
+          diff:['-<img src="signups.png" alt="chart">','+<img src="signups.png" alt="Sign-ups doubled in March, from 1,200 to 2,400.">']},
+ '1.4.1':{fail:`<p style="margin:0">Your order ships in two days. See the <span class="ex-link">delivery schedule</span> for cut-off times.</p>`,
+          pass:`<p style="margin:0">Your order ships in two days. See the <span class="ex-link u">delivery schedule</span> for cut-off times.</p>`},
+ '1.4.11':{fail:`<span class="ex-lab">Email</span><span class="ex-field" style="border-color:#DDD8CE">jo@example.com</span>`,
+           pass:`<span class="ex-lab">Email</span><span class="ex-field" style="border-color:#857C6E">jo@example.com</span>`,
+           m:['#DDD8CE','#857C6E'],diff:['-.field { border: 1.5px solid #DDD8CE; }','+.field { border: 1.5px solid #857C6E; }']},
+ '2.5.8':{fail:`<div class="tgt" style="gap:2px">${'<i style="width:16px;height:16px"></i>'.repeat(5)}</div><span class="measure">16 × 16px, 2px apart</span>`,
+          pass:`<div class="tgt" style="gap:8px">${'<i style="width:28px;height:28px"></i>'.repeat(5)}</div><span class="measure">28 × 28px, 8px apart</span>`},
+ '3.3.1':{fail:`<span class="ex-lab">Email</span><span class="ex-field" style="border-color:#B3261E">jo@example</span><span style="font-size:14px;color:#6B6458">Invalid input</span>`,
+          pass:`<span class="ex-lab">Email</span><span class="ex-field" style="border-color:#B3261E">jo@example</span><span class="ex-err"><span aria-hidden="true">⚠</span>Email needs a domain, like example.com</span>`,
+          diff:['-<input id="email" class="error">','+<input id="email" aria-invalid="true" aria-describedby="email-err">','+<p id="email-err">Email needs a domain, like example.com</p>']}};
+function cardHTML(num,anat){const c=byNum[num],sp=SPECIMENS[num];const P=n=>anat?`<span class="pin" aria-hidden="true">${n}</span>`:'';const id=(anat?'a-':'h-')+num;
+ const m=sp.m?sp.m.map(h=>`<span class="measure">${ratio(hex(h),[255,255,255]).toFixed(2)}:1 against white</span>`):['',''];
+ const diff=sp.diff?`<pre class="diff" data-part="8" aria-label="Markup diff">${sp.diff.map((l,i)=>`<span class="${l[0]==='-'?'del':'add'}">${i===0?P(8):''}${esc(l[0]+' '+l.slice(1))}</span>`).join('')}</pre>`:'';
+ return `<article class="card" aria-labelledby="${id}">
+  <div class="card-h"><span class="num" data-part="1">${P(1)}${num}</span><h3 id="${id}" data-part="2">${P(2)}${esc(c[1])}</h3><span data-part="3">${P(3)}${badge(c[2])}</span></div>
+  <p class="plain" data-part="4">${P(4)}${esc(c[3])}</p>
+  <div class="pair">
+   <figure class="frame fail" data-part="5"><span class="v">${P(5)}${V.fail}</span><div class="screen" data-ui role="group" aria-label="Failing example">${sp.fail}${m[0]}</div><figcaption data-part="7">${P(7)}${esc(c[4])}</figcaption></figure>
+   <figure class="frame pass" data-part="6"><span class="v">${P(6)}${V.pass}</span><div class="screen" data-ui role="group" aria-label="Passing example">${sp.pass}${m[1]}</div><figcaption>${esc(c[5])}</figcaption></figure>
+  </div>${diff}</article>`}
+
+/* specimen viewer */
+const SPEC_ORDER=['1.4.3','1.1.1','1.4.1','1.4.11','2.5.8','3.3.1'];
+const pick=document.getElementById('pick'),spec=document.getElementById('spec');
+pick.innerHTML=SPEC_ORDER.map((n,i)=>`<li role="presentation"><button role="tab" id="pk-${i}" aria-controls="spec" aria-selected="${i===0}" tabindex="${i?-1:0}"><span class="num">${n}</span><b>${esc(byNum[n][1])}</b></button></li>`).join('');
+const pickEls=[...pick.querySelectorAll('button')];
+function showSpec(i){pickEls.forEach((b,j)=>{b.setAttribute('aria-selected',i===j);b.tabIndex=i===j?0:-1});spec.setAttribute('aria-labelledby','pk-'+i);spec.innerHTML=cardHTML(SPEC_ORDER[i]);if(SPEC_ORDER[i]==='1.4.3')live143()}
+pickEls.forEach((b,i)=>{b.onclick=()=>showSpec(i);b.onkeydown=e=>{const k={ArrowDown:1,ArrowUp:-1,ArrowRight:1,ArrowLeft:-1}[e.key];if(k){e.preventDefault();const n=(i+k+pickEls.length)%pickEls.length;showSpec(n);pickEls[n].focus()}}});
+function live143(){const r=document.getElementById('c143r');if(!r)return;const pass=r.closest('.pair').querySelector('.frame.pass .measure');pass.textContent=ratio(hex('#3A3F3B'),[255,255,255]).toFixed(2)+':1 against white';
+ const upd=()=>{const l=+r.value;const v=Math.round(l/100*255);const rgb=[v,Math.max(0,v-4),Math.max(0,v-10)];const rt=ratio(rgb,[255,255,255]);const ok=rt>=4.5;
+  r.closest('.screen').querySelectorAll('.c143').forEach(e=>e.style.color=`rgb(${rgb})`);document.getElementById('c143v').textContent=rt.toFixed(2)+':1';
+  const fr=r.closest('.frame');fr.classList.toggle('fail',!ok);fr.classList.toggle('pass',ok);fr.querySelector('.v').innerHTML=ok?V.pass:V.fail;
+  fr.querySelector('figcaption').textContent=ok?`${rt.toFixed(2)}:1 clears 4.5:1. That’s the fix.`:byNum['1.4.3'][4]};
+ r.oninput=upd;upd()}
+showSpec(0);
+
+/* anatomy */
+const PARTS=[['Number','The criterion’s dotted triple, and its link.'],['Name','The short name used in the spec.'],['Level badge','A or AA, told apart by shape as well as colour.'],['Plain English','What the criterion asks, in one paragraph.'],['Fail example','Real interface, rendered live, showing the violation.'],['Pass example','The same interface with the fix applied.'],['Caption','The single thing that is wrong, or that changed.'],['Diff','The exact markup change, marked − and + as well as tinted.']];
+document.getElementById('anat-card').innerHTML=cardHTML('1.4.11',true);
+const al=document.getElementById('anat-list');al.innerHTML=PARTS.map((p,i)=>`<li><button aria-pressed="false" data-p="${i+1}"><span class="pin" aria-hidden="true">${i+1}</span><span><b>${p[0]}</b><span class="d">${p[1]}</span></span></button></li>`).join('');
+al.querySelectorAll('button').forEach(b=>{const go=()=>{al.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));document.querySelectorAll('#anat-card [data-part]').forEach(e=>e.classList.toggle('lit',e.dataset.part===b.dataset.p))};b.onclick=go;b.onmouseenter=go;b.onfocus=go});
+
+/* ================================================================= Principles */
+const tabs=document.getElementById('tabs'),panel=document.getElementById('panel');
+tabs.innerHTML=PRINCIPLES.map((p,i)=>`<button class="chap" role="tab" id="tab-${i}" aria-selected="${i===0}" aria-controls="panel" tabindex="${i?-1:0}"><span class="num">0${p.n}</span><span class="nm">${mark(p.n)}${p.name}</span><span class="c">${p.q} · ${C.filter(c=>c[0][0]==p.n).length} criteria</span></button>`).join('');
+const tabEls=[...tabs.children];
+function sel(i){tabEls.forEach((t,j)=>{t.setAttribute('aria-selected',i===j);t.tabIndex=i===j?0:-1});const p=PRINCIPLES[i];panel.setAttribute('aria-labelledby','tab-'+i);
+ panel.innerHTML=`<p class="tagline">${esc(p.tag)}</p><p class="blurb">${esc(p.blurb)}</p><div class="gl">${GUIDELINES.filter(g=>g[0][0]==p.n).map(g=>`<article class="g"><span class="label"><span>Guideline ${g[0]}</span><span>${inG(g[0]).length}</span></span><h3>${esc(g[1])}</h3><ul>${inG(g[0]).map(c=>`<li><a href="#ix-${c[0]}" data-open="${c[0]}"><span class="num">${c[0]}</span><span class="draw">${esc(c[1])}</span></a></li>`).join('')}</ul></article>`).join('')}</div>`}
+tabEls.forEach((t,i)=>{t.onclick=()=>sel(i);t.onkeydown=e=>{const k={ArrowRight:1,ArrowLeft:-1,ArrowDown:1,ArrowUp:-1}[e.key];if(k){e.preventDefault();const n=(i+k+4)%4;sel(n);tabEls[n].focus()}}});sel(0);
+
+/* ================================================================= Demos: pure functions of t in [0,1] */
+const DEMOS=[
+ {num:'2.4.7',name:'Focus Visible',d:'A keyboard tour of a checkout',live:true,
+  stage:()=>`<div class="form"><div class="fld">Full name</div><div class="fld">Email</div><div class="row2"><div class="fld">Card number</div><div class="fld">Expiry</div></div><div class="buy">Pay now</div></div>`,
+  labels:['Focus styles removed','Visible focus ring'],
+  frame(t,st){const stops=['Full name','Email','Card number','Expiry','Pay now'];const i=Math.min(4,Math.floor(t*5));st.forEach((s,k)=>{s.querySelectorAll('.fld,.buy').forEach((e,j)=>e.classList.toggle('cur',j===i));s.querySelector('.say').textContent=k?'Focus: '+stops[i]:'Where is focus? You can’t tell.'})}},
+ {num:'4.1.2',name:'Name, Role, Value',d:'A screen reader on icon buttons',live:true,
+  stage:()=>`<div class="form"><div style="font-weight:700">Basket</div><div class="iconrow"><span class="ib"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" stroke="#1B1712" stroke-width="2" fill="none"/></svg></span><span class="ib"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="#1B1712" stroke-width="2"/></svg></span><span class="ib"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14" stroke="#1B1712" stroke-width="2"/></svg></span></div><div class="fld">Linen shirt, size M</div></div>`,
+  labels:['No accessible names','aria-label on each button'],
+  frame(t,st){const said=[['button','Remove item, button'],['button','Increase quantity, button'],['button','Decrease quantity, button']];const i=Math.min(2,Math.floor(t*3));const chars=Math.floor((t*3-i)*1.6*30);st.forEach((s,k)=>{s.querySelectorAll('.ib').forEach((e,j)=>e.classList.toggle('cur',j===i));const full=said[i][k];s.querySelector('.say').innerHTML=`<span class="sr">🔊 <b>${esc(full.slice(0,Math.max(1,chars)))}</b></span>`})}},
+ {num:'1.4.10',name:'Reflow',d:'1280px down to 320px'},
+ {num:'2.4.7',name:'Focus, removed',d:'The tour with outlines stripped'},
+ {num:'2.4.11',name:'Focus Not Obscured',d:'A sticky header hiding focus'},
+ {num:'3.3.1',name:'Error Identification',d:'Named, linked errors'},
+ {num:'4.1.3',name:'Status Messages',d:'A live region on a basket update'},
+ {num:'2.5.8',name:'Target Size',d:'18px versus 24px under a fingertip'},
+ {num:'2.2.2',name:'Pause, Stop, Hide',d:'A carousel you can pause'}];
+let demo=0,t=0,playing=false,last=0;const player=document.getElementById('player'),scrub=document.getElementById('scrub');
+document.getElementById('demo-list').innerHTML=DEMOS.map((d,i)=>`<li><button aria-pressed="${i===0}" data-i="${i}" ${d.live?'':'aria-disabled="true" class="soon"'}><span class="num">${d.num}</span><b>${esc(d.name)}</b><span class="s">${esc(d.d)}${d.live?'':' · in the full build'}</span></button></li>`).join('');
+document.querySelectorAll('#demo-list button:not(.soon)').forEach(b=>b.onclick=()=>{demo=+b.dataset.i;document.querySelectorAll('#demo-list button').forEach(x=>x.setAttribute('aria-pressed',x===b));mountDemo()});
+function mountDemo(){const d=DEMOS[demo];player.innerHTML=d.labels.map((l,k)=>`<div class="stage ${k?'with':'without'}"><div class="hdr"><span class="label">${d.num} · ${esc(l)}</span><span class="verdict ${k?'pass':'fail'}">${k?V.pass:V.fail}</span></div><div data-ui>${d.stage()}</div><div class="say" aria-live="off"></div></div>`).join('');t=0;scrub.value=0;draw()}
+function draw(){DEMOS[demo].frame(Math.min(t,.999),[...player.children]);document.getElementById('tc').textContent='0:'+String(Math.floor(t*10)).padStart(2,'0')}
+scrub.oninput=()=>{t=scrub.value/1000;draw()};
+const pb=document.getElementById('play'),pi=document.getElementById('pi');
+function tick(ts){if(!playing)return;if(last){t=(t+(ts-last)/10000*S.speed)%1;scrub.value=t*1000;draw()}last=ts;requestAnimationFrame(tick)}
+function setPlay(p){playing=p;last=0;pb.setAttribute('aria-label',p?'Pause demo':'Play demo');pi.setAttribute('d',p?'M2 1h3v12H2zM9 1h3v12H9z':'M3 1l10 6-10 6z');if(p)requestAnimationFrame(tick)}
+pb.onclick=()=>setPlay(!playing);mountDemo();
+
+/* ================================================================= Index with level cards */
+const nA=C.filter(c=>c[2]==='A').length,nAA=C.filter(c=>c[2]==='AA').length;
+const LV=[['all',C.length,'Every level','A and AA together: the usual conformance target.'],['A',nA,'Level A','The floor. Fail one and some people can’t use the page at all.'],['AA',nAA,'Level AA','The usual target in law and procurement.']];
+document.getElementById('lvls').innerHTML=LV.map(l=>`<button class="lvcard" aria-pressed="${l[0]==='all'}" data-v="${l[0]}"><span class="num">${l[1]}</span><b>${l[0]==='all'?'':badge(l[0])}${l[2]}</b><span class="d">${l[3]}</span></button>`).join('');
+document.getElementById('ixp').innerHTML=`<button aria-pressed="true" data-v="all">All</button>`+PRINCIPLES.map(p=>`<button aria-pressed="false" data-v="${p.n}" aria-label="${p.name}">${mark(p.n)}${p.n}</button>`).join('');
+let ixL='all',ixP='all';const ixq=document.getElementById('ixq'),ix=document.getElementById('ix');
+function syncFilters(){document.querySelectorAll('#lvls button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===ixL));document.querySelectorAll('#ixp button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===ixP))}
+function renderIx(){const s=ixq.value.trim();const hits=s?new Set(search(s).map(c=>c[0])):null;let shown=0;
+ const html=GUIDELINES.map(g=>{const rows=inG(g[0]).filter(c=>(ixL==='all'||c[2]===ixL)&&(ixP==='all'||c[0][0]===ixP)&&(!hits||hits.has(c[0])));shown+=rows.length;if(!rows.length)return'';
+  return `<div class="ix-g"><span class="label">Guideline ${g[0]}</span><h3>${mark(+g[0][0])}${esc(g[1])}</h3>${rows.map(c=>`<details class="row" id="ix-${c[0]}"><summary><span class="num">${c[0]}</span><span class="nm"><span class="draw">${esc(c[1])}</span></span>${badge(c[2])}</summary><div class="body"><p>${esc(c[3])}</p><div class="cap-line f"><b>✕ Fail</b><span>${esc(c[4])}</span></div><div class="cap-line p"><b>✓ Pass</b><span>${esc(c[5])}</span></div></div></details>`).join('')}</div>`}).join('');
+ ix.innerHTML=html||'<p class="empty">No criteria match. Clear the search or pick another level.</p>';document.getElementById('ixc').textContent=`Showing ${shown} of ${C.length}`}
+ixq.oninput=renderIx;
+document.querySelectorAll('#lvls button').forEach(b=>b.onclick=()=>{ixL=b.dataset.v;syncFilters();renderIx()});
+document.querySelectorAll('#ixp button').forEach(b=>b.onclick=()=>{ixP=b.dataset.v;syncFilters();renderIx()});
+renderIx();
+
+/* nav tracking */
+const navLinks=[...document.querySelectorAll('.links a')];
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)navLinks.forEach(a=>a.setAttribute('aria-current',a.hash==='#'+e.target.id))}),{rootMargin:'-40% 0px -55% 0px'});
+['read','principles','specimens','demos','index'].forEach(id=>io.observe(document.getElementById(id)));
+
+/* theme button */
+const tb=document.getElementById('theme');
+const isDark=()=>(root.dataset.theme||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'))==='dark';
+tb.onclick=()=>{set('theme',isDark()?'light':'dark')};
+
+/* ================================================================= TWEAKS (schema-driven) */
+const FONTS={
+ display:{'Gloock':'','Young Serif':'','Libre Caslon Display':'','Bodoni Moda':':opsz,wght@6..96,400..900','Newsreader':':opsz,wght@6..72,200..800','Rozha One':'','Gupter':':wght@400;500;700','Big Shoulders Display':':wght@400..900','Host Grotesk':':wght@300..800','Instrument Serif (common, for comparison)':''},
+ text:{'Funnel Sans':':wght@300..800','Host Grotesk':':wght@300..800','Atkinson Hyperlegible Next':':wght@200..800','Schibsted Grotesk':':wght@400..900','Hanken Grotesk':':wght@100..900','Onest':':wght@100..900','Geologica':':wght@100..900','Literata':':opsz,wght@7..72,200..900','Inter (common, for comparison)':':wght@100..900'},
+ num:{'Doto':':wght@100..900','Martian Mono':':wght@100..800','Sometype Mono':':wght@400..700','Azeret Mono':':wght@100..900','Handjet':':wght@100..900','Jersey 10':'','Silkscreen':':wght@400;700','Same as display':null,'Same as text':null}};
+const loaded=new Set(['Gloock','Funnel Sans','Doto']);
+const fam=n=>n.replace(/ \(.*\)$/,'');
+function loadFont(group,name){const f=fam(name),ax=FONTS[group][name];if(ax===null||ax===undefined||loaded.has(f))return;loaded.add(f);const l=document.createElement('link');l.rel='stylesheet';l.href=`https://fonts.googleapis.com/css2?family=${f.replace(/ /g,'+')}${ax}&display=swap`;l.onload=chrome;document.head.appendChild(l)}
+const cssv=(v,u='')=>x=>root.style.setProperty(v,x+u);
+const attr=a=>x=>root.setAttribute('data-'+a,x);
+const SECTIONS=[['announce','“All 55 are in” pill'],['rive','Rive character'],['today','Criterion of the day'],['stats','Stats strip'],['read','Card anatomy'],['principles','Principles'],['specimens','Specimens'],['demos','Demos'],['levels','Level cards'],['index','Index'],['audit','Self-audit'],['spline','Spline slot']];
+const SCHEMA=[
+ {g:'Colour',id:'theme',label:'Theme',type:'seg',opts:['auto','light','dark'],def:'auto',apply:x=>{x==='auto'?root.removeAttribute('data-theme'):root.dataset.theme=x;tb.setAttribute('aria-label',isDark()?'Switch to light theme':'Switch to dark theme')}},
+ {g:'Colour',id:'paper',label:'Paper',type:'color',v:'--paper'},
+ {g:'Colour',id:'ink',label:'Ink',type:'color',v:'--ink'},
+ {g:'Colour',id:'ink2',label:'Secondary ink',type:'color',v:'--ink-2'},
+ {g:'Colour',id:'signal',label:'Signal',type:'color',v:'--signal'},
+ {g:'Colour',id:'signalInk',label:'Signal (text)',type:'color',v:'--signal-ink'},
+ {g:'Colour',id:'hi',label:'Highlighter',type:'color',v:'--hi'},
+ {g:'Colour',id:'lineMix',label:'Line strength',type:'range',min:4,max:50,step:1,unit:'%',def:16,apply:cssv('--line-mix','%')},
+ {g:'Colour',id:'texture',label:'Background',type:'seg',opts:['none','grid','dots'],def:'grid',apply:attr('texture')},
+ {g:'Colour',id:'gridSize',label:'Grid size',type:'range',min:16,max:120,step:4,unit:'px',def:56,apply:cssv('--grid','px')},
+ {g:'Fonts',id:'fDisplay',label:'Display',type:'select',opts:Object.keys(FONTS.display),def:'Gloock',apply:x=>{loadFont('display',x);root.style.setProperty('--f-display',`"${fam(x)}", Georgia, serif`);colophon()}},
+ {g:'Fonts',id:'fText',label:'Text',type:'select',opts:Object.keys(FONTS.text),def:'Funnel Sans',apply:x=>{loadFont('text',x);root.style.setProperty('--f-text',`"${fam(x)}", system-ui, sans-serif`);colophon()}},
+ {g:'Fonts',id:'fNum',label:'Numerals',type:'select',opts:Object.keys(FONTS.num),def:'Doto',apply:x=>{loadFont('num',x);root.style.setProperty('--f-num',x==='Same as display'?'var(--f-display)':x==='Same as text'?'var(--f-text)':`"${x}", ui-monospace, monospace`);colophon()}},
+ {g:'Type',id:'dScale',label:'Display size',type:'range',min:.6,max:1.5,step:.05,unit:'×',def:1,apply:cssv('--d-scale')},
+ {g:'Type',id:'dTrack',label:'Display tracking',type:'range',min:-.08,max:.06,step:.005,unit:'em',def:-.02,apply:cssv('--d-track','em')},
+ {g:'Type',id:'dLh',label:'Display leading',type:'range',min:.8,max:1.3,step:.02,def:1,apply:cssv('--d-lh')},
+ {g:'Type',id:'dWeight',label:'Display weight',type:'range',min:200,max:900,step:50,def:400,apply:cssv('--d-weight'),note:'Only variable fonts respond.'},
+ {g:'Type',id:'fs',label:'Body size',type:'range',min:14,max:22,step:.5,unit:'px',def:18,apply:cssv('--fs','px')},
+ {g:'Type',id:'lh',label:'Body leading',type:'range',min:1.2,max:1.9,step:.05,def:1.55,apply:cssv('--lh')},
+ {g:'Type',id:'measure',label:'Line length',type:'range',min:36,max:90,step:2,unit:'ch',def:58,apply:cssv('--measure','ch')},
+ {g:'Type',id:'label',label:'Small labels',type:'seg',opts:['caps','small','plain'],def:'caps',apply:attr('label')},
+ {g:'Spacing & layout',id:'u',label:'Base unit',type:'range',min:4,max:14,step:1,unit:'px',def:8,apply:cssv('--u','px'),note:'Scales every gap and padding together.'},
+ {g:'Spacing & layout',id:'sec',label:'Section padding',type:'range',min:.4,max:2,step:.05,unit:'×',def:1,apply:cssv('--sec')},
+ {g:'Spacing & layout',id:'maxw',label:'Max width',type:'range',min:880,max:1680,step:20,unit:'px',def:1240,apply:cssv('--maxw','px')},
+ {g:'Spacing & layout',id:'gutter',label:'Side gutter',type:'range',min:12,max:80,step:2,unit:'px',def:24,apply:cssv('--gutter','px')},
+ {g:'Spacing & layout',id:'gap',label:'Card gap',type:'range',min:8,max:56,step:2,unit:'px',def:20,apply:cssv('--gap','px')},
+ {g:'Shape & lines',id:'radius',label:'Corner radius',type:'range',min:0,max:32,step:1,unit:'px',def:12,apply:cssv('--radius','px')},
+ {g:'Shape & lines',id:'bw',label:'Border width',type:'range',min:1,max:3,step:.5,unit:'px',def:1,apply:cssv('--bw','px')},
+ {g:'Shape & lines',id:'ticks',label:'Corner ticks',type:'toggle',def:true,apply:x=>root.dataset.ticks=x?'on':'off'},
+ {g:'Shape & lines',id:'shadow',label:'Card shadows',type:'toggle',def:false,apply:x=>root.dataset.shadow=x?'on':'off'},
+ {g:'Hero',id:'headline',label:'Headline',type:'select',opts:Object.keys(HEADLINES),labels:{every:'Every WCAG 2.2 rule…',breaks:'How WCAG 2.2 breaks…',shown:'WCAG 2.2, shown…',see:'The reference you can see'},def:'every',apply:x=>{S.headline=x;renderHero()}},
+ {g:'Hero',id:'mini',label:'Inline example',type:'seg',opts:['focus','contrast','error','none'],def:'focus',apply:x=>{miniKind=x;drawMini()}},
+ {g:'Hero',id:'hero',label:'Layout',type:'seg',opts:['split','stacked','centered'],def:'split',apply:attr('hero')},
+ {g:'Hero',id:'hl',label:'Highlight',type:'seg',opts:['marker','underline','none'],def:'marker',apply:attr('hl')},
+ {g:'Cards',id:'cards',label:'Fail/pass layout',type:'seg',opts:['side','stacked'],def:'side',apply:attr('cards')},
+ {g:'Cards',id:'verdict',label:'Fail/pass style',type:'seg',opts:['tint','outline','label'],def:'tint',apply:attr('verdict')},
+ {g:'Cards',id:'surface',label:'Example surface',type:'seg',opts:['white','paper'],def:'white',apply:attr('surface')},
+ {g:'Cards',id:'diffs',label:'Show diffs',type:'toggle',def:true,apply:x=>root.dataset.diffs=x?'on':'off'},
+ {g:'Cards',id:'plain',label:'Show plain text',type:'toggle',def:true,apply:x=>root.dataset.plain=x?'on':'off'},
+ {g:'Motion & media',id:'speed',label:'Animation speed',type:'range',min:.25,max:2.5,step:.25,unit:'×',def:1,apply:x=>{S.speed=+x;root.style.setProperty('--speed',x)}},
+ {g:'Motion & media',id:'still',label:'Freeze all motion',type:'toggle',def:false,apply:x=>{x?root.setAttribute('data-still',''):root.removeAttribute('data-still');if(x)setPlay(false)}},
+ {g:'Motion & media',id:'slots',label:'Rive/Spline boxes',type:'seg',opts:['show','hide'],def:'show',apply:attr('slots'),note:'Hide draws the stand-in art without the dashed outline.'},
+ ...SECTIONS.map(([k,l])=>({g:'Sections',id:'sec_'+k,label:l,type:'toggle',def:true,apply:x=>{document.querySelectorAll(`[data-sec="${k}"]`).forEach(e=>e.classList.toggle('off',!x));chrome()}})),
+ {g:'Feedback',id:'notes',label:'Notes',type:'text',def:'',apply:()=>{}}];
+const S={speed:1,headline:'every'};
+const state={};
+const still=()=>root.hasAttribute('data-still')||matchMedia('(prefers-reduced-motion: reduce)').matches;
+SCHEMA.forEach(c=>{if(c.type==='color'){c.def=null;c.apply=x=>x?root.style.setProperty(c.v,x):root.style.removeProperty(c.v)}state[c.id]=c.def});
+function set(id,val,silent){const c=SCHEMA.find(x=>x.id===id);state[id]=val;c.apply(val);if(!silent){save();syncUI()}}
+function save(){try{localStorage.setItem('bureau-tweaks-r3',JSON.stringify(state))}catch(e){}}
+function changed(){return SCHEMA.filter(c=>JSON.stringify(state[c.id])!==JSON.stringify(c.def))}
+
+const body=document.getElementById('tw-body');
+const PRESETS={
+ 'Bureau':{_d:'The default'},
+ 'Night shift':{_d:'Dark, hotter orange',theme:'dark',signal:'#FF7A1A',texture:'dots'},
+ 'Newsprint':{_d:'Square, serif-heavy',paper:'#F4F1EA',ink:'#111111',ink2:'#4A4640',signal:'#D7261E',signalInk:'#A3170F',hi:'#FFE9A8',fDisplay:'Libre Caslon Display',fText:'Literata',fNum:'Sometype Mono',radius:0,texture:'none',ticks:false,verdict:'outline',dTrack:-.01},
+ 'Lab':{_d:'Grotesk, blue, gridded',paper:'#F2F4F3',ink:'#0E1A16',ink2:'#4A5752',signal:'#2F6BFF',signalInk:'#1E4FD1',hi:'#D6E4FF',fDisplay:'Host Grotesk',fText:'Host Grotesk',fNum:'Doto',dWeight:500,dTrack:-.04,radius:4,gridSize:32,label:'small'},
+ 'Soft':{_d:'Round and rosy',paper:'#FFF7F3',signal:'#E0457B',signalInk:'#A8224F',hi:'#FFD6E7',fDisplay:'Young Serif',fText:'Onest',fNum:'Martian Mono',radius:24,texture:'none',shadow:true,ticks:false},
+ 'Poster':{_d:'Condensed, loud, tight',fDisplay:'Big Shoulders Display',dWeight:900,dScale:1.25,dLh:.86,dTrack:0,fText:'Atkinson Hyperlegible Next',fNum:'Handjet',radius:2,label:'caps'}};
+let html=`<div class="note">Changes save in this browser. Press <b>\\</b> to toggle. Copy feedback exports only what you changed, plus your notes.</div><details open><summary>Presets</summary><div class="presets">${Object.entries(PRESETS).map(([k,v])=>`<button data-preset="${k}">${k}<small>${v._d}</small></button>`).join('')}</div></details>`;
+const groups=[...new Set(SCHEMA.map(c=>c.g))];
+groups.forEach((g,gi)=>{html+=`<details ${gi<2?'open':''} data-g="${g}"><summary>${g}<span class="ch"></span></summary>`;
+ if(g==='Colour')html+=`<div class="cr" id="tw-cr"></div>`;
+ SCHEMA.filter(c=>c.g===g).forEach(c=>{const id='tw-'+c.id;let ctl='';
+  if(c.type==='range')ctl=`<div class="rng"><input type="range" id="${id}" min="${c.min}" max="${c.max}" step="${c.step}"><output for="${id}" id="${id}-o"></output></div>`;
+  if(c.type==='seg')ctl=`<div class="sg" role="group" aria-label="${c.label}" id="${id}">${c.opts.map(o=>`<button data-v="${o}" aria-pressed="false">${o}</button>`).join('')}</div>`;
+  if(c.type==='select')ctl=`<select id="${id}">${c.opts.map(o=>`<option value="${o}">${c.labels?c.labels[o]:o}</option>`).join('')}</select>`;
+  if(c.type==='toggle')ctl=`<button class="tg" role="switch" id="${id}" aria-checked="false" aria-label="${c.label}"></button>`;
+  if(c.type==='color')ctl=`<div class="clr"><input type="color" id="${id}"><code id="${id}-o"></code><button data-reset="${c.id}" aria-label="Reset ${c.label}">reset</button></div>`;
+  if(c.type==='text'){html+=`<div style="padding:6px 14px"><label for="${id}" style="color:#b5b5b5;display:block;margin-bottom:4px">What do you like, what's off? It goes out with Copy feedback.</label><textarea id="${id}"></textarea></div>`;return}
+  html+=`<div class="ctl" data-c="${c.id}">${c.type==='seg'||c.type==='toggle'?`<span class="lab">${c.label}</span>`:`<label for="${id}">${c.label}</label>`}${ctl}</div>${c.note?`<div class="note" style="padding-top:0">${c.note}</div>`:''}`});
+ html+='</details>'});
+body.innerHTML=html;
+SCHEMA.forEach(c=>{const el=document.getElementById('tw-'+c.id);if(!el)return;
+ if(c.type==='range')el.oninput=()=>set(c.id,+el.value);
+ if(c.type==='select')el.onchange=()=>set(c.id,el.value);
+ if(c.type==='seg')el.querySelectorAll('button').forEach(b=>b.onclick=()=>set(c.id,b.dataset.v));
+ if(c.type==='toggle')el.onclick=()=>set(c.id,!state[c.id]);
+ if(c.type==='color')el.oninput=()=>set(c.id,el.value.toUpperCase());
+ if(c.type==='text')el.oninput=()=>{state[c.id]=el.value;save();syncCount()}});
+body.querySelectorAll('[data-reset]').forEach(b=>b.onclick=()=>set(b.dataset.reset,null));
+body.querySelectorAll('[data-preset]').forEach(b=>b.onclick=()=>applyPreset(b.dataset.preset));
+function applyPreset(name){const notes=state.notes;SCHEMA.forEach(c=>set(c.id,c.def,true));Object.entries(PRESETS[name]).forEach(([k,v])=>{if(k!=='_d')set(k,v,true)});state.notes=notes;state._preset=name;save();syncUI();toast('Preset: '+name)}
+function syncCount(){const n=changed().filter(c=>c.id!=='notes').length;const d=document.getElementById('tw-count');d.hidden=!n;d.textContent=n}
+function syncUI(){SCHEMA.forEach(c=>{const el=document.getElementById('tw-'+c.id);if(!el)return;const v=state[c.id];
+  if(c.type==='range'){el.value=v;const dec=c.step<.01?3:c.step<1?2:0;document.getElementById(el.id+'-o').textContent=String(+(+v).toFixed(dec))+(c.unit||'')}
+  if(c.type==='select')el.value=v;
+  if(c.type==='seg')el.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v));
+  if(c.type==='toggle')el.setAttribute('aria-checked',!!v);
+  if(c.type==='color'){const cur=toHex(resolve(c.v));el.value=cur;document.getElementById(el.id+'-o').textContent=v?cur:cur+' · theme'}
+  if(c.type==='text'&&el.value!==v)el.value=v||'';
+  const row=document.querySelector(`#tw .ctl[data-c="${c.id}"]`);if(row)row.classList.toggle('changed',JSON.stringify(v)!==JSON.stringify(c.def))});
+ groups.forEach(g=>{const n=changed().filter(c=>c.g===g&&c.id!=='notes').length;const s=document.querySelector(`#tw details[data-g="${g}"] .ch`);if(s)s.textContent=n?n+' changed':''});
+ syncCount();contrastReport();chrome()}
+function contrastReport(){const paper=resolve('--paper');const rows=[['Ink on paper','--ink',4.5],['Secondary ink','--ink-2',4.5],['Signal text','--signal-ink',4.5],['Signal (graphics)','--signal',3]];
+ const out=rows.map(([l,v,need])=>{const r=ratio(resolve(v),paper);return{l,r,need,ok:r>=need}});
+ const cr=document.getElementById('tw-cr');if(cr)cr.innerHTML=out.map(o=>`<div><span>${o.l}</span><span>${o.r.toFixed(2)}:1</span><span class="${o.ok?'ok':'bad'}">${o.ok?'✓':'✕'} ${o.need}</span></div>`).join('');
+ document.getElementById('audit-list').innerHTML=out.map(o=>`<li><span class="${o.ok?'ok':'no'}" aria-hidden="true">${o.ok?'✓':'✕'}</span><span>${o.l} <span class="muted">needs ${o.need}:1</span></span><span class="num">${o.r.toFixed(2)}:1<span class="sr-only">${o.ok?', passes':', fails'}</span></span></li>`).join('')+`<li><span class="ok" aria-hidden="true">✓</span><span>Every control at least 44px tall</span><span class="num">44px</span></li><li><span class="ok" aria-hidden="true">✓</span><span>Focus ring, always visible</span><span class="num">3px</span></li>`}
+function colophon(){const g=k=>fam(state[k]||'');const el=document.getElementById('colophon');if(el)el.textContent=`Set in ${g('fDisplay')}, ${g('fText')} and ${state.fNum&&state.fNum.startsWith('Same')?state.fNum.toLowerCase():g('fNum')}`}
+function feedback(){const ch={};changed().forEach(c=>{if(c.id!=='notes')ch[c.id]=state[c.id]});return{mockup:'C — Bureau r3',preset:state._preset||null,viewport:innerWidth+'×'+innerHeight,theme:isDark()?'dark':'light',changed:ch,notes:state.notes||''}}
+function toast(m){const t=document.getElementById('tw-toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),1800)}
+document.getElementById('tw-copy').onclick=async()=>{const txt=JSON.stringify(feedback(),null,2);try{await navigator.clipboard.writeText(txt);toast('Copied. Paste it into the chat.')}catch(e){prompt('Copy this:',txt)}};
+document.getElementById('tw-dl').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(feedback(),null,2)],{type:'application/json'}));a.download='bureau-feedback.json';a.click()};
+document.getElementById('tw-reset').onclick=()=>{SCHEMA.forEach(c=>set(c.id,c.def,true));delete state._preset;save();syncUI();toast('Reset to defaults')};
+const tw=document.getElementById('tw'),twt=document.getElementById('tw-toggle');
+function openTw(o){tw.hidden=!o;twt.setAttribute('aria-expanded',o);document.body.classList.toggle('tw-open',o);try{localStorage.setItem('bureau-tw-open',o?'1':'')}catch(e){};if(o)document.getElementById('tw-close').focus();else twt.focus()}
+twt.onclick=()=>openTw(tw.hidden);document.getElementById('tw-close').onclick=()=>openTw(false);
+addEventListener('keydown',e=>{if(e.key==='\\'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){e.preventDefault();openTw(tw.hidden)}if(e.key==='Escape'&&!tw.hidden)openTw(false)});
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',syncUI);
+
+/* boot */
+let saved={};try{saved=JSON.parse(localStorage.getItem('bureau-tweaks-r3')||'{}')}catch(e){}
+SCHEMA.forEach(c=>set(c.id,c.id in saved?saved[c.id]:c.def,true));if(saved._preset)state._preset=saved._preset;
+chrome();renderHero();playMini();syncUI();colophon();
+document.fonts&&document.fonts.ready.then(chrome);
+try{if(localStorage.getItem('bureau-tw-open'))openTw(true)}catch(e){}
+</script><i style="display: none; color: var(--signal);"></i>
+
+
+</body></html>

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Colour check: WCAG Encyclopedia</title>
+<meta name="description" content="Check any text and background colour against WCAG contrast rules, see the pair in a real layout, and get the closest colour that passes.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gabarito:wght@500;600;700;800&family=Golos+Text:wght@400;500;600&family=Bricolage+Grotesque:wght@500;600;700;800&family=Familjen+Grotesk:wght@500;600;700&family=Fraunces:wght@500;600;700;800&family=Instrument+Sans:wght@400;500;600;700&family=Atkinson+Hyperlegible:wght@400;700&family=Onest:wght@400;500;600;700&family=Figtree:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="swatch.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="wrap">
+<header class="top" id="hdr"></header>
+<main id="main">
+<section class="ph" aria-labelledby="h1">
+  <svg class="loop" viewBox="0 0 1168 400" preserveAspectRatio="none" aria-hidden="true"><path d="M760 60 C 860 20, 980 120, 920 200 S 1060 320, 1140 260"/></svg>
+  <p class="eyebrow">Tool · Success criteria 1.4.3, 1.4.6 and 1.4.11</p>
+  <h1 class="d" id="h1">Colour check. <em>Will people read it?</em></h1>
+  <p class="lede">Pick a text colour and a background. You see the pair in a real layout, every contrast rule it passes or fails, and the nearest colour that would pass.</p>
+  <ul class="presets" id="presets" aria-label="Start from a common pair"></ul>
+</section>
+
+<form class="chk wide" id="cc" onsubmit="return false" data-title="Your colours"></form>
+
+<section class="band" id="pairs" aria-labelledby="pr-h">
+  <div class="bh"><div><h2 id="pr-h">Done well, done badly</h2><p>Six mistakes we see most, each next to its fix. Load one into the checker above and try your own fix.</p></div></div>
+  <ul class="pairs" id="pl"></ul>
+</section>
+
+<section class="band" aria-labelledby="l-h">
+  <div class="bh"><div><h2 id="l-h">What the numbers mean</h2><p>Contrast is measured from 1 : 1, the same colour twice, to 21 : 1, black on white. The rule you need depends on what the colour is doing.</p></div></div>
+  <ul class="learn">
+    <li class="surf"><p class="big">4.5 : 1</p><h3>Body text</h3><p>Anything people read below large size. Level AA, criterion 1.4.3. At AAA, criterion 1.4.6 asks for 7 : 1.</p></li>
+    <li class="surf"><p class="big">3 : 1</p><h3>Large text</h3><p>At least 24px, or 18.66px when bold. Bigger letters stay readable with less contrast.</p></li>
+    <li class="surf"><p class="big">3 : 1</p><h3>Controls and graphics</h3><p>Field borders, focus rings, icons and chart lines, measured against what sits next to them. Criterion 1.4.11.</p></li>
+  </ul>
+</section>
+
+<section class="band" aria-labelledby="x-h">
+  <div class="limits">
+    <div class="bh" style="margin:0"><div><h2 id="x-h">What a ratio can’t tell you</h2><p>Passing the number is the minimum. These still need a human look.</p></div></div>
+    <ul>
+      <li><b>Thin and small fonts</b><span>A hairline weight at 4.5 : 1 can still be hard to read. The ratio assumes ordinary strokes.</span></li>
+      <li><b>Text over images</b><span>A photo has hundreds of background colours. Check the lightest part behind the text, or add a solid backing.</span></li>
+      <li><b>Hover, focus and disabled states</b><span>Each state is a new pair of colours. Check them all, not just the resting one.</span></li>
+      <li><b>Colour as the only signal</b><span>Two colours can both pass and still be told apart only by hue. Criterion 1.4.1 asks for a second cue, such as an icon or underline.</span></li>
+    </ul>
+  </div>
+</section>
+</main>
+<footer class="foot" id="ftr"></footer>
+</div>
+<script src="../corpus.js"></script>
+<script src="site.js"></script>
+<script src="tweak.js"></script>
+<script>
+chrome('Colour check');
+const u = new URLSearchParams(location.search);
+const cc = checker($('#cc'), norm(u.get('fg') || '') || '#1A1C1C', norm(u.get('bg') || '') || '#F8D17D');
+const PRE = [['Ink on paper', '#1A1C1C', '#F4F3EF'], ['White on night', '#FFFFFF', '#1A1C1C'], ['Ink on sun', '#1A1C1C', '#F8D17D'], ['White on sky', '#FFFFFF', '#9CCADE'], ['Grey on white', '#999999', '#FFFFFF'], ['Teal on white', '#1F5E7A', '#FFFFFF']];
+$('#presets').innerHTML = PRE.map(([n, f, b], i) => `<li><button type="button" data-i="${i}"><span class="d" aria-hidden="true"><i style="background:${b}"></i><i style="background:${f}"></i></span>${n}</button></li>`).join('');
+$('#presets').onclick = e => { const b = e.target.closest('button'); if (b) { const p = PRE[+b.dataset.i]; cc.set(p[1], p[2]); } };
+renderPairs($('#pl'), p => { cc.set(p.bad[0], p.bad[1]); $('#cc').scrollIntoView({ block: 'start' }); $('#cc-fg').focus({ preventScroll: true }); });
+</script>
+</body>
+</html>

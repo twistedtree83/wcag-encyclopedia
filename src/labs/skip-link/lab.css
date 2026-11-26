@@ -1,0 +1,30 @@
+/* The skip-link lab's own styles, imported by its lab.ts. Shared lab styles stay in src/styles. */
+
+/* The 2.4.1 lab: the page's Tab stops as chips, the menu as many as the reader chose. */
+.bp-mock__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.bp-chip {
+  display: inline-grid;
+  place-items: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--rad-chip);
+  background: var(--bg);
+  font-size: var(--small);
+}
+.bp-chip--skip {
+  border: 2px solid var(--ink);
+  font-weight: 700;
+}
+.bp-mock__main {
+  margin-top: 12px;
+  padding: 16px;
+  border: 2px dashed var(--line-2);
+  border-radius: var(--rad-sm);
+  font-weight: 700;
+}

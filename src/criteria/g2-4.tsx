@@ -2,24 +2,301 @@
  * Guideline 2.4 — Navigable.
  *
  * The largest guideline in the standard at Level A and AA, and the one this site's own chrome
- * leans on hardest: the skip link, the rail, the headings, the focus ring, and the
- * scroll-margin that keeps a deep-linked card clear of the masthead are all 2.4 in practice.
+ * leans on hardest: the skip link, the headings, the breadcrumb, the focus ring and the page
+ * titles are all 2.4 in practice.
  */
 
-import type { CriterionRecord } from './types';
+import { useEffect, useId, useRef, useState, type MouseEvent } from 'react';
+import type { CriterionRecord, LiveExample } from './types';
+import { MockSite } from '../live/SiteWindow';
+import { SUPPORT_SITE, SUPPORT_SITE_FOUND } from '../labs/multiple-ways/multipleWays';
+
+/*
+ * 2.4.7's live examples (#44): three fields, as in the static examples. The broken row removes
+ * the outline (`.fv-row--none`); the stage draws no ring either (`hideRing`), so focus goes
+ * somewhere invisible and only the focus tracker says where. The fixed row keeps the site's ring.
+ */
+
+function FocusFields({ broken }: { broken: boolean }) {
+  return (
+    <div className={broken ? 'fv-row fv-row--none' : 'fv-row'}>
+      <label>
+        Name
+        <input type="text" autoComplete="name" />
+      </label>
+      <label>
+        Email
+        <input type="email" autoComplete="email" />
+      </label>
+      <label>
+        Card
+        <input type="text" inputMode="numeric" autoComplete="cc-number" />
+      </label>
+    </div>
+  );
+}
+
+const FIELD_KEYS: LiveExample['keys'] = ['tab', 'shift-tab'];
+
+/*
+ * 2.4.2, 2.4.4 and 2.4.6's live examples (#50). Each is the static example made real: the tabs
+ * are switched with "Switch tab", the links and headings are pulled into a screen reader's list.
+ */
+
+function SameTitles() {
+  return (
+    <div className="tabs">
+      <span className="tabs__tab" data-sim-tab>Acme</span>
+      <span className="tabs__tab" data-sim-tab>Acme</span>
+      <span className="tabs__tab" data-sim-tab>Acme</span>
+    </div>
+  );
+}
+
+function SpecificTitles() {
+  return (
+    <div className="tabs">
+      <span className="tabs__tab" data-sim-tab>Basket (3) — Acme</span>
+      <span className="tabs__tab" data-sim-tab>Delivery — Acme</span>
+      <span className="tabs__tab" data-sim-tab>Order confirmed — Acme</span>
+    </div>
+  );
+}
+
+const TITLE_KEYS: LiveExample['keys'] = ['switch-tab'];
+
+/** The documents the example links point at don't exist; following one would leave the page. */
+const stay = (e: MouseEvent) => e.preventDefault();
+
+/*
+ * 2.4.4 fails here in context too: the titles are their own list, laid beside the links, so each
+ * link's list item holds nothing but "read more". Only the eye pairs a title with its link.
+ */
+function ReadMoreLinks() {
+  return (
+    <div className="linkrows" onClick={stay}>
+      <ul className="linkrows__titles live-links">
+        <li>Annual report 2025</li>
+        <li>Board minutes, March</li>
+        <li>Sustainability update</li>
+      </ul>
+      <ul className="linkrows__links live-links">
+        <li>
+          <a href="/reports/annual-2025.pdf">read more</a>
+        </li>
+        <li>
+          <a href="/reports/minutes-march">read more</a>
+        </li>
+        <li>
+          <a href="/reports/sustainability">read more</a>
+        </li>
+      </ul>
+    </div>
+  );
+}
+
+function NamedLinks() {
+  return (
+    <ul className="linklist live-links" onClick={stay}>
+      <li>
+        <a href="/reports/annual-2025.pdf">Read the annual report 2025</a> (PDF, 2.4 MB)
+      </li>
+      <li>
+        <a href="/reports/minutes-march">Read the board minutes for March</a>
+      </li>
+      <li>
+        <a href="/reports/sustainability">Read the sustainability update</a>
+      </li>
+    </ul>
+  );
+}
+
+const LINK_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'links'];
+
+function VagueHeadings() {
+  return (
+    <div className="fauxdoc live-doc">
+      <h3 className="fauxdoc__real-h">More</h3>
+      <h4 className="fauxdoc__line">Information</h4>
+      <h4 className="fauxdoc__line">Details</h4>
+      <label className="live-doc__field">
+        Enter your details here
+        <input type="text" />
+      </label>
+    </div>
+  );
+}
+
+function DescriptiveHeadings() {
+  return (
+    <div className="fauxdoc live-doc">
+      <h3 className="fauxdoc__real-h">Returns and refunds</h3>
+      <h4 className="fauxdoc__line">How long you have</h4>
+      <h4 className="fauxdoc__line">What it costs</h4>
+      <label className="live-doc__field">
+        Order number
+        <input type="text" />
+      </label>
+    </div>
+  );
+}
+
+const HEADING_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'headings'];
+
+/*
+ * 2.4.1's, 2.4.3's and 2.4.11's live examples (#46). Links go nowhere: their clicks are
+ * prevented, so Enter on the fail stage (a programmatic click) never leaves the page.
+ */
+
+const visibly = { focusVisible: true } as FocusOptions;
+
+const MENU = ['Home', 'Women', 'Men', 'Kids', 'Sale', 'Brands', 'Gifts', 'Help'];
+
+/** 2.4.1: a shop page with an eight-link menu, with or without a skip link before it. */
+function SkipPage({ skip }: { skip: boolean }) {
+  const id = useId();
+  const article = useRef<HTMLAnchorElement>(null);
+  return (
+    <div className="bp-page">
+      <div className="bp-page__head">
+        {skip ? (
+          <a
+            className="bp-page__skip"
+            href={`#${id}`}
+            onClick={(e) => {
+              e.preventDefault();
+              article.current?.focus(visibly);
+            }}
+          >
+            Skip to content
+          </a>
+        ) : null}
+        {MENU.map((m) => (
+          <a key={m} href="#" onClick={stay}>
+            {m}
+          </a>
+        ))}
+      </div>
+      <div className="bp-page__main" id={id}>
+        <p>Winter coats, and how to choose one.</p>
+        <a href="#" onClick={stay} ref={article}>
+          Read the buying guide
+        </a>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * 2.4.3: a filters dialog over a product list. Broken, the dialog opens and focus stays on the
+ * page behind it. Fixed, focus moves into the dialog, the page goes inert, and closing it puts
+ * focus back on the button that opened it.
+ */
+function FilterPage({ broken }: { broken: boolean }) {
+  const titleId = useId();
+  const [open, setOpen] = useState(false);
+  const opener = useRef<HTMLButtonElement>(null);
+  const apply = useRef<HTMLButtonElement>(null);
+  const wasOpen = useRef(false);
+  useEffect(() => {
+    if (broken) return;
+    if (open) apply.current?.focus(visibly);
+    else if (wasOpen.current) opener.current?.focus(visibly);
+    wasOpen.current = open;
+  }, [open, broken]);
+  return (
+    <div className="fd-page">
+      <div className="fd-page__body" inert={!broken && open}>
+        <button type="button" className="btn o sm" ref={opener} onClick={() => setOpen(true)}>
+          Show filters
+        </button>
+        <ul className="fd-page__list">
+          {['Boots', 'Trainers', 'Sandals'].map((p) => (
+            <li key={p}>
+              <a href="#" onClick={stay}>
+                {p}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+      {open ? (
+        <div className="fd-dialog" role="dialog" aria-labelledby={titleId}>
+          <p className="fd-dialog__title" id={titleId}>
+            Filters
+          </p>
+          <button type="button" className="btn sm" ref={apply} onClick={() => setOpen(false)}>
+            Apply
+          </button>
+          <button type="button" className="btn o sm" onClick={() => setOpen(false)}>
+            Close
+          </button>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+const STICKY_FIELDS = [
+  { label: 'Name', autoComplete: 'name' },
+  { label: 'Email', autoComplete: 'email' },
+  { label: 'Street', autoComplete: 'address-line1' },
+  { label: 'Town', autoComplete: 'address-level2' },
+  { label: 'Postcode', autoComplete: 'postal-code' },
+];
+
+/**
+ * 2.4.11: a short scrolling checkout with a sticky header. Broken, nothing reserves room for the
+ * header, so a field scrolled to the top on the way back up sits under it. Fixed, the box's
+ * `scroll-padding-top` keeps every focused field below the header.
+ */
+function StickyForm({ padded }: { padded: boolean }) {
+  return (
+    <div className={padded ? 'nob-box nob-box--padded' : 'nob-box'}>
+      <p className="nob-box__bar">Acme checkout</p>
+      {STICKY_FIELDS.map((f) => (
+        <label key={f.label} className="nob-box__field">
+          {f.label}
+          <input type="text" autoComplete={f.autoComplete} />
+        </label>
+      ))}
+    </div>
+  );
+}
+
+const PAGE_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'enter'];
+
+/*
+ * 2.4.5's live examples (#63): the shop's support site as a mock site the reader moves round.
+ * Broken: the menu and each page's links are the only way down to VAT invoices. Fixed: search
+ * (filled with “VAT”) and a site map lead there too. Neither ever navigates the real page.
+ */
+
+const LostSite = () => <MockSite site={SUPPORT_SITE} />;
+const FoundSite = () => <MockSite site={SUPPORT_SITE_FOUND} />;
+
+const SITE_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'enter'];
+const SITE_INSTRUMENTS: LiveExample['instruments'] = ['mock-site', 'announcement-log'];
 
 export const G2_4: readonly CriterionRecord[] = [
   {
     num: '2.4.1',
     name: 'Bypass Blocks',
     level: 'A',
+    since: '2.0',
     guideline: '2.4',
+    labs: ['skip-link'],
     plain:
       'Give people a way past the things that repeat on every page. A skip link is the usual ' +
       'answer; real landmarks and a sane heading structure also count, because screen reader ' +
       'users navigate by those.',
     fail: {
-      caption: 'Forty links before the article, on every page.',
+      caption: 'Every menu link stands between the reader and the article.',
+      live: {
+        Example: () => <SkipPage skip={false} />,
+        keys: PAGE_KEYS,
+        instruments: ['focus-tracker'],
+      },
       render: () => (
         <>
           <div className="tabstops">
@@ -39,6 +316,11 @@ export const G2_4: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'One link, first in the tab order.',
+      live: {
+        Example: () => <SkipPage skip />,
+        keys: PAGE_KEYS,
+        instruments: ['focus-tracker'],
+      },
       render: () => (
         <>
           <div className="tabstops">
@@ -61,12 +343,15 @@ export const G2_4: readonly CriterionRecord[] = [
     num: '2.4.2',
     name: 'Page Titled',
     level: 'A',
+    since: '2.0',
     guideline: '2.4',
+    labs: ['page-title'],
     plain:
       'Every page needs a title that describes it. It is the first thing a screen reader ' +
       'announces, and the only thing distinguishing twenty open tabs or twenty history entries.',
     fail: {
       caption: 'The same title on every page.',
+      live: { Example: SameTitles, keys: TITLE_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="tabs">
@@ -83,6 +368,7 @@ export const G2_4: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'Specific first, site name last.',
+      live: { Example: SpecificTitles, keys: TITLE_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="tabs">
@@ -103,13 +389,20 @@ export const G2_4: readonly CriterionRecord[] = [
     num: '2.4.3',
     name: 'Focus Order',
     level: 'A',
+    since: '2.0',
     guideline: '2.4',
+    labs: ['focus-order'],
     plain:
       'Focus has to move in an order that preserves meaning. Usually that means source order — ' +
       'and when something opens on top, like a dialog, focus goes into it and comes back out ' +
       'where it started.',
     fail: {
       caption: 'A dialog opens and focus stays behind it.',
+      live: {
+        Example: () => <FilterPage broken />,
+        keys: PAGE_KEYS,
+        instruments: ['focus-tracker'],
+      },
       render: () => (
         <>
           <div className="stack">
@@ -126,6 +419,11 @@ export const G2_4: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'Focus follows the dialog in and back out.',
+      live: {
+        Example: () => <FilterPage broken={false} />,
+        keys: PAGE_KEYS,
+        instruments: ['focus-tracker'],
+      },
       render: () => (
         <>
           <div className="stack">
@@ -145,30 +443,41 @@ export const G2_4: readonly CriterionRecord[] = [
     num: '2.4.4',
     name: 'Link Purpose (In Context)',
     level: 'A',
+    since: '2.0',
     guideline: '2.4',
+    labs: ['link-purpose'],
     plain:
       'What a link does has to be clear from its text, or from the sentence, list item, cell, ' +
       'or paragraph around it. Screen reader users often pull up a list of every link on the ' +
       'page, where that surrounding context is gone.',
     fail: {
-      caption: 'Eleven links that all say the same thing.',
+      caption: 'Three “read more” links, with their titles in a separate column.',
+      live: { Example: ReadMoreLinks, keys: LINK_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
-          <div className="linklist">
-            <span>Annual report 2025 — <u>read more</u></span>
-            <span>Board minutes, March — <u>read more</u></span>
-            <span>Sustainability update — <u>read more</u></span>
+          <div className="linkrows">
+            <div className="linkrows__titles">
+              <span>Annual report 2025</span>
+              <span>Board minutes, March</span>
+              <span>Sustainability update</span>
+            </div>
+            <div className="linkrows__links">
+              <u>read more</u>
+              <u>read more</u>
+              <u>read more</u>
+            </div>
           </div>
           <p className="example-note">
-            Pulled into a links list they read "read more, read more, read more". The same
-            problem afflicts "click here", "download", and a bare URL read out character by
-            character.
+            The titles are one list and the links another, lined up only by the layout. A
+            link’s own list item says nothing but “read more”, so neither its text nor its
+            context names the report, and a links list reads “read more” three times.
           </p>
         </>
       ),
     },
     pass: {
       caption: 'The link text names its destination.',
+      live: { Example: NamedLinks, keys: LINK_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="linklist">
@@ -192,8 +501,11 @@ export const G2_4: readonly CriterionRecord[] = [
     diff: {
       title: 'reports.html',
       lines: [
-        { kind: 'del', text: 'Annual report 2025 — <a href="/r25.pdf">read more</a>' },
-        { kind: 'add', text: '<a href="/r25.pdf">Read the annual report 2025</a> (PDF, 2.4 MB)' },
+        { kind: 'del', text: '<ul class="titles"><li>Annual report 2025</li> …</ul>' },
+        { kind: 'del', text: '<ul class="links"><li><a href="/r25.pdf">read more</a></li> …</ul>' },
+        { kind: 'add', text: '<ul>' },
+        { kind: 'add', text: '  <li><a href="/r25.pdf">Read the annual report 2025</a> (PDF, 2.4 MB)</li> …' },
+        { kind: 'add', text: '</ul>' },
       ],
       note:
         'Hiding the context in aria-label is a second-best fix: it desynchronises what is seen ' +
@@ -205,13 +517,16 @@ export const G2_4: readonly CriterionRecord[] = [
     num: '2.4.5',
     name: 'Multiple Ways',
     level: 'AA',
+    since: '2.0',
     guideline: '2.4',
     plain:
       'Offer more than one route to each page — navigation plus search, or a sitemap, or an ' +
       'index. People navigate differently; some scan structure, others go straight to search. ' +
       'Steps within a process are exempt.',
+    labs: ['multiple-ways'],
     fail: {
       caption: 'A deep hierarchy and nothing else.',
+      live: { Example: LostSite, keys: SITE_KEYS, instruments: SITE_INSTRUMENTS },
       render: () => (
         <>
           <div className="crumbs">Home › Support › Billing › Invoices › VAT</div>
@@ -225,6 +540,7 @@ export const G2_4: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'Two independent routes, at least.',
+      live: { Example: FoundSite, keys: SITE_KEYS, instruments: SITE_INSTRUMENTS },
       render: () => (
         <>
           <div className="crumbs">Home › Support › Billing › Invoices › VAT</div>
@@ -233,8 +549,8 @@ export const G2_4: readonly CriterionRecord[] = [
             <span>Search · A–Z index · "VAT" linked from three related articles</span>
           </div>
           <p className="example-note">
-            This page offers the rail, the principle openers, in-page search, and deep links
-            per criterion — four routes to the same card.
+            This site offers the main navigation, the All criteria index with search and
+            filters, and links between related criteria: three routes to the same page.
           </p>
         </>
       ),
@@ -245,13 +561,16 @@ export const G2_4: readonly CriterionRecord[] = [
     num: '2.4.6',
     name: 'Headings and Labels',
     level: 'AA',
+    since: '2.0',
     guideline: '2.4',
+    labs: ['headings-labels'],
     plain:
       'Where headings and labels exist, they have to describe the topic or purpose. This is ' +
       'about being informative, not merely present — 1.3.1 asks whether a heading is marked up ' +
       'as one; this asks whether it says anything.',
     fail: {
       caption: 'Headings that describe nothing.',
+      live: { Example: VagueHeadings, keys: HEADING_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="fauxdoc">
@@ -268,6 +587,7 @@ export const G2_4: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'Headings that answer "what is under here".',
+      live: { Example: DescriptiveHeadings, keys: HEADING_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="fauxdoc">
@@ -288,14 +608,22 @@ export const G2_4: readonly CriterionRecord[] = [
     num: '2.4.7',
     name: 'Focus Visible',
     level: 'AA',
+    since: '2.0',
     guideline: '2.4',
     demos: ['focus-visible-2-4-7', 'focus-lost-2-4-7'],
+    labs: ['focus-ring'],
     plain:
       'Keyboard focus has to be visible. Removing the outline because it is ugly is the single ' +
       'most common accessibility failure on the web, and it makes a site unusable rather than ' +
       'merely awkward.',
     fail: {
       caption: 'The outline was removed and nothing replaced it.',
+      live: {
+        Example: () => <FocusFields broken />,
+        keys: FIELD_KEYS,
+        instruments: ['focus-tracker'],
+        hideRing: true,
+      },
       render: () => (
         <>
           <div className="focusrow">
@@ -313,6 +641,11 @@ export const G2_4: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'A ring with its own contrast and an offset.',
+      live: {
+        Example: () => <FocusFields broken={false} />,
+        keys: FIELD_KEYS,
+        instruments: ['focus-tracker'],
+      },
       render: () => (
         <>
           <div className="focusrow">
@@ -339,7 +672,7 @@ export const G2_4: readonly CriterionRecord[] = [
         { kind: 'add', text: '  outline-offset: 2px;' },
         { kind: 'add', text: '}' },
       ],
-      note: 'The rule this page uses on every interactive element, verbatim.',
+      note: 'The CSS rule this page uses on every interactive element, verbatim.',
     },
   },
 
@@ -347,14 +680,21 @@ export const G2_4: readonly CriterionRecord[] = [
     num: '2.4.11',
     name: 'Focus Not Obscured (Minimum)',
     level: 'AA',
+    since: '2.2',
     guideline: '2.4',
     demos: ['obscured-2-4-11'],
+    labs: ['sticky-banner'],
     plain:
       'When something receives focus, it must not be entirely hidden behind other content. New ' +
       'in WCAG 2.2, and almost always caused by a sticky header swallowing whatever you just ' +
       'tabbed to.',
     fail: {
       caption: 'The sticky header covers the field that just took focus.',
+      live: {
+        Example: () => <StickyForm padded={false} />,
+        keys: FIELD_KEYS,
+        instruments: ['focus-tracker'],
+      },
       render: () => (
         <>
           <div className="obscure">
@@ -371,6 +711,11 @@ export const G2_4: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'Scroll padding reserves room for the header.',
+      live: {
+        Example: () => <StickyForm padded />,
+        keys: FIELD_KEYS,
+        instruments: ['focus-tracker'],
+      },
       render: () => (
         <>
           <div className="obscure">
@@ -381,8 +726,7 @@ export const G2_4: readonly CriterionRecord[] = [
           </div>
           <p className="example-note">
             <span className="alt-code">scroll-padding-top</span> equal to the header height,
-            set once on the root. This page does exactly that, which is why a deep link to a
-            criterion lands below the masthead rather than under it.
+            set once on the root.
           </p>
         </>
       ),
@@ -391,7 +735,7 @@ export const G2_4: readonly CriterionRecord[] = [
       title: 'app.css',
       lines: [
         { kind: 'context', text: 'html {' },
-        { kind: 'add', text: '  scroll-padding-top: 5.5rem;  /* the sticky masthead */' },
+        { kind: 'add', text: '  scroll-padding-top: 5.5rem;  /* the sticky header */' },
         { kind: 'context', text: '}' },
       ],
       note:

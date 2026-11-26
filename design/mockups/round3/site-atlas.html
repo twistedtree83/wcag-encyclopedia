@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>An Atlas of the Accessible Page — WCAG 2.2 by region</title>
+<meta name="description" content="Every web page has the same regions. Find which WCAG 2.2 success criteria apply to each, with a plain-language explanation and a working example.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Onest:wght@400;500;600&display=swap">
+<style>
+:root{--paper:#F4F1EA;--card:#FBF9F4;--ink:#1C1D1F;--ink-2:#4E4E4A;--land:#DCD8CE;--edge:#F4F1EA;--line:#CFC9BC;--sky:#9CCADE;--sun:#F8D17D;--rose:#FFB3A9;--sage:#BFD8B0;--deep:#1F5E7A;--r1:#1F5E7A;--r2:#A8402F;--r3:#3F6A2C}
+*{box-sizing:border-box}
+html{background:var(--paper);scroll-behavior:smooth}
+body{margin:0;color:var(--ink);font:400 17px/1.6 "Onest",system-ui,sans-serif}
+a{color:inherit}
+button,input{font:inherit}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px;border-radius:3px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:16px;top:-60px;background:var(--ink);color:var(--paper);padding:10px 14px;z-index:9}
+.skip:focus{top:12px}
+.wrap{max-width:1320px;margin:0 auto;padding:0 56px}
+.k{font:600 13px/1.3 "Onest";letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+h1,h2,h3{font-weight:400;font-family:"Young Serif",serif}
+header.top{display:flex;justify-content:space-between;align-items:center;padding:26px 0;border-bottom:1px solid var(--ink)}
+.brand{font:400 21px/1 "Young Serif";text-decoration:none;display:flex;align-items:center;gap:12px}
+nav ul{display:flex;gap:30px;list-style:none;margin:0;padding:0;font-weight:500}
+nav a{text-decoration:none;padding:10px 0;display:inline-block}
+nav a:hover,nav [aria-current]{text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:2px}
+section{scroll-margin-top:16px}
+
+/* hero */
+.hero{display:grid;grid-template-columns:5fr 7fr;gap:64px;padding:64px 0 72px;align-items:start}
+h1{font-size:clamp(44px,4.6vw,68px);line-height:1.02;letter-spacing:-.02em;margin:18px 0 26px}
+.lede{margin:0 0 34px;color:var(--ink-2);max-width:42ch;font-size:19px}
+.find{position:relative}
+.find label{display:block;font-weight:600;margin:0 0 8px}
+.find .box{display:flex;border:1.5px solid var(--ink);border-radius:999px;overflow:hidden;background:#fff;max-width:440px}
+.find input{flex:1;border:0;padding:0 20px;font-size:17px;min-height:52px;background:transparent;color:var(--ink);min-width:0}
+.find input::placeholder{color:#6B6B66}
+.find input:focus-visible{outline:0}
+.find .box:focus-within{outline:3px solid var(--ink);outline-offset:3px}
+.find .hint{font-size:15px;color:var(--ink-2);margin:10px 0 0}
+.res{max-width:440px;margin:12px 0 0;background:var(--card);border:1.5px solid var(--ink);border-radius:18px;padding:6px 0}
+.res[hidden]{display:none}
+.res ul{list-style:none;margin:0;padding:0}
+.res a{display:grid;grid-template-columns:56px 1fr auto;gap:10px;align-items:center;padding:10px 18px;text-decoration:none}
+.res a:hover{background:#EFEBE1}
+.res .num{font-weight:600;font-size:14px;color:var(--ink-2)}
+.res p{margin:0;padding:10px 18px;color:var(--ink-2);font-size:15px}
+.regions{margin:40px 0 0}
+.regions ul{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.regions button{font-weight:500;font-size:15px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);border-radius:999px;padding:0 16px;min-height:44px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.regions button i{width:12px;height:12px;border-radius:50%;border:1.5px solid var(--ink)}
+.regions button:hover{background:#EAE5DA}
+.regions button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.regions button[aria-pressed="true"] i{border-color:var(--paper);background:var(--sky)}
+
+/* map */
+.map{margin:0;position:relative}
+.map svg{width:100%;height:auto;display:block}
+.map .r{fill:var(--land);stroke:var(--edge);stroke-width:3;transition:fill .25s;cursor:pointer}
+.map .r:hover{fill:#CEC9BC}
+.map .r.on{fill:var(--sky)}
+.map .cl{fill:none;stroke:#fff;stroke-width:1;opacity:.7;pointer-events:none}
+.map text{font:500 14px "Onest";fill:var(--ink);pointer-events:none}
+.map .lbl{font:400 19px "Young Serif"}
+.map .lead{stroke:var(--ink);stroke-width:1}
+.map .grat{stroke:var(--line);stroke-width:1;stroke-dasharray:2 6}
+.map figcaption{display:flex;justify-content:space-between;gap:16px;border-top:1px solid var(--ink);padding:10px 0 0;margin-top:14px;font-size:14px;color:var(--ink-2)}
+
+/* plate */
+.plate{border-top:1px solid var(--ink);display:grid;grid-template-columns:4fr 4fr 4fr;gap:48px;padding:56px 0 90px}
+.plate h2{font-size:clamp(40px,4.4vw,64px);line-height:1;margin:14px 0 18px;letter-spacing:-.01em}
+.plate .side p{color:var(--ink-2);margin:0 0 20px;max-width:40ch}
+.stat{display:flex;gap:24px;margin-top:30px}
+.stat div{border-top:2px solid var(--ink);padding-top:10px;flex:1;min-width:0}
+.stat b{display:block;font:400 44px/1 "Young Serif";font-weight:400}
+.crit{list-style:none;margin:0;padding:0;border-top:1px solid var(--ink)}
+.crit li{border-bottom:1px solid var(--line)}
+.crit button{all:unset;box-sizing:border-box;width:100%;display:grid;grid-template-columns:58px 1fr auto;gap:12px;align-items:center;padding:13px 10px;cursor:pointer}
+.crit button:hover .n{text-decoration:underline;text-underline-offset:4px}
+.crit button:focus-visible{outline:3px solid var(--ink);outline-offset:-3px}
+.crit button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.crit button[aria-pressed="true"] .num{color:#D9D5CB}
+.crit button[aria-pressed="true"] .lv{border-color:var(--paper)}
+.crit button[aria-pressed="true"] .lv.aa{background:var(--paper);color:var(--ink)}
+.crit .num{font:600 14px "Onest";color:var(--ink-2)}
+.crit .n{font-weight:500}
+.lv{font:600 12px "Onest";letter-spacing:.06em;border:1.5px solid var(--ink);border-radius:4px;padding:3px 6px;min-width:34px;text-align:center}
+.lv.aa{background:var(--ink);color:var(--paper)}
+.spec{background:var(--card);border:1.5px solid var(--ink);border-radius:4px;padding:28px;position:sticky;top:24px;align-self:start}
+.spec .row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.spec h3{font-size:32px;line-height:1.05;margin:12px 0 14px}
+.spec>p{margin:0 0 20px;color:var(--ink-2);font-size:16px}
+.spec dl{margin:0;display:grid;gap:12px}
+.spec dl div{border-top:1px solid var(--line);padding-top:12px}
+.spec dt{display:flex;align-items:center;gap:8px;font:600 13px "Onest";letter-spacing:.12em;text-transform:uppercase}
+.spec dd{margin:4px 0 0;font-size:16px}
+.spec .go{display:inline-flex;align-items:center;gap:8px;margin:22px 0 0;min-height:48px;padding:0 20px;border-radius:999px;background:var(--ink);color:var(--paper);text-decoration:none;font-weight:600}
+.spec .go:hover{background:var(--deep)}
+.ttl{font-size:14px;color:var(--ink-2)}
+
+/* routes */
+.routes{border-top:1px solid var(--ink);padding:56px 0 90px}
+.sh{display:grid;grid-template-columns:5fr 7fr;gap:64px;align-items:end;margin:0 0 36px}
+.sh h2{font-size:clamp(36px,4vw,56px);line-height:1.02;margin:14px 0 0;letter-spacing:-.01em}
+.sh p{margin:0;color:var(--ink-2);max-width:52ch}
+.rt{display:grid;grid-template-columns:5fr 7fr;gap:64px;align-items:start}
+.rt-pick{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.rt-pick button{all:unset;box-sizing:border-box;width:100%;display:grid;grid-template-columns:54px 1fr;gap:16px;align-items:center;padding:18px 20px;border:1.5px solid var(--ink);border-radius:4px;cursor:pointer;background:var(--card)}
+.rt-pick button:hover{background:#EFEBE1}
+.rt-pick button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.rt-pick button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.rt-pick b{display:block;font:400 22px/1.15 "Young Serif"}
+.rt-pick span.d{font-size:15px;color:var(--ink-2)}
+.rt-pick button[aria-pressed="true"] span.d{color:#D9D5CB}
+.rt-pick svg{display:block}
+.rt-pick button[aria-pressed="true"] .sw{stroke:var(--paper)}
+.rt-map svg{width:100%;height:auto;display:block}
+.rt-map .r{fill:var(--land);stroke:var(--edge);stroke-width:3}
+.rt-map .lbl{font:400 17px "Young Serif";fill:#4E4E4A}
+.rt-map .path{fill:none;stroke-width:3.5;stroke-linecap:round;opacity:.22;transition:opacity .25s}
+.rt-map .path.on{opacity:1}
+.rt-map .stop{opacity:.22;transition:opacity .25s}
+.rt-map .stop.on{opacity:1}
+.rt-map .stop text{font:600 14px "Onest";fill:#fff}
+.stops{list-style:none;margin:28px 0 0;padding:0;counter-reset:s;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 32px}
+.stops li{display:grid;grid-template-columns:34px 1fr;gap:12px;padding:14px 0;border-top:1px solid var(--line)}
+.stops li::before{counter-increment:s;content:counter(s);width:30px;height:30px;border-radius:50%;background:var(--rc,var(--r1));color:#fff;display:grid;place-items:center;font-weight:600;font-size:14px}
+.stops b{display:block;font-weight:600}
+.stops span{font-size:15px;color:var(--ink-2)}
+
+/* key */
+.key{border-top:1px solid var(--ink);padding:56px 0 80px}
+.key h2{font-size:40px;line-height:1;margin:0 0 30px}
+.key table{width:100%;border-collapse:collapse}
+.key th{text-align:left;font:600 13px "Onest";letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);padding:0 0 12px;border-bottom:2px solid var(--ink)}
+.key td{padding:20px 16px 20px 0;border-bottom:1px solid var(--line);vertical-align:middle}
+.key td:first-child{width:64px}
+.sym{width:34px;height:34px;display:block;border:1.5px solid var(--ink)}
+.key .nm{font:400 26px/1.1 "Young Serif"}
+.key .tg{color:var(--ink-2)}
+.key .bar{width:220px;height:12px;background:#E6E1D6;border-radius:99px;overflow:hidden}
+.key .bar i{display:block;height:100%;background:var(--ink);border-radius:99px}
+.key .ct{font-weight:600;text-align:right;white-space:nowrap}
+
+/* gazetteer */
+.gaz{border-top:1px solid var(--ink);padding:56px 0 90px}
+.gaz .tools{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin:0 0 30px}
+.seg{display:inline-flex;border:1.5px solid var(--ink);border-radius:999px;overflow:hidden}
+.seg button{border:0;background:transparent;color:var(--ink);min-height:44px;padding:0 20px;cursor:pointer;font-weight:500}
+.seg button+button{border-left:1.5px solid var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.cols{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:40px}
+.gm{width:18px;height:18px;flex:none;border:1.5px solid var(--ink)}
+.cols h3{display:flex;align-items:center;gap:12px;font-size:24px;margin:0 0 6px;padding:0 0 12px;border-bottom:2px solid var(--ink)}
+.cols ul{list-style:none;margin:0;padding:0}
+.cols li{border-bottom:1px solid var(--line)}
+.cols a{display:grid;grid-template-columns:52px 1fr auto;gap:10px;align-items:baseline;padding:9px 0;text-decoration:none;font-size:15px}
+.cols a:hover .n{text-decoration:underline;text-underline-offset:3px}
+.cols .num{color:var(--ink-2);font-weight:600;font-size:13px}
+.cols .lv{font-size:11px;padding:2px 5px;min-width:30px}
+.gn{font-size:14px;color:var(--ink-2);margin:10px 0 0}
+
+footer{border-top:1px solid var(--ink);padding:36px 0 48px;display:grid;grid-template-columns:2fr 1fr 1fr;gap:32px;font-size:15px;color:var(--ink-2)}
+footer h2{font:600 13px "Onest";letter-spacing:.12em;text-transform:uppercase;margin:0 0 10px;color:var(--ink)}
+footer ul{list-style:none;margin:0;padding:0}
+footer ul a{display:inline-block;padding:6px 0;text-decoration:none}
+footer ul a:hover{text-decoration:underline;text-underline-offset:4px;color:var(--ink)}
+footer p{margin:10px 0 0;max-width:40ch}
+footer .brand{color:var(--ink)}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+@media (max-width:1100px){
+  .plate{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .spec{grid-column:1/-1;position:static}
+  .cols{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:900px){
+  .wrap{padding:0 18px}
+  header.top{flex-direction:column;align-items:flex-start;gap:8px}
+  nav ul{gap:18px;flex-wrap:wrap}
+  .hero,.plate,.sh,.rt{grid-template-columns:minmax(0,1fr);gap:36px}
+  .sh{gap:16px}
+  .map{order:2}
+  .spec{padding:22px}
+  .key .bar,.key th:nth-child(4),.key td:nth-child(4){display:none}
+  .key .tg{display:block;font-size:15px}
+  .key th:nth-child(3),.key td:nth-child(3){display:none}
+  .key .nm{font-size:21px}.key td{padding-right:10px}.key td:first-child{width:46px}
+  .find .box,.res{max-width:100%}
+  .stat{gap:16px}
+  .stops{grid-template-columns:minmax(0,1fr)}
+  .cols{grid-template-columns:minmax(0,1fr);gap:32px}
+  .map figcaption{flex-direction:column;gap:2px}
+  footer{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  footer>div:first-child{grid-column:1/-1}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="wrap">
+<header class="top">
+  <a class="brand" href="#"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="11.5" fill="none" stroke="#1C1D1F" stroke-width="1.5"/><path d="M13 3 16 13 13 23 10 13Z" fill="#1C1D1F"/></svg>Atlas of the Accessible Page</a>
+  <nav aria-label="Main"><ul><li><a href="#" aria-current="page">Map</a></li><li><a href="#routes">Routes</a></li><li><a href="#gazetteer">All criteria</a></li><li><a href="#">About</a></li></ul></nav>
+</header>
+<main id="main">
+<section class="hero" aria-labelledby="h1">
+  <div>
+    <p class="k">WCAG 2.2 · 55 criteria · 7 regions</p>
+    <h1 id="h1">An atlas of the accessible page.</h1>
+    <p class="lede">Every web page has the same regions. Pick one to see which success criteria apply there, with a working example of each.</p>
+    <form class="find" role="search" onsubmit="return false">
+      <label for="q">Find a criterion</label>
+      <div class="box"><input id="q" type="search" placeholder="Try “focus” or “captions”" autocomplete="off" aria-describedby="q-h" aria-controls="res"><button type="submit" style="border:0;background:var(--ink);color:var(--paper);font-weight:600;padding:0 22px;cursor:pointer">Search</button></div>
+      <p class="hint" id="q-h">Search by number, name, or what went wrong.</p>
+      <div class="res" id="res" hidden><p id="res-n" aria-live="polite"></p><ul id="res-l"></ul></div>
+    </form>
+    <div class="regions">
+      <p class="k" id="reg-h" style="margin:0">Regions</p>
+      <ul aria-labelledby="reg-h" id="reg"></ul>
+    </div>
+  </div>
+  <figure class="map" aria-labelledby="map-c">
+    <svg viewBox="0 0 720 640" role="img" aria-labelledby="map-t"><title id="map-t">Map of a web page divided into seven regions. The selected region is highlighted.</title>
+      <g aria-hidden="true" id="mapg">
+      <line class="grat" x1="0" y1="160" x2="720" y2="160"/><line class="grat" x1="0" y1="320" x2="720" y2="320"/><line class="grat" x1="0" y1="480" x2="720" y2="480"/>
+      <line class="grat" x1="180" y1="0" x2="180" y2="640"/><line class="grat" x1="360" y1="0" x2="360" y2="640"/><line class="grat" x1="540" y1="0" x2="540" y2="640"/>
+      <path class="r" data-r="header" d="M60 40 H660 Q668 40 668 48 V96 Q600 108 520 98 T300 102 T60 96 Z"/>
+      <path class="r" data-r="nav" d="M60 112 Q160 104 240 112 L232 380 Q150 392 60 382 Z"/>
+      <path class="r" data-r="content" d="M252 112 Q400 100 668 114 V300 Q520 290 400 304 T252 300 Z"/>
+      <path class="r" data-r="media" d="M252 316 Q330 306 420 318 L414 520 Q330 530 252 520 Z"/>
+      <path class="r" data-r="forms" d="M436 316 Q560 304 668 318 V520 Q560 532 430 520 Z"/>
+      <path class="r" data-r="aside" d="M60 396 Q150 404 232 396 V520 Q150 530 60 520 Z"/>
+      <path class="r" data-r="footer" d="M60 536 Q300 548 668 534 V592 Q668 600 660 600 H68 Q60 600 60 592 Z"/>
+      <path class="cl" d="M90 70 Q200 60 300 74 M480 66 Q560 76 640 64 M84 160 Q140 170 210 156 M84 230 Q150 240 214 228 M84 300 Q140 310 210 298 M300 160 Q420 150 620 170 M300 220 Q440 236 630 214 M290 380 Q340 370 390 384 M290 450 Q340 460 390 448 M470 380 Q560 370 640 386 M470 430 Q560 440 640 428 M470 480 Q560 470 640 482 M100 570 Q360 580 630 566 M84 440 Q150 450 214 438 M84 480 Q150 470 214 486"/>
+      <text class="lbl" x="80" y="80">Header</text>
+      <text class="lbl" x="78" y="150">Navigation</text>
+      <text class="lbl" x="276" y="150">Content</text>
+      <text class="lbl" x="272" y="356">Media</text>
+      <text class="lbl" x="456" y="356">Forms</text>
+      <text class="lbl" x="78" y="436">Sidebar</text>
+      <text class="lbl" x="80" y="574">Footer</text>
+      <line class="lead" x1="620" y1="470" x2="700" y2="600"/><circle cx="620" cy="470" r="4" fill="#1C1D1F"/>
+      <text x="610" y="626" text-anchor="end" id="lead-t">11 criteria</text>
+      </g>
+    </svg>
+    <figcaption id="map-c"><span>Plate 7, the generic web page. Click a region or use the buttons.</span><span>Region sizes are not to scale</span></figcaption>
+  </figure>
+</section>
+
+<section class="plate" id="plate" aria-labelledby="plate-h">
+  <div class="side">
+    <p class="k" id="plate-k" aria-live="polite">Region 5 of 7</p>
+    <h2 id="plate-h">Forms</h2>
+    <p id="plate-p"></p>
+    <div class="stat"><div><b id="st-n"></b><span class="k">Criteria</span></div><div><b id="st-a"></b><span class="k">Level A</span></div><div><b id="st-aa"></b><span class="k">Level AA</span></div></div>
+  </div>
+  <div>
+    <p class="k" id="crit-h" style="margin:0 0 12px">Criteria in this region</p>
+    <ul class="crit" id="crit" aria-labelledby="crit-h"></ul>
+  </div>
+  <article class="spec" id="spec" aria-labelledby="spec-h" aria-live="polite">
+    <div class="row"><span class="k" id="spec-k"></span><span class="lv" id="spec-lv"></span></div>
+    <h3 id="spec-h"></h3>
+    <p id="spec-p"></p>
+    <dl>
+      <div><dt><svg width="12" height="12" aria-hidden="true"><path d="M1 1l10 10M11 1 1 11" stroke="#A8402F" stroke-width="2.2"/></svg>Fails when</dt><dd id="spec-f"></dd></div>
+      <div><dt><svg width="12" height="12" aria-hidden="true"><path d="M1 6.5 4.5 10 11 1.5" stroke="#1F5E7A" stroke-width="2.2" fill="none"/></svg>Passes when</dt><dd id="spec-ok"></dd></div>
+    </dl>
+    <a class="go" id="spec-a" href="#">See it broken, then fixed <span aria-hidden="true">→</span></a>
+  </article>
+</section>
+
+<section class="routes" id="routes" aria-labelledby="rt-h">
+  <div class="sh"><div><p class="k">Routes</p><h2 id="rt-h">Three journeys through the same page.</h2></div><p>Regions tell you where a criterion lives. Routes show who it is for. Follow how three different people cross the same page, and which criteria they meet at each stop.</p></div>
+  <div class="rt">
+    <div>
+      <ul class="rt-pick" id="rt-pick"></ul>
+      <ol class="stops" id="stops" aria-live="polite" aria-label="Stops on this route"></ol>
+    </div>
+    <div class="rt-map">
+      <svg viewBox="0 0 720 640" role="img" aria-labelledby="rt-t"><title id="rt-t">The three routes drawn over the page map. The selected route is drawn solid, the others faded.</title>
+        <g aria-hidden="true">
+        <path class="r" d="M60 40 H660 Q668 40 668 48 V96 Q600 108 520 98 T300 102 T60 96 Z"/>
+        <path class="r" d="M60 112 Q160 104 240 112 L232 380 Q150 392 60 382 Z"/>
+        <path class="r" d="M252 112 Q400 100 668 114 V300 Q520 290 400 304 T252 300 Z"/>
+        <path class="r" d="M252 316 Q330 306 420 318 L414 520 Q330 530 252 520 Z"/>
+        <path class="r" d="M436 316 Q560 304 668 318 V520 Q560 532 430 520 Z"/>
+        <path class="r" d="M60 396 Q150 404 232 396 V520 Q150 530 60 520 Z"/>
+        <path class="r" d="M60 536 Q300 548 668 534 V592 Q668 600 660 600 H68 Q60 600 60 592 Z"/>
+        <text class="lbl" x="560" y="80">Header</text><text class="lbl" x="78" y="150">Navigation</text><text class="lbl" x="560" y="150">Content</text><text class="lbl" x="272" y="356">Media</text><text class="lbl" x="580" y="356">Forms</text><text class="lbl" x="78" y="436">Sidebar</text><text class="lbl" x="560" y="574">Footer</text>
+        <g id="rt-g"></g>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section class="key" aria-labelledby="key-h">
+  <h2 id="key-h">Key to the four principles</h2>
+  <table>
+    <thead><tr><th scope="col"><span class="sr">Symbol</span></th><th scope="col">Principle</th><th scope="col">What it asks</th><th scope="col">Share of the 55</th><th scope="col" style="text-align:right">Criteria</th></tr></thead>
+    <tbody id="key-b"></tbody>
+  </table>
+</section>
+
+<section class="gaz" id="gazetteer" aria-labelledby="gz-h">
+  <div class="tools">
+    <div><p class="k">Gazetteer</p><h2 id="gz-h" style="font-size:clamp(36px,4vw,56px);line-height:1.02;margin:14px 0 0">Every criterion, by principle.</h2></div>
+    <div><p class="k" id="gl-l" style="margin:0 0 8px">Show level</p><div class="seg" role="group" aria-labelledby="gl-l" id="gl"></div></div>
+  </div>
+  <div class="cols" id="cols"></div>
+  <p class="gn" id="gn" aria-live="polite"></p>
+</section>
+</main>
+<footer>
+  <div><a class="brand" href="#"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="11.5" fill="none" stroke="#1C1D1F" stroke-width="1.5"/><path d="M13 3 16 13 13 23 10 13Z" fill="#1C1D1F"/></svg>Atlas of the Accessible Page</a><p>Every Level A and AA criterion of WCAG 2.2, mapped to where it lives on a page. This page passes every criterion it describes.</p></div>
+  <div><h2>Explore</h2><ul><li><a href="#">Map</a></li><li><a href="#routes">Routes</a></li><li><a href="#gazetteer">All criteria</a></li></ul></div>
+  <div><h2>About</h2><ul><li><a href="#">How we test</a></li><li><a href="#">Accessibility statement</a></li><li><a href="#">Source code</a></li></ul></div>
+</footer>
+</div>
+<script src="../corpus.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const D={};window.CORPUS.forEach(([num,name,level,plain,fail,pass])=>D[num]={num,name,level,plain,fail,pass,p:+num[0]});
+const ALL=Object.values(D).sort((a,b)=>{const x=a.num.split('.').map(Number),y=b.num.split('.').map(Number);return x[0]-y[0]||x[1]-y[1]||x[2]-y[2]});
+const PN=['','Perceivable','Operable','Understandable','Robust'];
+const R={
+ header:{n:'Header',p:'The first thing on every page. Where people learn what site they are on and how to skip past it.',c:['2.4.1','2.4.2','3.1.1','1.3.1','2.4.7']},
+ nav:{n:'Navigation',p:'Menus and links. They must work by keyboard, stay in the same place, and say where they go.',c:['2.1.1','2.4.3','2.4.4','3.2.3','3.2.4','2.4.5','2.4.11']},
+ content:{n:'Content',p:'Headings, paragraphs and tables. Text that has to survive zoom, reflow and a bright room.',c:['1.4.3','1.4.4','1.4.10','1.4.12','2.4.6','1.3.2','1.4.1']},
+ media:{n:'Media',p:'Images, audio and video. Everything here needs a text version that does the same job.',c:['1.1.1','1.2.1','1.2.2','1.2.5','1.4.2','2.2.2','2.3.1']},
+ forms:{n:'Forms',p:'Where people give you something: an email, a payment, a booking. Most failures that stop people finishing a task happen here.',c:['1.3.5','3.3.1','3.3.2','3.3.3','3.3.4','3.3.7','3.3.8','4.1.2','1.4.11','2.5.8','3.2.2']},
+ aside:{n:'Sidebar',p:'Pop-ups, help panels and status messages. Content that appears on its own must not trap or surprise.',c:['1.4.13','2.1.2','4.1.3','3.2.6','2.2.1']},
+ footer:{n:'Footer',p:'Contact, help and legal links. Help has to be in the same place on every page.',c:['3.2.6','2.4.4','1.4.3']}
+};
+const keys=Object.keys(R);let cur='forms',sel=null;
+const ul=$('reg');
+ul.innerHTML=keys.map(k=>`<li><button type="button" data-k="${k}" aria-pressed="false" aria-controls="plate"><i aria-hidden="true"></i>${R[k].n}</button></li>`).join('');
+function spec(num){sel=num;const d=D[num];
+ $('crit').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.n===num));
+ $('spec-k').textContent=`${d.num} · ${PN[d.p]}`;$('spec-lv').textContent=d.level;$('spec-lv').className='lv '+(d.level==='AA'?'aa':'');
+ $('spec-h').textContent=d.name;$('spec-p').textContent=d.plain;$('spec-f').textContent=d.fail;$('spec-ok').textContent=d.pass;
+ $('spec-a').href='#c-'+d.num;$('spec-a').setAttribute('aria-label',`See ${d.num} ${d.name} broken, then fixed`)}
+function show(k,keepSel){cur=k;const d=R[k];const list=d.c.map(n=>D[n]);
+ document.querySelectorAll('.map .r').forEach(p=>p.classList.toggle('on',p.dataset.r===k));
+ ul.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===k));
+ $('plate-k').textContent=`Region ${keys.indexOf(k)+1} of ${keys.length}`;
+ $('plate-h').textContent=d.n;$('plate-p').textContent=d.p;
+ const a=list.filter(x=>x.level==='A').length;
+ $('st-n').textContent=list.length;$('st-a').textContent=a;$('st-aa').textContent=list.length-a;
+ $('lead-t').textContent=list.length+' criteria';
+ $('crit').innerHTML=list.map(c=>`<li><button type="button" data-n="${c.num}" aria-pressed="false" aria-controls="spec"><span class="num">${c.num}</span><span class="n">${esc(c.name)}</span><span class="lv ${c.level==='AA'?'aa':''}"><span class="sr">Level </span>${c.level}</span></button></li>`).join('');
+ spec(keepSel&&d.c.includes(keepSel)?keepSel:d.c[0]);
+ const box=document.querySelector(`.map .r[data-r="${k}"]`).getBBox();const dot=document.querySelector('.map circle');const ln=document.querySelector('.map .lead');
+ const cx=box.x+box.width*.75,cy=box.y+box.height*.6;dot.setAttribute('cx',cx);dot.setAttribute('cy',cy);ln.setAttribute('x1',cx);ln.setAttribute('y1',cy)}
+ul.addEventListener('click',e=>{const b=e.target.closest('button');if(b)show(b.dataset.k)});
+document.querySelectorAll('.map .r').forEach(p=>p.addEventListener('click',()=>show(p.dataset.r)));
+$('crit').addEventListener('click',e=>{const b=e.target.closest('button');if(b)spec(b.dataset.n)});
+show(cur);
+
+/* search */
+const regionOf=n=>keys.find(k=>R[k].c.includes(n));
+function search(){const q=$('q').value.trim().toLowerCase();const box=$('res');
+ if(!q){box.hidden=true;return}
+ const m=ALL.filter(d=>(d.num+' '+d.name+' '+d.plain+' '+d.fail).toLowerCase().includes(q)).slice(0,6);
+ box.hidden=false;$('res-n').textContent=m.length?`${m.length===6?'Top 6':m.length} ${m.length===1?'match':'matches'}`:'No matches. Try a number such as 2.4.';
+ $('res-l').innerHTML=m.map(d=>`<li><a href="#plate" data-n="${d.num}"><span class="num">${d.num}</span><span>${esc(d.name)}</span><span class="lv ${d.level==='AA'?'aa':''}"><span class="sr">Level </span>${d.level}</span></a></li>`).join('')}
+$('q').addEventListener('input',search);
+$('q').closest('form').addEventListener('submit',search);
+$('res-l').addEventListener('click',e=>{const a=e.target.closest('a');if(!a)return;const n=a.dataset.n;const k=regionOf(n);
+ if(k){show(k,n)}else{spec(n)}
+ setTimeout(()=>$('crit').querySelector(`[data-n="${n}"]`)?.focus({preventScroll:true}),0)});
+
+/* routes */
+const RT=[
+ {id:'kb',n:'Keyboard only',d:'Signing up for a newsletter without a mouse.',c:'var(--r1)',hex:'#1F5E7A',dash:'',
+  pts:[[120,70],[150,200],[360,200],[540,420],[600,470],[330,570]],
+  s:[['2.4.1','Skips the header with the first Tab'],['2.4.3','Moves through the menu in reading order'],['2.4.7','Can always see where focus is'],['2.1.1','Fills every field from the keyboard'],['3.3.1','Hears which field went wrong'],['2.1.2','Leaves the sign-up without getting stuck']]},
+ {id:'sr',n:'Screen reader',d:'Listening to an article from top to bottom.',c:'var(--r2)',hex:'#A8402F',dash:'12 8',
+  pts:[[300,70],[460,180],[560,250],[330,440],[150,460],[500,570]],
+  s:[['2.4.2','Hears the page title first'],['3.1.1','Gets the right voice for the language'],['1.3.1','Jumps between headings'],['1.1.1','Hears what each image is for'],['4.1.3','Is told when a status changes'],['3.2.6','Finds help in the usual place']]},
+ {id:'zm',n:'Zoomed to 400%',d:'Reading on a small screen with large text.',c:'var(--r3)',hex:'#3F6A2C',dash:'2 7',
+  pts:[[620,70],[600,170],[400,250],[180,330],[520,470],[200,570]],
+  s:[['1.4.4','Text grows without breaking'],['1.4.10','No sideways scrolling'],['1.4.12','Spacing can be widened'],['2.4.11','Focus stays visible under sticky bars'],['2.5.8','Targets are big enough to hit'],['1.4.13','Pop-ups can be dismissed']]}
+];
+let rc=0;
+$('rt-pick').innerHTML=RT.map((r,i)=>`<li><button type="button" data-i="${i}" aria-pressed="${i===0}" aria-controls="stops"><svg width="54" height="14" aria-hidden="true"><line class="sw" x1="2" y1="7" x2="52" y2="7" stroke="${r.hex}" stroke-width="3.5" stroke-linecap="round" ${r.dash?`stroke-dasharray="${r.dash}"`:''}/></svg><span><b>${r.n}</b><span class="d">${r.d}</span></span></button></li>`).join('');
+const curve=pts=>pts.map((p,i)=>i?`S ${(pts[i-1][0]+p[0])/2+(i%2?40:-40)} ${(pts[i-1][1]+p[1])/2} ${p[0]} ${p[1]}`:`M ${p[0]} ${p[1]}`).join(' ');
+$('rt-g').innerHTML=RT.map((r,i)=>`<path class="path" data-i="${i}" d="${curve(r.pts)}" stroke="${r.hex}" ${r.dash?`stroke-dasharray="${r.dash}"`:''}/>`).join('')+
+ RT.map((r,i)=>r.pts.map((p,j)=>`<g class="stop" data-i="${i}"><circle cx="${p[0]}" cy="${p[1]}" r="14" fill="${r.hex}" stroke="#F4F1EA" stroke-width="3"/><text x="${p[0]}" y="${p[1]+5}" text-anchor="middle">${j+1}</text></g>`).join('')).join('');
+function route(i){rc=i;const r=RT[i];
+ $('rt-pick').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.i===i));
+ document.querySelectorAll('#rt-g [data-i]').forEach(e=>e.classList.toggle('on',+e.dataset.i===i));
+ const top=document.querySelectorAll('#rt-g .stop.on, #rt-g .path.on');top.forEach(e=>e.parentNode.appendChild(e));
+ $('stops').style.setProperty('--rc',r.hex);
+ $('stops').innerHTML=r.s.map(([n,t])=>`<li><div><b>${n} ${esc(D[n].name)}</b><span>${t}</span></div></li>`).join('')}
+$('rt-pick').addEventListener('click',e=>{const b=e.target.closest('button');if(b)route(+b.dataset.i)});
+route(0);
+
+/* key */
+const SYM=['','<span class="sym" style="background:var(--sky)"></span>','<span class="sym" style="background:var(--sun);border-radius:50%"></span>','<svg width="36" height="34"><path d="M18 2 L34 32 H2 Z" fill="#FFB3A9" stroke="#1C1D1F" stroke-width="1.5"/></svg>','<span class="sym" style="background:var(--sage);transform:rotate(45deg) scale(.78)"></span>'];
+const TG=['','If you can’t perceive it, it isn’t there for you.','Every control reachable by whatever you drive it with.','Perceivable and operable can still mean nothing.','Assistive technology relays only what the markup says.'];
+$('key-b').innerHTML=[1,2,3,4].map(i=>{const n=ALL.filter(d=>d.p===i).length;return `<tr><td><span aria-hidden="true">${SYM[i]}</span></td><td class="nm">${PN[i]}</td><td class="tg">${TG[i]}</td><td><div class="bar" aria-hidden="true"><i style="width:${n/ALL.length*100}%"></i></div></td><td class="ct">${n}</td></tr>`}).join('');
+
+/* gazetteer */
+let gl='all';
+const GM=['','background:var(--sky)','background:var(--sun);border-radius:50%','background:var(--rose);border:0;clip-path:polygon(50% 0,100% 100%,0 100%)','background:var(--sage);transform:rotate(45deg) scale(.8)'];
+$('gl').innerHTML=['all','A','AA'].map(l=>`<button type="button" data-l="${l}" aria-pressed="${l==='all'}">${l==='all'?'All':'Level '+l}</button>`).join('');
+function gaz(){const vis=ALL.filter(d=>gl==='all'||d.level===gl);
+ $('cols').innerHTML=[1,2,3,4].map(i=>{const l=vis.filter(d=>d.p===i);return `<div><h3><span class="gm" aria-hidden="true" style="${GM[i]}"></span>${PN[i]}</h3><ul>${l.map(d=>`<li><a href="#c-${d.num}"><span class="num">${d.num}</span><span class="n">${esc(d.name)}</span><span class="lv ${d.level==='AA'?'aa':''}"><span class="sr">Level </span>${d.level}</span></a></li>`).join('')}</ul></div>`}).join('');
+ $('gn').textContent=`Showing ${vis.length} of ${ALL.length} criteria.`}
+$('gl').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;gl=b.dataset.l;$('gl').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));gaz()});
+gaz();
+</script>
+</body>
+</html>

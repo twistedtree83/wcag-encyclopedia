@@ -1,0 +1,21 @@
+/* The fade-text lab's own styles, imported by its lab.ts. Shared lab styles stay in src/styles. */
+
+/* The exhibit is near-black in both themes; its text colour is set inline by the slider. */
+.lab__exhibit {
+  padding: 28px;
+  border-radius: calc(var(--rad) * 0.65);
+  background: var(--exhibit);
+}
+.lab__exhibit h4 {
+  margin: 0 0 10px;
+  font: 700 26px/1.15 var(--fh), sans-serif;
+}
+.lab__exhibit p {
+  margin: 0;
+  font-size: 17px;
+}
+@media (max-width: 900px) {
+  .lab__exhibit {
+    padding: 20px;
+  }
+}

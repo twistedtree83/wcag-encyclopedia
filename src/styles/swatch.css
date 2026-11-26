@@ -1,0 +1,3613 @@
+/*
+ * The Swatch shell, for the pre-rendered pages (ADR 0001).
+ *
+ * Ported from design/mockups/swatch/swatch.css, default style only: no tweak bar and no
+ * data-* switches except data-theme. Colour tokens are not declared here; they come from
+ * src/theme/tokens.ts, injected into the page head, so the contrast audit covers them. This
+ * file holds the non-colour tokens and the components.
+ *
+ * Sections are appended per component (later tickets add theirs at the end, in their own
+ * section), then the breakpoints and reduced motion close the file.
+ */
+
+/* --- Tokens: type, layout, shape, motion ------------------------------------------------ */
+
+:root {
+  --fh: 'Figtree';
+  --fb: 'Onest';
+  --hw: 800;
+  --hw2: 700;
+  --bw: 400;
+  --ts: 1;
+  --h1: 96px;
+  --h1-sub: 84px;
+  --h2: 64px;
+  --h3: 22px;
+  --num: 64px;
+  --lede: 20px;
+  --body: 18px;
+  --small: 15px;
+  --eye: 16px;
+  --lh: 1.6;
+  --hlh: 1;
+  --hls: -0.02em;
+
+  --maxw: 1240px;
+  --gut: 56px;
+  --sp: 100px;
+  --gap: 18px;
+  --pad: 28px;
+  --hero-gap: 32px;
+  --prev-pad: 24px;
+
+  --rad: 28px;
+  --rad-sm: 12px;
+  --rad-btn: 999px;
+  --rad-chip: 999px;
+  --rad-badge: 6px;
+  --bwid: 1.5px;
+
+  --btn-h: 55px;
+  --btn-px: 24px;
+  --btn-w: 500;
+  --nav-gap: 6px;
+  --lift: 4px;
+  --speed: 0.15s;
+  /* State changes in labs and stages (a verdict flip): longer than a hover, eased out. */
+  --speed-state: 0.3s;
+  --ease-out: cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+/* --- Base ------------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--bg);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: var(--bw) calc(var(--body) * var(--ts)) / var(--lh) var(--fb), system-ui, sans-serif;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--fh), sans-serif;
+  margin: 0;
+}
+
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip {
+  position: absolute;
+  left: 16px;
+  top: -80px;
+  z-index: 50;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 10px 18px;
+  border-radius: var(--rad-btn);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-weight: 600;
+  text-decoration: none;
+}
+.skip:focus {
+  top: 12px;
+}
+
+.wrap {
+  max-width: calc(var(--maxw) + var(--gut) * 2);
+  margin: 0 auto;
+  padding: 0 var(--gut);
+}
+
+/* --- Header ----------------------------------------------------------------------------- */
+
+header.top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  padding: 28px 0;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  font: var(--hw2) 20px/1 var(--fh), sans-serif;
+  text-decoration: none;
+}
+.brand i {
+  display: flex;
+  gap: 3px;
+}
+.brand__dot {
+  display: block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+.brand__dot--a1 {
+  background: var(--a1);
+}
+.brand__dot--a2 {
+  background: var(--a2);
+}
+.brand__dot--a3 {
+  background: var(--a3);
+}
+
+header.top nav {
+  margin-left: auto;
+}
+header.top nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--nav-gap);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+header.top nav a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 10px 16px;
+  border-radius: var(--rad-btn);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 1.4;
+}
+header.top nav a:hover {
+  background: var(--raise);
+}
+header.top nav [aria-current] {
+  background: var(--nav-on-bg);
+  color: var(--nav-on-fg);
+}
+header.top nav [aria-current]:hover {
+  background: var(--nav-on-bg);
+}
+
+/* --- Buttons ---------------------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: var(--btn-h);
+  padding: 0 var(--btn-px);
+  border-radius: var(--rad-btn);
+  border: 2px solid transparent;
+  background: none;
+  font-weight: var(--btn-w);
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform var(--speed);
+}
+.btn:hover {
+  transform: translateY(calc(var(--lift) * -1));
+}
+.btn:active {
+  transform: translateY(0);
+}
+.btn.p {
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+}
+.btn.o {
+  border-color: var(--btn2-line);
+  color: var(--ink);
+}
+.btn.sm {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 18px;
+  font-size: var(--small);
+}
+
+/* The theme toggle: a secondary button whose pressed state is drawn as well as announced. */
+.theme-toggle[aria-pressed='true'] {
+  background: var(--chip-on-bg);
+  border-color: var(--chip-on-bg);
+  color: var(--chip-on-fg);
+}
+
+/* --- Type and section heads ------------------------------------------------------------- */
+
+h1 {
+  font-weight: var(--hw);
+  font-size: calc(var(--ts) * max(calc(var(--h1-sub) * 0.52), min(var(--h1-sub), 7.5vw)));
+  line-height: var(--hlh);
+  letter-spacing: calc(var(--hls) - 0.005em);
+  overflow-wrap: break-word;
+}
+
+section.band {
+  padding: var(--sp) 0 0;
+  scroll-margin-top: 12px;
+}
+.bh {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 24px 40px;
+  margin: 0 0 40px;
+}
+.bh h2 {
+  font-weight: var(--hw);
+  font-size: calc(var(--ts) * max(calc(var(--h2) * 0.56), min(var(--h2), 6vw)));
+  letter-spacing: var(--hls);
+  line-height: var(--hlh);
+  margin: 0 0 14px;
+}
+.bh p {
+  color: var(--ink-2);
+  max-width: 56ch;
+  margin: 0;
+}
+
+/* --- Markers and badges ----------------------------------------------------------------- */
+
+.mk {
+  display: inline-block;
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+.mk.p1 {
+  background: var(--a1);
+}
+.mk.p2 {
+  background: var(--a2);
+  border-radius: 50%;
+}
+.mk.p3 {
+  background: var(--a3);
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+.mk.p4 {
+  background: var(--a4);
+  transform: rotate(45deg) scale(0.78);
+  box-shadow: inset 0 0 0 1.5px var(--line-2);
+}
+
+.lv {
+  font: 700 12px/1 var(--fb), sans-serif;
+  letter-spacing: 0.06em;
+  border: var(--bwid) solid var(--ink-2);
+  border-radius: var(--rad-badge);
+  padding: 5px 7px;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.lv.aa {
+  background: var(--badge-bg);
+  border-color: var(--badge-bg);
+  color: var(--badge-fg);
+}
+
+/* --- Criterion page --------------------------------------------------------------------- */
+
+.ch {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+  gap: 56px;
+  align-items: start;
+  padding: 40px 0 0;
+}
+.ch .meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 18px;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.ch .plain {
+  max-width: 54ch;
+  margin: 28px 0 0;
+  font-size: calc((var(--lede) + 1px) * var(--ts));
+  line-height: 1.55;
+}
+
+.ex {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--gap);
+}
+
+.stage {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-height: 260px;
+  margin: 0;
+  padding: calc(var(--pad) + 4px);
+  border-radius: var(--rad);
+  background: var(--deep);
+}
+.stage.bad {
+  box-shadow: inset 0 0 0 2px var(--stage-edge-bad);
+}
+.stage.good {
+  box-shadow: inset 0 0 0 2px var(--stage-edge-good);
+}
+.stage figcaption {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+}
+.stage .lbl {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px 6px 10px;
+  border-radius: var(--rad-chip);
+  color: var(--on-a);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.stage.bad .lbl {
+  background: var(--a3);
+}
+.stage.good .lbl {
+  background: var(--a1);
+}
+.stage q {
+  font: var(--hw2) calc(28px * var(--ts)) / 1.2 var(--fh), sans-serif;
+  quotes: none;
+}
+.stage__example {
+  min-width: 0;
+}
+
+/* --- Footer ----------------------------------------------------------------------------- */
+
+footer.foot {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 32px;
+  margin-top: var(--sp);
+  padding: 44px 0 48px;
+  border-top: var(--bwid) solid var(--line);
+  color: var(--ink-2);
+  font-size: var(--small);
+}
+footer.foot h2 {
+  font: 600 var(--small) var(--fb), sans-serif;
+  color: var(--ink);
+  margin: 0 0 12px;
+}
+footer.foot ul {
+  display: grid;
+  gap: 2px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+footer.foot ul a {
+  display: inline-block;
+  padding: 6px 0;
+  text-decoration: none;
+}
+footer.foot ul a:hover {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+footer.foot .brand {
+  margin: 0 0 14px;
+  color: var(--ink);
+}
+footer.foot p {
+  max-width: 36ch;
+  margin: 0;
+}
+
+/* --- Sub-page head ---------------------------------------------------------------------- */
+
+.ph {
+  padding: 48px 0 0;
+}
+.eyebrow {
+  margin: 0 0 18px;
+  color: var(--ink-2);
+  font-size: var(--eye);
+  font-weight: 500;
+}
+.lede {
+  max-width: 52ch;
+  margin: 28px 0 0;
+  color: var(--ink-2);
+  font-size: calc(var(--lede) * var(--ts));
+}
+.prose {
+  max-width: 64ch;
+  margin: 28px 0 0;
+}
+.prose p {
+  margin: 0 0 16px;
+}
+
+/* --- Pledge panel ----------------------------------------------------------------------- */
+
+.pledge {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 56px;
+  padding: calc(var(--pad) * 2);
+  border-radius: calc(var(--rad) * 1.25);
+  background: var(--pledge-bg);
+  color: var(--pledge-fg);
+}
+.pledge :is(h2, h3) {
+  margin: 0 0 18px;
+  font-weight: var(--hw);
+  font-size: calc(var(--ts) * max(34px, min(calc(var(--h2) * 0.875), 5vw)));
+  line-height: var(--hlh);
+  letter-spacing: var(--hls);
+}
+.pledge > div > p {
+  margin: 0;
+  font-size: 18px;
+}
+.pledge ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.pledge li {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: 14px;
+  padding: 18px 0;
+  border-bottom: var(--bwid) solid rgba(128, 128, 128, 0.35);
+}
+.pledge li:first-child {
+  padding-top: 0;
+}
+.pledge li b {
+  display: block;
+  margin: 0 0 4px;
+  font: var(--hw2) 19px/1.2 var(--fh), sans-serif;
+}
+.pledge li span:not(.mk) {
+  font-size: 16px;
+}
+.pledge .mk {
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+}
+
+/* --- About page: how we test ------------------------------------------------------------ */
+
+.checks {
+  margin: 56px 0 0;
+  scroll-margin-top: 12px;
+}
+.checks h3 {
+  margin: 0 0 14px;
+  font-size: calc(var(--ts) * 34px);
+  font-weight: var(--hw);
+  letter-spacing: var(--hls);
+}
+.checks__intro {
+  max-width: 64ch;
+  margin: 0 0 28px;
+}
+.checks ul {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--gap);
+  list-style: none;
+  margin: 0 0 28px;
+  padding: 0;
+}
+.checks li {
+  padding: var(--pad);
+  border-radius: var(--rad);
+  background: var(--card-bg);
+}
+.checks h4 {
+  margin: 0 0 10px;
+  font-size: calc(var(--h3) * var(--ts));
+  font-weight: var(--hw2);
+}
+.checks li p {
+  margin: 0 0 12px;
+  color: var(--ink-2);
+}
+.checks li p:last-child {
+  margin: 0;
+}
+.checks code {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.92em;
+}
+
+/* --- Criterion page parts: crumbs, facts, cards, pager (R-03) --------------------------- */
+
+.surf {
+  background: var(--card-bg);
+  border: var(--bwid) solid var(--surf-edge);
+}
+
+.trail {
+  padding: 28px 0 0;
+  font-size: var(--small);
+  color: var(--ink-2);
+}
+.trail ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.trail li + li::before {
+  content: '/';
+  margin: 0 10px;
+  color: var(--ink-2);
+}
+.trail a {
+  display: inline-block;
+  padding: 4px 0;
+  text-underline-offset: 4px;
+}
+.trail [aria-current] {
+  display: inline-block;
+  padding: 4px 0;
+  color: var(--ink);
+  font-weight: 400;
+}
+
+.new-tag {
+  padding: 3px 8px;
+  border-radius: var(--rad-chip);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.facts {
+  margin: 0;
+  padding: 26px var(--pad);
+  border-radius: var(--rad);
+}
+.facts div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-top: var(--bwid) solid var(--line);
+}
+.facts div:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+.facts dt {
+  color: var(--ink-2);
+}
+.facts dd {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-weight: 600;
+  text-align: right;
+}
+
+/* The diff at full width on a criterion page: a panel like the stages (restyle only). */
+.band .diff {
+  margin: 0;
+  border-color: var(--line-2);
+  border-radius: var(--rad-sm);
+}
+
+.demos {
+  display: grid;
+  gap: var(--gap);
+}
+.lab-slot + .lab-slot {
+  margin-top: 48px;
+}
+.lab-slot h3 {
+  margin: 0 0 18px;
+  font: var(--hw2) calc(var(--h3) * var(--ts)) / 1.15 var(--fh), sans-serif;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: calc(var(--gap) - 2px);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.grid a {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+  padding: calc(var(--pad) - 4px);
+  border-radius: calc(var(--rad) * 0.8);
+  color: var(--ink);
+  text-decoration: none;
+  transition:
+    transform var(--speed),
+    border-color var(--speed);
+}
+.grid a:hover {
+  transform: translateY(calc(var(--lift) * -1));
+  border-color: var(--line-2);
+}
+.grid .top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink-2);
+  font-size: var(--small);
+  font-weight: 600;
+}
+.grid .top .lv {
+  margin-left: auto;
+}
+.grid h3 {
+  font: var(--hw2) calc(var(--h3) * var(--ts)) / 1.15 var(--fh), sans-serif;
+}
+.grid p {
+  margin: auto 0 0;
+  color: var(--ink-2);
+  font-size: var(--small);
+  line-height: 1.5;
+}
+.grid p b {
+  color: var(--err-text);
+  font-weight: 600;
+}
+
+.pager {
+  margin-top: var(--sp);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--gap);
+}
+.pager a {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 24px var(--pad);
+  border-radius: var(--rad);
+  color: var(--ink);
+  text-decoration: none;
+  transition: transform var(--speed);
+}
+.pager a:hover {
+  transform: translateY(calc(var(--lift) * -1));
+}
+.pager .k {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink-2);
+}
+.pager b {
+  font: var(--hw2) calc(var(--h3) * var(--ts)) / 1.2 var(--fh), sans-serif;
+}
+.pager .nx {
+  align-items: flex-end;
+  text-align: right;
+}
+
+/* --- Fade lab (R-07) --------------------------------------------------------------------- */
+
+.lab {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: calc(var(--pad) + 4px);
+  border: var(--bwid) solid var(--surf-edge);
+  border-radius: var(--rad);
+  background: var(--deep);
+}
+.slide label {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 0 10px;
+  font-weight: 600;
+  font-size: var(--small);
+}
+.slide input {
+  width: 100%;
+  height: 44px;
+  margin: 0;
+  accent-color: var(--btn-bg);
+}
+.labout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  font-weight: 600;
+}
+.labout output {
+  font: var(--hw) calc(var(--num) * 0.75 * var(--ts)) / 1 var(--fh), sans-serif;
+}
+.lab-res {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.lab-res li {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 10px 12px;
+  border: var(--bwid) solid var(--line);
+  border-radius: var(--rad-sm);
+  font-size: 14px;
+}
+.lab-res strong {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font: 700 15px var(--fh), sans-serif;
+}
+.lab-res .ok strong {
+  color: var(--ok-text);
+}
+.lab-res .bad strong {
+  color: var(--err-text);
+}
+
+/* --- Colour check (R-06) ---------------------------------------------------------------- */
+
+.ph h1 em {
+  font-style: normal;
+  color: var(--accent-text);
+}
+.chk {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: calc(var(--pad) + 2px);
+  border: var(--bwid) solid var(--panel-edge);
+  border-radius: var(--rad);
+  background: var(--deep);
+}
+.swap {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+.swap:hover {
+  background: var(--raise);
+}
+.prev {
+  display: grid;
+  gap: 12px;
+  padding: var(--prev-pad);
+  border-radius: calc(var(--rad) * 0.65);
+  /* A faint inner edge, so a white preview still reads as a box on a white card. */
+  box-shadow: inset 0 0 0 1.5px rgba(128, 128, 128, 0.45);
+  transition: filter 0.2s;
+}
+.prev.grey {
+  filter: grayscale(1);
+}
+.prev p {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.5;
+}
+.prev .row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+.prev small {
+  font-size: 14px;
+}
+.score {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 20px 0 14px;
+}
+.score span {
+  font-weight: 600;
+}
+.score output {
+  font: var(--hw) calc(var(--num) * 0.7 * var(--ts)) / 1 var(--fh), sans-serif;
+  white-space: nowrap;
+}
+.fix {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 14px 0 0;
+  padding: 14px 16px;
+  border-radius: var(--rad-sm);
+  background: var(--bg);
+  font-size: var(--small);
+}
+.fix b {
+  font-weight: 600;
+}
+
+/* The wide check on its own page: inputs and results on the left, a large preview right. */
+.wide {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: 0 40px;
+  padding: calc(var(--pad) + 8px);
+}
+.wide > * {
+  grid-column: 1;
+}
+.wide > .prev {
+  grid-column: 2;
+  grid-row: 1 / span 9;
+  align-self: stretch;
+  align-content: center;
+  gap: 18px;
+  padding: calc(var(--prev-pad) + 14px);
+}
+.wide > .prev p {
+  font-size: 20px;
+}
+
+.presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  list-style: none;
+  margin: 28px 0 0;
+  padding: 0;
+}
+.presets button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 16px 0 8px;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-chip);
+  background: transparent;
+  font-weight: 500;
+  font-size: var(--small);
+  cursor: pointer;
+}
+.presets button:hover {
+  background: var(--raise);
+}
+.presets .d {
+  display: inline-flex;
+}
+.presets .d i {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.5);
+}
+.presets .d i + i {
+  margin-left: -8px;
+}
+
+/* Done well, done badly */
+.pairs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gap);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.pairs > li {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: calc(var(--pad) - 6px);
+  border-radius: var(--rad);
+}
+.pairs h3 {
+  font: var(--hw2) calc((var(--h3) - 1px) * var(--ts)) / 1.2 var(--fh), sans-serif;
+}
+.pairs .duo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 10px;
+}
+.tile {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 118px;
+  padding: 16px 14px;
+  border-radius: calc(var(--rad) * 0.5);
+  box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.35);
+}
+.tile .sm {
+  font: 700 19px/1.15 var(--fh), sans-serif;
+  overflow-wrap: anywhere;
+}
+/* The badly tile's sample is drawn here, out of reach of assistive technology. */
+.tile .sm[data-t]::before {
+  content: attr(data-t);
+}
+/* The badge is the same ink-on-white chip on every tile, whatever the tile's colours. */
+.tag {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px 3px 8px;
+  border-radius: var(--rad-chip);
+  background: var(--tag-bg);
+  color: var(--tag-fg);
+  font-size: 13px;
+  font-weight: 600;
+}
+.tag svg {
+  flex: none;
+}
+.pairs p {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--small);
+  line-height: 1.5;
+}
+.pairs .btn {
+  align-self: flex-start;
+  margin-top: auto;
+}
+
+/* What the numbers mean, and what a ratio can't tell you */
+.learn {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gap);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.learn li {
+  padding: var(--pad);
+  border-radius: var(--rad);
+}
+.learn h3 {
+  font: var(--hw2) calc(var(--h3) * 1.2 * var(--ts)) / 1.15 var(--fh), sans-serif;
+  margin: 6px 0 10px;
+}
+.learn .big {
+  margin: 0 0 12px;
+  color: var(--ink);
+  font: var(--hw) calc(var(--num) * 0.8 * var(--ts)) / 1 var(--fh), sans-serif;
+  letter-spacing: var(--hls);
+}
+.learn p {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: 16px;
+}
+.limits {
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  gap: 56px;
+  align-items: start;
+}
+.limits .bh {
+  margin: 0;
+}
+.limits ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.limits li {
+  padding: 20px 0;
+  border-top: var(--bwid) solid var(--line);
+}
+.limits li b {
+  display: block;
+  margin: 0 0 4px;
+  font: var(--hw2) calc(20px * var(--ts)) / 1.2 var(--fh), sans-serif;
+}
+.limits li span {
+  color: var(--ink-2);
+  font-size: 16px;
+}
+
+/* --- All criteria page: split chart, filters, chips, results (R-05) --------------------- */
+
+.ph2 {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: 48px;
+  align-items: end;
+  padding-bottom: 44px;
+}
+.ph2 .lede {
+  margin-top: 20px;
+}
+.split-title {
+  margin: 0 0 14px;
+  color: var(--ink-2);
+  font: 600 var(--small) / 1.3 var(--fb), sans-serif;
+}
+.split {
+  display: grid;
+  gap: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.split li {
+  display: grid;
+  grid-template-columns: 20px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  font-size: 16px;
+}
+.split strong {
+  font-weight: 600;
+}
+.split .b {
+  grid-column: 2 / 4;
+  height: 8px;
+  margin: -4px 0 6px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: var(--line);
+}
+.split .b i {
+  display: block;
+  height: 100%;
+  border-radius: 99px;
+}
+.split .b i.p1 {
+  background: var(--a1);
+}
+.split .b i.p2 {
+  background: var(--a2);
+}
+.split .b i.p3 {
+  background: var(--a3);
+}
+.split .b i.p4 {
+  background: var(--a4);
+  box-shadow: inset 0 0 0 1.5px var(--line-2);
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: start;
+  align-items: end;
+  gap: 20px 28px;
+  margin: 0 0 22px;
+  padding: 24px var(--pad);
+  border: var(--bwid) solid var(--panel-edge);
+  border-radius: var(--rad);
+  background: var(--deep);
+}
+.filters > div:first-child {
+  grid-column: 1 / -1;
+}
+.filters label,
+.filters .gl {
+  display: block;
+  margin: 0 0 8px;
+  font-size: var(--small);
+  font-weight: 600;
+}
+.filters input {
+  width: 100%;
+  max-width: 640px;
+  min-height: 48px;
+  padding: 0 16px;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+  font-size: 17px;
+}
+.filters input::placeholder {
+  color: var(--ink-2);
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chips button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 16px;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-chip);
+  background: transparent;
+  color: var(--ink);
+  font: 500 var(--small) / 1 var(--fb), sans-serif;
+  cursor: pointer;
+}
+.chips button[aria-pressed='true'] {
+  border-color: var(--chip-on-bg);
+  background: var(--chip-on-bg);
+  color: var(--chip-on-fg);
+}
+.index .count {
+  margin: 0 0 18px;
+  color: var(--ink-2);
+  font-size: var(--small);
+}
+.index .empty {
+  margin: 0;
+  padding: 40px;
+  border: var(--bwid) dashed var(--line-2);
+  border-radius: var(--rad);
+  color: var(--ink-2);
+  text-align: center;
+}
+
+/* --- Home (R-08) ----------------------------------------------------------------------- */
+
+.k {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--small);
+  font-weight: 600;
+}
+
+/* Dashed loop lines: decorative, behind the content, gone under 900px. */
+.loop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.loop path {
+  fill: none;
+  stroke: var(--loop);
+  stroke-width: 1.6px;
+  stroke-dasharray: 10px 9px;
+}
+
+.hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  gap: var(--hero-gap);
+  align-items: start;
+  padding: 48px 0 0;
+}
+.hero .txt {
+  position: relative;
+  z-index: 1;
+  padding-top: 24px;
+}
+.hero h1 {
+  max-width: 11ch;
+  font-size: calc(var(--ts) * max(calc(var(--h1) * 0.5), min(var(--h1), 9vw)));
+  line-height: calc(var(--hlh) * 0.98);
+}
+.hero h1 em {
+  font-style: normal;
+  color: var(--accent-text);
+}
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 34px 0 0;
+}
+.mini {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 36px;
+  margin: 56px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.mini b {
+  display: block;
+  font: var(--hw) calc(var(--num) * 0.7 * var(--ts)) / 1 var(--fh), sans-serif;
+}
+.mini span {
+  color: var(--ink-2);
+  font-size: var(--small);
+}
+
+/* Principle cards: one link each, in the principle's colour, marked by its number in ink. */
+.princ {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.princ a {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 40px;
+  height: 100%;
+  min-height: 340px;
+  padding: var(--pad);
+  border-radius: var(--rad);
+  color: var(--on-a);
+  text-decoration: none;
+  transition: transform var(--speed);
+}
+.princ a:hover {
+  transform: translateY(calc(var(--lift) * -1.5));
+}
+.princ a:focus-visible {
+  outline-offset: 4px;
+}
+.princ .p1 {
+  background: var(--a1);
+}
+.princ .p2 {
+  background: var(--a2);
+}
+.princ .p3 {
+  background: var(--a3);
+}
+/* Robust is white in the dark theme: an inner edge keeps the card's outline. */
+.princ .p4 {
+  background: var(--a4);
+  box-shadow: inset 0 0 0 1.5px var(--line);
+}
+.princ .mark {
+  display: block;
+  font: 800 calc(var(--num) * 1.5) / 0.9 var(--fh), sans-serif;
+  letter-spacing: -0.02em;
+}
+.princ h3 {
+  margin: 0 0 12px;
+  font-weight: var(--hw);
+  font-size: calc(var(--h3) * 1.55 * var(--ts));
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+.princ p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+}
+.princ .ct {
+  display: block;
+  margin-top: 16px;
+  font-size: var(--small);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.index .more {
+  display: flex;
+  justify-content: center;
+  margin: 28px 0 0;
+}
+
+/* The lab section: the criterion on the left, the fade lab on the right. */
+.spot {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 40px;
+  align-items: stretch;
+}
+.spot .info h3 {
+  margin: 8px 0 18px;
+  font: var(--hw) calc(var(--num) * 0.7 * var(--ts)) / 1 var(--fh), sans-serif;
+  letter-spacing: -0.015em;
+}
+.spot .info > p:last-child {
+  margin: 0;
+  color: var(--ink-2);
+}
+
+/* Three contrast thresholds. The bars are decorative; the numbers carry the meaning. */
+.thresholds {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.thresholds li {
+  padding: var(--pad);
+  border: var(--bwid) solid var(--line);
+  border-radius: var(--rad);
+}
+.thresholds h3 {
+  margin: 6px 0 10px;
+  font: var(--hw2) calc(var(--h3) * 1.2 * var(--ts)) / 1.15 var(--fh), sans-serif;
+}
+.thresholds .big {
+  margin: 18px 0 12px;
+  color: var(--ink);
+  font: var(--hw) calc(var(--num) * var(--ts)) / 1 var(--fh), sans-serif;
+  letter-spacing: var(--hls);
+}
+.thresholds .bar {
+  height: 10px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: var(--line);
+}
+.thresholds .bar i {
+  display: block;
+  height: 100%;
+  border-radius: 99px;
+}
+.thresholds p:last-child {
+  margin: 14px 0 0;
+  color: var(--ink-2);
+  font-size: 16px;
+}
+
+/* New in 2.2: link cards in rotating sun, sky and rose. */
+.news {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.news a {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-content: start;
+  gap: 6px 18px;
+  height: 100%;
+  padding: calc(var(--pad) - 2px);
+  border-radius: var(--rad);
+  background: var(--a2);
+  color: var(--on-a);
+  text-decoration: none;
+  transition: transform var(--speed);
+}
+.news li:nth-child(3n + 2) a {
+  background: var(--a1);
+}
+.news li:nth-child(3n) a {
+  background: var(--a3);
+}
+.news a:hover {
+  transform: translateY(calc(var(--lift) * -1));
+}
+.news .num {
+  grid-row: span 2;
+  padding-top: 2px;
+  font: 800 30px/1 var(--fh), sans-serif;
+}
+.news h3 {
+  font: var(--hw2) calc(var(--h3) * var(--ts)) / 1.15 var(--fh), sans-serif;
+}
+.news p {
+  margin: 0;
+  font-size: var(--small);
+  line-height: 1.45;
+}
+
+/* --- Lab shell -------------------------------------------------------------------------- */
+
+/* The row under every lab: its one verdict, then Reset. */
+.lab-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 16px;
+}
+.lab-verdict {
+  margin: 0;
+  font: 700 calc(20px * var(--ts)) / 1.2 var(--fh), sans-serif;
+  transition: color var(--speed-state) var(--ease-out);
+}
+.lab-verdict span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.lab-verdict.ok {
+  color: var(--ok-text);
+}
+.lab-verdict.bad {
+  color: var(--err-text);
+}
+/* A flip settles: a small scale back to rest. Transform only; no shake, no bounce. */
+.lab-verdict .settle {
+  animation: lab-settle var(--speed-state) var(--ease-out);
+}
+@keyframes lab-settle {
+  from {
+    transform: scale(0.94);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* --- Announcement log and name-role-value lab ------------------------------------------- */
+
+/* The log: what a screen reader would say, one line per thing it says. Not a live region. */
+.alog__h {
+  margin: 0 0 8px;
+  color: var(--ink-2);
+  font-size: var(--small);
+  font-weight: 600;
+}
+.alog ol {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.alog li,
+.nrv-code code {
+  display: block;
+  padding: 8px 12px;
+  border-left: 3px solid var(--line-2);
+  border-radius: 4px;
+  background: var(--card-bg);
+  color: var(--ink);
+  font: 15px/1.45 ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  overflow-wrap: anywhere;
+}
+.alog li.alog__text {
+  color: var(--ink-2);
+}
+
+/* The 4.1.2 lab: a depicted toggle, three choices, then the markup and the log. */
+.nrv-mock {
+  padding: 24px;
+  border-radius: calc(var(--rad) * 0.65);
+  background: var(--card-bg);
+  color: var(--ink);
+}
+.nrv-controls {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.nrv-choice {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.nrv-choice legend {
+  margin: 0 0 6px;
+  padding: 0;
+  font-weight: 600;
+  font-size: var(--small);
+}
+.nrv-choice label,
+.nrv-on {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 32px;
+  font-size: var(--small);
+}
+.nrv-choice input,
+.nrv-on input {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  accent-color: var(--btn-bg);
+}
+.nrv-on {
+  grid-column: 1 / -1;
+  font-weight: 600;
+}
+.nrv-out {
+  display: grid;
+  gap: 16px;
+}
+
+/* --- Live examples ---------------------------------------------------------------------- */
+
+/* Side by side, the two stages share rows (caption, example, input bar, instruments), so the
+   broken and fixed logs line up row by row. At 900px and below they stack (Breakpoints). */
+.ex--live {
+  grid-template-rows: repeat(4, auto);
+  row-gap: 0;
+}
+.ex--live > .stage {
+  display: grid;
+  grid-row: span 4;
+  grid-template-rows: subgrid;
+  row-gap: 24px;
+}
+.live__frame {
+  position: relative;
+}
+.live__example {
+  padding: 16px;
+  border-radius: calc(var(--rad) * 0.65);
+  background: var(--card-bg);
+  color: var(--ink);
+}
+.live-toggle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  font-size: 17px;
+  font-weight: 600;
+}
+.live-toggle .toggle {
+  transform: scale(1.4);
+  transform-origin: left center;
+  margin-right: 14px;
+}
+.live-toggle input {
+  width: 24px;
+  height: 24px;
+  margin: 0;
+}
+/* The drawn focus ring: where simulated focus is. It moves by transform only. */
+.sim-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  outline: 3px solid transparent;
+  outline-offset: 3px;
+  border-radius: 4px;
+  pointer-events: none;
+  transition:
+    transform var(--speed-state) var(--ease-out),
+    outline-color var(--speed-state) var(--ease-out);
+}
+.sim-ring[data-on='true'] {
+  outline-color: var(--focus);
+}
+.inbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-self: start;
+}
+.alog li.alog__blank {
+  color: var(--ink-2);
+  font-style: italic;
+}
+.alog__empty {
+  margin: 0;
+  color: var(--ink-2);
+}
+
+/* --- Focus tracker and focus ring lab --------------------------------------------------- */
+
+/* The focus tracker: a map of the example's Tab stops, numbered in Tab order, with the ring on
+   the current stop and a dashed trail through where focus has been. Then the same in text. */
+.ftrack__map {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 180px;
+  margin: 0 0 8px;
+  overflow: visible;
+}
+.ftrack__stop {
+  fill: none;
+  stroke: var(--line-2);
+  stroke-width: 1.5;
+}
+.ftrack__path {
+  fill: none;
+  stroke: var(--ink-2);
+  stroke-width: 2;
+  stroke-dasharray: 5 4;
+}
+.ftrack__ring {
+  fill: none;
+  stroke: var(--focus);
+  stroke-width: 3;
+}
+.ftrack__num circle {
+  fill: var(--card-bg);
+  stroke: var(--ink-2);
+  stroke-width: 1.5;
+}
+.ftrack__num.is-on circle {
+  stroke: var(--focus);
+  stroke-width: 3;
+}
+.ftrack__num text {
+  fill: var(--ink);
+  font: 700 12px var(--fh), sans-serif;
+}
+.ftrack__now {
+  margin: 0 0 8px;
+}
+.ftrack__trail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ftrack__trail li {
+  padding: 4px 10px;
+  border-left: 3px solid var(--line-2);
+  border-radius: 4px;
+  background: var(--card-bg);
+  font-size: var(--small);
+}
+.ftrack__trail li[aria-current] {
+  border-left-color: var(--focus);
+  font-weight: 600;
+}
+.ftrack__n {
+  font-weight: 700;
+}
+
+/* 2.4.7's live examples: three fields. The broken row removes the outline and puts nothing back. */
+.fv-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+}
+.fv-row label {
+  display: flex;
+  flex: 1 1 7em;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  font-size: var(--small);
+  font-weight: 600;
+}
+.fv-row input {
+  width: 100%;
+  min-height: 36px;
+  padding: 6px 10px;
+  border: 1px solid var(--line-2);
+  border-radius: 4px;
+  background: var(--deep);
+  color: var(--ink);
+}
+.fv-row--none input:focus,
+.fv-row--none input:focus-visible {
+  outline: none;
+}
+
+/* --- Sequence, input purpose and label in name labs ------------------------------------- */
+
+/* Live examples: the 1.3.2 steps are real buttons; the 1.3.5 fields and 2.5.3 button too. */
+.live-seq {
+  margin: 0;
+}
+.live-seq .seq__step {
+  border-radius: 4px;
+  font: inherit;
+  font-size: 15px;
+  text-align: left;
+  cursor: pointer;
+}
+.live-form,
+.lin-field,
+.ip-field {
+  display: grid;
+  gap: 6px;
+}
+.live-form label,
+.lin-field label,
+.ip-field label {
+  font-size: var(--small);
+  font-weight: 600;
+}
+.live-form input,
+.lin-field input,
+.ip-field input {
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  padding: 0 12px;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px;
+}
+.live-form input + label {
+  margin-top: 8px;
+}
+.live-send .namebox__visual {
+  min-height: 40px;
+  padding: 0 18px;
+  border: 0;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* The three labs: a depicted mock, a row of choices, then the readouts. */
+.seq-mock,
+.ip-mock,
+.lin-mock {
+  padding: 24px;
+  border-radius: calc(var(--rad) * 0.65);
+  background: var(--card-bg);
+  color: var(--ink);
+}
+.lab-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  align-items: start;
+  gap: 16px;
+}
+/* A stage with two instruments (voice control or autofill, then the log). */
+.stage__instruments > .alog + .alog {
+  margin-top: 16px;
+}
+.lin-hint {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--small);
+}
+.lab-out {
+  display: grid;
+  gap: 16px;
+}
+.lab-code {
+  display: grid;
+  gap: 6px;
+}
+.lab-code .alog__h {
+  margin: 0 0 2px;
+}
+.lab-code code {
+  display: block;
+  padding: 8px 12px;
+  border-left: 3px solid var(--line-2);
+  border-radius: 4px;
+  background: var(--card-bg);
+  color: var(--ink);
+  font: 15px/1.45 ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  overflow-wrap: anywhere;
+}
+
+/* --- Alt text and structure labs -------------------------------------------------------- */
+
+/* Shared controls: radio and checkbox groups, and the alt text field. */
+.sem-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 16px;
+}
+.sem-choice {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.sem-choice legend,
+.sem-field label {
+  margin: 0 0 6px;
+  padding: 0;
+  font-weight: 600;
+  font-size: var(--small);
+}
+.sem-choice label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 32px;
+  font-size: var(--small);
+}
+.sem-choice input {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  accent-color: var(--btn-bg);
+}
+.sem-field input,
+.st-field input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px;
+}
+
+/* The 1.1.1 mock: one image on a card. */
+.alt-mock,
+.st-mock {
+  padding: 24px;
+  border-radius: calc(var(--rad) * 0.65);
+  background: var(--card-bg);
+  color: var(--ink);
+}
+.alt-mock__img,
+.live-alts img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--line-2);
+  border-radius: 4px;
+}
+.live-alts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.live-alts img {
+  width: 96px;
+}
+
+/* --- Page title, link purpose and headings labs ----------------------------------------- */
+
+/* Live examples. "Switch tab" draws its cursor on the tab it switched to (`data-sim-on`). */
+.tabs__tab {
+  outline: 3px solid transparent;
+  outline-offset: 2px;
+  transition: outline-color var(--speed-state) var(--ease-out);
+}
+.tabs__tab[data-sim-on] {
+  outline-color: var(--focus);
+}
+.live-links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--small);
+}
+.live-doc {
+  margin-bottom: 0;
+}
+.live-doc h4 {
+  margin: 0;
+  font-weight: 600;
+}
+.live-doc__field {
+  display: grid;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: var(--small);
+  font-weight: 600;
+}
+.live-doc__field input,
+.tlh-doc input {
+  min-width: 0;
+  min-height: 40px;
+  padding: 0 10px;
+  border: 2px solid var(--line-2);
+  border-radius: 6px;
+  background: var(--card-bg);
+}
+
+/* The 2.4.2, 2.4.4 and 2.4.6 labs: a depicted page, the choices, then the list as read. */
+.tlh-mock {
+  display: grid;
+  gap: 12px;
+  padding: 24px;
+  border-radius: calc(var(--rad) * 0.65);
+  background: var(--card-bg);
+  color: var(--ink);
+}
+.tlh-mock p,
+.tlh-mock h4,
+.tlh-mock h5 {
+  margin: 0;
+}
+.tabs__tab--on {
+  border-color: var(--line-2);
+  font-weight: 600;
+}
+.tlh-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: 16px;
+}
+
+/* --- Language and status message labs --------------------------------------------------- */
+
+/* The 3.1.x mocks and live examples: a short page of prose. */
+.lang-page h4,
+.live-page__h {
+  margin: 0 0 8px;
+  font: 700 20px/1.2 var(--fh), sans-serif;
+}
+.lang-page p,
+.live-page p {
+  margin: 0;
+  font-size: 17px;
+}
+/* The 4.1.3 mock and live examples: a product, its button, the basket and the message. */
+.status-shop,
+.live-shop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  font-size: 17px;
+}
+.status-shop p,
+.live-shop p {
+  margin: 0;
+}
+.status-shop__item,
+.live-shop > p:first-child {
+  flex: 1 0 100%;
+  font-weight: 600;
+}
+/* The message's region is in the page from the start, empty, so it is never display: none. */
+.status-shop__msg,
+.live-shop > [role='status'] {
+  flex: 1 0 100%;
+  min-height: 1.45em;
+  font-weight: 600;
+}
+
+/* --- Zoom frame and reflow lab ---------------------------------------------------------- */
+
+/* The zoom frame: a browser window whose content is laid out in the window's own CSS pixels,
+   then scaled (transform only) to fill the frame. The frame clips it, so the page never widens. */
+.zframe {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  background: var(--card-bg);
+}
+.zframe__view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: auto;
+  transform-origin: 0 0;
+  background: var(--card-bg);
+  color: var(--ink);
+  line-height: 1.4;
+}
+.zframe__view:focus-visible {
+  outline-offset: -6px;
+}
+/* 1.4.12's overrides, one class each, as a reader's stylesheet would apply them (TEXT_SPACING). */
+.zframe--line .zframe__view * {
+  line-height: 1.5 !important;
+}
+.zframe--paragraph .zframe__view p {
+  margin-bottom: 2em !important;
+}
+.zframe--letter .zframe__view * {
+  letter-spacing: 0.12em !important;
+}
+.zframe--word .zframe__view * {
+  word-spacing: 0.16em !important;
+}
+.live__example .zframe {
+  max-width: 100%;
+}
+.alog li.zmeter--two {
+  color: var(--err-text);
+  font-weight: 600;
+}
+
+/* --- Form errors and form labels labs --------------------------------------------------- */
+
+/* A small real form: the live examples on 3.3.1 and 3.3.2, and both labs' depicted mocks. */
+.lform {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+}
+.lform__label {
+  font-weight: 600;
+  font-size: var(--small);
+}
+.lform__hint,
+.lform__err,
+.lform__banner {
+  margin: 0;
+  font-size: var(--small);
+}
+.lform__hint {
+  color: var(--ink-2);
+}
+.lform__err {
+  color: var(--err-text);
+  font-weight: 600;
+}
+.lform__banner {
+  justify-self: stretch;
+  padding: 8px 12px;
+  border-left: 3px solid var(--ok-text);
+}
+.lform__banner--bad {
+  border-left-color: var(--err-text);
+}
+.lform__banner a {
+  color: inherit;
+}
+.lform__field {
+  width: 100%;
+  max-width: 320px;
+  min-height: 44px;
+  padding: 0 12px;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+}
+.lform__field::placeholder {
+  color: var(--ink-2);
+}
+/* The error 3.3.1 is about: a red border. Thicker as well as red, so it shows in greyscale. */
+.lform__field--bad {
+  border: 3px solid var(--err-text);
+}
+.lform .btn {
+  margin-top: 8px;
+}
+.flab__mock {
+  padding: 24px;
+  border-radius: calc(var(--rad) * 0.65);
+  background: var(--card-bg);
+  color: var(--ink);
+}
+.flab .lab-controls > .btn {
+  justify-self: start;
+}
+.flab__screen {
+  font-weight: 600;
+}
+
+/* --- Keyboard labs ---------------------------------------------------------------------- */
+
+/* Live examples: a basket, a newsletter panel that loops focus, and a message with a reply box. */
+.kb-basket,
+.sc-mail {
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+}
+.kb-basket .fakebtn,
+.kb-basket .realbtn,
+.trap--live .realbtn {
+  margin: 0;
+  font-size: 15px;
+}
+.kb-field {
+  display: grid;
+  gap: 6px;
+  width: 100%;
+  font-size: var(--small);
+  font-weight: 600;
+}
+.kb-field input {
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  padding: 0 12px;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 400;
+  font-size: 16px;
+}
+.kb-count,
+.sc-state {
+  margin: 0;
+  font-size: var(--small);
+}
+.trap--live {
+  margin: 0;
+  gap: 12px;
+  padding: 16px;
+}
+.trap--live .trap__title {
+  font-size: 15px;
+}
+.trap__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+.trap__close {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 12px;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  background: var(--card-bg);
+  color: var(--ink);
+  font: inherit;
+  font-size: 15px;
+  cursor: pointer;
+}
+.sc-msg {
+  min-height: 40px;
+  padding: 0 14px;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  background: var(--card-bg);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* The key log under the focus tracker. */
+.stage__instruments > .ftrack + .alog {
+  margin-top: 16px;
+}
+
+/* The three labs: a depicted mock with a drawn ring, choices, simulated keys, then readouts. */
+.kb-mock,
+.trap-mock,
+.sc-mock {
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+  padding: 24px;
+  border-radius: calc(var(--rad) * 0.65);
+  background: var(--card-bg);
+  color: var(--ink);
+}
+.kb-mock .fakebtn,
+.kb-mock .realbtn,
+.trap-mock .trap {
+  margin: 0;
+}
+.kb-mock__field,
+.kb-mock__count,
+.sc-mock__label {
+  font-size: var(--small);
+}
+.trap-mock__btn {
+  margin: 0;
+}
+/* Where simulated focus is in a lab mock: drawn, since the mock itself never takes focus. */
+.lab__mock .is-focus {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+.kb-keys {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.kb-last {
+  flex-basis: 100%;
+  font-size: var(--small);
+}
+
+/* --- Gesture pad and target size lab ---------------------------------------------------- */
+
+/* The bar's fingertip: a disc centred where the last "Tap" landed, on both stages. */
+.sim-tap {
+  position: absolute;
+  top: -9px;
+  left: -9px;
+  width: 18px;
+  height: 18px;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  pointer-events: none;
+  transition:
+    transform var(--speed-state) var(--ease-out),
+    border-color var(--speed-state) var(--ease-out);
+}
+.sim-tap[data-on='true'] {
+  border-color: var(--focus);
+}
+
+/* The pad: the example's targets, the aim, the slip, pointer down (dot) and up (ring). */
+.gpad__map {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 120px;
+  margin: 0 0 8px;
+}
+.gpad__target {
+  fill: none;
+  stroke: var(--line-2);
+  stroke-width: 1;
+}
+.gpad__target.is-hit {
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+.gpad__aim line {
+  stroke: var(--ink-2);
+  stroke-width: 1;
+}
+.gpad__aim .gpad__slip,
+.gpad__path {
+  fill: none;
+  stroke: var(--ink-2);
+  stroke-width: 1;
+  stroke-dasharray: 2 2;
+}
+.gpad__down {
+  fill: var(--focus);
+}
+.gpad__up {
+  fill: none;
+  stroke: var(--focus);
+  stroke-width: 1.5;
+}
+.gpad__tilt {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.5;
+}
+.gpad ol {
+  margin: 0;
+  padding-left: 1.25em;
+}
+
+/* 2.5.8's live examples: Like, Retweet, Delete. Fixed pixel sizes, so the tap model holds. */
+.tap-row {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 0.875rem;
+}
+.tap-row--packed {
+  gap: 0;
+}
+.tap-target {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid var(--line-2);
+  border-radius: 3px;
+  background: var(--card-bg);
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1;
+}
+.tap-target--small {
+  width: 16px;
+  height: 16px;
+  font-size: 10px;
+}
+
+/* --- Focus order, bypass and obscured focus labs ---------------------------------------- */
+
+/* Live examples. Links and buttons are at least 24px tall (2.5.8). Anything that covers the
+   page (the 2.4.3 dialog, the 2.4.11 header) sits above the drawn focus ring, z-index 2. */
+.bp-page__head,
+.fd-page__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.bp-page__head a,
+.bp-page__main a,
+.fd-page__list a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 6px;
+  color: var(--ink);
+  font-size: var(--small);
+}
+.bp-page__head a.bp-page__skip {
+  font-weight: 700;
+}
+.bp-page__main {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: var(--bwid) solid var(--line-2);
+}
+.bp-page__main p {
+  margin: 0 0 4px;
+}
+.fd-page {
+  position: relative;
+  min-height: 132px;
+}
+.fd-page__list {
+  margin-top: 12px;
+}
+.fd-dialog {
+  position: absolute;
+  z-index: 2;
+  top: 36px;
+  right: 0;
+  left: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border: var(--bwid) solid var(--ink);
+  border-radius: var(--rad-sm);
+  background: var(--bg);
+}
+.fd-dialog__title {
+  flex-basis: 100%;
+  margin: 0;
+  font-weight: 700;
+}
+.nob-box {
+  position: relative;
+  height: 180px;
+  overflow-y: auto;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  background: var(--card-bg);
+}
+.nob-box--padded {
+  scroll-padding-top: 56px;
+}
+.nob-box__bar {
+  position: sticky;
+  z-index: 2;
+  top: 0;
+  height: 48px;
+  margin: 0 0 16px;
+  padding: 12px;
+  background: var(--ink);
+  color: var(--bg);
+  font-weight: 700;
+}
+.nob-box__field {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 12px 12px;
+  font-size: var(--small);
+  font-weight: 600;
+}
+.nob-box__field input {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 44px;
+  padding: 6px 10px;
+  border: 1px solid var(--line-2);
+  border-radius: 4px;
+  background: var(--deep);
+  color: var(--ink);
+}
+
+/* The 2.4.3 lab: the grid places every part by name, so only the focus numbers move. */
+.fo-mock,
+.bp-mock,
+.nob-mock {
+  padding: 20px;
+  border-radius: calc(var(--rad) * 0.65);
+  background: var(--card-bg);
+  color: var(--ink);
+}
+.bp-count,
+.nob-share {
+  display: block;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* --- On focus and content on hover labs ------------------------------------------------- */
+
+/* The bar's drawn pointer, on either stage of a live example with a Hover key. Its tip sits on
+   the point it is given; it moves by transform only. */
+.sim-cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 6;
+  visibility: hidden;
+  pointer-events: none;
+  transition: transform var(--speed-state) var(--ease-out);
+}
+.sim-cursor[data-on='true'] {
+  visibility: visible;
+}
+.sim-cursor path,
+.tt-cursor path {
+  fill: var(--ink);
+  stroke: var(--card-bg);
+  stroke-width: 1.5;
+}
+.plog__now {
+  margin: 8px 0 0;
+  font-size: var(--small);
+  font-weight: 600;
+}
+.stage__instruments > .clog + .ftrack {
+  margin-top: 16px;
+}
+
+/* 3.2.1: a mock page with its own address bar, so a change of page stays inside the mock. */
+.ctx {
+  display: grid;
+  gap: 12px;
+}
+.ctx__bar {
+  margin: 0;
+  padding: 6px 12px;
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  background: var(--bg);
+  font: 14px/1.4 ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  overflow-wrap: anywhere;
+}
+.ctx__page {
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+}
+.ctx__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.ctx__field {
+  display: grid;
+  gap: 6px;
+  font-size: var(--small);
+  font-weight: 600;
+}
+.ctx select,
+.ctx input {
+  min-width: 0;
+  max-width: 100%;
+  min-height: 40px;
+  padding: 0 10px;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 400;
+}
+.ctx__title {
+  margin: 0;
+  font-weight: 700;
+}
+.ctx__text {
+  margin: 0;
+}
+
+/* 1.4.13: the live tooltips, placed against the sentence so they fit at 320px. The fixed one
+   touches its words, so the pointer can move straight in; the broken one opens a gap below. */
+.live-tip {
+  position: relative;
+  margin: 0;
+  padding-bottom: 136px;
+  line-height: 24px;
+}
+.live-tip__word {
+  display: inline-block;
+  min-height: 24px;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px dotted var(--ink-2);
+  background: none;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  cursor: help;
+}
+.live-tip__tip {
+  position: absolute;
+  left: 0;
+  top: 24px;
+  z-index: 5;
+  width: min(15rem, 100%);
+  padding: 8px 10px;
+  background: var(--card-bg);
+  border: 1px solid var(--line-2);
+  font-size: var(--small);
+  line-height: 1.5;
+  color: var(--ink);
+}
+.live-tip__tip[hidden] {
+  display: none;
+}
+.live-tip__tip--fleeting {
+  top: 48px;
+}
+
+/* The 3.2.1 lab: the mock form, its drawn focus, and the pages it can jump to. */
+.fl-mock,
+.tt-mock {
+  display: grid;
+  gap: 12px;
+  padding: 24px;
+  border-radius: calc(var(--rad) * 0.65);
+  background: var(--card-bg);
+  color: var(--ink);
+}
+
+/* The 1.4.13 lab: the words, the drawn pointer, and where the tooltip opens. */
+.tt-line {
+  position: relative;
+  margin: 0;
+  padding-bottom: 104px;
+}
+.tt-acts {
+  align-items: start;
+}
+.tt-now {
+  display: block;
+  margin-top: 16px;
+}
+
+/* --- Orientation and images of text labs ------------------------------------------------ */
+
+/* A phone held upright is drawn narrow, so a portrait frame is not as tall as a full-width one. */
+.zframe[data-orientation='portrait'] {
+  width: min(100%, 14rem);
+}
+@container (orientation: landscape) {
+  .opage--adapts .opage__body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5em;
+  }
+  .opage--portrait .opage__body {
+    display: none;
+  }
+  .opage--portrait .opage__prompt {
+    display: flex;
+  }
+}
+@container (orientation: portrait) {
+  .opage--landscape .opage__body {
+    display: none;
+  }
+  .opage--landscape .opage__prompt {
+    display: flex;
+  }
+}
+/* The reader's own colours and font (a user stylesheet: dark ink on the sun tint, an audited pair).
+   It reaches text, never a picture's pixels. */
+.reader-colours--on {
+  min-height: 100%;
+}
+.reader-colours--on,
+.reader-colours--on * {
+  background-color: var(--a2) !important;
+  color: var(--on-a) !important;
+  font-family: Verdana, Tahoma, sans-serif !important;
+}
+
+/* --- On input, error suggestion and error prevention labs ------------------------------- */
+
+/* A depicted address bar, so a page change inside an example or mock can be seen. */
+.addrbar {
+  justify-self: stretch;
+  margin: 0;
+  padding: 6px 12px;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  color: var(--ink-2);
+  font: 15px/1.45 ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  overflow-wrap: anywhere;
+}
+/* A radio group inside a small form: a fieldset with its legend set as a field label. */
+.lform__set {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.lform__set legend {
+  margin: 0 0 4px;
+  padding: 0;
+}
+.lform__set label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 32px;
+  font-size: var(--small);
+}
+.lform__set input {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  accent-color: var(--btn-bg);
+}
+/* A row of buttons: a review step's two choices. */
+.pay__btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.lform .pay__btns .btn {
+  margin-top: 0;
+}
+
+/* --- Vision filter ---------------------------------------------------------------------- */
+
+/* The colour-vision SVG filters live in a zero-size svg; not display:none, or they stop drawing. */
+.vis-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+/* The vision filter switches instantly: only opacity, transform and colour animate (design
+   guide §7), so .vis-target carries no transition. */
+.vis-log__now {
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+.vis-log ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* 1.4.1: the sentence is --ink-2, so the depicted link is under 3:1 from it in both themes. */
+.vis-prose {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+.vis-prose a.example-link {
+  color: var(--ex-link);
+}
+
+/* 1.4.11: a real field and checkbox whose edges are the example's border tokens. */
+.vis-fields {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+  font-size: var(--small);
+}
+.vis-fields > label {
+  font-weight: 600;
+}
+.vis-fields .swatch-field {
+  width: 100%;
+  max-width: 320px;
+  color: var(--ink);
+  font: inherit;
+}
+.vis-fields .swatch-field::placeholder {
+  color: var(--ink-2);
+}
+.vis-fields__check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+}
+.vis-check {
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  border-radius: 4px;
+  background: transparent;
+}
+.vis-check:checked {
+  background: var(--ink);
+  box-shadow: inset 0 0 0 4px var(--card-bg);
+}
+
+/* 1.3.3: a checkout step with a red and a green button of near-equal lightness. */
+.vis-step {
+  display: grid;
+  gap: 12px;
+}
+.vis-step__say {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.5;
+}
+.vis-step__panel {
+  display: grid;
+  gap: 2px;
+  max-width: 280px;
+  padding: 10px 14px;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  font-size: var(--small);
+}
+.vis-step__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.vis-btn {
+  min-height: 44px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 4px;
+  color: var(--ex-on-button);
+  font: inherit;
+  font-weight: 600;
+}
+.vis-btn--go {
+  border-radius: 999px;
+  background: var(--ex-go);
+}
+.vis-btn--stop {
+  background: var(--ex-stop);
+}
+
+/* --- Mock site -------------------------------------------------------------------------- */
+
+/* A miniature site drawn in a live example or a lab: address bar, menu, search, page, footer. */
+.msite__window {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.msite__bar {
+  margin: 0;
+  padding: 6px 12px;
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  background: var(--bg);
+  font: 14px/1.4 ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  overflow-wrap: anywhere;
+}
+.msite__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 8px 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line-2);
+}
+.msite__menu,
+.msite__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--small);
+}
+.msite__links {
+  flex-direction: column;
+}
+/* Links are 24px tall at least (2.5.8). */
+.msite__menu a,
+.msite__links a,
+.msite__foot a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+}
+.msite__menu a {
+  font-weight: 600;
+}
+.msite__search {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 8px;
+  min-width: 0;
+}
+.msite__search label {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  font-size: var(--small);
+  font-weight: 600;
+}
+.msite__search input {
+  min-width: 0;
+  max-width: 100%;
+  min-height: 40px;
+  padding: 0 10px;
+  border: var(--bwid) solid var(--line-2);
+  border-radius: var(--rad-sm);
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+}
+.msite__page {
+  display: grid;
+  gap: 6px;
+}
+.msite__title {
+  margin: 0;
+  font-weight: 700;
+}
+.msite__text,
+.msite__foot {
+  margin: 0;
+  font-size: var(--small);
+}
+/* In a lab: the depicted site sits on a card, as the other lab mocks do. */
+.msite--lab {
+  padding: 24px;
+  border-radius: calc(var(--rad) * 0.65);
+  background: var(--card-bg);
+  color: var(--ink);
+}
+.msite-log__now,
+.msite-log__ways {
+  margin: 0 0 8px;
+}
+.msite-log__now {
+  font-weight: 600;
+}
+
+/* --- Mock site: search name and help link ----------------------------------------------- */
+
+/* The help link, wherever the site puts it: after the menu, at the end of the page, the footer. */
+.msite__help {
+  margin: 0;
+  font-size: var(--small);
+}
+/* 24px tall at least (2.5.8). */
+.msite__help a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  font-weight: 600;
+}
+
+/* --- Clock and session timeout lab ------------------------------------------------------ */
+
+/* The 2.2.1 live examples: a one-field application, its warning, or its end. */
+.sess {
+  display: grid;
+  gap: 12px;
+}
+.sess .notice {
+  margin: 0;
+}
+/* The clock instrument: the mock time, then each change the example made on it. */
+.clock-log__now {
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+.stage__instruments > .clock-log + .alog {
+  margin-top: 16px;
+}
+/* The 2.2.1 lab: Sam's screen, the choices, the clock's buttons, then what happened to Sam. */
+.sess-mock {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+  max-width: 420px;
+  padding: 24px;
+  border-radius: calc(var(--rad) * 0.65);
+  background: var(--card-bg);
+  color: var(--ink);
+}
+.sess-mock .notice {
+  justify-self: stretch;
+  margin: 0;
+}
+.sess-mock__offer {
+  margin: 0;
+  font-size: var(--small);
+  font-weight: 600;
+}
+.sess-clock {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.sess-clock__now {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.sess-beats {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sess-beats li {
+  padding: 6px 12px;
+  border-left: 3px solid var(--line-2);
+  color: var(--ink);
+}
+.sess-beats li.bad {
+  border-left-color: var(--err-text);
+  color: var(--err-text);
+  font-weight: 600;
+}
+.sess-beats li.ok {
+  border-left-color: var(--ok-text);
+  color: var(--ok-text);
+  font-weight: 600;
+}
+.sess-beats__at {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+/* --- Redundant entry and accessible authentication labs --------------------------------- */
+
+/* The step a checkout is on, in the live examples and the 3.3.7 lab's mock. */
+.lform__step {
+  margin: 0;
+  font-weight: 600;
+}
+/* 3.3.7's fixed example: the delivery address offered back as a ticked box, 24px or more. */
+.lform__check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  font-size: var(--small);
+}
+.lform__check input {
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  accent-color: var(--ink);
+}
+/* 3.3.8's picture puzzle: letters set at angles, the cognitive test the criterion is about. */
+.lform__puzzle {
+  display: inline-flex;
+  gap: 6px;
+  padding: 8px 14px;
+  border: var(--bwid) dashed var(--line-2);
+  border-radius: var(--rad-sm);
+  color: var(--ink);
+  font: italic 700 22px/1 var(--fh), sans-serif;
+}
+.lform__puzzle > span:nth-child(odd) {
+  transform: rotate(-14deg) translateY(2px);
+}
+.lform__puzzle > span:nth-child(even) {
+  transform: rotate(11deg) translateY(-3px);
+}
+.lform__puzzle > span {
+  display: inline-block;
+}
+/* The 3.3.7 and 3.3.8 mocks' drawn fields: a field's colours, on the mock's card. */
+.flab__mock .swatch-field {
+  width: 100%;
+  max-width: 320px;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+/* --- Timing, audio and flashing labs ---------------------------------------------------- */
+
+/*
+ * Nothing in this block animates, and nothing in it may ever flash (2.3.1): the film strip is
+ * still, and the meters' bars change only when the reader moves a clock or a choice.
+ */
+
+/* The live examples: a carousel, a track or a banner, then a link to Tab to. */
+.tcar {
+  display: grid;
+  justify-items: start;
+  gap: 10px;
+}
+.tcar__link {
+  display: inline-block;
+  min-height: 24px;
+  color: var(--ink);
+  font-weight: 600;
+}
+.tim-track,
+.tbanner {
+  margin: 0;
+  font-weight: 600;
+}
+.tim-note {
+  margin: 0;
+  font-size: var(--small);
+  color: var(--ink-2);
+}
+
+/* --- Pointer labs ----------------------------------------------------------------------- */
+
+/* Live examples. Every button is at least 32px, so the bar's 10px slip stays on it (2.5.8). */
+.live-map,
+.live-press,
+.live-shake {
+  display: grid;
+  gap: 10px;
+}
+.live-map button,
+.live-press__btn,
+.live-shake button,
+.sortl button {
+  min-width: 32px;
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--line-2);
+  border-radius: 3px;
+  background: var(--card-bg);
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+.hmap {
+  position: relative;
+  height: 96px;
+  overflow: hidden;
+  border: 1px solid var(--line-2);
+  border-radius: 3px;
+  background: var(--deep);
+  touch-action: none;
+}
+.hmap__land {
+  position: absolute;
+  inset: 24px 30% 18px 18%;
+  border: 1.5px solid var(--ink-2);
+  border-radius: 40% 55% 35% 50%;
+  transition: transform var(--speed-state) var(--ease-out);
+}
+.hmap__pin {
+  position: absolute;
+  top: calc(50% - 4px);
+  left: calc(50% - 4px);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+.hmap__zoom {
+  display: flex;
+  gap: 8px;
+}
+.live-map .hmap__zoom button {
+  padding: 0;
+  font-size: 18px;
+  line-height: 1;
+}
+.live-press__draft,
+.live-shake__msg {
+  margin: 0;
+}
+.live-press__btn {
+  justify-self: start;
+  font-weight: 600;
+}
+.live-shake__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.live-shake button[aria-checked='true'] {
+  border-color: var(--ink);
+  font-weight: 600;
+}
+.sortl {
+  display: grid;
+  gap: 4px;
+  margin: 0 0 0.875rem;
+  padding: 0;
+  list-style: none;
+}
+.sortl__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 8px;
+  border: 1px solid var(--line-2);
+  border-radius: 3px;
+  background: var(--card-bg);
+}
+.sortl__handle {
+  padding: 4px;
+  color: var(--ink-2);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.sortl__name {
+  flex: 1;
+}
+.sortl__moves {
+  display: flex;
+  gap: 4px;
+}
+.sortl .sortl__moves button {
+  padding: 0;
+}
+
+/* --- Mock player ------------------------------------------------------------------------ */
+
+/* The stand-in for a video (#65): a screen that says its picture in words, the caption, and a
+   transport row. No media element; the picture steps with the clip, nothing animates. */
+.mplayer {
+  display: block;
+  margin: 0 0 0.875rem;
+  border: 1px solid var(--line-2);
+  background: var(--deep);
+}
+.mplayer__screen {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  aspect-ratio: 16 / 9;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--line-2);
+}
+.mplayer--lab {
+  margin: 0;
+}
+.mplayer--lab .mplayer__screen {
+  border-bottom: 0;
+}
+.mplayer__badge {
+  padding: 0.125rem 0.375rem;
+  border: 1px solid var(--line-2);
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.mplayer__picture {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-style: italic;
+  color: var(--ink-2);
+}
+.mplayer__cc {
+  align-self: center;
+  margin: auto 0 0;
+  padding: 0.25rem 0.5rem;
+  background: var(--ink);
+  color: var(--card-bg);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  text-align: center;
+}
+.mplayer__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.5rem;
+}
+.mplayer__scrub {
+  flex: 1 1 8rem;
+  min-width: 0;
+  min-height: 24px;
+  accent-color: var(--ink);
+}
+.mplayer__time {
+  font-variant-numeric: tabular-nums;
+  font-size: var(--small);
+  color: var(--ink);
+}
+.mplayer-out {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+  margin: 0;
+}
+.mplayer-out dt {
+  font-size: var(--small);
+  font-weight: 600;
+}
+.mplayer-out dd {
+  margin: 4px 0 0;
+}
+.mplog__now {
+  margin: 0 0 6px;
+  font-size: var(--small);
+}
+
+/* --- Media alternatives labs ------------------------------------------------------------ */
+
+/* Description cues (#66) sit on the screen, above any caption: the site is silent, so the
+   description track is drawn rather than heard. Transcripts are plain lists under the player. */
+.mplayer__ad {
+  margin: 0;
+  padding: 0.25rem 0.5rem;
+  border-left: 3px solid var(--ink);
+  background: var(--card-bg);
+  color: var(--ink);
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+.mplayer__ad-k {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.transcript__lines {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0;
+  padding-left: 1.25rem;
+}
+.mplayer-out--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* --- Lab steps ------------------------------------------------------------------------- */
+
+/* "How to use this lab", the lab shell's ordered list above each lab on a criterion page. */
+.lab-steps {
+  margin: 0 0 18px;
+  padding: 16px 18px;
+  border: var(--bwid) solid var(--line);
+  border-radius: var(--rad-sm);
+  font-size: 15px;
+  line-height: 1.55;
+}
+.lab-steps h4 {
+  margin: 0 0 8px;
+  font: 700 16px/1.3 var(--fh), sans-serif;
+}
+.lab-steps ol {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 22px;
+}
+.lab .lab-steps {
+  margin: 0;
+}
+
+/* --- Ratio explained ------------------------------------------------------------------- */
+
+/* What a contrast ratio means, under the ratio in every contrast lab (RatioExplained.tsx). The
+   scale's marks and pointer are placed by inline `left` and never transition. */
+.ratio-x {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0 0 16px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.ratio-x p {
+  margin: 0;
+}
+.ratio-scale__bar {
+  position: relative;
+  height: 64px;
+  margin: 0 18px;
+}
+.ratio-scale__track {
+  position: absolute;
+  top: 26px;
+  right: 0;
+  left: 0;
+  height: 8px;
+  border: 1.5px solid var(--ink-2);
+  border-radius: 99px;
+}
+.ratio-scale__mark {
+  position: absolute;
+  top: 22px;
+  width: 2px;
+  height: 16px;
+  margin-left: -1px;
+  background: var(--ink-2);
+}
+.ratio-scale__mark span,
+.ratio-scale__end {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--ink-2);
+  font-size: 13px;
+  white-space: nowrap;
+}
+.ratio-scale__end {
+  top: 40px;
+}
+.ratio-scale__end--min {
+  left: 0;
+}
+.ratio-scale__end--max {
+  left: 100%;
+}
+/* The ratio on screen: a heavy pointer in ink with its number above, a shape as well as a colour. */
+.ratio-scale__now {
+  position: absolute;
+  top: 18px;
+  width: 4px;
+  height: 24px;
+  margin-left: -2px;
+  border-radius: 2px;
+  background: var(--ink);
+}
+.ratio-scale__now span {
+  position: absolute;
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  font: 800 14px/1 var(--fh), sans-serif;
+  white-space: nowrap;
+}
+.ratio-why summary {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.ratio-why ul {
+  display: grid;
+  gap: 6px;
+  margin: 4px 0 0;
+  padding-left: 20px;
+}
+
+/* --- Breakpoints ------------------------------------------------------------------------ */
+
+@media (max-width: 1100px) {
+  .ch {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .pairs,
+  .news,
+  .princ {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .hero,
+  .spot {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .learn,
+  .limits {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .limits {
+    gap: 24px;
+  }
+  .wide {
+    display: block;
+  }
+  .wide > .prev {
+    margin: 4px 0 0;
+    padding: var(--prev-pad);
+  }
+}
+
+@media (max-width: 900px) {
+  .pager {
+    margin-top: calc(var(--sp) * 0.72);
+  }
+  .wrap {
+    padding: 0 20px;
+  }
+  header.top {
+    gap: 12px;
+  }
+  /* Phones: the links wrap under the logo; the toggle stays beside it. */
+  header.top nav {
+    order: 3;
+    flex-basis: 100%;
+    margin-left: 0;
+  }
+  header.top .theme-toggle {
+    margin-left: auto;
+  }
+  header.top nav a {
+    padding: 10px 12px;
+  }
+  section.band {
+    padding-top: calc(var(--sp) * 0.72);
+  }
+  .ex {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ex--live {
+    grid-template-rows: none;
+    row-gap: var(--gap);
+  }
+  .ex--live > .stage {
+    display: flex;
+    grid-row: auto;
+  }
+  .grid,
+  .pager,
+  .ph2,
+  .filters {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ph2 {
+    gap: 28px;
+  }
+  .filters {
+    padding: 20px;
+  }
+  .stage {
+    padding: 24px;
+    min-height: 200px;
+  }
+  .pledge {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+    padding: var(--pad) 22px;
+  }
+  .checks ul {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .checks li {
+    padding: 22px;
+  }
+  .lab {
+    padding: 20px;
+  }
+  .lab-res,
+  .nrv-controls {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .mplayer-out {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pairs,
+  .princ,
+  .thresholds,
+  .news {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .princ a {
+    min-height: calc(340px * 0.68);
+  }
+  .mini {
+    gap: 20px;
+    margin-top: 40px;
+  }
+  .loop {
+    display: none;
+  }
+  .chk,
+  .wide {
+    padding: 20px;
+  }
+  .swap {
+    justify-self: start;
+  }
+  .wide > .prev p {
+    font-size: 17px;
+  }
+  footer.foot {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  footer.foot > div:first-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Reduced motion stops everything that moves: transitions, animations, smooth scrolling. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+/* So does switching motion off (design guide §7). */
+:root[data-motion='off'] *,
+:root[data-motion='off'] *::before,
+:root[data-motion='off'] *::after {
+  transition: none !important;
+  animation: none !important;
+  scroll-behavior: auto !important;
+}
+:root[data-motion='off'] {
+  --lift: 0px;
+  scroll-behavior: auto;
+}

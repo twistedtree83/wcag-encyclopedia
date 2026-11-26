@@ -1,0 +1,47 @@
+/* The target-size lab's own styles, imported by its lab.ts. Shared lab styles stay in src/styles. */
+
+/* The 2.5.8 lab: the row drawn at twice size, with each target's 24px circle or square. */
+.ts-mock {
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+  border: 1px solid var(--line-2);
+  border-radius: calc(var(--rad) * 0.65);
+  background: var(--deep);
+}
+.ts-mock svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+.ts-target {
+  fill: var(--card-bg);
+  stroke: var(--ink-2);
+  stroke-width: 0.75;
+}
+.ts-glyph {
+  fill: var(--ink);
+  font-size: 8px;
+}
+.ts-guide,
+.ts-circle {
+  fill: none;
+  stroke: var(--ok-text);
+  stroke-width: 0.75;
+  stroke-dasharray: 2 1.5;
+}
+.ts-circle.is-clash {
+  stroke: var(--err-text);
+  stroke-dasharray: none;
+}
+.ts-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 24px;
+}
+
+@media (max-width: 900px) {
+  .ts-controls {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

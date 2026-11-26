@@ -6,21 +6,89 @@
  * problems no assistive technology actually had.
  */
 
-import type { CriterionRecord } from './types';
+import { useState } from 'react';
+import type { CriterionRecord, LiveExample } from './types';
+
+/*
+ * 4.1.2's live examples (#43), the pilot. The broken toggle is the diff's "before": two divs and
+ * a click handler, focusable but with no name, role or state. The fixed one is the diff's "after".
+ */
+
+function BrokenToggle() {
+  const [on, setOn] = useState(true);
+  return (
+    <div className="live-toggle">
+      <div className={on ? 'toggle toggle--on' : 'toggle'} tabIndex={0} onClick={() => setOn(!on)}>
+        <span className="toggle__knob" />
+      </div>
+      <div>Email notifications</div>
+    </div>
+  );
+}
+
+function FixedToggle() {
+  const [on, setOn] = useState(true);
+  return (
+    <label className="live-toggle">
+      <input type="checkbox" role="switch" checked={on} onChange={(e) => setOn(e.target.checked)} />
+      Email notifications
+    </label>
+  );
+}
+
+const TOGGLE_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'space', 'read'];
+
+/*
+ * 4.1.3's live examples (#51): Add to basket updates the count. The broken basket changes only
+ * the count, which no screen reader says; the fixed one also puts a message in a status region
+ * that was in the page from the start, so it is announced while focus stays on the button.
+ */
+
+function SilentBasket() {
+  const [count, setCount] = useState(3);
+  return (
+    <div className="live-shop">
+      <p>Wireless headphones</p>
+      <button type="button" className="btn o sm" onClick={() => setCount(count + 1)}>
+        Add to basket
+      </button>
+      <p>Basket ({count})</p>
+    </div>
+  );
+}
+
+function AnnouncedBasket() {
+  const [count, setCount] = useState(3);
+  return (
+    <div className="live-shop">
+      <p>Wireless headphones</p>
+      <button type="button" className="btn o sm" onClick={() => setCount(count + 1)}>
+        Add to basket
+      </button>
+      <p>Basket ({count})</p>
+      <p role="status">{count > 3 ? `Added. ${count} items in basket.` : ''}</p>
+    </div>
+  );
+}
+
+const BASKET_KEYS: LiveExample['keys'] = ['tab', 'enter', 'read'];
 
 export const G4_1: readonly CriterionRecord[] = [
   {
     num: '4.1.2',
     name: 'Name, Role, Value',
     level: 'A',
+    since: '2.0',
     guideline: '4.1',
     demos: ['name-4-1-2'],
+    labs: ['name-role-value'],
     plain:
       'Every control has to expose three things programmatically: what it is called, what kind ' +
       'of thing it is, and what state it is in — and it has to update as that state changes. ' +
       'This is the criterion that custom components fail.',
     fail: {
       caption: 'A custom toggle that exposes nothing.',
+      live: { Example: BrokenToggle, keys: TOGGLE_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="a11ytree">
@@ -42,6 +110,7 @@ export const G4_1: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'Name, role, and state, all present and live.',
+      live: { Example: FixedToggle, keys: TOGGLE_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="a11ytree">
@@ -67,7 +136,7 @@ export const G4_1: readonly CriterionRecord[] = [
     diff: {
       title: 'settings.html',
       lines: [
-        { kind: 'del', text: '<div class="toggle" onclick="toggle()"></div>' },
+        { kind: 'del', text: '<div class="toggle" tabindex="0" onclick="toggle()"></div>' },
         { kind: 'del', text: '<div class="toggle-text">Email notifications</div>' },
         { kind: 'add', text: '<label>' },
         { kind: 'add', text: '  <input type="checkbox" role="switch" checked>' },
@@ -84,14 +153,17 @@ export const G4_1: readonly CriterionRecord[] = [
     num: '4.1.3',
     name: 'Status Messages',
     level: 'AA',
+    since: '2.1',
     guideline: '4.1',
     demos: ['live-4-1-3'],
+    labs: ['status-message'],
     plain:
       'When something important changes without moving focus — a result count, a saved ' +
       'confirmation, an error appearing — it has to be announced. Moving focus to it would be a ' +
       'change of context; this is how you tell people without interrupting them.',
     fail: {
       caption: 'The basket updates silently.',
+      live: { Example: SilentBasket, keys: BASKET_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="a11ytree">
@@ -108,6 +180,7 @@ export const G4_1: readonly CriterionRecord[] = [
     },
     pass: {
       caption: 'A live region announces it, without stealing focus.',
+      live: { Example: AnnouncedBasket, keys: BASKET_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
           <div className="a11ytree">

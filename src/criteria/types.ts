@@ -6,15 +6,86 @@
  * `criterion`, `restatement`, `example`, `caption`, `diff`, `demo`.
  */
 
-import type { ReactNode } from 'react';
+import type { ComponentType, ReactNode } from 'react';
+import type { InstrumentId } from '../live/instruments';
 
 export type Level = 'A' | 'AA' | 'AAA';
+
+/** The WCAG version that introduced a criterion. */
+export type Since = '2.0' | '2.1' | '2.2';
 
 /** A rendered piece of interface, plus the one line naming what is wrong or what changed. */
 export type Example = {
   /** Real interface, not a description of one. */
   readonly render: () => ReactNode;
   readonly caption: string;
+  /**
+   * A live version the reader can operate (#43, CONTEXT.md "Live example"). The page pre-renders
+   * `render` as always and swaps this in after hydration. Give both `fail` and `pass` one, or
+   * neither; the caption must be true of both versions.
+   */
+  readonly live?: LiveExample;
+};
+
+/** A button on a live example's input bar. Add a key on its own line, with its handler in `LiveStage`. */
+export type SimKey =
+  | 'tab'
+  | 'shift-tab'
+  | 'enter'
+  | 'space'
+  | 'read'
+  | 'autofill'
+  | 'voice'
+  | 'hover'
+  | 'escape'
+  | 'dictate'
+  | 'switch-tab'
+  | 'links'
+  | 'headings'
+  | 'zoom'
+  | 'text-size'
+  | 'spacing'
+  | 'rotate'
+  | 'restyle'
+  | 'tap'
+  | 'pinch'
+  | 'slide-off'
+  | 'drag'
+  | 'shake'
+  | 'vision'
+  | 'wait'
+  | 'run';
+
+export type LiveExample = {
+  /**
+   * The interface itself. On the fail stage it is rendered inert and hidden from assistive
+   * technology and operated only by simulated input (ADR 0002); on the pass stage it is real.
+   * It may keep its own state (a toggle that toggles). Ids from `useId`.
+   */
+  readonly Example: ComponentType;
+  /** The input bar's buttons, in order. The same on both stages. */
+  readonly keys: readonly SimKey[];
+  /** Ids of the instruments under the stage (`src/live/instruments.tsx`), in order. */
+  readonly instruments: readonly InstrumentId[];
+  /**
+   * Fail stage only: draw no ring where simulated focus is. The stage still moves focus and
+   * feeds the instruments. For a failure that is the missing ring itself (2.4.7, #44), so the
+   * example shows nothing and only the focus tracker knows where focus went.
+   */
+  readonly hideRing?: boolean;
+  /**
+   * Draw the example in a zoom frame (#53) with this window at 100%, and let the bar's "Zoom in"
+   * key step it through 100%, 200% and 400%. The `zoom-meter` instrument shows what scrolls.
+   * "Enlarge text" and "Toggle text spacing" change the text in it instead (#54), and the
+   * `text-fit` instrument shows whether any box cuts its text off.
+   */
+  readonly zoomFrame?: { readonly width: number; readonly height: number };
+  /**
+   * The stage's mock clock (#61), for the bar's "Wait 20 seconds" and "Run the clock": where it
+   * stops, in mock seconds. The example reads the time with `useClockNow()` (`src/live/clock.ts`)
+   * and names what it shows in a `data-timer` attribute, for the `clock` instrument.
+   */
+  readonly clock?: { readonly end: number };
 };
 
 export type DiffLine = {
@@ -40,6 +111,11 @@ export type CriterionRecord = {
   readonly level: Level;
   /** Dotted pair, e.g. '1.4'. Must be `num` minus its last segment. */
   readonly guideline: string;
+  /**
+   * The WCAG version that introduced this criterion. Drives the facts card's "In WCAG since"
+   * and the "new in 2.2" filter. Exactly six records are '2.2'.
+   */
+  readonly since: Since;
   /** Plain English. Original prose — never W3C normative text. */
   readonly plain: string;
   readonly fail: Example;
@@ -51,6 +127,12 @@ export type CriterionRecord = {
    * lesson and neither half teaches it alone.
    */
   readonly demos?: readonly string[];
+  /**
+   * Ids of the labs (see `src/labs/registry.ts`) the reader can try on this criterion's page,
+   * in reading order. A list, like `demos`, because 1.4.3 carries two. Omit rather than leave
+   * empty. Labs add to `fail` and `pass`; they never replace them.
+   */
+  readonly labs?: readonly string[];
 };
 
 export type Guideline = {
@@ -62,7 +144,6 @@ export type Guideline = {
 export type Principle = {
   readonly num: 1 | 2 | 3 | 4;
   readonly name: string;
-  /** The one-sentence definition shown on the chapter opener. */
+  /** The one-line idea shown on the principle's card on Home. */
   readonly tagline: string;
-  readonly blurb: string;
 };

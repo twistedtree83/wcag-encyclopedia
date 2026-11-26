@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Colour that holds up — WCAG Encyclopedia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gabarito:wght@500;700;800&family=Golos+Text:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#2A2B2D;--deep:#1A1C1C;--sky:#9CCADE;--sun:#F8D17D;--rose:#FFB3A9;--white:#FFFFFF;--ink:#F3F3F0;--ink-2:#C3C3BE;--line:#4A4B4F}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{margin:0;color:var(--ink);font:400 18px/1.6 "Golos Text",system-ui,sans-serif}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--sun);outline-offset:3px;border-radius:4px}
+.skip{position:absolute;left:16px;top:-60px;background:var(--sun);color:var(--deep);padding:10px 14px;border-radius:8px;z-index:9;font-weight:600}
+.skip:focus{top:12px}
+.wrap{max-width:1280px;margin:0 auto;padding:0 56px}
+h1,h2,h3{font-family:"Gabarito",sans-serif;margin:0}
+header.top{display:flex;align-items:center;justify-content:space-between;padding:28px 0}
+.brand{display:flex;align-items:center;gap:12px;font:700 20px/1 "Gabarito";text-decoration:none}
+.brand i{display:flex;gap:3px}.brand b{width:12px;height:12px;border-radius:50%;display:block}
+nav ul{display:flex;gap:6px;list-style:none;margin:0;padding:0}
+nav a{display:block;padding:10px 16px;border-radius:999px;text-decoration:none;font-weight:500}
+nav a:hover{background:#3A3B3E}
+nav [aria-current]{background:var(--ink);color:var(--deep)}
+/* hero */
+.hero{position:relative;padding:56px 0 40px}
+.eyebrow{font-size:16px;color:var(--ink-2);margin:0 0 18px;font-weight:500}
+h1{font-weight:800;font-size:clamp(48px,7vw,104px);line-height:.98;letter-spacing:-.025em;max-width:11ch}
+h1 em{font-style:normal;color:var(--sky)}
+.lede{max-width:52ch;color:var(--ink-2);margin:28px 0 0;font-size:20px}
+.loop{position:absolute;inset:0;pointer-events:none;z-index:0}
+.loop path{fill:none;stroke:#8E8F93;stroke-width:1.6;stroke-dasharray:10 9}
+.set{position:relative;z-index:1}
+.set h2{font:500 22px/1.2 "Golos Text";color:var(--ink);margin:0 0 30px}
+.swatches{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;list-style:none;margin:0;padding:0}
+.swatches li{display:flex;flex-direction:column;align-items:center;text-align:center}
+.dot{width:min(190px,100%);aspect-ratio:1;border-radius:50%;margin:0 0 22px}
+.dot.d{background:var(--deep);box-shadow:inset 0 0 0 1.5px #55565A}
+.hex{font:700 32px/1 "Gabarito";letter-spacing:.01em}
+.use{font-size:16px;color:var(--ink-2);margin:10px 0 12px}
+.ratio{display:inline-flex;gap:8px;align-items:center;border:1.5px solid var(--line);border-radius:999px;padding:6px 12px;font-size:15px;font-weight:600}
+.ratio b{background:var(--ink);color:var(--deep);border-radius:999px;padding:1px 7px;font-size:12px;letter-spacing:.04em}
+.ratio.no b{background:transparent;color:var(--rose);box-shadow:inset 0 0 0 1.5px var(--rose)}
+.row2{display:grid;grid-template-columns:1fr 1fr 2fr;gap:24px;margin:72px 0 0;align-items:start}
+/* tester */
+.tester{background:var(--deep);border-radius:28px;padding:32px;grid-column:3;position:relative;z-index:1}
+.tester h2{font:700 28px/1.1 "Gabarito";margin:0 0 6px}
+.tester p.s{margin:0 0 22px;color:var(--ink-2);font-size:16px}
+.pick{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:0 0 20px}
+.pick label{display:block;font-size:15px;font-weight:600;margin:0 0 6px}
+.pick select{width:100%;min-height:48px;border-radius:12px;border:1.5px solid #6A6B70;background:var(--bg);color:var(--ink);font:500 16px "Golos Text";padding:0 12px}
+.sample{border-radius:18px;padding:22px 24px;display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:96px}
+.sample span{font:700 26px/1.1 "Gabarito"}
+.out{font:800 40px/1 "Gabarito";white-space:nowrap}
+.verdict{margin:14px 0 0;font-weight:600}
+/* principles */
+section.band{padding:110px 0 40px}
+.band>h2{font-weight:800;font-size:clamp(36px,4.6vw,64px);letter-spacing:-.02em;margin:0 0 14px;line-height:1}
+.band>p{color:var(--ink-2);max-width:56ch;margin:0 0 44px}
+.princ{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;list-style:none;margin:0;padding:0}
+.princ a{display:flex;flex-direction:column;gap:40px;min-height:330px;border-radius:28px;padding:28px;color:var(--deep);text-decoration:none;transition:transform .2s}
+.princ a:hover{transform:translateY(-3px)}
+.princ .n{font:800 18px/1 "Gabarito"}
+.princ h3{font-weight:800;font-size:34px;line-height:1;margin:0 0 12px;letter-spacing:-.01em}
+.princ p{margin:0;font-size:16px;line-height:1.5}
+.princ .ct{font-weight:600;font-size:15px;margin-top:16px;display:block}
+.shape{width:44px;height:44px;background:var(--deep)}
+/* rules */
+.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;list-style:none;margin:0;padding:0}
+.rules li{border:1.5px solid var(--line);border-radius:28px;padding:28px}
+.rules .k{font-weight:600;color:var(--ink-2);font-size:15px}
+.rules h3{font-weight:700;font-size:28px;margin:6px 0 10px}
+.rules .big{font:800 64px/1 "Gabarito";letter-spacing:-.02em;margin:18px 0 12px}
+.bar{height:10px;border-radius:99px;background:#45464A;overflow:hidden}.bar i{display:block;height:100%;border-radius:99px}
+.rules p{color:var(--ink-2);font-size:16px;margin:14px 0 0}
+footer{margin-top:110px;border-top:1.5px solid var(--line);padding:28px 0 48px;display:flex;justify-content:space-between;color:var(--ink-2);font-size:15px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:900px){
+  .wrap{padding:0 20px}
+  header.top{flex-wrap:wrap;gap:12px}
+  nav a{padding:10px 12px}
+  .swatches{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:40px}
+  .dot{width:140px}
+  .hex{font-size:24px}
+  .row2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tester{grid-column:1/-1;padding:22px}
+  .pick{grid-template-columns:minmax(0,1fr)}
+  .princ,.rules{grid-template-columns:minmax(0,1fr)}
+  .princ a{min-height:240px}
+  .loop{display:none}
+  footer{flex-direction:column;gap:8px}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="wrap">
+<header class="top">
+  <a class="brand" href="#"><i aria-hidden="true"><b style="background:var(--sky)"></b><b style="background:var(--sun)"></b><b style="background:var(--rose)"></b></i>WCAG Encyclopedia</a>
+  <nav aria-label="Main"><ul><li><a href="#">Criteria</a></li><li><a href="#">Demos</a></li><li><a href="#" aria-current="page">Colour</a></li><li><a href="#">About</a></li></ul></nav>
+</header>
+<main id="main">
+<section class="hero" aria-labelledby="h1">
+  <svg class="loop" viewBox="0 0 1168 1100" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M700 150 C 820 120, 900 220, 840 300 S 640 360, 620 450 S 760 520, 900 470 S 1120 430, 1100 560 S 980 760, 760 800 S 560 900, 470 1000"/>
+    <path d="M1160 120 C 1000 140, 900 240, 960 330 S 1140 380, 1120 470"/>
+  </svg>
+  <p class="eyebrow">Contrast, explained with the palette this page is built from</p>
+  <h1 id="h1">Colour that holds up for <em>everyone.</em></h1>
+  <p class="lede">Every colour here is measured against the page it sits on. The numbers update if you change them. Pick any pair below and see whether it passes.</p>
+
+  <div class="set" style="margin-top:80px">
+    <h2>Main colours</h2>
+    <ul class="swatches" id="main-set"></ul>
+  </div>
+  <div class="row2">
+    <div class="set" style="grid-column:1/3"><h2>Supporting colours</h2><ul class="swatches" id="sup-set" style="grid-template-columns:repeat(2,1fr)"></ul></div>
+    <form class="tester" aria-labelledby="t-h" onsubmit="return false">
+      <h2 id="t-h">Try a pair</h2>
+      <p class="s">Text needs 4.5 : 1. Large text and controls need 3 : 1.</p>
+      <div class="pick">
+        <div><label for="fg">Text colour</label><select id="fg"></select></div>
+        <div><label for="bgc">Background</label><select id="bgc"></select></div>
+      </div>
+      <div class="sample" id="sample"><span>Read me easily</span><output class="out" id="out" for="fg bgc" aria-live="polite"></output></div>
+      <p class="verdict" id="verdict" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+
+<section class="band" aria-labelledby="p-h">
+  <h2 id="p-h">Four principles</h2>
+  <p>Each principle has a colour and a shape, so the grouping survives greyscale. Colour never carries meaning on its own here.</p>
+  <ul class="princ">
+    <li><a href="#" style="background:var(--sky)"><span class="n">1</span><div><div class="shape" aria-hidden="true" style="margin-bottom:22px"></div><h3>Perceivable</h3><p>If you can't perceive it, it isn't there for you.</p><span class="ct">20 criteria →</span></div></a></li>
+    <li><a href="#" style="background:var(--sun)"><span class="n">2</span><div><div class="shape" aria-hidden="true" style="border-radius:50%;margin-bottom:22px"></div><h3>Operable</h3><p>Every control has to be reachable by whatever you drive it with.</p><span class="ct">20 criteria →</span></div></a></li>
+    <li><a href="#" style="background:var(--rose)"><span class="n">3</span><div><div class="shape" aria-hidden="true" style="clip-path:polygon(50% 0,100% 100%,0 100%);margin-bottom:22px"></div><h3>Understandable</h3><p>A thing you can perceive and operate can still make no sense.</p><span class="ct">13 criteria →</span></div></a></li>
+    <li><a href="#" style="background:var(--white)"><span class="n">4</span><div><div class="shape" aria-hidden="true" style="transform:rotate(45deg) scale(.8);margin-bottom:22px"></div><h3>Robust</h3><p>Assistive technology can only relay what the markup says.</p><span class="ct">2 criteria →</span></div></a></li>
+  </ul>
+</section>
+
+<section class="band" aria-labelledby="r-h">
+  <h2 id="r-h">Three contrast rules</h2>
+  <p>People often treat contrast as one number. WCAG has three, and they measure different things.</p>
+  <ul class="rules">
+    <li><span class="k">1.4.3 · Level AA</span><h3>Text</h3><div class="big">4.5 : 1</div><div class="bar" aria-hidden="true"><i style="width:21%;background:var(--sky)"></i></div><p>Body text against its background. Large text, 24px or 19px bold, needs 3 : 1.</p></li>
+    <li><span class="k">1.4.6 · Level AAA</span><h3>Enhanced text</h3><div class="big">7 : 1</div><div class="bar" aria-hidden="true"><i style="width:33%;background:var(--sun)"></i></div><p>The stricter version, for people with moderately low vision who don't use magnification.</p></li>
+    <li><span class="k">1.4.11 · Level AA</span><h3>Controls &amp; graphics</h3><div class="big">3 : 1</div><div class="bar" aria-hidden="true"><i style="width:14%;background:var(--rose)"></i></div><p>Field borders, focus rings, icons and chart lines against whatever is next to them.</p></li>
+  </ul>
+</section>
+</main>
+<footer><span>WCAG Encyclopedia · every criterion of WCAG 2.2, shown working and broken</span><span>Bars show each ratio out of the maximum, 21 : 1.</span></footer>
+</div>
+<script>
+const C={"#2A2B2D":"Page","#9CCADE":"Sky","#F8D17D":"Sun","#FFB3A9":"Rose","#FFFFFF":"White","#1A1C1C":"Night"};
+const lum=h=>{const c=[1,3,5].map(i=>parseInt(h.substr(i,2),16)/255).map(v=>v<=.03928?v/12.92:((v+.055)/1.055)**2.4);return .2126*c[0]+.7152*c[1]+.0722*c[2]};
+const ratio=(a,b)=>{const x=lum(a),y=lum(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)};
+const page="#2A2B2D";
+const card=(hex,use,surf)=>{const r=surf?ratio('#FFFFFF',hex):ratio(hex,page);const ok=r>=3;const tag=r>=7?'AAA':r>=4.5?'AA':r>=3?'AA large':'Fails';
+ return `<li><div class="dot ${surf?'d':''}" style="background:${hex}" aria-hidden="true"></div><span class="hex">${hex}</span><span class="use">${use}</span><span class="ratio ${ok?'':'no'}">${r.toFixed(1)} : 1 ${surf?'with white text':'on this page'} <b>${tag}</b></span></li>`};
+document.getElementById('main-set').innerHTML=card('#1A1C1C','Night, for panels',1)+card('#9CCADE','Sky, for links')+card('#F8D17D','Sun, for focus')+card('#FFB3A9','Rose, for errors');
+document.getElementById('sup-set').innerHTML=card('#FFFFFF','White, for text')+card('#2A2B2D','Page background',1);
+const fg=document.getElementById('fg'),bg=document.getElementById('bgc');
+for(const [h,n] of Object.entries(C)){fg.add(new Option(`${n} ${h}`,h));bg.add(new Option(`${n} ${h}`,h))}
+fg.value='#F8D17D';bg.value='#2A2B2D';
+function upd(){const r=ratio(fg.value,bg.value);const s=document.getElementById('sample');s.style.background=bg.value;s.style.color=fg.value;s.style.boxShadow=bg.value==='#1A1C1C'||bg.value==='#2A2B2D'?'inset 0 0 0 1.5px #55565A':'none';
+ document.getElementById('out').textContent=r.toFixed(2)+' : 1';
+ document.getElementById('verdict').textContent=r>=7?'Passes for all text, even AAA.':r>=4.5?'Passes for all text at AA.':r>=3?'Passes only for large text and controls.':'Fails. Nobody should have to read this.'}
+fg.onchange=bg.onchange=upd;upd();
+</script>
+</body>
+</html>

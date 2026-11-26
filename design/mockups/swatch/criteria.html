@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>All criteria: WCAG Encyclopedia</title>
+<meta name="description" content="Search and filter all 55 Level A and AA success criteria of WCAG 2.2.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gabarito:wght@500;600;700;800&family=Golos+Text:wght@400;500;600&family=Bricolage+Grotesque:wght@500;600;700;800&family=Familjen+Grotesk:wght@500;600;700&family=Fraunces:wght@500;600;700;800&family=Instrument+Sans:wght@400;500;600;700&family=Atkinson+Hyperlegible:wght@400;700&family=Onest:wght@400;500;600;700&family=Figtree:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="swatch.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="wrap">
+<header class="top" id="hdr"></header>
+<main id="main">
+<section class="ph ph2" aria-labelledby="h1">
+  <div>
+    <p class="eyebrow">WCAG 2.2 · Levels A and AA</p>
+    <h1 class="d" id="h1">All 55 criteria</h1>
+    <p class="lede">Each one in a sentence, with the way it most often goes wrong. Open any criterion to see it broken and then fixed.</p>
+  </div>
+  <div><h2 class="k" style="margin:0 0 14px;font-family:var(--fb)">How they split by principle</h2><ul class="split" id="split"></ul></div>
+</section>
+<section aria-label="Search and filter criteria"><div id="ix"></div></section>
+</main>
+<footer class="foot" id="ftr"></footer>
+</div>
+<script src="../corpus.js"></script>
+<script src="site.js"></script>
+<script src="tweak.js"></script>
+<script>
+chrome('Criteria');
+$('#split').innerHTML = [1, 2, 3, 4].map(i => { const n = DATA.filter(d => d.p === i).length; return `<li><span class="mk p${i}" aria-hidden="true"></span><strong>${PN[i]}</strong><span>${n}</span><span class="b" aria-hidden="true"><i style="width:${n / DATA.length * 100}%;background:var(--a${i})"></i></span></li>`; }).join('');
+const u = new URLSearchParams(location.search);
+index($('#ix'), { init: { p: u.get('p'), q: u.get('q') || '', n: u.has('new') } });
+</script>
+</body>
+</html>

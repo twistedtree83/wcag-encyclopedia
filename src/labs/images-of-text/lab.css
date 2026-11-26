@@ -1,0 +1,22 @@
+/* The images-of-text lab's own styles, imported by its lab.ts. Shared lab styles stay in src/styles. */
+
+/* The sale page: a heading that is text or a picture of it. The picture keeps its own pixel
+   size, so it neither reflows nor sharpens; zoom stretches it. */
+.itext-mock {
+  max-width: 560px;
+}
+.ipage {
+  padding: 1.25em 1.5em;
+}
+.ipage__h {
+  margin: 0 0 0.5em;
+  font-size: 1.75em;
+  line-height: 1.2;
+}
+.ipage__img {
+  display: block;
+  max-width: none;
+}
+.ipage p {
+  margin: 0;
+}

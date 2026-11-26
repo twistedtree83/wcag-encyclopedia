@@ -1,0 +1,13 @@
+/* The keyboard-trap lab's own styles, imported by its lab.ts. Shared lab styles stay in src/styles. */
+
+.trap-mock .trap {
+  justify-self: stretch;
+  justify-items: start;
+}
+.trap-mock__next {
+  text-decoration: underline;
+}
+.lab-note {
+  margin: 0;
+  color: var(--ink-2);
+}

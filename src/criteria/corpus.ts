@@ -3,7 +3,8 @@
  * modules. Content tasks add a module here; nothing else changes.
  */
 
-import type { CriterionRecord } from './types';
+import { principleFor } from './structure';
+import type { CriterionRecord, Principle } from './types';
 import { G1_1 } from './g1-1';
 import { G1_2 } from './g1-2';
 import { G1_3 } from './g1-3';
@@ -38,6 +39,11 @@ export function criterion(num: string): CriterionRecord | undefined {
 
 export function criteriaFor(guideline: string): readonly CriterionRecord[] {
   return CORPUS.filter((c) => c.guideline === guideline);
+}
+
+/** Every criterion under one principle, in corpus order (resolved through its guideline). */
+export function criteriaInPrinciple(principle: Principle['num']): readonly CriterionRecord[] {
+  return CORPUS.filter((c) => principleFor(c.guideline)?.num === principle);
 }
 
 /** Guidelines that have at least one authored criterion, in standard order. */

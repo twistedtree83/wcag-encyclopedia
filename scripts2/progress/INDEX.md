@@ -31,3 +31,53 @@ One line per task. Flip `[ ]` to `[x]` when the task ships, and write its ledger
 - [x] **T-12** #12 — Demos: announcements, errors, targets, motion (4.1.2, 3.3.1, 4.1.3, 2.5.8, 2.2.2) (needs T-09, T-18, T-21, T-24, T-25)
 
 **24 tasks · 24 shipped · all `afk:true` · no human gates**
+
+---
+
+# Progress index — Swatch redesign
+
+Graph: `scripts2/prd-redesign.json` · Parent: #27 · Branch: `redesign`
+
+- [x] **R-01** #28 — Redesign walking skeleton: Swatch tokens, page shell and one pre-rendered criterion page (no deps)
+- [x] **R-02** #29 — Criterion records gain `since` and `lab?` (needs R-01)
+- [x] **R-03** #30 — All 55 criterion pages with the full anatomy (needs R-02)
+- [x] **R-04** #31 — Filter engine: principle, level, new in 2.2, and wider search (needs R-02)
+- [x] **R-06** #33 — Colour check lab and the Colour check page (needs R-03)
+- [x] **R-07** #34 — Fade-the-text lab on 1.4.3 (needs R-03)
+- [x] **R-09** #36 — About page with the accessibility statement (needs R-01)
+- [x] **R-05** #32 — All criteria page (needs R-03, R-04)
+- [x] **R-08** #35 — Home page (needs R-05, R-06, R-07)
+- [x] **R-10** #37 — Delete the retired single-page modules (needs R-08)
+- [ ] **R-11** #38 — Cutover: owner's visual sign-off, then merge the redesign and deploy (needs R-10)
+
+## Labs
+
+Graph: `scripts2/prd-labs.json` · Parent: #40 · Integration branch: `labs`
+
+- [x] **L-01** #41 — Lab shell, verdict and motion tokens (no deps)
+- [x] **L-02** #42 — Announcement log and the 4.1.2 flagship lab (L-01)
+- [x] **L-03** #43 — Live examples and simulated input, piloted on 4.1.2 (L-02)
+- [x] **L-10** #50 — Titles, link purpose and headings: 2.4.2, 2.4.4 and 2.4.6 (L-03)
+- [x] **L-04** #44 — Focus tracker and 2.4.7: flagship lab and live examples (L-03)
+- [x] **L-09** #49 — Sequence, input purpose and label in name: 1.3.2, 1.3.5 and 2.5.3 (L-03)
+- [x] **L-08** #48 — Semantics flagships: 1.1.1 and 1.3.1 (L-03)
+- [x] **L-05** #45 — Keyboard: 2.1.1, 2.1.2 and 2.1.4 (L-04)
+- [x] **L-06** #46 — Focus order and bypass: 2.4.1, 2.4.3 (flagship) and 2.4.11 (L-04)
+- [x] **L-11** #51 — Language and status messages: 3.1.1, 3.1.2 and 4.1.3 (L-03)
+- [x] **L-13** #53 — Zoom frame and the 1.4.10 flagship (L-03)
+- [x] **L-12** #52 — Form errors and labels: 3.3.1 and 3.3.2 (L-03)
+- [x] **L-14** #54 — Text sizing and spacing: 1.4.12 (flagship) and 1.4.4 (L-13)
+- [x] **L-17** #57 — Gesture pad and the 2.5.8 flagship (L-03)
+- [x] **L-16** #56 — Vision filter, with 1.4.1, 1.4.11, 1.3.3 and the 1.4.3 live examples (L-03)
+- [x] **L-07** #47 — Focus and hover behaviour: 3.2.1 and 1.4.13 (L-04)
+- [x] **L-15** #55 — Orientation and images of text: 1.3.4 and 1.4.5 (L-13)
+- [x] **L-19** #59 — Forms: 3.2.2, 3.3.3 and 3.3.4 (L-03)
+- [x] **L-23** #63 — Mock site, with 2.4.5 and 3.2.3 (L-03)
+- [x] **L-21** #61 — Clock and the 2.2.1 flagship (L-03)
+- [x] **L-18** #58 — Pointer: 2.5.1, 2.5.2, 2.5.4 and 2.5.7 (L-17)
+- [x] **L-20** #60 — Forms: 3.3.7 and 3.3.8 (L-03)
+- [x] **L-25** #65 — Mock player, with 1.2.2 and 1.2.4 (L-03)
+- [x] **L-24** #64 — Consistency: 3.2.4 and 3.2.6 (L-23)
+- [x] **L-22** #62 — Timing, audio and flashing: 2.2.2, 1.4.2 and 2.3.1 (L-21)
+- [x] **L-26** #66 — Media alternatives: 1.2.1, 1.2.3 and 1.2.5 (L-25)
+- [x] **L-27** #67 — Close out coverage: every criterion has a lab (L-04..L-26)
