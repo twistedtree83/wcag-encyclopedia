@@ -40,7 +40,8 @@ export function CriteriaPage() {
           <p className="eyebrow">WCAG 2.2 · Levels A and AA</p>
           <h1 id="criteria-title">All {CORPUS.length} criteria</h1>
           <p className="lede">
-            Each one in a sentence, with the way it most often goes wrong. Open any criterion to
+            These are the WCAG 2.2 success criteria at Levels A and AA: the testable checks a web
+            page has to pass. Each one in a sentence, with the way it most often goes wrong. Open any criterion to
             see it broken and then fixed.
           </p>
         </div>

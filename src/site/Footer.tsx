@@ -34,8 +34,8 @@ export function Footer() {
       <div>
         <Brand />
         <p>
-          Every Level A and AA criterion of WCAG 2.2, explained in plain language and shown
-          working and broken.
+          The WCAG 2.2 Level A and AA success criteria, the testable checks a web page has to
+          pass, explained in plain language and shown broken and then fixed.
         </p>
       </div>
       {columns.map(({ heading, links }) => (
