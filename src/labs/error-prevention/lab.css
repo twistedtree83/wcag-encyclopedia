@@ -1,0 +1,7 @@
+/* The error-prevention lab's own styles, imported by its lab.ts. Shared lab styles stay in src/styles. */
+
+.plab__actions {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+}

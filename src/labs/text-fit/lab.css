@@ -1,0 +1,53 @@
+/* The text-fit lab's own styles, imported by its lab.ts. Shared lab styles stay in src/styles. */
+
+/* The notice card drawn in the zoom frame. Sized in em so the frame's text size reaches it, in
+   the system font so no late web font changes it after its boxes are measured (NoticeCard). Its
+   own spacing is tighter than 1.4.12's, so each override visibly grows it. */
+.ncard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75em;
+  margin: 1.25em;
+  padding: 1em 1.25em;
+  border: 1px solid var(--line-2);
+  border-radius: 0.5em;
+  font-family: system-ui, sans-serif;
+  line-height: 1.25;
+}
+.ncard__title {
+  font-weight: 700;
+  font-size: 1.25em;
+}
+.ncard__body,
+.ncard__tag {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+.ncard__body p {
+  margin: 0 0 0.5em;
+}
+.ncard__tag {
+  display: inline-block;
+  padding: 0.25em 0.75em;
+  border: 1px solid var(--line-2);
+  border-radius: 1em;
+  background: var(--deep);
+  font-weight: 600;
+}
+/* Locked: each box is held at its designed size (inline, in px) and clips what no longer fits. */
+.ncard--locked .ncard__body,
+.ncard--locked .ncard__tag {
+  overflow: hidden;
+}
+.ncard--locked .ncard__tag {
+  white-space: nowrap;
+}
+/* Both labs: the frame, then the choices, then the readouts. */
+.fit-mock {
+  max-width: 560px;
+}
+.sem-choice .fit-all {
+  align-self: flex-start;
+  margin-top: 8px;
+}

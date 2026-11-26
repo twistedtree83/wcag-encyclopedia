@@ -1,0 +1,6 @@
+/* The input-purpose lab's own styles, imported by its lab.ts. Shared lab styles stay in src/styles. */
+
+.ip-mock {
+  display: grid;
+  gap: 12px;
+}

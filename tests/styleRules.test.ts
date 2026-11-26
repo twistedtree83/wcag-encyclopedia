@@ -20,9 +20,11 @@ function walk(dir: string, ext: RegExp): string[] {
   });
 }
 
-const sheets = readdirSync('src/styles')
-  .filter((f) => f.endsWith('.css'))
-  .map((f) => ({ file: f, root: postcss.parse(readFileSync(`src/styles/${f}`, 'utf8')) }));
+// The shared stylesheets and every lab's own lab.css (ADR 0004).
+const sheets = [...walk('src/styles', /\.css$/), ...walk('src/labs', /\.css$/)].map((file) => ({
+  file,
+  root: postcss.parse(readFileSync(file, 'utf8')),
+}));
 
 /** Each declaration of `props` as `file selector { prop: value }`, with its rule's selector. */
 function declarations(props: RegExp) {
@@ -127,6 +129,22 @@ describe('swatch.css layout', () => {
       .filter((l) => /^\/\* --- /.test(l))
       .map((l) => l.trim());
     expect(after, 'move these sections above "Breakpoints"').toEqual([]);
+  });
+});
+
+describe('lab stylesheets (ADR 0004)', () => {
+  it('keeps each lab’s CSS as lab.css in its folder, imported by its lab.ts', () => {
+    const bad: string[] = [];
+    for (const file of walk('src/labs', /\.css$/)) {
+      const m = /^src\/labs\/([^/]+)\/lab\.css$/.exec(file.split('\\').join('/'));
+      if (!m || m[1] === 'shared') {
+        bad.push(`${file}: a lab's styles go in src/labs/<lab>/lab.css`);
+        continue;
+      }
+      const lab = readFileSync(`src/labs/${m[1]}/lab.ts`, 'utf8');
+      if (!lab.includes("import './lab.css';")) bad.push(`src/labs/${m[1]}/lab.ts does not import ./lab.css`);
+    }
+    expect(bad, `\n${bad.join('\n')}\n`).toEqual([]);
   });
 });
 

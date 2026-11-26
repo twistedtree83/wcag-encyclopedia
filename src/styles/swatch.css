@@ -762,20 +762,6 @@ footer.foot p {
   border-radius: var(--rad);
   background: var(--deep);
 }
-/* The exhibit is near-black in both themes; its text colour is set inline by the slider. */
-.lab__exhibit {
-  padding: 28px;
-  border-radius: calc(var(--rad) * 0.65);
-  background: var(--exhibit);
-}
-.lab__exhibit h4 {
-  margin: 0 0 10px;
-  font: 700 26px/1.15 var(--fh), sans-serif;
-}
-.lab__exhibit p {
-  margin: 0;
-  font-size: 17px;
-}
 .slide label {
   display: flex;
   justify-content: space-between;
@@ -804,38 +790,6 @@ footer.foot p {
 .scale {
   position: relative;
   height: 56px;
-}
-.scale__track,
-.scale__fill {
-  position: absolute;
-  top: 12px;
-  left: 0;
-  height: 10px;
-  border-radius: 99px;
-}
-.scale__track {
-  right: 0;
-  background: var(--line);
-}
-.scale__fill {
-  background: var(--btn-bg);
-  transition: width var(--speed);
-}
-.scale__tick {
-  position: absolute;
-  top: 0;
-  width: 2px;
-  height: 34px;
-  background: var(--ink-2);
-}
-.scale__tick span {
-  position: absolute;
-  top: 36px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 13px;
-  color: var(--ink-2);
-  white-space: nowrap;
 }
 .lab-res {
   display: grid;
@@ -882,81 +836,6 @@ footer.foot p {
   border-radius: var(--rad);
   background: var(--deep);
 }
-.ph + .chk {
-  margin-top: 40px;
-}
-.chk h2.t {
-  font: var(--hw) calc(28px * var(--ts)) / 1.1 var(--fh), sans-serif;
-  margin: 0 0 6px;
-}
-.chk .s {
-  margin: 0 0 22px;
-  color: var(--ink-2);
-  font-size: calc(var(--small) + 1px);
-}
-.chk-in {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  gap: 12px;
-  align-items: end;
-  margin: 0 0 18px;
-}
-.chk fieldset {
-  border: 0;
-  margin: 0;
-  padding: 0;
-  min-width: 0;
-}
-.chk legend {
-  font-size: var(--small);
-  font-weight: 600;
-  padding: 0;
-  margin: 0 0 6px;
-}
-.cf {
-  display: flex;
-  min-height: 48px;
-  overflow: hidden;
-  border: var(--bwid) solid var(--line-2);
-  border-radius: var(--rad-sm);
-  background: var(--bg);
-}
-.cf input[type='color'] {
-  appearance: none;
-  -webkit-appearance: none;
-  flex: none;
-  width: 52px;
-  padding: 0;
-  border: 0;
-  border-right: var(--bwid) solid var(--line-2);
-  background: none;
-  cursor: pointer;
-}
-.cf input[type='color']::-webkit-color-swatch-wrapper {
-  padding: 6px;
-}
-.cf input[type='color']::-webkit-color-swatch {
-  border: 0;
-  border-radius: 6px;
-}
-.cf input[type='text'] {
-  width: 100%;
-  min-width: 0;
-  padding: 0 12px;
-  border: 0;
-  background: transparent;
-  font-weight: 600;
-  font-size: 16px;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-}
-.cf:focus-within {
-  outline: 3px solid var(--focus);
-  outline-offset: 2px;
-}
-.cf input:focus-visible {
-  outline: 0;
-}
 .swap {
   display: grid;
   place-items: center;
@@ -987,34 +866,12 @@ footer.foot p {
   font-size: 17px;
   line-height: 1.5;
 }
-.prev .pvh {
-  font: 700 calc(26px * var(--ts)) / 1.1 var(--fh), sans-serif;
-}
-.prev .lnk {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  font-weight: 600;
-}
 .prev .row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 12px;
   margin-top: 4px;
-}
-.prev .fbtn {
-  padding: 8px 16px;
-  border: 2px solid currentColor;
-  border-radius: var(--rad-btn);
-  font-weight: 600;
-  font-size: 15px;
-}
-.prev .finp {
-  min-width: 150px;
-  padding: 7px 12px;
-  border: 2px solid currentColor;
-  border-radius: var(--rad-sm);
-  font-size: 15px;
 }
 .prev small {
   font-size: 14px;
@@ -1033,35 +890,6 @@ footer.foot p {
   font: var(--hw) calc(var(--num) * 0.7 * var(--ts)) / 1 var(--fh), sans-serif;
   white-space: nowrap;
 }
-.res {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.res li {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  padding: 10px 12px;
-  border: var(--bwid) solid var(--line);
-  border-radius: var(--rad-sm);
-  font-size: 14px;
-}
-.res strong {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font: 700 15px var(--fh), sans-serif;
-}
-.res .ok strong {
-  color: var(--ok-text);
-}
-.res .bad strong {
-  color: var(--err-text);
-}
 .fix {
   display: flex;
   flex-wrap: wrap;
@@ -1076,24 +904,6 @@ footer.foot p {
 }
 .fix b {
   font-weight: 600;
-}
-.chk-x {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 44px;
-  margin: 8px 0 0;
-  font-size: var(--small);
-  cursor: pointer;
-}
-.chk-x input {
-  width: 20px;
-  height: 20px;
-  margin: 0;
-  accent-color: var(--btn-bg);
-}
-.lab-more {
-  margin: 18px 0 0;
 }
 
 /* The wide check on its own page: inputs and results on the left, a large preview right. */
@@ -1113,9 +923,6 @@ footer.foot p {
   align-content: center;
   gap: 18px;
   padding: calc(var(--prev-pad) + 14px);
-}
-.wide > .prev .pvh {
-  font-size: calc(40px * var(--ts));
 }
 .wide > .prev p {
   font-size: 20px;
@@ -1456,10 +1263,6 @@ footer.foot p {
   z-index: 1;
   padding-top: 24px;
 }
-.hero > .chk {
-  position: relative;
-  z-index: 1;
-}
 .hero h1 {
   max-width: 11ch;
   font-size: calc(var(--ts) * max(calc(var(--h1) * 0.5), min(var(--h1), 9vw)));
@@ -1693,9 +1496,6 @@ footer.foot p {
   justify-content: space-between;
   gap: 12px 16px;
 }
-.chk .lab-foot {
-  margin: 18px 0 0;
-}
 .lab-verdict {
   margin: 0;
   font: 700 calc(20px * var(--ts)) / 1.2 var(--fh), sans-serif;
@@ -1762,30 +1562,6 @@ footer.foot p {
   border-radius: calc(var(--rad) * 0.65);
   background: var(--card-bg);
   color: var(--ink);
-}
-.nrv-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
-  font-size: 17px;
-  font-weight: 600;
-}
-.nrv-ctl {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: inherit;
-  font: inherit;
-}
-.nrv-ctl .toggle {
-  transform: scale(1.4);
-  transform-origin: left center;
-  margin-right: 14px;
 }
 .nrv-controls {
   display: grid;
@@ -2000,35 +1776,6 @@ footer.foot p {
   outline: none;
 }
 
-/* The 2.4.7 lab: a depicted page (fixed colours, set inline) with a focused Save button. */
-.ring-mock {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 24px;
-  padding: 36px 24px;
-  border: 1px solid var(--line-2);
-  border-radius: calc(var(--rad) * 0.65);
-}
-.ring-mock__btn {
-  display: inline-block;
-  padding: 10px 24px;
-  border-radius: 6px;
-  font: 700 17px/1.2 var(--fh), sans-serif;
-}
-.ring-controls {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px 24px;
-}
-.ring-swatch {
-  flex: 0 0 auto;
-  width: 16px;
-  height: 16px;
-  border: 1px solid var(--line-2);
-  border-radius: 4px;
-}
-
 /* --- Sequence, input purpose and label in name labs ------------------------------------- */
 
 /* Live examples: the 1.3.2 steps are real buttons; the 1.3.5 fields and 2.5.3 button too. */
@@ -2088,23 +1835,6 @@ footer.foot p {
   border-radius: calc(var(--rad) * 0.65);
   background: var(--card-bg);
   color: var(--ink);
-}
-.seq-mock .seq {
-  margin: 0;
-}
-.seq-mock .seq__step {
-  font-size: 15px;
-}
-.ip-mock {
-  display: grid;
-  gap: 12px;
-}
-.lin-mock .namebox__visual {
-  min-height: 40px;
-  padding: 0 18px;
-  border: 0;
-  font: inherit;
-  font-weight: 600;
 }
 .lab-controls {
   display: grid;
@@ -2181,11 +1911,6 @@ footer.foot p {
   margin: 0;
   accent-color: var(--btn-bg);
 }
-.sem-field {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
 .sem-field input,
 .st-field input {
   width: 100%;
@@ -2222,58 +1947,6 @@ footer.foot p {
 }
 .live-alts img {
   width: 96px;
-}
-
-/* The 1.3.1 mock: the styled-div build and the real build look the same. */
-.st {
-  display: grid;
-  gap: 10px;
-  max-width: 420px;
-  font-size: 16px;
-}
-.st-h {
-  margin: 0;
-  font: 700 20px/1.2 var(--fh), sans-serif;
-}
-.st-p {
-  margin: 0;
-}
-.st-list {
-  display: grid;
-  gap: 2px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-ul.st-list li::before {
-  content: '• ';
-}
-.st-field {
-  display: grid;
-  gap: 4px;
-}
-.st-label,
-.st-field label {
-  font-weight: 600;
-}
-.st-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-.st-table th,
-.st-table td,
-.st-tr > div {
-  padding: 6px 8px;
-  border-bottom: 1px solid var(--line-2);
-  text-align: left;
-}
-.st-table th,
-.st-th > div {
-  font-weight: 700;
-}
-.st-table--divs .st-tr {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
 }
 
 /* --- Page title, link purpose and headings labs ----------------------------------------- */
@@ -2331,45 +2004,8 @@ ul.st-list li::before {
 .tlh-mock h5 {
   margin: 0;
 }
-.tlh-browser .tabs {
-  margin: 0;
-}
 .tabs__tab--on {
   border-color: var(--line-2);
-  font-weight: 600;
-}
-.tlh-address {
-  padding: 6px 12px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  color: var(--ink-2);
-  font: 14px/1.4 ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
-  overflow-wrap: anywhere;
-}
-.tlh-news {
-  display: grid;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.tlh-news a {
-  text-decoration: underline;
-}
-.tlh-doc {
-  display: grid;
-  gap: 8px;
-}
-.tlh-doc h4 {
-  font-size: 22px;
-}
-.tlh-doc h5 {
-  font-size: 17px;
-}
-.tlh-doc label {
-  display: grid;
-  gap: 6px;
-  font-size: var(--small);
   font-weight: 600;
 }
 .tlh-controls {
@@ -2390,16 +2026,6 @@ ul.st-list li::before {
 .live-page p {
   margin: 0;
   font-size: 17px;
-}
-.lang-controls {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.lang-note {
-  margin: 0;
-  color: var(--ink-2);
-  font-size: var(--small);
 }
 /* The 4.1.3 mock and live examples: a product, its button, the basket and the message. */
 .status-shop,
@@ -2425,12 +2051,6 @@ ul.st-list li::before {
   flex: 1 0 100%;
   min-height: 1.45em;
   font-weight: 600;
-}
-.status-controls {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px 24px;
 }
 
 /* --- Zoom frame and reflow lab ---------------------------------------------------------- */
@@ -2470,58 +2090,6 @@ ul.st-list li::before {
 }
 .zframe--word .zframe__view * {
   word-spacing: 0.16em !important;
-}
-/* The catalogue page drawn in the frame, sized in em so the frame's text size reaches it. */
-.zpage {
-  box-sizing: border-box;
-  min-height: 70em;
-  padding: 1.5em 2em;
-}
-.zpage p {
-  margin: 0 0 1em;
-}
-.zpage__bar {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 0.5em 2em;
-  margin-bottom: 2em;
-  padding-bottom: 1em;
-  border-bottom: 1px solid var(--line-2);
-}
-.zpage__brand,
-.zpage__title {
-  font-weight: 700;
-}
-.zpage__title {
-  font-size: 1.75em;
-}
-.zpage__grid {
-  display: grid;
-  gap: 1em;
-  margin-bottom: 1.5em;
-}
-.zpage__tile {
-  display: flex;
-  align-items: flex-end;
-  aspect-ratio: 3 / 4;
-  padding: 1em;
-  border: 1px solid var(--line-2);
-  border-radius: 0.5em;
-  font-weight: 600;
-}
-.zpage--fixed {
-  width: 60em;
-}
-.zpage--fixed .zpage__grid {
-  grid-template-columns: repeat(3, 18em);
-}
-.zpage--reflow .zpage__grid {
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12em), 1fr));
-}
-/* The 1.4.10 lab: the frame, then the zoom and layout choices, then the readouts. */
-.reflow-mock {
-  max-width: 560px;
 }
 .live__example .zframe {
   max-width: 100%;
@@ -2596,22 +2164,6 @@ ul.st-list li::before {
 }
 .flab .lab-controls > .btn {
   justify-self: start;
-}
-.flab__type {
-  display: grid;
-  gap: 6px;
-  font-weight: 600;
-  font-size: var(--small);
-}
-.flab__type input {
-  min-height: 44px;
-  padding: 0 12px;
-  border: var(--bwid) solid var(--line-2);
-  border-radius: var(--rad-sm);
-  background: var(--bg);
-  color: var(--ink);
-  font: inherit;
-  font-weight: 400;
 }
 .flab__screen {
   font-weight: 600;
@@ -2718,31 +2270,13 @@ ul.st-list li::before {
 .trap-mock .trap {
   margin: 0;
 }
-.trap-mock .trap {
-  justify-self: stretch;
-  justify-items: start;
-}
 .kb-mock__field,
 .kb-mock__count,
 .sc-mock__label {
   font-size: var(--small);
 }
-.sc-mock__label {
-  font-weight: 600;
-}
 .trap-mock__btn {
   margin: 0;
-}
-.trap-mock__next {
-  text-decoration: underline;
-}
-.sc-mock__msg {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-.sc-mock__reply {
-  justify-self: stretch;
 }
 /* Where simulated focus is in a lab mock: drawn, since the mock itself never takes focus. */
 .lab__mock .is-focus {
@@ -2758,10 +2292,6 @@ ul.st-list li::before {
 .kb-last {
   flex-basis: 100%;
   font-size: var(--small);
-}
-.lab-note {
-  margin: 0;
-  color: var(--ink-2);
 }
 
 /* --- Gesture pad and target size lab ---------------------------------------------------- */
@@ -2857,46 +2387,6 @@ ul.st-list li::before {
   width: 16px;
   height: 16px;
   font-size: 10px;
-}
-
-/* The 2.5.8 lab: the row drawn at twice size, with each target's 24px circle or square. */
-.ts-mock {
-  display: flex;
-  justify-content: center;
-  padding: 16px;
-  border: 1px solid var(--line-2);
-  border-radius: calc(var(--rad) * 0.65);
-  background: var(--deep);
-}
-.ts-mock svg {
-  display: block;
-  max-width: 100%;
-  height: auto;
-}
-.ts-target {
-  fill: var(--card-bg);
-  stroke: var(--ink-2);
-  stroke-width: 0.75;
-}
-.ts-glyph {
-  fill: var(--ink);
-  font-size: 8px;
-}
-.ts-guide,
-.ts-circle {
-  fill: none;
-  stroke: var(--ok-text);
-  stroke-width: 0.75;
-  stroke-dasharray: 2 1.5;
-}
-.ts-circle.is-clash {
-  stroke: var(--err-text);
-  stroke-dasharray: none;
-}
-.ts-controls {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px 24px;
 }
 
 /* --- Focus order, bypass and obscured focus labs ---------------------------------------- */
@@ -3010,149 +2500,10 @@ ul.st-list li::before {
   background: var(--card-bg);
   color: var(--ink);
 }
-.fo-mock {
-  display: grid;
-  grid-template-areas:
-    'name email'
-    'phone postcode'
-    'send send';
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-}
-.fo-part {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
-  overflow-wrap: anywhere;
-  min-height: 44px;
-  padding: 6px 12px;
-  border: var(--bwid) solid var(--line-2);
-  border-radius: var(--rad-sm);
-  background: var(--bg);
-  font-weight: 600;
-}
-.fo-part--name {
-  grid-area: name;
-}
-.fo-part--email {
-  grid-area: email;
-}
-.fo-part--phone {
-  grid-area: phone;
-}
-.fo-part--postcode {
-  grid-area: postcode;
-}
-.fo-part--send {
-  grid-area: send;
-  justify-self: start;
-}
-.fo-num {
-  display: inline-grid;
-  place-items: center;
-  width: 26px;
-  height: 26px;
-  border: 2px solid var(--ink-2);
-  border-radius: 50%;
-  font: 700 13px var(--fh), sans-serif;
-  transition: border-color var(--speed-state) var(--ease-out);
-}
-/* Out of step with the layout: the number is ringed in the error colour, and dashed. */
-.fo-part.is-off .fo-num {
-  border-color: var(--err-text);
-  border-style: dashed;
-}
-.fo-visits {
-  display: block;
-  padding: 8px 12px;
-  border-left: 3px solid var(--line-2);
-  border-radius: 4px;
-  background: var(--card-bg);
-}
-.fo-src {
-  display: grid;
-  gap: 4px;
-  margin: 0;
-  padding-left: 1.5em;
-}
-.fo-src code {
-  padding: 2px 8px;
-}
-
-/* The 2.4.1 lab: the page's Tab stops as chips, the menu as many as the reader chose. */
-.bp-mock__head {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-.bp-chip {
-  display: inline-grid;
-  place-items: center;
-  min-width: 28px;
-  height: 28px;
-  padding: 0 8px;
-  border: 1px solid var(--line-2);
-  border-radius: var(--rad-chip);
-  background: var(--bg);
-  font-size: var(--small);
-}
-.bp-chip--skip {
-  border: 2px solid var(--ink);
-  font-weight: 700;
-}
-.bp-mock__main {
-  margin-top: 12px;
-  padding: 16px;
-  border: 2px dashed var(--line-2);
-  border-radius: var(--rad-sm);
-  font-weight: 700;
-}
 .bp-count,
 .nob-share {
   display: block;
   font-size: 20px;
-  font-weight: 700;
-}
-
-/* The 2.4.11 lab: a 200px window drawn in percent, so it scales at any width. */
-.nob-mock {
-  position: relative;
-  height: 200px;
-  padding: 0;
-  overflow: hidden;
-  border: var(--bwid) solid var(--line-2);
-}
-.nob-mock__line,
-.nob-mock__field,
-.nob-mock__banner {
-  position: absolute;
-  right: 16px;
-  left: 16px;
-}
-.nob-mock__line {
-  height: 10px;
-  border-radius: 4px;
-  background: var(--line-2);
-}
-.nob-mock__field {
-  display: grid;
-  place-items: center;
-  border: 2px solid var(--ink);
-  border-radius: 4px;
-  outline: 3px solid var(--focus);
-  outline-offset: 2px;
-  background: var(--bg);
-  font-weight: 600;
-}
-.nob-mock__banner {
-  right: 0;
-  left: 0;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  background: var(--ink);
-  color: var(--bg);
   font-weight: 700;
 }
 
@@ -3290,84 +2641,12 @@ ul.st-list li::before {
   background: var(--card-bg);
   color: var(--ink);
 }
-.fl-form {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: end;
-  gap: 12px;
-}
-.fl-stop {
-  display: grid;
-  gap: 4px;
-  border-radius: 4px;
-  outline: 3px solid transparent;
-  outline-offset: 3px;
-  transition: outline-color var(--speed-state) var(--ease-out);
-}
-.fl-stop[data-on='true'] {
-  outline-color: var(--focus);
-}
-.fl-label {
-  font-size: var(--small);
-  font-weight: 600;
-}
-.fl-box {
-  display: block;
-  width: 9rem;
-  max-width: 100%;
-  height: 36px;
-  border: var(--bwid) solid var(--line-2);
-  border-radius: var(--rad-sm);
-  background: var(--bg);
-}
-.fl-stop--send {
-  padding: 8px 18px;
-  border-radius: var(--rad-sm);
-  background: var(--btn-bg);
-  color: var(--btn-fg);
-  font-weight: 600;
-}
-.fl-page {
-  display: grid;
-  gap: 6px;
-}
-.fl-keys {
-  display: grid;
-  justify-items: start;
-  gap: 10px;
-}
 
 /* The 1.4.13 lab: the words, the drawn pointer, and where the tooltip opens. */
 .tt-line {
   position: relative;
   margin: 0;
   padding-bottom: 104px;
-}
-.tt-word {
-  position: relative;
-}
-.tt-cursor {
-  position: absolute;
-  left: 40%;
-  top: 55%;
-}
-.tt-spot {
-  position: absolute;
-  left: 0;
-  top: 44px;
-  width: min(15rem, 100%);
-  min-height: 72px;
-}
-.tt-spot--near {
-  top: 24px;
-}
-.tt-tip {
-  display: block;
-  padding: 8px 10px;
-  background: var(--card-bg);
-  border: 1px solid var(--line-2);
-  font-size: var(--small);
-  line-height: 1.5;
 }
 .tt-acts {
   align-items: start;
@@ -3377,100 +2656,11 @@ ul.st-list li::before {
   margin-top: 16px;
 }
 
-/* --- Text size and spacing labs --------------------------------------------------------- */
-
-/* The notice card drawn in the zoom frame. Sized in em so the frame's text size reaches it, in
-   the system font so no late web font changes it after its boxes are measured (NoticeCard). Its
-   own spacing is tighter than 1.4.12's, so each override visibly grows it. */
-.ncard {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.75em;
-  margin: 1.25em;
-  padding: 1em 1.25em;
-  border: 1px solid var(--line-2);
-  border-radius: 0.5em;
-  font-family: system-ui, sans-serif;
-  line-height: 1.25;
-}
-.ncard__title {
-  font-weight: 700;
-  font-size: 1.25em;
-}
-.ncard__body,
-.ncard__tag {
-  box-sizing: border-box;
-  max-width: 100%;
-}
-.ncard__body p {
-  margin: 0 0 0.5em;
-}
-.ncard__tag {
-  display: inline-block;
-  padding: 0.25em 0.75em;
-  border: 1px solid var(--line-2);
-  border-radius: 1em;
-  background: var(--deep);
-  font-weight: 600;
-}
-/* Locked: each box is held at its designed size (inline, in px) and clips what no longer fits. */
-.ncard--locked .ncard__body,
-.ncard--locked .ncard__tag {
-  overflow: hidden;
-}
-.ncard--locked .ncard__tag {
-  white-space: nowrap;
-}
-/* Both labs: the frame, then the choices, then the readouts. */
-.fit-mock {
-  max-width: 560px;
-}
-.sem-choice .fit-all {
-  align-self: flex-start;
-  margin-top: 8px;
-}
-
 /* --- Orientation and images of text labs ------------------------------------------------ */
 
 /* A phone held upright is drawn narrow, so a portrait frame is not as tall as a full-width one. */
 .zframe[data-orientation='portrait'] {
   width: min(100%, 14rem);
-}
-.orient-mock {
-  max-width: 440px;
-}
-/* The order page is its own size container: its CSS asks the frame's window which way up it is. */
-.opage {
-  box-sizing: border-box;
-  height: 100%;
-  container-type: size;
-}
-.opage__body {
-  padding: 1.25em 1.5em;
-}
-.opage p {
-  margin: 0 0 0.75em;
-}
-.opage__title {
-  font-size: 1.5em;
-  font-weight: 700;
-}
-.opage__steps {
-  margin: 0;
-  padding-left: 1.25em;
-  line-height: 1.6;
-}
-.opage__prompt {
-  display: none;
-  box-sizing: border-box;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
-  padding: 2em;
-  text-align: center;
-  font-size: 1.25em;
-  font-weight: 700;
 }
 @container (orientation: landscape) {
   .opage--adapts .opage__body {
@@ -3492,26 +2682,6 @@ ul.st-list li::before {
   .opage--landscape .opage__prompt {
     display: flex;
   }
-}
-/* The sale page: a heading that is text or a picture of it. The picture keeps its own pixel
-   size, so it neither reflows nor sharpens; zoom stretches it. */
-.itext-mock {
-  max-width: 560px;
-}
-.ipage {
-  padding: 1.25em 1.5em;
-}
-.ipage__h {
-  margin: 0 0 0.5em;
-  font-size: 1.75em;
-  line-height: 1.2;
-}
-.ipage__img {
-  display: block;
-  max-width: none;
-}
-.ipage p {
-  margin: 0;
 }
 /* The reader's own colours and font (a user stylesheet: dark ink on the sun tint, an audited pair).
    It reaches text, never a picture's pixels. */
@@ -3573,19 +2743,6 @@ ul.st-list li::before {
 }
 .lform .pay__btns .btn {
   margin-top: 0;
-}
-.olab__page {
-  display: grid;
-  gap: 12px;
-}
-.olab__out {
-  margin: 0;
-  font-weight: 600;
-}
-.plab__actions {
-  display: grid;
-  justify-items: start;
-  gap: 8px;
 }
 
 /* --- Vision filter ---------------------------------------------------------------------- */
@@ -3699,61 +2856,6 @@ ul.st-list li::before {
 }
 .vis-btn--stop {
   background: var(--ex-stop);
-}
-
-/* The three labs: a depicted mock in fixed colours, drawn through the chosen filter. */
-.vis-lab__mock {
-  display: grid;
-  gap: 16px;
-  padding: 24px;
-  border-radius: calc(var(--rad) * 0.65);
-  background: var(--card-bg);
-}
-.vis-lab__mock p {
-  margin: 0;
-  line-height: 1.6;
-}
-.vis-lab__fields {
-  display: grid;
-  gap: 6px;
-  max-width: 320px;
-}
-.vis-lab__label {
-  font-weight: 600;
-  font-size: var(--small);
-}
-.vis-lab__field {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 40px;
-  padding: 0 12px;
-  border: 1.5px solid;
-  border-radius: 4px;
-}
-.vis-lab__icon {
-  display: grid;
-  place-items: center;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  color: var(--ex-on-button);
-  font-weight: 700;
-}
-.vis-lab__check {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 8px;
-}
-.vis-lab__box {
-  width: 20px;
-  height: 20px;
-  border: 1.5px solid;
-  border-radius: 4px;
-}
-.lab-res.vis-cues {
-  grid-template-columns: minmax(0, 1fr);
 }
 
 /* --- Mock site -------------------------------------------------------------------------- */
@@ -3995,11 +3097,6 @@ ul.st-list li::before {
   background: var(--bg);
   color: var(--ink);
 }
-.re-lab__steps {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
 
 /* --- Timing, audio and flashing labs ---------------------------------------------------- */
 
@@ -4020,23 +3117,6 @@ ul.st-list li::before {
   color: var(--ink);
   font-weight: 600;
 }
-.tslides {
-  justify-self: stretch;
-  padding: 12px 16px;
-  border: var(--bwid) solid var(--line-2);
-  border-radius: var(--rad-sm);
-  background: var(--card-bg);
-  color: var(--ink);
-}
-.tslides__slide {
-  margin: 0 0 4px;
-  font-weight: 600;
-}
-.tslides__dots {
-  margin: 0;
-  font-size: var(--small);
-  color: var(--ink-2);
-}
 .tim-track,
 .tbanner {
   margin: 0;
@@ -4046,92 +3126,6 @@ ul.st-list li::before {
   margin: 0;
   font-size: var(--small);
   color: var(--ink-2);
-}
-/* The drawn level meter: the site is silent, so the sound is five bars. */
-.tlevel {
-  display: flex;
-  align-items: flex-end;
-  gap: 12px;
-}
-.tlevel__bars {
-  display: flex;
-  align-items: flex-end;
-  gap: 3px;
-  height: 32px;
-}
-.tlevel__bar {
-  display: block;
-  width: 8px;
-  background: var(--ink-2);
-}
-.tlevel__text {
-  font-size: var(--small);
-  color: var(--ink-2);
-}
-/* One second of a banner as 16 still frames. Depicted, never played. */
-.tstrip {
-  display: grid;
-  gap: 4px;
-  justify-self: stretch;
-}
-.tstrip__frames {
-  display: grid;
-  grid-template-columns: repeat(16, 1fr);
-  gap: 2px;
-  max-width: 320px;
-}
-.tstrip__f {
-  display: block;
-  height: 16px;
-  border: 1px solid var(--line-2);
-  background: var(--card-bg);
-}
-.tstrip__f--dark {
-  background: var(--ink-2);
-}
-.tstrip__label {
-  font-size: var(--small);
-  color: var(--ink-2);
-}
-/* The flash-rate meter: the rate on a 0 to 8 scale, the limit at 3 marked by a line. */
-.fmeter {
-  display: grid;
-  gap: 4px;
-  justify-self: stretch;
-}
-.fmeter__track {
-  position: relative;
-  display: block;
-  max-width: 320px;
-  height: 12px;
-  border: var(--bwid) solid var(--line-2);
-  background: var(--card-bg);
-}
-.fmeter__bar {
-  display: block;
-  height: 100%;
-  background: var(--ink-2);
-}
-.fmeter__bar--over {
-  background: var(--err-text);
-}
-.fmeter__limit {
-  position: absolute;
-  top: -4px;
-  bottom: -4px;
-  width: 2px;
-  background: var(--ink);
-}
-.fmeter__text {
-  font-size: var(--small);
-  font-weight: 600;
-  color: var(--ink);
-}
-.fmeter__text.bad {
-  color: var(--err-text);
-}
-.tim-lab .sess-mock .pill {
-  justify-self: start;
 }
 
 /* --- Pointer labs ----------------------------------------------------------------------- */
@@ -4242,91 +3236,6 @@ ul.st-list li::before {
 }
 .sortl .sortl__moves button {
   padding: 0;
-}
-
-/* The four labs: a depicted mock, then the choices and readouts. */
-.ptr-mock {
-  padding: 16px;
-  border: 1px solid var(--line-2);
-  border-radius: calc(var(--rad) * 0.65);
-  background: var(--deep);
-  color: var(--ink);
-}
-.ptr-map {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  min-height: 96px;
-  padding: 10px;
-  border: 1px solid var(--line-2);
-  background: var(--card-bg);
-}
-.ptr-map__hint,
-.ptr-note {
-  color: var(--ink-2);
-  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
-  font-size: var(--small);
-}
-.ptr-map__zoom,
-.ptr-list__moves {
-  display: flex;
-  gap: 6px;
-}
-.ptr-key {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 28px;
-  min-height: 28px;
-  padding: 0 8px;
-  border: 1px solid var(--ink-2);
-  border-radius: 3px;
-  background: var(--card-bg);
-}
-.ptr-press,
-.ptr-phone {
-  display: grid;
-  justify-items: start;
-  gap: 8px;
-}
-.ptr-draft.is-gone {
-  color: var(--ink-2);
-  text-decoration: line-through;
-  transition: color var(--speed-state) var(--ease-out);
-}
-.ptr-phone {
-  max-width: 16rem;
-  padding: 12px;
-  border: 1.5px solid var(--ink-2);
-  border-radius: 12px;
-  background: var(--card-bg);
-  transition: transform var(--speed-state) var(--ease-out);
-}
-.ptr-phone.is-shaken {
-  transform: rotate(-4deg);
-}
-.ptr-list {
-  display: grid;
-  gap: 4px;
-}
-.ptr-list__row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 4px 8px;
-  border: 1px solid var(--line-2);
-  background: var(--card-bg);
-}
-.ptr-list__handle {
-  color: var(--ink-2);
-}
-.ptr-list__moves {
-  margin-left: auto;
-}
-.ptr-try {
-  display: grid;
-  justify-items: start;
-  gap: 8px;
 }
 
 /* --- Mock player ------------------------------------------------------------------------ */
@@ -4440,16 +3349,8 @@ ul.st-list li::before {
   margin: 0;
   padding-left: 1.25rem;
 }
-.mplayer-pair {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 12px;
-}
 .mplayer-out--3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-.media-alt-lab .transcript {
-  margin: 0;
 }
 
 /* --- Breakpoints ------------------------------------------------------------------------ */
@@ -4552,23 +3453,11 @@ ul.st-list li::before {
   .lab {
     padding: 20px;
   }
-  .lab__exhibit {
-    padding: 20px;
-  }
   .lab-res,
   .nrv-controls {
     grid-template-columns: minmax(0, 1fr);
   }
-  .ring-controls {
-    grid-template-columns: minmax(0, 1fr);
-  }
   .mplayer-out {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .mplayer-pair {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .ts-controls {
     grid-template-columns: minmax(0, 1fr);
   }
   .pairs,
@@ -4591,14 +3480,8 @@ ul.st-list li::before {
   .wide {
     padding: 20px;
   }
-  .chk-in {
-    grid-template-columns: minmax(0, 1fr);
-  }
   .swap {
     justify-self: start;
-  }
-  .wide > .prev .pvh {
-    font-size: 28px;
   }
   .wide > .prev p {
     font-size: 17px;

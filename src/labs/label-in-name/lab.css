@@ -1,0 +1,9 @@
+/* The label-in-name lab's own styles, imported by its lab.ts. Shared lab styles stay in src/styles. */
+
+.lin-mock .namebox__visual {
+  min-height: 40px;
+  padding: 0 18px;
+  border: 0;
+  font: inherit;
+  font-weight: 600;
+}

@@ -1,3 +1,4 @@
+import './lab.css';
 import type { LabEntry } from '../shared/labEntry';
 import { DraggingMovementsLab, MotionActuationLab, PointerCancellationLab, PointerGesturesLab } from './PointerLabs';
 

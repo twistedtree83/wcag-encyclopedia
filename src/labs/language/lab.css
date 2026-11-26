@@ -1,0 +1,12 @@
+/* The language lab's own styles, imported by its lab.ts. Shared lab styles stay in src/styles. */
+
+.lang-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.lang-note {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--small);
+}

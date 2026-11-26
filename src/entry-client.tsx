@@ -5,12 +5,14 @@
  * step), not from `location.pathname`, which carries the GitHub Pages repository prefix.
  * Once hydrated, `<Site>` sets `<html data-hydrated="true">` so tests can wait for live controls.
  */
+// The shared stylesheets come first, so each lab's own lab.css (imported by its lab.ts, through
+// the registry) lands after them in the bundle, as its rules sat after the shared ones before.
+import './styles/swatch.css';
+import './styles/examples.css';
 import { StrictMode } from 'react';
 import { hydrateRoot } from 'react-dom/client';
 import { Site } from './site/Site';
 import { routeFor } from './site/routes';
-import './styles/swatch.css';
-import './styles/examples.css';
 
 const root = document.getElementById('root');
 const route = root ? routeFor(root.dataset.route ?? '') : undefined;

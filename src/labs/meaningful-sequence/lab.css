@@ -1,0 +1,8 @@
+/* The meaningful-sequence lab's own styles, imported by its lab.ts. Shared lab styles stay in src/styles. */
+
+.seq-mock .seq {
+  margin: 0;
+}
+.seq-mock .seq__step {
+  font-size: 15px;
+}

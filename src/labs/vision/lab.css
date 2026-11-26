@@ -1,0 +1,56 @@
+/* The vision lab's own styles, imported by its lab.ts. Shared lab styles stay in src/styles. */
+
+/* The three labs: a depicted mock in fixed colours, drawn through the chosen filter. */
+.vis-lab__mock {
+  display: grid;
+  gap: 16px;
+  padding: 24px;
+  border-radius: calc(var(--rad) * 0.65);
+  background: var(--card-bg);
+}
+.vis-lab__mock p {
+  margin: 0;
+  line-height: 1.6;
+}
+.vis-lab__fields {
+  display: grid;
+  gap: 6px;
+  max-width: 320px;
+}
+.vis-lab__label {
+  font-weight: 600;
+  font-size: var(--small);
+}
+.vis-lab__field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1.5px solid;
+  border-radius: 4px;
+}
+.vis-lab__icon {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  color: var(--ex-on-button);
+  font-weight: 700;
+}
+.vis-lab__check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+.vis-lab__box {
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid;
+  border-radius: 4px;
+}
+.lab-res.vis-cues {
+  grid-template-columns: minmax(0, 1fr);
+}
