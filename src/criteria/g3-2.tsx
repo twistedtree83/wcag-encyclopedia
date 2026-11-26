@@ -1,7 +1,7 @@
 /**
  * Guideline 3.2 — Predictable.
  *
- * The shared rule: the interface may not change under you. Something you did not ask for, or a
+ * The shared idea: the interface may not change under you. Something you did not ask for, or a
  * thing that moves between pages, costs a sighted mouse user a moment of confusion and costs a
  * screen magnifier or screen reader user their entire orientation.
  */

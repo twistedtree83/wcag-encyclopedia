@@ -534,7 +534,7 @@ export const G3_3: readonly CriterionRecord[] = [
       ),
     },
     pass: {
-      caption: 'Persistent labels, with the rules stated up front.',
+      caption: 'Persistent labels, with the format stated up front.',
       live: { Example: LabelledFields, keys: LABEL_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>

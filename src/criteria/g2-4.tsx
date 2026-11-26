@@ -672,7 +672,7 @@ export const G2_4: readonly CriterionRecord[] = [
         { kind: 'add', text: '  outline-offset: 2px;' },
         { kind: 'add', text: '}' },
       ],
-      note: 'The rule this page uses on every interactive element, verbatim.',
+      note: 'The CSS rule this page uses on every interactive element, verbatim.',
     },
   },
 

@@ -54,8 +54,11 @@ To add a page:
   section as `/* --- <Component> --- */` before "Breakpoints", and put its media rules in the
   shared blocks. Check `examples.css` before naming a site class: examples own names such as
   `.crumbs` and `.res`.
-- Fonts are Figtree and Onest only. `e2e/retired.spec.ts` fails if the old fonts or the old
-  single-page markup come back into `dist/`.
+- Fonts are Figtree and Onest only, set as `var(--fh)` and `var(--fb)`. Code uses
+  `ui-monospace, 'SF Mono', Menlo, Consolas, monospace`. `e2e/retired.spec.ts` fails if the old
+  fonts or the old single-page markup come back into `dist/`.
+- `tests/styleRules.test.ts` enforces the mechanical rules: transitions, font stacks, sections
+  before "Breakpoints", axe excludes and the "rule" wording.
 
 ## Records, labs and thresholds
 
