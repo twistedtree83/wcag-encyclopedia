@@ -13,8 +13,6 @@ concurrency:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 jobs:
   # The gate runs here too, deliberately. A page whose central claim is that it obeys the
@@ -38,18 +36,10 @@ jobs:
       - name: Verify (types, unit tests, build, axe scan)
         run: npm run verify
 
-      - uses: actions/configure-pages@v5
-
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      # Publish to Cloudflare Workers (wrangler.jsonc) only after the gate above has passed.
+      # CLOUDFLARE_API_TOKEN is a repository secret: a token from the "Edit Cloudflare Workers"
+      # template, limited to this account.
+      - name: Deploy to Cloudflare
+        run: npx --yes wrangler@4 deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

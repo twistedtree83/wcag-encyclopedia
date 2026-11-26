@@ -101,7 +101,7 @@ The binding constraint is unchanged: **the site obeys every criterion it documen
 ### Stack and pages
 
 - **React + Vite + TypeScript**, kept. The mockup's `site.js` is a behaviour reference, not code to copy: its logic is ported into React components and the existing modules.
-- **Pre-rendered pages.** A build step renders each page to static HTML with React and hydrates it. URLs: `/`, `/colour-check/`, `/criteria/`, `/criteria/<number>/` and `/about/`. Hosting stays GitHub Pages with a relative base, so links between pages are relative. See ADR 0001.
+- **Pre-rendered pages.** A build step renders each page to static HTML with React and hydrates it. URLs: `/`, `/colour-check/`, `/criteria/`, `/criteria/<number>/` and `/about/`. Hosting is Cloudflare Workers (ADR 0005) with a relative base, so links between pages are relative. See ADR 0001.
 - **Old links.** A small script on Home sends `#<criterion number>` to `/criteria/<number>/` with `location.replace`.
 - **Retired:** the single page, the rail, the strip, the drawer, principle openers, "how to read a card", the viewport preview and its container queries, the demo library index, and the old palette and fonts. Layout uses media queries at the guide's breakpoints, 1100px and 900px.
 

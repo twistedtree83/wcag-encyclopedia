@@ -1,0 +1,20 @@
+// Hosting on Cloudflare Workers: the pre-rendered site in dist/ is served as static assets.
+// Deployed by .github/workflows/deploy.yml after `npm run verify` passes, never on its own.
+{
+  "name": "wcag-encyclopedia",
+  "account_id": "13714a328c90b297ce5c4cc077434839",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash",
+    // The Worker runs first only so it can redirect www; everything else is served as assets.
+    "run_worker_first": true
+  },
+  "routes": [
+    { "pattern": "wcagencyclopedia.com", "custom_domain": true },
+    { "pattern": "www.wcagencyclopedia.com", "custom_domain": true }
+  ],
+  "workers_dev": false
+}
