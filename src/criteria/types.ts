@@ -7,6 +7,7 @@
  */
 
 import type { ComponentType, ReactNode } from 'react';
+import type { InstrumentId } from '../live/instruments';
 
 export type Level = 'A' | 'AA' | 'AAA';
 
@@ -65,7 +66,7 @@ export type LiveExample = {
   /** The input bar's buttons, in order. The same on both stages. */
   readonly keys: readonly SimKey[];
   /** Ids of the instruments under the stage (`src/live/instruments.tsx`), in order. */
-  readonly instruments: readonly string[];
+  readonly instruments: readonly InstrumentId[];
   /**
    * Fail stage only: draw no ring where simulated focus is. The stage still moves focus and
    * feeds the instruments. For a failure that is the missing ring itself (2.4.7, #44), so the

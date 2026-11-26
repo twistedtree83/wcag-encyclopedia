@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
-import { clips } from './textFit';
+import { boxesIn, clippedIn } from '../live/clip';
 
 /**
  * A notice card (#54), as the 1.4.12 and 1.4.4 labs and live examples draw it in the zoom frame.
@@ -18,12 +18,6 @@ import { clips } from './textFit';
 
 type Size = { readonly width: number; readonly height: number };
 
-const boxesIn = (root: ParentNode) => Array.from(root.querySelectorAll<HTMLElement>('[data-box]'));
-
-/** Whether any box under `root` cuts off its text. */
-export function clippedIn(root: ParentNode | null): boolean {
-  return root ? boxesIn(root).some(clips) : false;
-}
 
 export function NoticeCard({ locked }: { readonly locked: boolean }) {
   const root = useRef<HTMLDivElement>(null);

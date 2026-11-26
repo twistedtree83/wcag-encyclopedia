@@ -1,4 +1,4 @@
-import type { ComponentType } from 'react';
+import type { ComponentType, ReactNode } from 'react';
 import { AnnouncementLog } from '../labs/AnnouncementLog';
 import { spoken } from '../labs/announce';
 import { contextLog, keyLines, lastOf, logOf, pointerLog, type StageEvent } from './events';
@@ -7,7 +7,7 @@ import { gestureLines } from './gesture';
 import { withVoices } from '../labs/language';
 import { filterName } from './vision';
 import { scrollLine } from '../labs/zoom';
-import { colourLine, sharpLine } from '../labs/imagesOfText';
+import { colourLine, sharpLine } from './readouts';
 import { PlayerLog } from './PlayerWindow';
 import { helpPlaceLines, menuOrderLines, searchNameLines, siteLines } from './mockSite';
 import { clockLines, clockNowLine } from './clock';
@@ -109,26 +109,76 @@ function FocusTracker({ id, events }: InstrumentProps) {
   );
 }
 
+/**
+ * The skeleton most instruments share: a titled `.alog` panel, then a list named by that title,
+ * or a short note while there is nothing to list. `before` and `after` sit around the list.
+ */
+function LogPanel({
+  id,
+  title,
+  className,
+  list = 'ol',
+  items,
+  empty,
+  before,
+  after,
+}: {
+  id: string;
+  title: string;
+  className?: string;
+  list?: 'ol' | 'ul';
+  /** The list's items, or `null` while there is nothing to list. */
+  items: ReactNode[] | null;
+  /** What shows instead of the list; `null` shows nothing. */
+  empty: string | null;
+  before?: ReactNode;
+  after?: ReactNode;
+}) {
+  const List = list;
+  return (
+    <div className={className ? `alog ${className}` : 'alog'}>
+      <p className="alog__h" id={`${id}-h`}>
+        {title}
+      </p>
+      {before}
+      {items ? (
+        <List aria-labelledby={`${id}-h`}>{items}</List>
+      ) : empty !== null ? (
+        <p className="alog__empty">{empty}</p>
+      ) : null}
+      {after}
+    </div>
+  );
+}
+
+/** Items for a list of lines, `null` when there are none. */
+const someOf = <T,>(lines: readonly T[], item: (line: T, i: number) => ReactNode) =>
+  lines.length > 0 ? lines.map(item) : null;
+
+/** A line that says nothing happened is drawn faint. */
+const blankIf = (blank: boolean) => (blank ? 'alog__blank' : undefined);
+
+/** A line that shows the failure is drawn in the failure colour. */
+const twoIf = (two: boolean) => (two ? 'zmeter--two' : undefined);
+
 /** What the last "Autofill" put in each field (#49). */
 function AutofillInstrument({ id, events }: InstrumentProps) {
   const last = lastOf(events, 'autofill');
   return (
-    <div className="alog">
-      <p className="alog__h" id={`${id}-h`}>
-        Autofill
-      </p>
-      {last ? (
-        <ol aria-labelledby={`${id}-h`}>
-          {last.fields.map((f, i) => (
-            <li key={i} className={f.value ? undefined : 'alog__blank'}>
-              {f.name}: {f.value || 'left empty'}
-            </li>
-          ))}
-        </ol>
-      ) : (
-        <p className="alog__empty">Not tried yet.</p>
-      )}
-    </div>
+    <LogPanel
+      id={id}
+      title="Autofill"
+      items={
+        last
+          ? last.fields.map((f, i) => (
+              <li key={i} className={blankIf(!f.value)}>
+                {f.name}: {f.value || 'left empty'}
+              </li>
+            ))
+          : null
+      }
+      empty="Not tried yet."
+    />
   );
 }
 
@@ -136,23 +186,31 @@ function AutofillInstrument({ id, events }: InstrumentProps) {
 function VoiceInstrument({ id, events }: InstrumentProps) {
   const last = lastOf(events, 'voice');
   return (
-    <div className="alog">
-      <p className="alog__h" id={`${id}-h`}>
-        Voice control
-      </p>
-      {last ? (
-        <ol aria-labelledby={`${id}-h`}>
-          <li>You said “{last.phrase}”</li>
-          <li className={last.clicked ? undefined : 'alog__blank'}>
-            {last.clicked ? `Clicked ${spoken(last.clicked)}` : 'Nothing matched'}
-          </li>
-        </ol>
-      ) : (
-        <p className="alog__empty">Nothing said yet.</p>
-      )}
-    </div>
+    <LogPanel
+      id={id}
+      title="Voice control"
+      items={
+        last
+          ? [
+              <li key="said">You said “{last.phrase}”</li>,
+              <li key="did" className={blankIf(!last.clicked)}>
+                {last.clicked ? `Clicked ${spoken(last.clicked)}` : 'Nothing matched'}
+              </li>,
+            ]
+          : null
+      }
+      empty="Nothing said yet."
+    />
   );
 }
+
+/** One judged line: a ✓ or ✕ glyph, hidden, then the words. */
+const judged = (ok: boolean, text: string, key: number) => (
+  <li key={key} className={ok ? 'vis-log__ok' : 'vis-log__lost'}>
+    <span aria-hidden="true">{ok ? '✓ ' : '✕ '}</span>
+    {text}
+  </li>
+);
 
 /**
  * The vision filter (#56): which filter is on the example, and, for each cue whose colour carries
@@ -161,24 +219,15 @@ function VoiceInstrument({ id, events }: InstrumentProps) {
 function VisionInstrument({ id, events }: InstrumentProps) {
   const last = lastOf(events, 'vision');
   return (
-    <div className="alog vis-log">
-      <p className="alog__h" id={`${id}-h`}>
-        Vision filter
-      </p>
-      <p className="vis-log__now">Seen in: {filterName(last?.filter ?? 'none')}</p>
-      {last ? (
-        <ul aria-labelledby={`${id}-h`}>
-          {last.cues.map((c, i) => (
-            <li key={i} className={c.found ? 'vis-log__ok' : 'vis-log__lost'}>
-              <span aria-hidden="true">{c.found ? '✓ ' : '✕ '}</span>
-              {c.line}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="alog__empty">Press “Vision filter” to see the example without full colour.</p>
-      )}
-    </div>
+    <LogPanel
+      id={id}
+      title="Vision filter"
+      className="vis-log"
+      list="ul"
+      before={<p className="vis-log__now">Seen in: {filterName(last?.filter ?? 'none')}</p>}
+      items={last ? last.cues.map((c, i) => judged(c.found, c.line, i)) : null}
+      empty="Press “Vision filter” to see the example without full colour."
+    />
   );
 }
 
@@ -186,23 +235,23 @@ function VisionInstrument({ id, events }: InstrumentProps) {
 function ZoomMeter({ id, events }: InstrumentProps) {
   const last = lastOf(events, 'zoom');
   return (
-    <div className="alog">
-      <p className="alog__h" id={`${id}-h`}>
-        Zoom and scrolling
-      </p>
-      {last ? (
-        <ol aria-labelledby={`${id}-h`}>
-          <li>
-            Zoom {last.zoom}%: {last.width} by {last.height} CSS pixels
-          </li>
-          <li className={last.sideways ? 'zmeter--two' : undefined}>
-            {scrollLine({ sideways: last.sideways, down: last.down })}
-          </li>
-        </ol>
-      ) : (
-        <p className="alog__empty">At 100%: not zoomed yet.</p>
-      )}
-    </div>
+    <LogPanel
+      id={id}
+      title="Zoom and scrolling"
+      items={
+        last
+          ? [
+              <li key="zoom">
+                Zoom {last.zoom}%: {last.width} by {last.height} CSS pixels
+              </li>,
+              <li key="scroll" className={twoIf(last.sideways)}>
+                {scrollLine({ sideways: last.sideways, down: last.down })}
+              </li>,
+            ]
+          : null
+      }
+      empty="At 100%: not zoomed yet."
+    />
   );
 }
 
@@ -210,23 +259,23 @@ function ZoomMeter({ id, events }: InstrumentProps) {
 function OrientationMeter({ id, events }: InstrumentProps) {
   const last = lastOf(events, 'rotate');
   return (
-    <div className="alog">
-      <p className="alog__h" id={`${id}-h`}>
-        Orientation
-      </p>
-      {last ? (
-        <ol aria-labelledby={`${id}-h`}>
-          <li>
-            {last.turned ? 'Landscape' : 'Portrait'}: {last.width} by {last.height} CSS pixels
-          </li>
-          <li className={last.hidden ? 'zmeter--two' : undefined}>
-            {last.hidden ? 'Content hidden: the page asks to be turned back' : 'Content shown'}
-          </li>
-        </ol>
-      ) : (
-        <p className="alog__empty">Upright: not turned yet.</p>
-      )}
-    </div>
+    <LogPanel
+      id={id}
+      title="Orientation"
+      items={
+        last
+          ? [
+              <li key="way">
+                {last.turned ? 'Landscape' : 'Portrait'}: {last.width} by {last.height} CSS pixels
+              </li>,
+              <li key="shown" className={twoIf(last.hidden)}>
+                {last.hidden ? 'Content hidden: the page asks to be turned back' : 'Content shown'}
+              </li>,
+            ]
+          : null
+      }
+      empty="Upright: not turned yet."
+    />
   );
 }
 
@@ -234,23 +283,23 @@ function OrientationMeter({ id, events }: InstrumentProps) {
 function TextLook({ id, events }: InstrumentProps) {
   const last = lastOf(events, 'look');
   return (
-    <div className="alog">
-      <p className="alog__h" id={`${id}-h`}>
-        Zoom and your colours
-      </p>
-      {last ? (
-        <ol aria-labelledby={`${id}-h`}>
-          <li className={last.image && last.zoom > 100 ? 'zmeter--two' : undefined}>
-            {sharpLine(last.zoom, last.image)}
-          </li>
-          <li className={last.image && last.restyled ? 'zmeter--two' : undefined}>
-            {colourLine(last.restyled, last.image)}
-          </li>
-        </ol>
-      ) : (
-        <p className="alog__empty">At 100%, in the page’s own colours.</p>
-      )}
-    </div>
+    <LogPanel
+      id={id}
+      title="Zoom and your colours"
+      items={
+        last
+          ? [
+              <li key="sharp" className={twoIf(last.image && last.zoom > 100)}>
+                {sharpLine(last.zoom, last.image)}
+              </li>,
+              <li key="colour" className={twoIf(last.image && last.restyled)}>
+                {colourLine(last.restyled, last.image)}
+              </li>,
+            ]
+          : null
+      }
+      empty="At 100%, in the page’s own colours."
+    />
   );
 }
 
@@ -258,22 +307,20 @@ function TextLook({ id, events }: InstrumentProps) {
 function KeyLog({ id, events }: InstrumentProps) {
   const last = lastOf(events, 'keys');
   return (
-    <div className="alog">
-      <p className="alog__h" id={`${id}-h`}>
-        Keys
-      </p>
-      {last ? (
-        <ol aria-labelledby={`${id}-h`}>
-          {keyLines(last).map((text, i) => (
-            <li key={i} className={text === 'Nothing happened' ? 'alog__blank' : undefined}>
-              {text}
-            </li>
-          ))}
-        </ol>
-      ) : (
-        <p className="alog__empty">No keys sent yet.</p>
-      )}
-    </div>
+    <LogPanel
+      id={id}
+      title="Keys"
+      items={
+        last
+          ? keyLines(last).map((text, i) => (
+              <li key={i} className={blankIf(text === 'Nothing happened')}>
+                {text}
+              </li>
+            ))
+          : null
+      }
+      empty="No keys sent yet."
+    />
   );
 }
 
@@ -366,52 +413,44 @@ function GesturePad({ id, events }: InstrumentProps) {
  * tooltip did after each, then whether a tooltip is open now and what it says.
  */
 function PointerInstrument({ id, events }: InstrumentProps) {
-  const lines = pointerLog(events);
   const popup = lastOf(events, 'popup');
   return (
-    <div className="alog plog">
-      <p className="alog__h" id={`${id}-h`}>
-        Pointer and tooltip
-      </p>
-      {lines.length > 0 ? (
-        <ol aria-labelledby={`${id}-h`}>
-          {lines.map((line, i) => (
-            <li key={i}>{line}</li>
-          ))}
-        </ol>
-      ) : (
-        <p className="alog__empty">The pointer has not moved yet.</p>
-      )}
-      <p className="plog__now">
-        {popup?.text ? `Open now: “${popup.text}”` : 'No tooltip is open.'}
-      </p>
-    </div>
+    <LogPanel
+      id={id}
+      title="Pointer and tooltip"
+      className="plog"
+      items={someOf(pointerLog(events), (line, i) => (
+        <li key={i}>{line}</li>
+      ))}
+      empty="The pointer has not moved yet."
+      after={
+        <p className="plog__now">{popup?.text ? `Open now: “${popup.text}”` : 'No tooltip is open.'}</p>
+      }
+    />
   );
 }
+
+/** Items for a trail of lines, the last one marked current. */
+const trailOf = (lines: readonly string[], current: 'page' | 'step') =>
+  someOf(lines, (line, i) => (
+    <li key={i} aria-current={i === lines.length - 1 ? current : undefined}>
+      {line}
+    </li>
+  ));
 
 /**
  * The example's own page (#47): every page it has shown, oldest first, and what moved it there.
  * A change on focus alone is the 3.2.1 failure; a change after an action is fine.
  */
 function ContextInstrument({ id, events }: InstrumentProps) {
-  const lines = contextLog(events);
   return (
-    <div className="alog clog">
-      <p className="alog__h" id={`${id}-h`}>
-        Where the example is
-      </p>
-      {lines.length > 0 ? (
-        <ol aria-labelledby={`${id}-h`}>
-          {lines.map((line, i) => (
-            <li key={i} aria-current={i === lines.length - 1 ? 'page' : undefined}>
-              {line}
-            </li>
-          ))}
-        </ol>
-      ) : (
-        <p className="alog__empty">Not loaded yet.</p>
-      )}
-    </div>
+    <LogPanel
+      id={id}
+      title="Where the example is"
+      className="clog"
+      items={trailOf(contextLog(events), 'page')}
+      empty="Not loaded yet."
+    />
   );
 }
 
@@ -422,54 +461,25 @@ function ContextInstrument({ id, events }: InstrumentProps) {
 function MockSiteInstrument({ id, events }: InstrumentProps) {
   const lines = siteLines(events);
   return (
-    <div className="alog msite-log">
-      <p className="alog__h" id={`${id}-h`}>
-        Mock site
-      </p>
-      {lines ? (
-        <>
-          <p className="msite-log__now">{lines.now}</p>
-          <p className="msite-log__ways">{lines.ways}</p>
-          <ol aria-labelledby={`${id}-h`}>
-            {lines.trail.map((line, i) => (
-              <li key={i} aria-current={i === lines.trail.length - 1 ? 'page' : undefined}>
-                {line}
-              </li>
-            ))}
-          </ol>
-        </>
-      ) : (
-        <p className="alog__empty">Not loaded yet.</p>
-      )}
-    </div>
+    <LogPanel
+      id={id}
+      title="Mock site"
+      className="msite-log"
+      before={
+        lines ? (
+          <>
+            <p className="msite-log__now">{lines.now}</p>
+            <p className="msite-log__ways">{lines.ways}</p>
+          </>
+        ) : null
+      }
+      items={lines ? (trailOf(lines.trail, 'page') ?? []) : null}
+      empty="Not loaded yet."
+    />
   );
 }
 
-/** The menu on each mock-site page visited (#63), judged against the first page's order. */
-function MenuOrderInstrument({ id, events }: InstrumentProps) {
-  const lines = menuOrderLines(events);
-  return (
-    <div className="alog vis-log morder">
-      <p className="alog__h" id={`${id}-h`}>
-        Menu order
-      </p>
-      {lines.length > 0 ? (
-        <ul aria-labelledby={`${id}-h`}>
-          {lines.map((l, i) => (
-            <li key={i} className={l.kept ? 'vis-log__ok' : 'vis-log__lost'}>
-              <span aria-hidden="true">{l.kept ? '✓ ' : '✕ '}</span>
-              {l.text}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="alog__empty">Not loaded yet.</p>
-      )}
-    </div>
-  );
-}
-
-/** A judged line per mock-site page (#64): a ✓ or ✕ glyph, hidden, then the words. */
+/** A judged line per mock-site page (#63, #64): a ✓ or ✕ glyph, hidden, then the words. */
 function JudgedLines({
   id,
   title,
@@ -482,24 +492,20 @@ function JudgedLines({
   lines: readonly { text: string; kept: boolean }[];
 }) {
   return (
-    <div className={`alog vis-log ${className}`}>
-      <p className="alog__h" id={`${id}-h`}>
-        {title}
-      </p>
-      {lines.length > 0 ? (
-        <ul aria-labelledby={`${id}-h`}>
-          {lines.map((l, i) => (
-            <li key={i} className={l.kept ? 'vis-log__ok' : 'vis-log__lost'}>
-              <span aria-hidden="true">{l.kept ? '✓ ' : '✕ '}</span>
-              {l.text}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="alog__empty">Not loaded yet.</p>
-      )}
-    </div>
+    <LogPanel
+      id={id}
+      title={title}
+      className={`vis-log ${className}`}
+      list="ul"
+      items={someOf(lines, (l, i) => judged(l.kept, l.text, i))}
+      empty="Not loaded yet."
+    />
   );
+}
+
+/** The menu on each mock-site page visited (#63), judged against the first page's order. */
+function MenuOrderInstrument({ id, events }: InstrumentProps) {
+  return <JudgedLines id={id} title="Menu order" className="morder" lines={menuOrderLines(events)} />;
 }
 
 /**
@@ -507,21 +513,17 @@ function JudgedLines({
  * changed on it (a warning, an expiry), with when. It never starts on its own.
  */
 function ClockInstrument({ id, events }: InstrumentProps) {
-  const lines = clockLines(events);
   return (
-    <div className="alog clock-log">
-      <p className="alog__h" id={`${id}-h`}>
-        Clock
-      </p>
-      <p className="clock-log__now">{clockNowLine(events)}</p>
-      {lines.length > 0 ? (
-        <ol aria-labelledby={`${id}-h`}>
-          {lines.map((line, i) => (
-            <li key={i}>{line}</li>
-          ))}
-        </ol>
-      ) : null}
-    </div>
+    <LogPanel
+      id={id}
+      title="Clock"
+      className="clock-log"
+      before={<p className="clock-log__now">{clockNowLine(events)}</p>}
+      items={someOf(clockLines(events), (line, i) => (
+        <li key={i}>{line}</li>
+      ))}
+      empty={null}
+    />
   );
 }
 
@@ -539,27 +541,27 @@ function HelpPlaceInstrument({ id, events }: InstrumentProps) {
 function TextFitMeter({ id, events }: InstrumentProps) {
   const last = lastOf(events, 'text-fit');
   return (
-    <div className="alog">
-      <p className="alog__h" id={`${id}-h`}>
-        Text and clipping
-      </p>
-      {last ? (
-        <ol aria-labelledby={`${id}-h`}>
-          <li>
-            Text at {last.scale}%, spacing {last.spacing ? 'on' : 'off'}
-          </li>
-          <li className={last.clipped ? 'zmeter--two' : undefined}>
-            {last.clipped ? 'Text is cut off' : 'All the text fits'}
-          </li>
-        </ol>
-      ) : (
-        <p className="alog__empty">As designed: nothing changed yet.</p>
-      )}
-    </div>
+    <LogPanel
+      id={id}
+      title="Text and clipping"
+      items={
+        last
+          ? [
+              <li key="size">
+                Text at {last.scale}%, spacing {last.spacing ? 'on' : 'off'}
+              </li>,
+              <li key="clip" className={twoIf(last.clipped)}>
+                {last.clipped ? 'Text is cut off' : 'All the text fits'}
+              </li>,
+            ]
+          : null
+      }
+      empty="As designed: nothing changed yet."
+    />
   );
 }
 
-export const INSTRUMENTS: Readonly<Record<string, ComponentType<InstrumentProps>>> = {
+export const INSTRUMENTS = {
   clock: ClockInstrument,
   'gesture-pad': GesturePad,
   'mock-player': PlayerLog,
@@ -580,7 +582,10 @@ export const INSTRUMENTS: Readonly<Record<string, ComponentType<InstrumentProps>
   'menu-order': MenuOrderInstrument,
   'search-name': SearchNameInstrument,
   'help-place': HelpPlaceInstrument,
-};
+} as const satisfies Readonly<Record<string, ComponentType<InstrumentProps>>>;
+
+/** An instrument's id: one key of INSTRUMENTS. */
+export type InstrumentId = keyof typeof INSTRUMENTS;
 
 /** The ids in `ids` that no registered instrument answers to. Empty when all resolve. */
 export function unresolvedInstruments(ids: readonly string[]): string[] {

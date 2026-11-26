@@ -1683,7 +1683,7 @@ footer.foot p {
   line-height: 1.45;
 }
 
-/* --- Lab shell (L-01) ------------------------------------------------------------------- */
+/* --- Lab shell -------------------------------------------------------------------------- */
 
 /* The row under every lab: its one verdict, then Reset. */
 .lab-foot {
@@ -1725,7 +1725,7 @@ footer.foot p {
   }
 }
 
-/* --- Announcement log and the 4.1.2 lab (L-02) ------------------------------------------- */
+/* --- Announcement log and name-role-value lab ------------------------------------------- */
 
 /* The log: what a screen reader would say, one line per thing it says. Not a live region. */
 .alog__h {
@@ -1832,7 +1832,7 @@ footer.foot p {
   gap: 16px;
 }
 
-/* --- Live examples (L-03) ---------------------------------------------------------------- */
+/* --- Live examples ---------------------------------------------------------------------- */
 
 /* Side by side, the two stages share rows (caption, example, input bar, instruments), so the
    broken and fixed logs line up row by row. At 900px and below they stack (Breakpoints). */
@@ -1904,7 +1904,7 @@ footer.foot p {
   color: var(--ink-2);
 }
 
-/* --- Focus tracker and the 2.4.7 lab (L-04) ---------------------------------------------- */
+/* --- Focus tracker and focus ring lab --------------------------------------------------- */
 
 /* The focus tracker: a map of the example's Tab stops, numbered in Tab order, with the ring on
    the current stop and a dashed trail through where focus has been. Then the same in text. */
@@ -2029,7 +2029,7 @@ footer.foot p {
   border-radius: 4px;
 }
 
-/* --- Sequence, input purpose and label in name (L-09) ------------------------------------ */
+/* --- Sequence, input purpose and label in name labs ------------------------------------- */
 
 /* Live examples: the 1.3.2 steps are real buttons; the 1.3.5 fields and 2.5.3 button too. */
 .live-seq {
@@ -2143,7 +2143,7 @@ footer.foot p {
   overflow-wrap: anywhere;
 }
 
-/* --- Semantics labs: 1.1.1 alt text and 1.3.1 structure (L-08) --------------------------- */
+/* --- Alt text and structure labs -------------------------------------------------------- */
 
 /* Shared controls: radio and checkbox groups, and the alt text field. */
 .sem-controls {
@@ -2276,7 +2276,7 @@ ul.st-list li::before {
   grid-template-columns: 1fr 1fr;
 }
 
-/* --- Titles, links and headings (L-10) --------------------------------------------------- */
+/* --- Page title, link purpose and headings labs ----------------------------------------- */
 
 /* Live examples. "Switch tab" draws its cursor on the tab it switched to (`data-sim-on`). */
 .tabs__tab {
@@ -2378,7 +2378,7 @@ ul.st-list li::before {
   gap: 16px;
 }
 
-/* --- Language and status messages (L-11) ------------------------------------------------ */
+/* --- Language and status message labs --------------------------------------------------- */
 
 /* The 3.1.x mocks and live examples: a short page of prose. */
 .lang-page h4,
@@ -2433,7 +2433,7 @@ ul.st-list li::before {
   gap: 12px 24px;
 }
 
-/* --- Zoom frame and the 1.4.10 lab (L-13) ----------------------------------------------- */
+/* --- Zoom frame and reflow lab ---------------------------------------------------------- */
 
 /* The zoom frame: a browser window whose content is laid out in the window's own CSS pixels,
    then scaled (transform only) to fill the frame. The frame clips it, so the page never widens. */
@@ -2531,7 +2531,7 @@ ul.st-list li::before {
   font-weight: 600;
 }
 
-/* --- Form errors and labels: 3.3.1 and 3.3.2 (L-12) ------------------------------------------ */
+/* --- Form errors and form labels labs --------------------------------------------------- */
 
 /* A small real form: the live examples on 3.3.1 and 3.3.2, and both labs' depicted mocks. */
 .lform {
@@ -2617,7 +2617,7 @@ ul.st-list li::before {
   font-weight: 600;
 }
 
-/* --- Keyboard: 2.1.1, 2.1.2 and 2.1.4 (L-05) --------------------------------------------- */
+/* --- Keyboard labs ---------------------------------------------------------------------- */
 
 /* Live examples: a basket, a newsletter panel that loops focus, and a message with a reply box. */
 .kb-basket,
@@ -2764,7 +2764,7 @@ ul.st-list li::before {
   color: var(--ink-2);
 }
 
-/* --- Gesture pad and target size: 2.5.8 (L-17) ------------------------------------------- */
+/* --- Gesture pad and target size lab ---------------------------------------------------- */
 
 /* The bar's fingertip: a disc centred where the last "Tap" landed, on both stages. */
 .sim-tap {
@@ -2899,7 +2899,7 @@ ul.st-list li::before {
   gap: 16px 24px;
 }
 
-/* --- Focus order, bypass and obscured focus: 2.4.1, 2.4.3, 2.4.11 (L-06) ------------------ */
+/* --- Focus order, bypass and obscured focus labs ---------------------------------------- */
 
 /* Live examples. Links and buttons are at least 24px tall (2.5.8). Anything that covers the
    page (the 2.4.3 dialog, the 2.4.11 header) sits above the drawn focus ring, z-index 2. */
@@ -3156,7 +3156,7 @@ ul.st-list li::before {
   font-weight: 700;
 }
 
-/* --- On focus and content on hover (L-07) ------------------------------------------------ */
+/* --- On focus and content on hover labs ------------------------------------------------- */
 
 /* The bar's drawn pointer, on either stage of a live example with a Hover key. Its tip sits on
    the point it is given; it moves by transform only. */
@@ -3377,7 +3377,7 @@ ul.st-list li::before {
   margin-top: 16px;
 }
 
-/* --- Text size and spacing: 1.4.4 and 1.4.12 (L-14) ------------------------------------------ */
+/* --- Text size and spacing labs --------------------------------------------------------- */
 
 /* The notice card drawn in the zoom frame. Sized in em so the frame's text size reaches it, in
    the system font so no late web font changes it after its boxes are measured (NoticeCard). Its
@@ -3431,7 +3431,7 @@ ul.st-list li::before {
   margin-top: 8px;
 }
 
-/* --- Orientation and images of text: 1.3.4 and 1.4.5 (L-15) --------------------------------- */
+/* --- Orientation and images of text labs ------------------------------------------------ */
 
 /* A phone held upright is drawn narrow, so a portrait frame is not as tall as a full-width one. */
 .zframe[data-orientation='portrait'] {
@@ -3525,7 +3525,7 @@ ul.st-list li::before {
   font-family: Verdana, Tahoma, sans-serif !important;
 }
 
-/* --- Forms: on input, error suggestion and error prevention: 3.2.2, 3.3.3, 3.3.4 (L-19) ---- */
+/* --- On input, error suggestion and error prevention labs ------------------------------- */
 
 /* A depicted address bar, so a page change inside an example or mock can be seen. */
 .addrbar {
@@ -3588,7 +3588,7 @@ ul.st-list li::before {
   gap: 8px;
 }
 
-/* --- Vision filter: 1.4.1, 1.4.11, 1.3.3 and 1.4.3 (L-16) ----------------------------------- */
+/* --- Vision filter ---------------------------------------------------------------------- */
 
 /* The colour-vision SVG filters live in a zero-size svg; not display:none, or they stop drawing. */
 .vis-defs {
@@ -3756,7 +3756,7 @@ ul.st-list li::before {
   grid-template-columns: minmax(0, 1fr);
 }
 
-/* --- Mock site: 2.4.5 and 3.2.3 (L-23) --------------------------------------------------- */
+/* --- Mock site -------------------------------------------------------------------------- */
 
 /* A miniature site drawn in a live example or a lab: address bar, menu, search, page, footer. */
 .msite__window {
@@ -3858,7 +3858,7 @@ ul.st-list li::before {
   font-weight: 600;
 }
 
-/* --- Mock site: search name and help link, 3.2.4 and 3.2.6 (L-24) ------------------------ */
+/* --- Mock site: search name and help link ----------------------------------------------- */
 
 /* The help link, wherever the site puts it: after the menu, at the end of the page, the footer. */
 .msite__help {
@@ -3873,7 +3873,7 @@ ul.st-list li::before {
   font-weight: 600;
 }
 
-/* --- Clock and 2.2.1 (L-21) ---------------------------------------------------------------- */
+/* --- Clock and session timeout lab ------------------------------------------------------ */
 
 /* The 2.2.1 live examples: a one-field application, its warning, or its end. */
 .sess {
@@ -3948,7 +3948,7 @@ ul.st-list li::before {
   font-weight: 600;
 }
 
-/* --- Redundant entry and accessible authentication: 3.3.7 and 3.3.8 (L-20) ---------------- */
+/* --- Redundant entry and accessible authentication labs --------------------------------- */
 
 /* The step a checkout is on, in the live examples and the 3.3.7 lab's mock. */
 .lform__step {
@@ -4001,7 +4001,7 @@ ul.st-list li::before {
   gap: 8px;
 }
 
-/* --- Timing, audio and flashing: 2.2.2, 1.4.2 and 2.3.1 (L-22) ----------------------------- */
+/* --- Timing, audio and flashing labs ---------------------------------------------------- */
 
 /*
  * Nothing in this block animates, and nothing in it may ever flash (2.3.1): the film strip is
@@ -4134,7 +4134,7 @@ ul.st-list li::before {
   justify-self: start;
 }
 
-/* --- Pointer: 2.5.1, 2.5.2, 2.5.4 and 2.5.7 (L-18) ------------------------------------------ */
+/* --- Pointer labs ----------------------------------------------------------------------- */
 
 /* Live examples. Every button is at least 32px, so the bar's 10px slip stays on it (2.5.8). */
 .live-map,
@@ -4329,7 +4329,7 @@ ul.st-list li::before {
   gap: 8px;
 }
 
-/* --- Mock player: 1.2.2 and 1.2.4 (L-25) ------------------------------------------------- */
+/* --- Mock player ------------------------------------------------------------------------ */
 
 /* The stand-in for a video (#65): a screen that says its picture in words, the caption, and a
    transport row. No media element; the picture steps with the clip, nothing animates. */
@@ -4415,7 +4415,7 @@ ul.st-list li::before {
   font-size: var(--small);
 }
 
-/* --- Media alternatives: 1.2.1, 1.2.3 and 1.2.5 (L-26) ------------------------------------ */
+/* --- Media alternatives labs ------------------------------------------------------------ */
 
 /* Description cues (#66) sit on the screen, above any caption: the site is silent, so the
    description track is drawn rather than heard. Transcripts are plain lists under the player. */

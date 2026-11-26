@@ -89,7 +89,7 @@ function JumpToSection({ onFocusJumps }: { onFocusJumps: boolean }) {
 }
 
 const JUMP_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'enter'];
-const JUMP_INSTRUMENTS = ['context', 'focus-tracker'];
+const JUMP_INSTRUMENTS: LiveExample['instruments'] = ['context', 'focus-tracker'];
 
 /*
  * 3.2.2's live examples (#59). A checkout form with a name already typed and a country choice.
@@ -183,7 +183,7 @@ const ShuffledShop = () => <MockSite site={SHUFFLED_SITE} />;
 const SteadyShop = () => <MockSite site={STEADY_SITE} />;
 
 const SHOP_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'enter'];
-const SHOP_INSTRUMENTS = ['menu-order', 'announcement-log'];
+const SHOP_INSTRUMENTS: LiveExample['instruments'] = ['menu-order', 'announcement-log'];
 
 /*
  * 3.2.4's and 3.2.6's live examples (#64), on the same mock shop. 3.2.4: the search button is
@@ -197,8 +197,8 @@ const SteadySearch = () => <MockSite site={STEADY_SEARCH_SITE} />;
 const RoamingHelp = () => <MockSite site={ROAMING_HELP_SITE} />;
 const SteadyHelp = () => <MockSite site={STEADY_HELP_SITE} />;
 
-const ID_INSTRUMENTS = ['search-name', 'announcement-log'];
-const HELP_INSTRUMENTS = ['help-place', 'announcement-log'];
+const ID_INSTRUMENTS: LiveExample['instruments'] = ['search-name', 'announcement-log'];
+const HELP_INSTRUMENTS: LiveExample['instruments'] = ['help-place', 'announcement-log'];
 
 export const G3_2: readonly CriterionRecord[] = [
   {

@@ -259,7 +259,7 @@ const LostSite = () => <MockSite site={SUPPORT_SITE} />;
 const FoundSite = () => <MockSite site={SUPPORT_SITE_FOUND} />;
 
 const SITE_KEYS: LiveExample['keys'] = ['tab', 'shift-tab', 'enter'];
-const SITE_INSTRUMENTS = ['mock-site', 'announcement-log'];
+const SITE_INSTRUMENTS: LiveExample['instruments'] = ['mock-site', 'announcement-log'];
 
 export const G2_4: readonly CriterionRecord[] = [
   {
