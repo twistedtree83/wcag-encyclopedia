@@ -68,13 +68,30 @@ const TITLE_KEYS: LiveExample['keys'] = ['switch-tab'];
 /** The documents the example links point at don't exist; following one would leave the page. */
 const stay = (e: MouseEvent) => e.preventDefault();
 
+/*
+ * 2.4.4 fails here in context too: the titles are their own list, laid beside the links, so each
+ * link's list item holds nothing but "read more". Only the eye pairs a title with its link.
+ */
 function ReadMoreLinks() {
   return (
-    <ul className="linklist live-links" onClick={stay}>
-      <li>Annual report 2025 — <a href="/reports/annual-2025.pdf">read more</a></li>
-      <li>Board minutes, March — <a href="/reports/minutes-march">read more</a></li>
-      <li>Sustainability update — <a href="/reports/sustainability">read more</a></li>
-    </ul>
+    <div className="linkrows" onClick={stay}>
+      <ul className="linkrows__titles live-links">
+        <li>Annual report 2025</li>
+        <li>Board minutes, March</li>
+        <li>Sustainability update</li>
+      </ul>
+      <ul className="linkrows__links live-links">
+        <li>
+          <a href="/reports/annual-2025.pdf">read more</a>
+        </li>
+        <li>
+          <a href="/reports/minutes-march">read more</a>
+        </li>
+        <li>
+          <a href="/reports/sustainability">read more</a>
+        </li>
+      </ul>
+    </div>
   );
 }
 
@@ -434,19 +451,26 @@ export const G2_4: readonly CriterionRecord[] = [
       'or paragraph around it. Screen reader users often pull up a list of every link on the ' +
       'page, where that surrounding context is gone.',
     fail: {
-      caption: 'Eleven links that all say the same thing.',
+      caption: 'Three “read more” links, with their titles in a separate column.',
       live: { Example: ReadMoreLinks, keys: LINK_KEYS, instruments: ['announcement-log'] },
       render: () => (
         <>
-          <div className="linklist">
-            <span>Annual report 2025 — <u>read more</u></span>
-            <span>Board minutes, March — <u>read more</u></span>
-            <span>Sustainability update — <u>read more</u></span>
+          <div className="linkrows">
+            <div className="linkrows__titles">
+              <span>Annual report 2025</span>
+              <span>Board minutes, March</span>
+              <span>Sustainability update</span>
+            </div>
+            <div className="linkrows__links">
+              <u>read more</u>
+              <u>read more</u>
+              <u>read more</u>
+            </div>
           </div>
           <p className="example-note">
-            Pulled into a links list they read "read more, read more, read more". The same
-            problem afflicts "click here", "download", and a bare URL read out character by
-            character.
+            The titles are one list and the links another, lined up only by the layout. A
+            link’s own list item says nothing but “read more”, so neither its text nor its
+            context names the report, and a links list reads “read more” three times.
           </p>
         </>
       ),
@@ -477,8 +501,11 @@ export const G2_4: readonly CriterionRecord[] = [
     diff: {
       title: 'reports.html',
       lines: [
-        { kind: 'del', text: 'Annual report 2025 — <a href="/r25.pdf">read more</a>' },
-        { kind: 'add', text: '<a href="/r25.pdf">Read the annual report 2025</a> (PDF, 2.4 MB)' },
+        { kind: 'del', text: '<ul class="titles"><li>Annual report 2025</li> …</ul>' },
+        { kind: 'del', text: '<ul class="links"><li><a href="/r25.pdf">read more</a></li> …</ul>' },
+        { kind: 'add', text: '<ul>' },
+        { kind: 'add', text: '  <li><a href="/r25.pdf">Read the annual report 2025</a> (PDF, 2.4 MB)</li> …' },
+        { kind: 'add', text: '</ul>' },
       ],
       note:
         'Hiding the context in aria-label is a second-best fix: it desynchronises what is seen ' +

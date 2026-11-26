@@ -193,7 +193,7 @@ export const G2_2: readonly CriterionRecord[] = [
             <span>Please sign in again.</span>
           </div>
           <p className="example-note">
-            Fifteen minutes, no warning, and the half-finished application is gone. Anyone
+            Two minutes, no warning, and the half-finished application is gone. Anyone
             typing with a switch, looking words up, or interrupted by care needs starts over —
             and hits the same wall next time.
           </p>
@@ -207,15 +207,15 @@ export const G2_2: readonly CriterionRecord[] = [
         <>
           <div className="notice">
             <span className="notice__title">Still there?</span>
-            <span>Your session ends in 2 minutes. Your answers are saved.</span>
+            <span>Your session ends in {WARN} seconds. Your answers are saved.</span>
             <span className="notice__actions">
               <span className="pill">Give me more time</span>
               <span className="pill">Sign out</span>
             </span>
           </div>
           <p className="example-note">
-            Warned well before the limit, extended by one obvious action, and the data survives
-            either way. Saving the work is not strictly required by the criterion — it is what
+            Warned {WARN} seconds before the two-minute limit, extended by one obvious action,
+            and the data survives either way. Saving the work is not strictly required by the criterion — it is what
             makes the difference between compliant and kind.
           </p>
         </>
