@@ -10,9 +10,10 @@ how tasks are selected — that is the runner's job.
 
 Read these before your first task, and re-read the relevant part whenever a task touches it:
 
-1. **`CONTEXT.md`** — the domain model and vocabulary. Use its terms exactly. If you need a
-   noun the project does not yet have a word for, that is a signal to stop and ask, not to
-   invent one silently.
+1. **`CONTEXT.md`** — the domain model and vocabulary. Use its terms exactly. A task that
+   needs a new domain noun adds it to `CONTEXT.md` in the same commit, with a one-line
+   definition. Stop to ask only when the run is attended and the noun is contested (it
+   overlaps an existing term, or the bibles suggest different words).
 2. **The PRD, `docs/PRD.md`** (the redesign, issue #27; the original single-page PRD, issue #1,
    is archived at `docs/archive/PRD-single-page.md`) — problem statement, user stories,
    implementation decisions, testing decisions, out-of-scope. It is the authority on *what* and
@@ -101,6 +102,10 @@ acceptance criterion, watch it fail for the right reason, make it pass, then cle
 `npm run verify`. Green or stop. Then walk the issue's acceptance criteria one by one and
 confirm each is actually satisfied — the gate proves the code works, not that you built the
 right thing.
+
+**Review check** (for the implementer and for anyone reviewing the commit): every new domain
+noun in the diff (a type, module, prop or copy term) is defined in `CONTEXT.md` in the same
+commit.
 
 ### 7. Commit
 On the graph's `branchName`. Message format:

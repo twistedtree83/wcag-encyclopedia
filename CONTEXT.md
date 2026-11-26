@@ -1,7 +1,8 @@
 # CONTEXT — WCAG Encyclopedia domain model
 
 The vocabulary of this project. Use these words exactly; they map one-to-one onto types and
-modules. If you need a noun that isn't here, stop and ask rather than inventing one.
+modules. A task that needs a noun that isn't here adds it, with a one-line definition, in the
+same commit (see `scripts2/RALPH_PROMPT.md`).
 
 ---
 
