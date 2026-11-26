@@ -150,7 +150,13 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
   const example = useRef<HTMLDivElement>(null);
   const [events, setEvents] = useState<readonly StageEvent[]>([]);
   /** Fail stage: the Tab stop the drawn focus is on, or -1. */
-  const [simAt, setSimAt] = useState(-1);
+  const [simAt, setSimAtState] = useState(-1);
+  /** The same stop, current between renders, so two presses before a re-render both move it. */
+  const simAtNow = useRef(-1);
+  const setSimAt = useCallback((at: number) => {
+    simAtNow.current = at;
+    setSimAtState(at);
+  }, []);
   /** Pass stage: the last Tab stop that had real focus. */
   const realAt = useRef<HTMLElement | null>(null);
   /** True while the bar is sending keys, so the real-key listener leaves them to `press`. */
@@ -478,7 +484,7 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
       // With no control focused they go to what the pointer is on (#47), else to the example
       // itself, as keys go to the page body. A letter the example doesn't cancel is typed into
       // the field it lands on.
-      const at = simulated ? stops[simAt] : realAt.current;
+      const at = simulated ? stops[simAtNow.current] : realAt.current;
       const focused = at && at.isConnected && root.contains(at) ? at : null;
       const target = focused ?? hoverEl.current ?? root.firstElementChild ?? root;
       const where = focused ? lineFor(focused) : null;
@@ -521,7 +527,7 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
       const back = key === 'shift-tab';
       cause.current = 'focus';
       if (simulated) {
-        const next = step(stops.length, simAt, back);
+        const next = step(stops.length, simAtNow.current, back);
         setSimAt(next);
         // Simulated focus scrolls a scrolling box in the example as real focus would (#46).
         if (next >= 0) revealWithin(root, stops[next]!);
@@ -553,7 +559,7 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
       }
       return;
     }
-    const target = simulated ? stops[simAt] : realAt.current;
+    const target = simulated ? stops[simAtNow.current] : realAt.current;
     if (!target || !activates(key, target)) return;
     cause.current = 'action';
     const before = spoken(lineFor(target));

@@ -44,14 +44,20 @@ describe('every criterion page', () => {
     expect(ROUTES.filter((r) => r.page === 'criterion')).toHaveLength(55);
   });
 
+  // The first of these pays for the first full page render, which has passed vitest's 5 s
+  // default on a loaded machine; the rest are a few ms each.
   for (const record of CORPUS) {
-    it(`${record.num} has its name, restatement and both captions in the static HTML`, () => {
-      const html = decode(page(record.num));
-      expect(html).toMatch(new RegExp(`<h1[^>]*>${escapeRe(record.name)}</h1>`));
-      expect(html).toContain(record.plain);
-      expect(html).toContain(record.fail.caption);
-      expect(html).toContain(record.pass.caption);
-    });
+    it(
+      `${record.num} has its name, restatement and both captions in the static HTML`,
+      () => {
+        const html = decode(page(record.num));
+        expect(html).toMatch(new RegExp(`<h1[^>]*>${escapeRe(record.name)}</h1>`));
+        expect(html).toContain(record.plain);
+        expect(html).toContain(record.fail.caption);
+        expect(html).toContain(record.pass.caption);
+      },
+      30_000,
+    );
   }
 });
 

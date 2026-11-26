@@ -901,6 +901,17 @@ async function open(page: Page, url: string) {
 const verdict = (lab: Locator) => lab.locator('.lab-verdict');
 const live = (lab: Locator) => lab.locator('[aria-live="polite"]');
 
+/*
+ * The live region speaks ANNOUNCE_DELAY_MS (500 ms, LabShell.tsx) after the reader's last change.
+ * Under a loaded machine a timer plus a render can take longer than expect's 5 s default, so
+ * waiting for an announcement gets its own budget; and a check that Reset said nothing waits
+ * past two delays, so a wrongly scheduled announcement would have landed.
+ */
+const ANNOUNCE_DELAY_MS = 500;
+const HEARD_WITHIN_MS = 15_000;
+const heard = (lab: Locator, text: string) =>
+  expect(live(lab)).toHaveText(text, { timeout: HEARD_WITHIN_MS });
+
 /** What the reader sees in a lab: its text, minus the live region, and every control's value. */
 const snapshot = (lab: Locator) =>
   lab.evaluate((el) => {
@@ -930,7 +941,7 @@ for (const c of LABS) {
       const lab = page.locator(c.lab);
       await drive(lab, page);
       await expect(verdict(lab)).toHaveText(end);
-      await expect(live(lab)).toHaveText(c.said);
+      await heard(lab, c.said);
 
       // The whole lab passes axe in every state, mock included. Only content marked
       // `data-depicts-failure` is left out, and the test below holds those marks to the mock.
@@ -964,14 +975,14 @@ for (const c of LABS) {
       const lab = page.locator(c.lab);
       const before = await snapshot(lab);
       await drive(lab, page);
-      await expect(live(lab)).toHaveText(c.said);
+      await heard(lab, c.said);
       expect(await snapshot(lab)).not.toEqual(before);
 
       await lab.getByRole('button', { name: 'Reset' }).click();
       await expect(verdict(lab)).toHaveText(start);
       expect(await snapshot(lab)).toEqual(before);
       // The live region still holds the reader's last change: Reset said nothing new.
-      await page.waitForTimeout(800);
+      await page.waitForTimeout(ANNOUNCE_DELAY_MS * 2);
       await expect(live(lab)).toHaveText(c.said);
     });
 

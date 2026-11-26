@@ -73,6 +73,18 @@ test.describe('2.4.1', () => {
     await expectSimulated(stage);
   });
 
+  // Review finding 5: two presses that land before React re-renders must both move focus. Two
+  // clicks in one task is the fastest a reader (or a loaded machine) can press.
+  test('Broken: two Tab presses before a re-render move focus two stops', async ({ page }) => {
+    await open(page, URL);
+    const stage = broken(page);
+    await key(stage, 'Press Tab').evaluate((button: HTMLButtonElement) => {
+      button.click();
+      button.click();
+    });
+    await expect(now(stage)).toHaveText('Focus is on stop 2 of 9: Women, link.');
+  });
+
   test('Fixed: one Tab and Enter reach the article, by the bar and by real keys', async ({
     page,
   }) => {
