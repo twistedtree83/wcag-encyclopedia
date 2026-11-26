@@ -32,7 +32,14 @@ export function FadeLab() {
       said={said}
       onReset={() => setModel(START)}
     >
-      <div className="lab__exhibit" data-lab-mock style={{ color: s.colour }}>
+      {/* Faded past 4.5 : 1, the exhibit is the failure the reader made: only then is it marked
+          as a deliberate failure, and axe leaves it out. */}
+      <div
+        className="lab__exhibit"
+        data-lab-mock
+        {...(s.verdict.passes ? {} : { 'data-depicts-failure': true })}
+        style={{ color: s.colour }}
+      >
         <h4>Opening hours</h4>
         <p>Monday to Friday, nine until five. Closed on public holidays.</p>
       </div>

@@ -9,6 +9,7 @@
  * The verdict fails for the image whatever the zoom or colours: they only show why.
  */
 
+import { colourLine, sharpLine } from '../live/readouts';
 import type { Verdict } from './LabShell';
 import type { Viewport, Zoom } from './zoom';
 
@@ -34,18 +35,8 @@ export type ImagesOfText = { readonly heading: Heading; readonly zoom: Zoom; rea
 
 export const IMAGES_START: ImagesOfText = { heading: 'text', zoom: 100, colours: 'page' };
 
-/** How sharp the heading is at `zoom` percent. */
-export function sharpLine(zoom: number, image: boolean): string {
-  if (!image) return `Text redrawn at ${zoom}%: sharp`;
-  if (zoom === 100) return 'Image at its own size: sharp';
-  return `Image pixels stretched ${zoom / 100} times: blurred`;
-}
-
-/** Whether the heading takes the reader's colours. */
-export function colourLine(restyled: boolean, image: boolean): string {
-  if (!restyled) return 'Your colours: off';
-  return image ? 'Your colours: on, but the image keeps its own' : 'Your colours: on, and the text follows them';
-}
+// The readout lines are shared with the live stages, so they live in `live/readouts.ts`.
+export { colourLine, sharpLine };
 
 export function imagesVerdict({ heading }: ImagesOfText): Verdict {
   return { criterion: '1.4.5', passes: heading === 'text' };

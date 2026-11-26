@@ -895,6 +895,22 @@
   font-size: 0.8125rem;
   color: var(--ink);
 }
+/* 2.4.4 Broken: titles and links in two columns, paired only by the layout. */
+.linkrows {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: start;
+  column-gap: 1.5rem;
+  margin-bottom: 0.875rem;
+  font-size: 0.8125rem;
+  color: var(--ink);
+}
+.linkrows__titles,
+.linkrows__links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
 .tabstops__item,
 .tabs__tab {
   padding: 0.25rem 0.5rem;

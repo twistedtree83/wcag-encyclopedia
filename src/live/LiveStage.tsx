@@ -5,10 +5,10 @@ import { autofillValue } from '../labs/inputPurpose';
 import { voiceMatches } from '../labs/labelInName';
 import { ZOOMS, viewportAt, type Scrolls } from '../labs/zoom';
 import { ZoomFrame } from '../labs/ZoomFrame';
-import { clippedIn } from '../labs/NoticeCard';
+import { clippedIn } from './clip';
 import { SCALES } from '../labs/textFit';
-import { ReaderColours } from '../labs/ImagesOfTextLab';
-import { ACTION_EVENT } from './actions';
+import { ReaderColours } from './ReaderColours';
+import { onActions } from './actions';
 import { between, gestureSaid, hitAt, tapPlan, type Point } from './gesture';
 import { shakeWithin } from './motion';
 import {
@@ -150,7 +150,13 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
   const example = useRef<HTMLDivElement>(null);
   const [events, setEvents] = useState<readonly StageEvent[]>([]);
   /** Fail stage: the Tab stop the drawn focus is on, or -1. */
-  const [simAt, setSimAt] = useState(-1);
+  const [simAt, setSimAtState] = useState(-1);
+  /** The same stop, current between renders, so two presses before a re-render both move it. */
+  const simAtNow = useRef(-1);
+  const setSimAt = useCallback((at: number) => {
+    simAtNow.current = at;
+    setSimAtState(at);
+  }, []);
   /** Pass stage: the last Tab stop that had real focus. */
   const realAt = useRef<HTMLElement | null>(null);
   /** True while the bar is sending keys, so the real-key listener leaves them to `press`. */
@@ -356,15 +362,14 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
       const hit = plan ? hitAt(map, at) : null;
       const under = hit !== null ? targets[hit]! : elementAt(root, at);
       const actions: string[] = [];
-      const hear = (e: Event) => actions.push((e as CustomEvent<string>).detail);
-      root.addEventListener(ACTION_EVENT, hear);
+      const unhear = onActions(root, (text) => actions.push(text));
       fromBar.current = true;
       sendPointer(root, under, 'pointerdown', at);
       const early = actions.length;
       sendPointer(root, under, 'pointerup', at);
       if (hit !== null) targets[hit]!.click();
       fromBar.current = false;
-      root.removeEventListener(ACTION_EVENT, hear);
+      unhear();
       const r = root.getBoundingClientRect();
       const f = frame.current!.getBoundingClientRect();
       setTapMark({ x: at.x + r.left - f.left, y: at.y + r.top - f.top });
@@ -396,14 +401,13 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
           ? mapOf(root, rows, (el) => (el as HTMLElement).dataset.drop || 'blank')
           : mapOf(root, targets, (el) => lineFor(el).name || 'blank');
       const actions: string[] = [];
-      const hear = (e: Event) => actions.push((e as CustomEvent<string>).detail);
       const base = { kind: 'gesture', simulated, map, tilt: null } as const;
       const r = root.getBoundingClientRect();
       const centre = (el: Element): Point => {
         const b = el.getBoundingClientRect();
         return { x: b.left - r.left + b.width / 2, y: b.top - r.top + b.height / 2 };
       };
-      root.addEventListener(ACTION_EVENT, hear);
+      const unhear = onActions(root, (text) => actions.push(text));
       fromBar.current = true;
       let event: StageEvent | null = null;
       if (key === 'slide-off' && targets[0] && map.stops[0]) {
@@ -456,7 +460,7 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
         event = { ...base, gesture: 'shake', aim: null, aimAt: null, path: [], downOn: null, upOn: null, tilt, actions };
       }
       fromBar.current = false;
-      root.removeEventListener(ACTION_EVENT, hear);
+      unhear();
       if (event) push(event);
       return;
     }
@@ -478,13 +482,12 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
       // With no control focused they go to what the pointer is on (#47), else to the example
       // itself, as keys go to the page body. A letter the example doesn't cancel is typed into
       // the field it lands on.
-      const at = simulated ? stops[simAt] : realAt.current;
+      const at = simulated ? stops[simAtNow.current] : realAt.current;
       const focused = at && at.isConnected && root.contains(at) ? at : null;
       const target = focused ?? hoverEl.current ?? root.firstElementChild ?? root;
       const where = focused ? lineFor(focused) : null;
       const actions: string[] = [];
-      const hear = (e: Event) => actions.push((e as CustomEvent<string>).detail);
-      root.addEventListener(ACTION_EVENT, hear);
+      const unhear = onActions(root, (text) => actions.push(text));
       fromBar.current = true;
       for (const k of key === 'escape' ? ['Escape'] : [...DICTATION]) {
         const typed = target.dispatchEvent(
@@ -494,7 +497,7 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
         if (typed && field && k.length === 1) target.value += k;
       }
       fromBar.current = false;
-      root.removeEventListener(ACTION_EVENT, hear);
+      unhear();
       push({
         kind: 'keys',
         simulated,
@@ -521,7 +524,7 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
       const back = key === 'shift-tab';
       cause.current = 'focus';
       if (simulated) {
-        const next = step(stops.length, simAt, back);
+        const next = step(stops.length, simAtNow.current, back);
         setSimAt(next);
         // Simulated focus scrolls a scrolling box in the example as real focus would (#46).
         if (next >= 0) revealWithin(root, stops[next]!);
@@ -553,7 +556,7 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
       }
       return;
     }
-    const target = simulated ? stops[simAt] : realAt.current;
+    const target = simulated ? stops[simAtNow.current] : realAt.current;
     if (!target || !activates(key, target)) return;
     cause.current = 'action';
     const before = spoken(lineFor(target));
@@ -627,7 +630,7 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
         });
       }
     };
-    const onAction = (e: Event) => {
+    const onAction = (text: string) => {
       if (fromBar.current || pointing.current) return;
       const el = document.activeElement;
       push({
@@ -636,7 +639,7 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
         keys: lastKey,
         dictated: false,
         target: el && el !== root && root.contains(el) ? lineFor(el) : null,
-        actions: [(e as CustomEvent<string>).detail],
+        actions: [text],
       });
     };
     // A real pointer (#57): down, the path while it is down, up, and what its click set off.
@@ -646,7 +649,6 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
       return { x: e.clientX - r.left, y: e.clientY - r.top };
     };
     const targetMap = () => mapOf(root, tabStops(root), (el) => lineFor(el).name || 'blank');
-    const hearPointer = (e: Event) => down?.actions.push((e as CustomEvent<string>).detail);
     const onDown = (e: PointerEvent) => {
       if (!e.isPrimary) return;
       pointing.current = true;
@@ -691,7 +693,7 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     root.addEventListener('pointermove', onMove);
     root.addEventListener('pointerup', onUp);
     root.addEventListener('pointercancel', onCancel);
-    root.addEventListener(ACTION_EVENT, hearPointer);
+    const unhearPointer = onActions(root, (text) => down?.actions.push(text));
     const onClick = () => {
       cause.current = 'action';
     };
@@ -714,7 +716,7 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
     root.addEventListener('focusin', onFocus);
     root.addEventListener('change', onChange);
     root.addEventListener('keydown', onKey, true);
-    root.addEventListener(ACTION_EVENT, onAction);
+    const unhearKeys = onActions(root, onAction);
     root.addEventListener('click', onClick);
     root.addEventListener('mouseover', onOver);
     root.addEventListener('mouseleave', onLeave);
@@ -723,11 +725,11 @@ export function LiveStage({ kind, live }: { kind: 'bad' | 'good'; live: LiveExam
       root.removeEventListener('pointermove', onMove);
       root.removeEventListener('pointerup', onUp);
       root.removeEventListener('pointercancel', onCancel);
-      root.removeEventListener(ACTION_EVENT, hearPointer);
+      unhearPointer();
       root.removeEventListener('focusin', onFocus);
       root.removeEventListener('change', onChange);
       root.removeEventListener('keydown', onKey, true);
-      root.removeEventListener(ACTION_EVENT, onAction);
+      unhearKeys();
       root.removeEventListener('click', onClick);
       root.removeEventListener('mouseover', onOver);
       root.removeEventListener('mouseleave', onLeave);

@@ -104,7 +104,10 @@ test('the deliberate-failure exclusion is in use', async ({ page }) => {
  * Pages whose content changes after load: scan the states too, not only the first paint.
  * The All criteria index filtered to one principle, and with nothing matching. The 4.1.2 lab's
  * URL states (#42): passing, a native toggle button, and broken markup (a state the role doesn't
- * support, and no name); its start is the page itself, scanned above.
+ * support, and no name); its start is the page itself, scanned above. The flagship labs that keep
+ * their state in the URL (#40): 1.4.10, 1.4.12, 2.2.1 and 2.5.8 in a failing and a passing state,
+ * and the Colour check page (the 1.4.3 check reads no query; this page does) with a failing and a
+ * passing pair. A failing pair's preview is a lab mock marked `data-depicts-failure`.
  */
 const STATE_PAGES = [
   '/criteria/?p=2',
@@ -123,11 +126,22 @@ const STATE_PAGES = [
   '/criteria/2.4.3/?src=columns&ti=none',
   '/criteria/2.4.3/?src=send-first&ti=postcode',
   '/criteria/2.4.3/?src=layout&ti=send',
+  '/criteria/1.4.10/?zoom=400&layout=fixed',
+  '/criteria/1.4.10/?zoom=400&layout=reflow',
+  '/criteria/1.4.12/?spacing=line,paragraph,letter,word&boxes=fixed',
+  '/criteria/1.4.12/?spacing=line,paragraph,letter,word&boxes=flexible',
+  '/criteria/2.2.1/?limit=60&help=none',
+  '/criteria/2.2.1/?limit=120&help=adjust',
+  '/criteria/2.5.8/?size=8&gap=0',
+  '/criteria/2.5.8/?size=44&gap=8',
+  '/colour-check/?fg=999999&bg=FFFFFF',
+  '/colour-check/?fg=595959&bg=FFFFFF',
 ];
 
 for (const url of STATE_PAGES) {
   for (const mode of MODES) {
     test(`${url} has no accessibility violations (${mode.name})`, async ({ page }) => {
+      test.slow();
       await page.setViewportSize({ width: mode.width, height: 800 });
       await page.emulateMedia({ colorScheme: mode.colorScheme });
       await openSitePage(page, url);
@@ -141,4 +155,22 @@ for (const url of STATE_PAGES) {
       ).toEqual([]);
     });
   }
+
+  // A state can mark more than the page's start does (a failing pair in a lab mock), so the
+  // marks are held to the Broken stage or a lab mock here too.
+  test(`${url} keeps every deliberate failure inside the Broken stage or a lab mock`, async ({
+    page,
+  }) => {
+    await openSitePage(page, url);
+    const marked = page.locator('[data-depicts-failure]');
+    const count = await marked.count();
+    for (let i = 0; i < count; i++) {
+      const inside = await marked
+        .nth(i)
+        .evaluate((el) => !!el.closest('figure.bad') || !!el.closest('[data-lab-mock]'));
+      expect(inside, `excluded element ${i} is outside the Broken stage and every lab mock`).toBe(
+        true,
+      );
+    }
+  });
 }

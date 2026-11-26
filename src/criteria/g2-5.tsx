@@ -74,7 +74,7 @@ const PackedToolbar = () => <Toolbar small />;
 const SizedToolbar = () => <Toolbar small={false} />;
 
 const TAP_KEYS: LiveExample['keys'] = ['tap'];
-const TAP_INSTRUMENTS = ['gesture-pad'];
+const TAP_INSTRUMENTS: LiveExample['instruments'] = ['gesture-pad'];
 
 /*
  * 2.5.1's live examples (#58): a harbour map. Both zoom with a two-finger pinch (the bar's

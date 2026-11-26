@@ -115,6 +115,27 @@ only has to let the reader cross the line at least once.
 across criteria: the announcement log, the focus tracker, the zoom frame, the vision filter, the
 clock, the gesture pad, the mock player and the mock site. One instrument, many labs.
 
+Under a live example the instruments are registered by id (`src/live/instruments.tsx`), grouped
+here with the eight they belong to:
+
+- Announcement log: `announcement-log`, what a screen reader says; `voice-log`, the same lines
+  naming the voice (language) each is read in.
+- Focus tracker: `focus-tracker`, the Tab stops, where focus is and its trail; `key-log`, the
+  last key sent, where focus was and what it set off; `pointer-log`, where the pointer went and
+  what the tooltip did; `context`, every page the example has shown and what moved it there.
+- Zoom frame (drawn by the stage, not registered): `zoom-meter`, the zoom, window and what
+  scrolls; `text-fit`, text size, spacing and whether a box clips; `orientation-meter`, the way
+  up and whether content shows; `text-look`, how sharp the heading is and whether it takes the
+  reader's colours.
+- Vision filter: `vision-filter`, the filter on and whether each colour cue still stands out.
+- Clock: `clock`, the mock time and each change the example made on it.
+- Gesture pad: `gesture-pad`, the last gesture drawn over the targets; `voice-control`, the
+  last voice command and what it clicked; `autofill`, what autofill put in each field.
+- Mock player: `mock-player`, what is heard and captioned, and where the player is now.
+- Mock site: `mock-site`, the page, the ways round and the trail; `menu-order`, `search-name`
+  and `help-place`, the menu, search control and help link on each page, judged against the
+  first.
+
 **Announcement log** — the instrument showing what a screen reader would say. Like a measured
 ratio, it is computed from the markup actually rendered, never typed in, so it cannot drift from
 what it describes.

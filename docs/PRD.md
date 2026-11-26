@@ -216,6 +216,13 @@ Issue #40 extends this PRD: every criterion gets at least one lab, and ten get a
 - **Coverage.** The data-integrity test fails when any criterion has no lab or lacks live fail
   and pass examples, and asserts the flagship set exactly. (During the build a to-come list
   that only shrinks held the exceptions; it was removed once it emptied, #67.)
+- **Where the instrument table in #40 was not followed** (owner-accepted at review; the
+  registered instruments are listed under "Instrument" in CONTEXT.md):
+  - 1.4.13 uses the pointer log (`pointer-log`), not the focus tracker.
+  - 3.1.1 and 3.1.2 use the voice log (`voice-log`), the announcement log naming each line's voice.
+  - The 3.2.3, 3.2.4 and 3.2.6 live examples use their own readouts (`menu-order`,
+    `search-name`, `help-place`); the mock site appears only in their labs.
+  - 3.2.2 and the 3.3.x criteria carry the announcement log as well.
 
 ## Out of Scope
 

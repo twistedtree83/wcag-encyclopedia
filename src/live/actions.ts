@@ -10,3 +10,10 @@ export const ACTION_EVENT = 'live-action';
 export function didAction(from: Element, text: string): void {
   from.dispatchEvent(new CustomEvent<string>(ACTION_EVENT, { bubbles: true, detail: text }));
 }
+
+/** Calls `hear` with each action's text that bubbles up to `root`. Returns the unsubscribe. */
+export function onActions(root: Element, hear: (text: string) => void): () => void {
+  const listener = (e: Event) => hear((e as CustomEvent<string>).detail);
+  root.addEventListener(ACTION_EVENT, listener);
+  return () => root.removeEventListener(ACTION_EVENT, listener);
+}

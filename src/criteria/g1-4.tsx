@@ -614,9 +614,10 @@ export const G1_4: readonly CriterionRecord[] = [
             <span>Your subscription renews on 4 March and can be cancelled any time before then.</span>
           </div>
           <p className="example-note">
-            <span className="alt-code">height: 48px</span> with{' '}
-            <span className="alt-code">overflow: hidden</span>. At 200% the sentence is cut in
-            half and the reader never learns there was more.
+            Each box is held at the <span className="alt-code">width</span> and{' '}
+            <span className="alt-code">height</span> its text had as designed, in px, with{' '}
+            <span className="alt-code">overflow: hidden</span>. At 200% the sentence is cut off
+            and the reader never learns there was more.
           </p>
         </>
       ),
@@ -630,8 +631,9 @@ export const G1_4: readonly CriterionRecord[] = [
             <span>Your subscription renews on 4 March and can be cancelled any time before then.</span>
           </div>
           <p className="example-note">
-            <span className="alt-code">min-height</span> instead of{' '}
-            <span className="alt-code">height</span>, and no overflow clipping. Sizing in
+            No <span className="alt-code">width</span> or{' '}
+            <span className="alt-code">height</span> of its own and no overflow clipping, so each
+            box grows with its text. Sizing in
             <span className="alt-code"> rem</span> rather than <span className="alt-code">px</span>{' '}
             also makes text follow the reader’s own browser setting.
           </p>
@@ -641,13 +643,14 @@ export const G1_4: readonly CriterionRecord[] = [
     diff: {
       title: 'notice.css',
       lines: [
-        { kind: 'context', text: '.notice {' },
-        { kind: 'del', text: '  height: 48px;' },
+        { kind: 'context', text: '.notice__body,' },
+        { kind: 'context', text: '.notice__tag {' },
+        { kind: 'del', text: '  width: var(--designed-width); /* px, as laid out at 100% */' },
+        { kind: 'del', text: '  height: var(--designed-height);' },
         { kind: 'del', text: '  overflow: hidden;' },
-        { kind: 'add', text: '  min-height: 3rem;' },
         { kind: 'context', text: '}' },
       ],
-      note: 'Two declarations. Almost every resize failure is one of these two.',
+      note: 'Each box was locked at the size its text had as designed. Take the lock off and the box grows with its text: almost every resize failure is a fixed size or clipped overflow.',
     },
   },
 

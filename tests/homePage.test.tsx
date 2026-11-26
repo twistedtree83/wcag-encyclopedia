@@ -25,13 +25,18 @@ describe('the home route', () => {
     expect(ROUTES).toContainEqual({ path: '', page: 'home' });
   });
 
-  it('carries the old #number redirect in its head, and no other page does', () => {
-    expect(home().head).toContain('location.replace');
-    expect(home().head).toContain('"1.4.3"');
-    for (const route of ROUTES.filter((r) => r.page !== 'home')) {
-      expect(render(route).head, route.path).toBe('');
-    }
-  });
+  // Renders every route (60 pages), which can pass vitest's 5 s default on a loaded machine.
+  it(
+    'carries the old #number redirect in its head, and no other page does',
+    () => {
+      expect(home().head).toContain('location.replace');
+      expect(home().head).toContain('"1.4.3"');
+      for (const route of ROUTES.filter((r) => r.page !== 'home')) {
+        expect(render(route).head, route.path).toBe('');
+      }
+    },
+    30_000,
+  );
 
   it('has a title and a description', () => {
     expect(home().title).toMatch(/WCAG Encyclopedia/);

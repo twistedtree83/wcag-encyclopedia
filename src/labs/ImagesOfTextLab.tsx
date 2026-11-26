@@ -1,4 +1,5 @@
-import { useEffect, useId, useState, type ReactNode } from 'react';
+import { useEffect, useId, useState } from 'react';
+import { ReaderColours } from '../live/ReaderColours';
 import { FailIcon, PassIcon } from '../components/Icons';
 import { LabChoice } from './LabChoice';
 import { LabShell, type Said } from './LabShell';
@@ -68,14 +69,6 @@ export function SalePage({ heading }: { heading: Heading }) {
       <p>Every coat in the winter catalogue, until Sunday.</p>
     </div>
   );
-}
-
-/**
- * The reader's own colours and font (a user stylesheet), on whatever is inside. They reach text
- * through CSS (`.reader-colours--on`, swatch.css); nothing reaches the pixels of a picture.
- */
-export function ReaderColours({ on, children }: { on: boolean; children: ReactNode }) {
-  return <div className={on ? 'reader-colours reader-colours--on' : 'reader-colours'}>{children}</div>;
 }
 
 /**

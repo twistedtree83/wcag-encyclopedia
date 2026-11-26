@@ -2,7 +2,7 @@ import { spoken, type Announcement } from '../labs/announce';
 import type { FocusMap } from './focusTrack';
 import type { CueSeen, VisionFilter } from './vision';
 import { scrollLine } from '../labs/zoom';
-import { colourLine, sharpLine } from '../labs/imagesOfText';
+import { colourLine, sharpLine } from './readouts';
 import type { GestureEvent } from './gesture';
 import type { PlayerSeen } from './mockPlayer';
 import type { SiteSeen } from './mockSite';
