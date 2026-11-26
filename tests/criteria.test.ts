@@ -15,7 +15,6 @@ import {
   uncoveredCriteria,
   unresolvedLabs,
 } from '../src/labs/registry';
-import { LABS_TO_COME } from './labsToCome';
 import { unresolvedInstruments } from '../src/live/instruments';
 import { palettes, THEMES, type Token } from '../src/theme/tokens';
 
@@ -380,30 +379,18 @@ describe('lab references', () => {
 });
 
 /**
- * Lab coverage (#41): every criterion has at least one lab, except those still to come in
- * `labsToCome.ts`, a list that only shrinks. The ten flagships are fixed by the PRD (#40).
+ * Lab coverage (#41, closed out by #67): every one of the 55 criteria has at least one lab, with
+ * no exceptions. The ten flagships are fixed by the PRD (#40).
  */
 describe('lab coverage', () => {
-  const nums = EXPECTED.map((e) => e.num);
-
-  it('flags a criterion with no lab that is not still to come', () => {
+  it('flags a criterion with no lab', () => {
     const records = [{ num: '9.9.9' }, { num: '9.9.8', labs: ['fade-text'] }];
-    expect(uncoveredCriteria(records, [])).toEqual(['9.9.9']);
-    expect(uncoveredCriteria(records, ['9.9.9'])).toEqual([]);
+    expect(uncoveredCriteria(records)).toEqual(['9.9.9']);
   });
 
-  it('gives every criterion a lab, except those still to come', () => {
-    expect(uncoveredCriteria(CORPUS, LABS_TO_COME)).toEqual([]);
-  });
-
-  it('lists only real criteria as still to come, each once', () => {
-    for (const num of LABS_TO_COME) expect(nums, num).toContain(num);
-    expect(LABS_TO_COME.length).toBe(new Set(LABS_TO_COME).size);
-  });
-
-  it('shrinks the to-come list as labs arrive', () => {
-    const arrived = LABS_TO_COME.filter((num) => (criterion(num)?.labs ?? []).length > 0);
-    expect(arrived, 'these have a lab now: delete them from tests/labsToCome.ts').toEqual([]);
+  it('gives every one of the 55 criteria a lab', () => {
+    expect(CORPUS.length).toBe(EXPECTED_TOTAL);
+    expect(uncoveredCriteria(CORPUS)).toEqual([]);
   });
 
   const FLAGSHIPS = [
@@ -419,9 +406,8 @@ describe('lab coverage', () => {
     '4.1.2',
   ];
 
-  it('has exactly the ten flagships, skipping those still to come', () => {
-    const toCome = FLAGSHIPS.filter((num) => LABS_TO_COME.includes(num));
-    expect([...flagshipCriteria(), ...toCome].sort()).toEqual([...FLAGSHIPS].sort());
+  it('has exactly the ten flagships', () => {
+    expect([...flagshipCriteria()].sort()).toEqual([...FLAGSHIPS].sort());
   });
 
   it('shows each flagship lab on the criterion it is the flagship for', () => {
@@ -442,8 +428,9 @@ describe('live-example references', () => {
     ]);
   });
 
-  it('has at least one record with live examples (4.1.2, the pilot)', () => {
-    expect(criterion('4.1.2')?.fail.live).toBeDefined();
+  it('gives every criterion live fail and pass examples (#67)', () => {
+    const notLive = CORPUS.filter((c) => !c.fail.live || !c.pass.live).map((c) => c.num);
+    expect(notLive).toEqual([]);
   });
 
   it.each(CORPUS.filter((c) => c.fail.live || c.pass.live).map((c) => [c.num, c] as const))(

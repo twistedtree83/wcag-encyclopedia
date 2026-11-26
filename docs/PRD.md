@@ -213,8 +213,9 @@ Issue #40 extends this PRD: every criterion gets at least one lab, and ten get a
   settles with a small scale and colour change, never a shake or bounce. Under
   `prefers-reduced-motion: reduce` or `data-motion="off"` every change is instant. The design
   guide's §7 holds the full rules.
-- **Coverage.** The data-integrity test fails when a criterion has no lab, except criteria on a
-  to-come list that only shrinks, and asserts the flagship set exactly.
+- **Coverage.** The data-integrity test fails when any criterion has no lab or lacks live fail
+  and pass examples, and asserts the flagship set exactly. (During the build a to-come list
+  that only shrinks held the exceptions; it was removed once it emptied, #67.)
 
 ## Out of Scope
 
