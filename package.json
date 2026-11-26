@@ -8,10 +8,11 @@
     "dev": "vite",
     "build": "vite build && vite build --ssr src/entry-server.tsx --outDir dist-ssr && node scripts/prerender.mjs",
     "preview": "vite preview --port 4173 --strictPort",
+    "lint": "stylelint \"src/**/*.css\"",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:a11y": "playwright test",
-    "verify": "npm run typecheck && npm run test && npm run build && npm run test:a11y"
+    "verify": "npm run lint && npm run typecheck && npm run test && npm run build && npm run test:a11y"
   },
   "dependencies": {
     "react": "^19.1.0",
@@ -24,6 +25,8 @@
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
     "@vitejs/plugin-react": "^5.0.0",
+    "stylelint": "^18.1.0",
+    "stylelint-config-standard": "^41.1.0",
     "typescript": "^5.7.0",
     "vite": "^7.0.0",
     "vitest": "^3.0.0"
