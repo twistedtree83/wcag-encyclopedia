@@ -293,6 +293,8 @@ export const G2_1: readonly CriterionRecord[] = [
     since: '2.1',
     guideline: '2.1',
     labs: ['character-shortcuts'],
+    gist:
+      'Single-key shortcuts must be possible to turn off, remap, or limit to when their control has focus.',
     plain:
       'A shortcut bound to a single letter, number, or symbol must be switchable off, ' +
       'remappable, or active only while the relevant control has focus. Speech-input users ' +

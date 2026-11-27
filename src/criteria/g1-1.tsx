@@ -54,6 +54,7 @@ export const G1_1: readonly CriterionRecord[] = [
     since: '2.0',
     guideline: '1.1',
     labs: ['alt-text'],
+    gist: 'Images, icons and charts need a text alternative that serves the same purpose.',
     plain:
       'Anything that is not text — an image, an icon, a chart, a video thumbnail — needs a ' +
       'text equivalent that serves the same purpose. Decoration needs an empty alt so screen ' +

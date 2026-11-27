@@ -336,6 +336,7 @@ export const G1_3: readonly CriterionRecord[] = [
     since: '2.1',
     guideline: '1.3',
     labs: ['orientation'],
+    gist: 'Do not lock the screen to portrait or landscape unless that orientation is essential.',
     plain:
       'Do not lock the screen to portrait or landscape unless the orientation is essential — a ' +
       'piano keyboard, a cheque scanner. Someone whose wheelchair mount holds their phone ' +
@@ -388,6 +389,7 @@ export const G1_3: readonly CriterionRecord[] = [
     since: '2.1',
     guideline: '1.3',
     labs: ['input-purpose'],
+    gist: 'Fields asking for the user’s own details must say in the markup what each one is for.',
     plain:
       'Fields collecting the user’s own information — name, email, address, phone — need to ' +
       'say which is which in the markup, via autocomplete. That is what lets a browser fill ' +

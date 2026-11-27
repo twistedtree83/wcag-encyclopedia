@@ -179,6 +179,7 @@ export const G2_2: readonly CriterionRecord[] = [
     since: '2.0',
     guideline: '2.2',
     labs: ['session-timeout'],
+    gist: 'A time limit must let the reader turn it off, lengthen it, or ask for more time.',
     plain:
       'If something is on a timer, the reader must be able to turn it off, adjust it to at ' +
       'least ten times the default, or extend it — with at least twenty seconds’ warning and a ' +
@@ -231,6 +232,8 @@ export const G2_2: readonly CriterionRecord[] = [
     guideline: '2.2',
     demos: ['autoplay-2-2-2'],
     labs: ['stop-carousel'],
+    gist:
+      'Anything that moves or updates on its own for over five seconds needs a way to pause it.',
     plain:
       'Anything that moves, blinks, scrolls, or auto-updates for more than five seconds needs a ' +
       'way to pause, stop, or hide it — provided it runs alongside other content. Motion in the ' +

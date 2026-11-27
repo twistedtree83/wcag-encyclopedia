@@ -509,6 +509,7 @@ export const G3_3: readonly CriterionRecord[] = [
     since: '2.0',
     guideline: '3.3',
     labs: ['form-labels'],
+    gist: 'Fields need labels, and any required format must be stated before the reader types.',
     plain:
       'Fields need labels, and any format requirement has to be stated before the reader types ' +
       'rather than after they get it wrong. A placeholder is not a label: it disappears the ' +
@@ -609,6 +610,8 @@ export const G3_3: readonly CriterionRecord[] = [
     since: '2.0',
     guideline: '3.3',
     labs: ['error-prevention'],
+    gist:
+      'Legal, financial and destructive actions need a way out: reversal, a check, or a confirmation step.',
     plain:
       'For anything legally binding, financial, or destructive, give the reader a way out: make ' +
       'it reversible, check the input and let them correct it, or offer a confirmation step ' +
@@ -707,6 +710,8 @@ export const G3_3: readonly CriterionRecord[] = [
     since: '2.2',
     guideline: '3.3',
     labs: ['accessible-auth'],
+    gist:
+      'Signing in must not rest on a memory or puzzle test unless there is an alternative or help.',
     plain:
       'Signing in must not depend on a cognitive function test — remembering a password, ' +
       'transcribing a code, solving a puzzle — unless there is an alternative, a mechanism to ' +

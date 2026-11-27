@@ -446,6 +446,7 @@ export const G2_4: readonly CriterionRecord[] = [
     since: '2.0',
     guideline: '2.4',
     labs: ['link-purpose'],
+    gist: 'A link’s purpose must be clear from its text or the sentence around it.',
     plain:
       'What a link does has to be clear from its text, or from the sentence, list item, cell, ' +
       'or paragraph around it. Screen reader users often pull up a list of every link on the ' +

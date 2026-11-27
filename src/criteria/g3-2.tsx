@@ -207,6 +207,8 @@ export const G3_2: readonly CriterionRecord[] = [
     level: 'A',
     since: '2.0',
     guideline: '3.2',
+    gist:
+      'Moving focus onto something must not change the context: no navigating away, no submitting.',
     plain:
       'Focusing something must not change the context — no navigating away, no opening a ' +
       'dialog, no submitting. Focus happens by accident all the time, because tabbing through ' +
@@ -396,6 +398,8 @@ export const G3_2: readonly CriterionRecord[] = [
     level: 'A',
     since: '2.2',
     guideline: '3.2',
+    gist:
+      'Help such as a contact link or chat widget must sit in the same relative place on every page.',
     plain:
       'If help is offered — a contact link, a chat widget, a help page — it has to appear in ' +
       'the same relative place on every page that has it. New in WCAG 2.2. People look for help ' +

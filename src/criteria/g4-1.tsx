@@ -82,6 +82,8 @@ export const G4_1: readonly CriterionRecord[] = [
     guideline: '4.1',
     demos: ['name-4-1-2'],
     labs: ['name-role-value'],
+    gist:
+      'Every control must expose its name, its role and its current state, and update them as they change.',
     plain:
       'Every control has to expose three things programmatically: what it is called, what kind ' +
       'of thing it is, and what state it is in — and it has to update as that state changes. ' +
@@ -157,6 +159,8 @@ export const G4_1: readonly CriterionRecord[] = [
     guideline: '4.1',
     demos: ['live-4-1-3'],
     labs: ['status-message'],
+    gist:
+      'Important changes that don’t move focus, such as a result count or a saved message, must be announced.',
     plain:
       'When something important changes without moving focus — a result count, a saved ' +
       'confirmation, an error appearing — it has to be announced. Moving focus to it would be a ' +

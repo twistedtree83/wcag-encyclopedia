@@ -56,6 +56,7 @@ export const G2_3: readonly CriterionRecord[] = [
     since: '2.0',
     guideline: '2.3',
     labs: ['flash-rate'],
+    gist: 'No large, bright area may flash more than three times in one second.',
     plain:
       'Nothing may flash more than three times per second, unless the flashing area is very ' +
       'small or the flash is low-contrast. Red flashes are held to a stricter limit, because ' +

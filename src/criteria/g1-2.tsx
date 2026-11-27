@@ -265,6 +265,8 @@ export const G1_2: readonly CriterionRecord[] = [
     since: '2.0',
     guideline: '1.2',
     labs: ['media-alternative'],
+    gist:
+      'If a video shows what its soundtrack never says, give that as audio description or text.',
     plain:
       'If the picture carries information the soundtrack does not, offer that information some ' +
       'other way — either an audio description track or a text alternative telling the whole ' +
@@ -349,6 +351,8 @@ export const G1_2: readonly CriterionRecord[] = [
     since: '2.0',
     guideline: '1.2',
     labs: ['description'],
+    gist:
+      'Prerecorded video needs a real audio description track: at AA, text alone is not enough.',
     plain:
       'At AA the text alternative is no longer enough on its own: prerecorded video needs an ' +
       'actual audio description track, narrating the visual information into the gaps in the ' +

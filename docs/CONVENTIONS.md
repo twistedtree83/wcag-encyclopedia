@@ -18,6 +18,12 @@ this before changing the build, adding a page, or touching tokens. The vocabular
   (`src/site/analytics.ts`), written at the end of `<body>` outside `#root`. It is empty while
   `CF_ANALYTICS_TOKEN` in `src/site/config.ts` is unset, and the committed config leaves it unset.
   The beacon sets no cookie, so the site has no consent banner.
+- Titles and descriptions come from `pageMeta` in `src/site/Site.tsx`. Fixed pages write theirs
+  by hand; criterion pages build theirs in `src/site/meta.ts` from the record: number, name and
+  level for the title, and the restatement's first sentence (or its `gist`) then "Fails when:"
+  and the fail caption for the description. `tests/headMeta.test.ts` holds every route to a
+  unique title of 30–65 characters and a unique description of 70–160, with the brand at most
+  once per title and first on Home.
 - The prerender step rewrites `./assets/` to `../` repeated once per directory level, so the
   relative base works at any depth and under the GitHub Pages sub-path.
 - **Canonical tag and crawl files** (ADR 0006). The only absolute addresses the site writes are
