@@ -11,9 +11,13 @@ this before changing the build, adding a page, or touching tokens. The vocabular
   `vite build --ssr src/entry-server.tsx --outDir dist-ssr`, then `node scripts/prerender.mjs`.
   It writes one `index.html` per route into `dist/` (59 pages).
 - `site.html` is the only HTML template. Its placeholders are `<!--@title-->`, `<!--@description-->`,
-  `<!--@tokens-->`, `<!--@legacy-redirect-->`, `<!--@fonts-->` and `<!--@app-->`. `render(route)` in
-  `src/entry-server.tsx` returns `{ html, title, description, head }`. Only Home has a `head`:
-  it holds the `#1.4.3` → `criteria/1.4.3/` redirect from `src/site/legacyRedirect.ts`.
+  `<!--@tokens-->`, `<!--@legacy-redirect-->`, `<!--@fonts-->`, `<!--@app-->` and `<!--@analytics-->`.
+  `render(route)` in `src/entry-server.tsx` returns `{ html, title, description, head, beacon }`.
+  Only Home has a `head`: it holds the `#1.4.3` → `criteria/1.4.3/` redirect from
+  `src/site/legacyRedirect.ts`. `beacon` is the Cloudflare Web Analytics script
+  (`src/site/analytics.ts`), written at the end of `<body>` outside `#root`. It is empty while
+  `CF_ANALYTICS_TOKEN` in `src/site/config.ts` is unset, and the committed config leaves it unset.
+  The beacon sets no cookie, so the site has no consent banner.
 - Titles and descriptions come from `pageMeta` in `src/site/Site.tsx`. Fixed pages write theirs
   by hand; criterion pages build theirs in `src/site/meta.ts` from the record: number, name and
   level for the title, and the restatement's first sentence (or its `gist`) then "Fails when:"
