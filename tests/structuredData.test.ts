@@ -78,6 +78,7 @@ describe('criterion pages', () => {
       datePublished: '2025-06-01',
       dateModified: '2025-09-15',
       inLanguage: 'en',
+      image: `${ORIGIN}/share/1.4.3.png`,
       author: org,
       publisher: org,
       about: {

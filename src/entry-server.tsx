@@ -9,17 +9,21 @@ import { CF_ANALYTICS_TOKEN } from './site/config';
 import { trailFor } from './site/breadcrumbs';
 import { jsonLdBlocks, jsonLdScripts } from './site/jsonLd';
 import { legacyRedirectScript } from './site/legacyRedirect';
+import { absoluteUrl } from './site/crawl';
+import { shareCard, shareTags } from './site/share';
 import { Site, pageMeta, pageName, recordFor } from './site/Site';
 import { ROUTES, type Route } from './site/routes';
 
 export { ROUTES };
 export { jsonLdProblems } from './site/jsonLd';
-export { canonicalProblems, canonicalTag, pageSources, robotsTxt, sitemapProblems, sitemapXml } from './site/crawl';
+export { canonicalProblems, canonicalTag, openGraphProblems, pageSources, robotsTxt, sitemapProblems, sitemapXml } from './site/crawl';
+export { CARD_FONTS, CARD_HEIGHT, CARD_WIDTH, cardContrastProblems, shareCard, toSatori } from './site/share';
 
 /**
  * A route rendered for the prerender step: the app markup, the title and description, and
  * `head`, extra markup for the page's `<head>` (the old `#number` redirect, on Home only), and
- * `beacon`, the analytics script for the end of `<body>` (empty while its token is unset).
+ * `beacon`, the analytics script for the end of `<body>` (empty while its token is unset), and
+ * `share`, the Open Graph and Twitter tags that point at the page's share card.
  */
 export type Rendered = {
   html: string;
@@ -27,6 +31,7 @@ export type Rendered = {
   description: string;
   head: string;
   beacon: string;
+  share: string;
 };
 
 export function render(route: Route): Rendered {
@@ -36,7 +41,7 @@ export function render(route: Route): Rendered {
     </StrictMode>,
   );
   const head = route.page === 'home' ? legacyRedirectScript() : '';
-  return { html, head, beacon: analyticsBeacon(CF_ANALYTICS_TOKEN), ...pageMeta(route) };
+  return { html, head, beacon: analyticsBeacon(CF_ANALYTICS_TOKEN), share: shareTags(route), ...pageMeta(route) };
 }
 
 /**
@@ -53,7 +58,7 @@ export function structuredData(route: Route, dates: { published: string; modifie
       headline: name,
       description: pageMeta(route).description,
       ...dates,
-      ...(record ? { criterion: { num: record.num, name: record.name } } : {}),
+      ...(record ? { criterion: { num: record.num, name: record.name }, image: absoluteUrl(shareCard(route).file) } : {}),
     }),
   );
 }

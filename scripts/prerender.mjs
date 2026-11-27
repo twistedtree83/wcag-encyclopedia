@@ -8,7 +8,9 @@
  * with the route so the client hydrates the same page, rewrites asset links for the page's
  * depth (the site uses relative URLs throughout so it works under any GitHub Pages prefix),
  * and writes `dist/<path>index.html`. Each page gets its canonical tag, checked against ADR 0006,
- * and its JSON-LD (src/site/jsonLd.ts), dated from the git history and checked the same way.
+ * and its JSON-LD (src/site/jsonLd.ts), dated from the git history and checked the same way,
+ * and its Open Graph and Twitter tags (src/site/share.ts), checked by `openGraphProblems`. Then it
+ * draws the share cards into `dist/share/`.
  * Then it writes the crawl files, `dist/robots.txt` and `dist/sitemap.xml` (src/site/crawl.ts),
  * with each page's `lastmod` the last commit date of the files it is built from, and removes
  * the template.
@@ -24,7 +26,25 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = join(root, 'dist');
 
-const { render, ROUTES, canonicalTag, canonicalProblems, structuredData, jsonLdProblems, pageSources, robotsTxt, sitemapXml, sitemapProblems } = await import(pathToFileURL(join(root, 'dist-ssr/entry-server.js')).href);
+const {
+  render,
+  ROUTES,
+  canonicalTag,
+  canonicalProblems,
+  openGraphProblems,
+  structuredData,
+  jsonLdProblems,
+  pageSources,
+  robotsTxt,
+  sitemapXml,
+  sitemapProblems,
+  CARD_FONTS,
+  CARD_HEIGHT,
+  CARD_WIDTH,
+  cardContrastProblems,
+  shareCard,
+  toSatori,
+} = await import(pathToFileURL(join(root, 'dist-ssr/entry-server.js')).href);
 const raw = await readFile(join(dist, 'site.html'), 'utf8');
 
 // Preload the two self-hosted faces every page shows above the fold: body text (Onest 400) and
@@ -39,7 +59,7 @@ const preloads = PRELOADED_FONTS.map((face) => {
 if (!raw.includes('<!--@fonts-->')) throw new Error('prerender: site.html has no <!--@fonts-->');
 const template = raw.replace('<!--@fonts-->', () => preloads);
 
-for (const marker of ['<!--@legacy-redirect-->', '<!--@canonical-->', '<!--@structured-data-->', '<!--@analytics-->', '<!--@title-->', '<!--@description-->', '<!--@app-->', '<div id="root">']) {
+for (const marker of ['<!--@legacy-redirect-->', '<!--@canonical-->', '<!--@structured-data-->', '<!--@share-->', '<!--@analytics-->', '<!--@title-->', '<!--@description-->', '<!--@app-->', '<div id="root">']) {
   if (!template.includes(marker)) throw new Error(`prerender: site.html has no ${marker}`);
 }
 
@@ -50,7 +70,7 @@ let written = 0;
 /** Each page's last-changed date: its sitemap `lastmod` and its JSON-LD `dateModified`. */
 const lastmods = new Map();
 for (const route of ROUTES) {
-  const { html, title, description, head, beacon } = render(route);
+  const { html, title, description, head, beacon, share } = render(route);
   if (!html.includes('<main')) throw new Error(`prerender: ${route.path} rendered no <main>`);
 
   const sources = pageSources(route);
@@ -65,13 +85,14 @@ for (const route of ROUTES) {
     .replace('<!--@legacy-redirect-->', () => head)
     .replace('<!--@canonical-->', () => canonicalTag(route.path))
     .replace('<!--@structured-data-->', () => jsonLd)
+    .replace('<!--@share-->', () => share)
     .replace('<!--@title-->', escape(title))
     .replace('<!--@description-->', escape(description))
     .replace('<div id="root">', `<div id="root" data-route="${escape(route.path)}">`)
     .replace('<!--@app-->', () => html)
     .replace('<!--@analytics-->', () => beacon);
 
-  const wrong = canonicalProblems(page, route.path);
+  const wrong = [...canonicalProblems(page, route.path), ...openGraphProblems(page, route.path)];
   if (wrong.length) throw new Error(`prerender: ${route.path || 'home'}: ${wrong.join('; ')}`);
   const badJsonLd = jsonLdProblems(page, route);
   if (badJsonLd.length) throw new Error(`prerender: ${route.path || 'home'} JSON-LD: ${badJsonLd.join('; ')}`);
@@ -80,6 +101,32 @@ for (const route of ROUTES) {
   await mkdir(dirname(out), { recursive: true });
   await writeFile(out, page);
   written++;
+}
+
+/**
+ * The share cards (src/site/share.ts): one PNG per criterion page and one site card, drawn
+ * with satori (to SVG) and resvg (to PNG). Both are dev dependencies imported only here, so
+ * neither reaches the client bundle. A card whose text fails the contrast check fails the build.
+ */
+const { default: satori } = await import('satori');
+const { Resvg } = await import('@resvg/resvg-js');
+const fonts = await Promise.all(
+  CARD_FONTS.map(async ({ name, weight, file }) => ({
+    name,
+    weight,
+    style: 'normal',
+    data: await readFile(join(root, 'node_modules/@fontsource', file)),
+  })),
+);
+const cards = new Map(ROUTES.map((route) => shareCard(route)).map((card) => [card.file, card]));
+for (const card of cards.values()) {
+  const low = cardContrastProblems(card.tree);
+  if (low.length) throw new Error(`prerender: ${card.file}: ${low.join('; ')}`);
+  const svg = await satori(toSatori(card.tree), { width: CARD_WIDTH, height: CARD_HEIGHT, fonts });
+  const png = new Resvg(svg, { fitTo: { mode: 'width', value: CARD_WIDTH } }).render().asPng();
+  const out = join(dist, card.file);
+  await mkdir(dirname(out), { recursive: true });
+  await writeFile(out, png);
 }
 
 /**
@@ -109,4 +156,4 @@ await writeFile(join(dist, 'sitemap.xml'), sitemap);
 await writeFile(join(dist, 'robots.txt'), robotsTxt());
 
 await rm(join(dist, 'site.html'));
-console.log(`prerender: wrote ${written} page${written === 1 ? '' : 's'}, robots.txt and sitemap.xml`);
+console.log(`prerender: wrote ${written} page${written === 1 ? '' : 's'}, ${cards.size} share cards, robots.txt and sitemap.xml`);

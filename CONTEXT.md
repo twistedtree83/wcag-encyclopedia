@@ -183,6 +183,10 @@ its own.
 to a route's path, it gives the page's **canonical URL**, the one absolute address crawlers are
 told to credit (ADR 0006).
 
+**Share card** — the 1200×630 image a page's link shows when shared, named by its `og:image`
+tag: one per criterion page (number, name, level and principle marker) and one site card for
+the fixed pages. Drawn at build time into `dist/share/`.
+
 **Crawl files** — `robots.txt` and `sitemap.xml`, written into `dist/` by the prerender step.
 
 **Breadcrumb trail** — a page's path from Home to itself, as **crumbs** (a route path and the

@@ -25,10 +25,12 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.10.1",
     "@playwright/test": "^1.50.0",
+    "@resvg/resvg-js": "^2.6.2",
     "@types/node": "^24.13.3",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
     "@vitejs/plugin-react": "^5.0.0",
+    "satori": "^0.63.2",
     "stylelint": "^18.1.0",
     "stylelint-config-standard": "^41.1.0",
     "typescript": "^5.7.0",

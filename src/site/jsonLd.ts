@@ -5,7 +5,7 @@
  *
  *   home                         WebSite (with a SearchAction into All criteria) and Organization
  *   every page below home        BreadcrumbList, the same trail the page shows (breadcrumbs.ts)
- *   criterion pages              TechArticle, by and from the organisation
+ *   criterion pages              TechArticle, by and from the organisation, its share card the image
  *
  * A new page kind adds its blocks to `BLOCKS` and the types it must carry to `TYPES` (both
  * typed by PageKind, so the compiler flags a missing entry); a new block type adds its
@@ -36,6 +36,8 @@ export type PageFacts = {
   readonly modified: string;
   /** The criterion a criterion page is about. */
   readonly criterion?: { readonly num: string; readonly name: string };
+  /** The absolute address of the page's share card (src/site/share.ts), the article's image. */
+  readonly image?: string;
 };
 
 const block = (type: string, body: Record<string, unknown>): JsonLdBlock => ({
@@ -82,6 +84,7 @@ function techArticle(page: PageFacts): JsonLdBlock {
     inLanguage: 'en',
     datePublished: page.published,
     dateModified: page.modified,
+    ...(page.image ? { image: page.image } : {}),
     author: organization(),
     publisher: organization(),
     about: {
