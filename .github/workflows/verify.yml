@@ -1,9 +1,13 @@
 name: verify
 
-# Pushes to main are gated by the deploy workflow, which runs the same `npm run verify`
-# before publishing. Running it here too would just do the work twice.
+# Pull requests and pushes to the `labs` integration branch run the gate here, so work merged
+# into labs between pull requests is checked too. Pushes to main are gated by the deploy
+# workflow, which runs the same `npm run verify` before publishing. Running it here too would
+# just do the work twice.
 on:
   pull_request:
+  push:
+    branches: [labs]
   workflow_dispatch:
 
 jobs:
