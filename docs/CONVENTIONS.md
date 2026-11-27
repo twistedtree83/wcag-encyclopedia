@@ -11,8 +11,8 @@ this before changing the build, adding a page, or touching tokens. The vocabular
   `vite build --ssr src/entry-server.tsx --outDir dist-ssr`, then `node scripts/prerender.mjs`.
   It writes one `index.html` per route into `dist/` (59 pages).
 - `site.html` is the only HTML template. Its placeholders are `<!--@title-->`, `<!--@description-->`,
-  `<!--@canonical-->`, `<!--@tokens-->`, `<!--@legacy-redirect-->`, `<!--@fonts-->`, `<!--@app-->` and `<!--@analytics-->`.
-  `render(route)` in `src/entry-server.tsx` returns `{ html, title, description, head, beacon }`.
+  `<!--@canonical-->`, `<!--@share-->`, `<!--@tokens-->`, `<!--@legacy-redirect-->`, `<!--@fonts-->`, `<!--@app-->` and `<!--@analytics-->`.
+  `render(route)` in `src/entry-server.tsx` returns `{ html, title, description, head, beacon, share }`.
   Only Home has a `head`: it holds the `#1.4.3` → `criteria/1.4.3/` redirect from
   `src/site/legacyRedirect.ts`. `beacon` is the Cloudflare Web Analytics script
   (`src/site/analytics.ts`), written at the end of `<body>` outside `#root`. It is empty while
@@ -31,6 +31,17 @@ this before changing the build, adding a page, or touching tokens. The vocabular
   An uncommitted new file counts as today. The CI build job checks out with `fetch-depth: 0`,
   because a shallow clone would date every page to the one commit it has. A new page kind adds
   its file to `PAGE_FILES` there. `tests/crawl.test.ts` and `e2e/crawl.spec.ts` check them.
+- **Share tags and share cards** (S-03). `share` is the page's Open Graph and Twitter tags from
+  `shareTags(route)` in `src/site/share.ts`, with the title and description from `pageMeta`.
+  `og:image` points at the page's share card, a 1200×630 PNG in `dist/share/`: `<num>.png` for
+  a criterion page, `site.png` for every fixed page. `share.ts` describes each card as a tree
+  of boxes in the dark theme's tokens; `scripts/prerender.mjs` draws it with satori and resvg
+  (dev dependencies, imported only there) using the `.woff` files of `@fontsource` (satori
+  reads no woff2), and fails the build if `cardContrastProblems` finds text under 4.5:1 or a
+  marker under 3:1, or `openGraphProblems` (`crawl.ts`) finds a tag missing, doubled, empty or
+  pointing off `SITE_ORIGIN`. satori sizes boxes content-box, and every `div` is a flex box.
+  The client entry never imports `share.ts`; `e2e/share.spec.ts` fails if satori, resvg or the
+  tags reach `dist/assets/`. A new page kind gets the site card unless `shareCard` says otherwise.
 - `src/entry-client.tsx` reads the route from `#root[data-route]`, never from
   `location.pathname`, then calls `hydrateRoot`.
 - **Hydration rule:** never read `localStorage`, `matchMedia`, `location.search` or the theme

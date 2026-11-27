@@ -38,6 +38,59 @@ export function canonicalProblems(html: string, path: string): string[] {
   return problems;
 }
 
+/** The share tags every page carries once each (S-03), read by `openGraphProblems`. */
+const SHARE_TAGS = [
+  'og:type',
+  'og:site_name',
+  'og:title',
+  'og:description',
+  'og:url',
+  'og:image',
+  'og:image:type',
+  'og:image:width',
+  'og:image:height',
+  'og:image:alt',
+  'twitter:card',
+  'twitter:image:alt',
+] as const;
+
+const escapeRegExp = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+/**
+ * The share-tag check on one page's markup (S-03, ADR 0006): each Open Graph and Twitter tag
+ * once and not empty, `og:url` the page's own canonical URL, `og:image` a PNG under
+ * `SITE_ORIGIN/share/`, and a large-image Twitter card. Returns what is wrong, or `[]`.
+ */
+export function openGraphProblems(html: string, path: string): string[] {
+  const metas = [...html.matchAll(/<meta\b[^>]*>/gi)].map((m) => m[0]);
+  const values = (key: string) => {
+    const named = new RegExp(`\\b(?:property|name)\\s*=\\s*["']${escapeRegExp(key)}["']`, 'i');
+    return metas
+      .filter((tag) => named.test(tag))
+      .map((tag) => /\bcontent\s*=\s*(?:"([^"]*)"|'([^']*)')/i.exec(tag))
+      .map((m) => (m ? (m[1] ?? m[2] ?? '') : ''));
+  };
+  const problems: string[] = [];
+  const one = new Map<string, string>();
+  for (const key of SHARE_TAGS) {
+    const found = values(key);
+    const [first = ''] = found;
+    if (found.length === 0) problems.push(`no ${key}`);
+    else if (found.length > 1) problems.push(`${found.length} ${key} tags`);
+    else if (first.trim() === '') problems.push(`${key} is empty`);
+    else one.set(key, first);
+  }
+  const url = one.get('og:url');
+  if (url !== undefined && url !== absoluteUrl(path)) problems.push(`og:url ${url} is not ${absoluteUrl(path)}, the page's own route`);
+  const image = one.get('og:image');
+  if (image !== undefined && !new RegExp(`^${escapeRegExp(SITE_ORIGIN)}/share/[^/]+\\.png$`).test(image)) {
+    problems.push(`og:image ${image} is not a PNG under ${SITE_ORIGIN}/share/`);
+  }
+  const card = one.get('twitter:card');
+  if (card !== undefined && card !== 'summary_large_image') problems.push(`twitter:card is ${card}, not summary_large_image`);
+  return problems;
+}
+
 export function robotsTxt(): string {
   return `User-agent: *\nAllow: /\n\nSitemap: ${absoluteUrl('sitemap.xml')}\n`;
 }

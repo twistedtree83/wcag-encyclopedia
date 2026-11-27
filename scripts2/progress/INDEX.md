@@ -86,7 +86,7 @@ Graph: `scripts2/prd-labs.json` · Parent: #40 · Integration branch: `labs`
 
 - [x] **S-01** #69 — Site origin, canonical URLs, robots.txt and sitemap.xml
 - [ ] **S-02** #70 — Unique titles and descriptions, and a head-metadata test
-- [ ] **S-03** #71 — Open Graph, Twitter cards and generated share images (S-01)
+- [x] **S-03** #71 — Open Graph, Twitter cards and generated share images (S-01)
 - [ ] **S-04** #72 — Structured data (S-01)
 - [ ] **S-05** #73 — A real 404 page (S-01)
 - [x] **S-06** #74 — Cloudflare Web Analytics
