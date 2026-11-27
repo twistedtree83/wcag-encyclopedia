@@ -556,6 +556,7 @@ The page parts are listed in [8.14](#814-criterion-page-parts). Screenshots show
 - **Numbers carry their unit:** "4.5 : 1", "24px", "55 criteria".
 - **Never rely on position or colour in instructions.** Write "the Text colour field", not "the box on the left".
 - **Broken examples are described, not just shown.** Every failing exhibit has a text description of what is wrong.
+- **Name it the first time.** The first time a page uses a term or a number, say what it means there ("4.5 : 1, the contrast body text needs"), not on a later page. Every interactive part says what to do with it and what its result means.
 - Criterion names, numbers, plain explanations and fail and pass captions come from the corpus generated from `src/criteria/*.tsx`. Don't retype them into components.
 
 ---
