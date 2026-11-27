@@ -8,6 +8,7 @@
  * with the route so the client hydrates the same page, rewrites asset links for the page's
  * depth (the site uses relative URLs throughout so it works under any GitHub Pages prefix),
  * and writes `dist/<path>index.html`. Each page gets its canonical tag, checked against ADR 0006.
+ * The 404 page is written once more, to `dist/404.html`, with root-absolute asset links.
  * Then it writes the crawl files, `dist/robots.txt` and `dist/sitemap.xml` (src/site/crawl.ts),
  * with each page's `lastmod` the last commit date of the files it is built from, and removes
  * the template.
@@ -23,7 +24,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = join(root, 'dist');
 
-const { render, ROUTES, canonicalTag, canonicalProblems, pageSources, robotsTxt, sitemapXml, sitemapProblems } = await import(pathToFileURL(join(root, 'dist-ssr/entry-server.js')).href);
+const { render, ROUTES, NOT_FOUND, NOINDEX, canonicalTag, canonicalProblems, pageSources, robotsTxt, sitemapXml, sitemapProblems } = await import(pathToFileURL(join(root, 'dist-ssr/entry-server.js')).href);
 const raw = await readFile(join(dist, 'site.html'), 'utf8');
 
 // Preload the two self-hosted faces every page shows above the fold: body text (Onest 400) and
@@ -45,22 +46,28 @@ for (const marker of ['<!--@legacy-redirect-->', '<!--@canonical-->', '<!--@anal
 const escape = (text) =>
   text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
 
-let written = 0;
-for (const route of ROUTES) {
+/**
+ * One page's HTML. `prefix` is how its asset links start; `canonical` is its canonical tag
+ * (empty for the 404 page, which is not indexed).
+ */
+function pageHtml(route, prefix, canonical) {
   const { html, title, description, head, beacon } = render(route);
   if (!html.includes('<main')) throw new Error(`prerender: ${route.path} rendered no <main>`);
-
-  const depth = route.path.split('/').filter(Boolean).length;
-  const prefix = depth ? '../'.repeat(depth) : './';
-  const page = template
+  return template
     .replaceAll('"./assets/', `"${prefix}assets/`)
     .replace('<!--@legacy-redirect-->', () => head)
-    .replace('<!--@canonical-->', () => canonicalTag(route.path))
+    .replace('<!--@canonical-->', () => canonical)
     .replace('<!--@title-->', escape(title))
     .replace('<!--@description-->', escape(description))
     .replace('<div id="root">', `<div id="root" data-route="${escape(route.path)}">`)
     .replace('<!--@app-->', () => html)
     .replace('<!--@analytics-->', () => beacon);
+}
+
+let written = 0;
+for (const route of ROUTES) {
+  const depth = route.path.split('/').filter(Boolean).length;
+  const page = pageHtml(route, depth ? '../'.repeat(depth) : './', canonicalTag(route.path));
 
   const wrong = canonicalProblems(page, route.path);
   if (wrong.length) throw new Error(`prerender: ${route.path || 'home'}: ${wrong.join('; ')}`);
@@ -70,6 +77,14 @@ for (const route of ROUTES) {
   await writeFile(out, page);
   written++;
 }
+
+// The 404 page (S-05): Cloudflare serves dist/404.html for any path that matches no asset, at
+// that path's depth, so its asset links start at the root. Not a route, so not in the sitemap.
+const notFound = pageHtml(NOT_FOUND, '/', '');
+if (!notFound.includes(NOINDEX)) throw new Error('prerender: 404.html is not noindex');
+if (/rel="canonical"/.test(notFound)) throw new Error('prerender: 404.html has a canonical tag');
+if (/(href|src)="\.\.?\//.test(notFound)) throw new Error('prerender: 404.html has a relative link, which breaks below the root');
+await writeFile(join(dist, NOT_FOUND.path), notFound);
 
 /**
  * The UTC date of the last commit that touched any of `files`. A file with no commit yet (a
@@ -88,4 +103,4 @@ await writeFile(join(dist, 'sitemap.xml'), sitemap);
 await writeFile(join(dist, 'robots.txt'), robotsTxt());
 
 await rm(join(dist, 'site.html'));
-console.log(`prerender: wrote ${written} page${written === 1 ? '' : 's'}, robots.txt and sitemap.xml`);
+console.log(`prerender: wrote ${written} page${written === 1 ? '' : 's'}, 404.html, robots.txt and sitemap.xml`);

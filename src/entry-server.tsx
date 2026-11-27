@@ -8,14 +8,15 @@ import { analyticsBeacon } from './site/analytics';
 import { CF_ANALYTICS_TOKEN } from './site/config';
 import { legacyRedirectScript } from './site/legacyRedirect';
 import { Site, pageMeta } from './site/Site';
-import { ROUTES, type Route } from './site/routes';
+import { NOT_FOUND, ROUTES, type Route } from './site/routes';
 
-export { ROUTES };
+export { NOT_FOUND, ROUTES };
 export { canonicalProblems, canonicalTag, pageSources, robotsTxt, sitemapProblems, sitemapXml } from './site/crawl';
 
 /**
  * A route rendered for the prerender step: the app markup, the title and description, and
- * `head`, extra markup for the page's `<head>` (the old `#number` redirect, on Home only), and
+ * `head`, extra markup for the page's `<head>` (the old `#number` redirect on Home, and
+ * `noindex` on the 404 page), and
  * `beacon`, the analytics script for the end of `<body>` (empty while its token is unset).
  */
 export type Rendered = {
@@ -26,12 +27,15 @@ export type Rendered = {
   beacon: string;
 };
 
+/** Keeps the 404 page out of search results; no other page carries it. */
+export const NOINDEX = '<meta name="robots" content="noindex" />';
+
 export function render(route: Route): Rendered {
   const html = renderToString(
     <StrictMode>
       <Site route={route} />
     </StrictMode>,
   );
-  const head = route.page === 'home' ? legacyRedirectScript() : '';
+  const head = route.page === 'home' ? legacyRedirectScript() : route.page === 'not-found' ? NOINDEX : '';
   return { html, head, beacon: analyticsBeacon(CF_ANALYTICS_TOKEN), ...pageMeta(route) };
 }
