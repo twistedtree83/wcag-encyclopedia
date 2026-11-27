@@ -118,6 +118,13 @@ export type CriterionRecord = {
   readonly since: Since;
   /** Plain English. Original prose — never W3C normative text. */
   readonly plain: string;
+  /**
+   * The restatement cut to one short sentence, for the page's description in search results
+   * (`src/site/meta.ts`). Only on records whose restatement opens with a sentence too long to
+   * share the description with the fail caption; otherwise that first sentence is used.
+   * Original prose, like `plain`.
+   */
+  readonly gist?: string;
   readonly fail: Example;
   readonly pass: Example;
   readonly diff?: Diff;

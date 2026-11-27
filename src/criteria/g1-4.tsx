@@ -366,6 +366,7 @@ export const G1_4: readonly CriterionRecord[] = [
     since: '2.1',
     guideline: '1.4',
     labs: ['colour-check', 'non-text-contrast'],
+    gist: 'Field edges, checkboxes and focus rings need 3:1 contrast.',
     plain:
       'The parts of a control that tell you it is a control — the input’s edge, the checkbox ' +
       'box, the focus ring, the chart key — need 3:1 against whatever sits behind them.',
@@ -442,11 +443,12 @@ export const G1_4: readonly CriterionRecord[] = [
     guideline: '1.4',
     demos: ['reflow-1-4-10'],
     labs: ['reflow'],
+    gist: 'At 320 CSS pixels wide, a page scrolls one way only.',
     plain:
       'At 320 CSS pixels wide, content must not require scrolling in two directions. Same ' +
       'content, one column, no horizontal scrollbar.',
     fail: {
-      caption: 'Fixed-width columns: zoomed to 320px wide, the page scrolls sideways as well as down.',
+      caption: 'Fixed-width columns make the page scroll sideways as well as down at 320px wide.',
       live: { Example: FixedCatalogue, ...REFLOW_LIVE },
       render: () => (
         <div className="mini">
@@ -506,6 +508,8 @@ export const G1_4: readonly CriterionRecord[] = [
     since: '2.0',
     guideline: '1.4',
     labs: ['audio-control'],
+    gist:
+      'Sound that plays on its own for more than three seconds needs a control on the page to stop it.',
     plain:
       'If sound plays automatically for more than three seconds, there has to be a way to stop ' +
       'it — a control on the page, not just the operating system volume. Screen reader users ' +
@@ -703,6 +707,7 @@ export const G1_4: readonly CriterionRecord[] = [
     since: '2.1',
     guideline: '1.4',
     labs: ['text-spacing'],
+    gist: 'Text must survive a reader loosening its line, paragraph, letter and word spacing.',
     plain:
       'A reader must be able to increase line height to 1.5×, paragraph spacing to 2×, letter ' +
       'spacing to 0.12em, and word spacing to 0.16em without losing content. People with ' +
@@ -746,6 +751,7 @@ export const G1_4: readonly CriterionRecord[] = [
     level: 'AA',
     since: '2.1',
     guideline: '1.4',
+    gist: 'A tooltip shown on hover or focus must stay put until the reader dismisses it.',
     plain:
       'Anything that appears on hover or focus — a tooltip, a popover, a dropdown — has to be ' +
       'dismissable without moving the pointer, stay visible while the pointer travels into it, ' +
