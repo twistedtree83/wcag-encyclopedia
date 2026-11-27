@@ -11,9 +11,13 @@ this before changing the build, adding a page, or touching tokens. The vocabular
   `vite build --ssr src/entry-server.tsx --outDir dist-ssr`, then `node scripts/prerender.mjs`.
   It writes one `index.html` per route into `dist/` (59 pages).
 - `site.html` is the only HTML template. Its placeholders are `<!--@title-->`, `<!--@description-->`,
-  `<!--@canonical-->`, `<!--@tokens-->`, `<!--@legacy-redirect-->`, `<!--@fonts-->` and `<!--@app-->`. `render(route)` in
-  `src/entry-server.tsx` returns `{ html, title, description, head }`. Only Home has a `head`:
-  it holds the `#1.4.3` → `criteria/1.4.3/` redirect from `src/site/legacyRedirect.ts`.
+  `<!--@canonical-->`, `<!--@tokens-->`, `<!--@legacy-redirect-->`, `<!--@fonts-->`, `<!--@app-->` and `<!--@analytics-->`.
+  `render(route)` in `src/entry-server.tsx` returns `{ html, title, description, head, beacon }`.
+  Only Home has a `head`: it holds the `#1.4.3` → `criteria/1.4.3/` redirect from
+  `src/site/legacyRedirect.ts`. `beacon` is the Cloudflare Web Analytics script
+  (`src/site/analytics.ts`), written at the end of `<body>` outside `#root`. It is empty while
+  `CF_ANALYTICS_TOKEN` in `src/site/config.ts` is unset, and the committed config leaves it unset.
+  The beacon sets no cookie, so the site has no consent banner.
 - The prerender step rewrites `./assets/` to `../` repeated once per directory level, so the
   relative base works at any depth and under the GitHub Pages sub-path.
 - **Canonical tag and crawl files** (ADR 0006). The only absolute addresses the site writes are

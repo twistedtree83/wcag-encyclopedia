@@ -38,7 +38,7 @@ const preloads = PRELOADED_FONTS.map((face) => {
 if (!raw.includes('<!--@fonts-->')) throw new Error('prerender: site.html has no <!--@fonts-->');
 const template = raw.replace('<!--@fonts-->', () => preloads);
 
-for (const marker of ['<!--@legacy-redirect-->', '<!--@canonical-->', '<!--@title-->', '<!--@description-->', '<!--@app-->', '<div id="root">']) {
+for (const marker of ['<!--@legacy-redirect-->', '<!--@canonical-->', '<!--@analytics-->', '<!--@title-->', '<!--@description-->', '<!--@app-->', '<div id="root">']) {
   if (!template.includes(marker)) throw new Error(`prerender: site.html has no ${marker}`);
 }
 
@@ -47,7 +47,7 @@ const escape = (text) =>
 
 let written = 0;
 for (const route of ROUTES) {
-  const { html, title, description, head } = render(route);
+  const { html, title, description, head, beacon } = render(route);
   if (!html.includes('<main')) throw new Error(`prerender: ${route.path} rendered no <main>`);
 
   const depth = route.path.split('/').filter(Boolean).length;
@@ -59,7 +59,8 @@ for (const route of ROUTES) {
     .replace('<!--@title-->', escape(title))
     .replace('<!--@description-->', escape(description))
     .replace('<div id="root">', `<div id="root" data-route="${escape(route.path)}">`)
-    .replace('<!--@app-->', () => html);
+    .replace('<!--@app-->', () => html)
+    .replace('<!--@analytics-->', () => beacon);
 
   const wrong = canonicalProblems(page, route.path);
   if (wrong.length) throw new Error(`prerender: ${route.path || 'home'}: ${wrong.join('; ')}`);
