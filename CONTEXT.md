@@ -175,6 +175,12 @@ every criterion page it discusses and never restates one; the criterion page sta
 on its criterion. A post may show a criterion's existing examples and labs, but brings none of
 its own.
 
+**Site origin** — `SITE_ORIGIN`, the production address `https://wcagencyclopedia.com`. Joined
+to a route's path, it gives the page's **canonical URL**, the one absolute address crawlers are
+told to credit (ADR 0006).
+
+**Crawl files** — `robots.txt` and `sitemap.xml`, written into `dist/` by the prerender step.
+
 **Token** — a CSS custom property in one of the two theme palettes. Token names and values come
 from the `:root` block of `design/mockups/swatch/swatch.css` verbatim, so the design and the
 build stay diffable.

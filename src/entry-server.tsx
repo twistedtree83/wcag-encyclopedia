@@ -9,6 +9,7 @@ import { Site, pageMeta } from './site/Site';
 import { ROUTES, type Route } from './site/routes';
 
 export { ROUTES };
+export { canonicalProblems, canonicalTag, pageSources, robotsTxt, sitemapProblems, sitemapXml } from './site/crawl';
 
 /**
  * A route rendered for the prerender step: the app markup, the title and description, and
