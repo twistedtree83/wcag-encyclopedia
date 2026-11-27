@@ -25,7 +25,9 @@ export function Footer() {
       links: [
         { to: href(`${PATHS.about}#how-we-test`), label: 'How we test' },
         { to: href(`${PATHS.about}#accessibility-statement`), label: 'Accessibility statement' },
-        { to: FEEDBACK_FORM_URL, label: 'Report a problem with this site' },
+        ...(FEEDBACK_FORM_URL
+          ? [{ to: FEEDBACK_FORM_URL, label: 'Report a problem with this site' }]
+          : []),
       ],
     },
   ];

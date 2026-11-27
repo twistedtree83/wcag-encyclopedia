@@ -101,15 +101,24 @@ export function AboutPage() {
               </p>
             </li>
           </ul>
-          <p className="checks__intro">
-            Automated checks find a lot, but not everything. If something on the site is hard
-            to use, please tell us through the feedback form.
-          </p>
-          <p>
-            <a className="btn o" href={FEEDBACK_FORM_URL}>
-              Report a problem with this site
-            </a>
-          </p>
+          {FEEDBACK_FORM_URL ? (
+            <>
+              <p className="checks__intro">
+                Automated checks find a lot, but not everything. If something on the site is hard
+                to use, please tell us through the feedback form.
+              </p>
+              <p>
+                <a className="btn o" href={FEEDBACK_FORM_URL}>
+                  Report a problem with this site
+                </a>
+              </p>
+            </>
+          ) : (
+            <p className="checks__intro">
+              Automated checks find a lot, but not everything. A form for reporting problems
+              with the site is on its way.
+            </p>
+          )}
         </div>
       </section>
     </>

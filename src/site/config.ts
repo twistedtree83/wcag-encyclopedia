@@ -6,6 +6,7 @@
  * Where readers report a problem with the site. The About page's accessibility statement and
  * the footer link here, as "Report a problem with this site".
  *
- * TODO: replace the placeholder with the feedback form's real address once the site owner has it.
+ * Unset until the form exists: while it is undefined, neither link is shown. Set it to the
+ * form's full https:// address and both links appear.
  */
-export const FEEDBACK_FORM_URL = 'https://example.com/TODO-feedback-form-url';
+export const FEEDBACK_FORM_URL: string | undefined = undefined;

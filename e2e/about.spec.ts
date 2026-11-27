@@ -84,18 +84,23 @@ test.describe('before any script runs', () => {
     await expect(howWeTest).toContainText('3:1');
   });
 
-  test('links to the feedback form to report a problem, and not to any source code', async ({
+  test('links to the feedback form only once it is set, and never to any source code', async ({
     page,
   }) => {
     await page.goto(PAGE);
-    await expect(
-      page.locator('#accessibility-statement').getByRole('link', {
-        name: 'Report a problem with this site',
-      }),
-    ).toHaveAttribute('href', FEEDBACK_FORM_URL);
-    await expect(
-      page.getByRole('contentinfo').getByRole('link', { name: 'Report a problem with this site' }),
-    ).toHaveAttribute('href', FEEDBACK_FORM_URL);
+    const reportLinks = page.getByRole('link', { name: 'Report a problem with this site' });
+    if (FEEDBACK_FORM_URL) {
+      await expect(
+        page.locator('#accessibility-statement').getByRole('link', {
+          name: 'Report a problem with this site',
+        }),
+      ).toHaveAttribute('href', FEEDBACK_FORM_URL);
+      await expect(
+        page.getByRole('contentinfo').getByRole('link', { name: 'Report a problem with this site' }),
+      ).toHaveAttribute('href', FEEDBACK_FORM_URL);
+    } else {
+      await expect(reportLinks).toHaveCount(0);
+    }
     await expect(page.locator('#source-code')).toHaveCount(0);
     await expect(page.locator('a[href*="github.com"]')).toHaveCount(0);
   });
