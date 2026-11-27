@@ -11,7 +11,7 @@ this before changing the build, adding a page, or touching tokens. The vocabular
   `vite build --ssr src/entry-server.tsx --outDir dist-ssr`, then `node scripts/prerender.mjs`.
   It writes one `index.html` per route into `dist/` (59 pages).
 - `site.html` is the only HTML template. Its placeholders are `<!--@title-->`, `<!--@description-->`,
-  `<!--@tokens-->`, `<!--@legacy-redirect-->` and `<!--@app-->`. `render(route)` in
+  `<!--@tokens-->`, `<!--@legacy-redirect-->`, `<!--@fonts-->` and `<!--@app-->`. `render(route)` in
   `src/entry-server.tsx` returns `{ html, title, description, head }`. Only Home has a `head`:
   it holds the `#1.4.3` → `criteria/1.4.3/` redirect from `src/site/legacyRedirect.ts`.
 - The prerender step rewrites `./assets/` to `../` repeated once per directory level, so the
@@ -58,6 +58,14 @@ To add a page:
 - Fonts are Figtree and Onest only, set as `var(--fh)` and `var(--fb)`. Code uses
   `ui-monospace, 'SF Mono', Menlo, Consolas, monospace`. `e2e/retired.spec.ts` fails if the old
   fonts or the old single-page markup come back into `dist/`.
+- The fonts are self-hosted, never loaded from Google Fonts: a reader's visit is not reported
+  to a third party, and layout in tests never waits on the network, so it is the same on every
+  run. `src/entry-client.tsx` imports the latin subset of each weight the design uses from
+  `@fontsource/figtree` and `@fontsource/onest` (each face sets `font-display: swap`), and Vite
+  bundles the woff2 files into `dist/assets/`. `scripts/prerender.mjs` fills `<!--@fonts-->`
+  with preloads for the two faces above the fold, Onest 400 (body) and Figtree 800 (h1). A new
+  weight is a new import there. `e2e/fonts.spec.ts` fails if a built page or stylesheet names
+  `fonts.googleapis.com` or `fonts.gstatic.com`.
 - `tests/styleRules.test.ts` enforces the mechanical rules: transitions, font stacks, sections
   before "Breakpoints", axe excludes and the "rule" wording.
 
@@ -99,7 +107,7 @@ and the one polite region. To add a lab:
    `null`, so it is never announced. Don't add a live region of your own.
 4. Register it in `src/labs/<name>/lab.ts`: `export default { id, title, criteria, steps, Lab } satisfies
    LabEntry;`. `steps` is "How to use this lab" (goal, controls, what to try, what the result
-   means), which the shell shows above the lab on criterion pages; `tests/labSteps.test.tsx` holds every lab to it. with `flagshipFor: '<num>'` if it is that criterion's flagship, and
+   means), which the shell shows above the lab on criterion pages; `tests/labSteps.test.tsx` holds every lab to it. A step that puts a control in curly quotes (“Live captions”) must quote what the lab shows when it opens, as `tests/labStepNames.test.tsx` checks; the only other quotes are values the reader types (type “#999999”). with `flagshipFor: '<num>'` if it is that criterion's flagship, and
    `import './lab.css';` if it has styles. Then add its id to each record in `criteria` (the
    record's `labs` sets the order on the page). Every criterion has at least one lab and live
    fail and pass examples; the data-integrity test fails on any gap, and
@@ -221,6 +229,10 @@ one entry per line so parallel work merges cleanly, and check each step:
   (never on CI), and `test:a11y` ends by printing every test that passed only on retry and the
   15 slowest (`scripts/flaky.mjs`, reading `test-results/results.json`). Treat a flaky test as a
   bug to fix, not a pass.
+- CI (`.github/workflows/verify.yml`) runs lint, types, unit tests and the build once, uploads
+  `dist/`, then runs Playwright in four parallel shards (`--shard=i/4`) against that build, each
+  printing its own `scripts/flaky.mjs` summary. `deploy.yml` calls the same workflow and deploys
+  that `dist/` only when every shard has passed.
 - `npm run verify:changed` runs lint, types, unit tests and the build, then only the e2e spec
   files changed since `labs` (`playwright test --only-changed=labs`). A new lab's spec is its
   own file, so this runs just that lab's bar. The lab bar's tests report their location as
@@ -230,8 +242,11 @@ one entry per line so parallel work merges cleanly, and check each step:
   was cut (`git merge-base --is-ancestor <target> <branch>`), the merged tree is the tree that
   passed, so the gate is not re-run; confirm with `npm run build`. If the target has moved, run
   the full `npm run verify` on the merge.
-- e2e waits for hydration before interacting:
-  `page.waitForFunction(() => document.documentElement.dataset.hydrated === 'true')`.
+- Open pages with `open(page, url)` from `e2e/support/open.ts`: it checks the page was built
+  (200), waits for `<html data-hydrated="true">` and then for `document.fonts.ready`, so
+  controls are live and geometry is measured in the real fonts. After a reload or a navigation
+  the test caused, call `whenReady(page)`. `tests/e2eOpen.test.ts` fails if a spec waits for
+  hydration itself.
 - The suite covers about 1,500 tests across 59 pages. On a heavily loaded machine, tests fail on
   the 30s timeout rather than on assertions. Re-run those with
   `npx playwright test --last-failed --workers=1` before treating them as real. Assertion

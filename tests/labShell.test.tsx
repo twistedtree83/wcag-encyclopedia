@@ -39,14 +39,14 @@ describe('the verdict', () => {
     expect(pairVerdict(grey, '1.4.3')).toEqual({ criterion: '1.4.3', passes: false });
     // Non-text contrast needs 3 : 1, which 4.47 : 1 clears.
     expect(pairVerdict(grey, '1.4.11')).toEqual({ criterion: '1.4.11', passes: true });
-    // Use of colour has no ratio of its own: the check reports text contrast there.
-    expect(pairVerdict(grey, '1.4.1')).toEqual({ criterion: '1.4.3', passes: false });
+    // Use of colour has no ratio of its own: the check judges text contrast there, as 1.4.1.
+    expect(pairVerdict(grey, '1.4.1')).toEqual({ criterion: '1.4.1', passes: false });
   });
 });
 
 describe('every lab in the shell, before any script runs', () => {
   const pages = [
-    { path: criterionPath('1.4.1'), labs: 2, verdicts: ['1.4.3 passes', '1.4.1 fails'] },
+    { path: criterionPath('1.4.1'), labs: 2, verdicts: ['1.4.1 passes', '1.4.1 fails'] },
     { path: criterionPath('1.4.3'), labs: 2, verdicts: ['1.4.3 passes', '1.4.3 passes'] },
     { path: criterionPath('1.4.11'), labs: 2, verdicts: ['1.4.11 passes', '1.4.11 passes'] },
     { path: PATHS.colourCheck, labs: 1, verdicts: ['1.4.3 passes'] },

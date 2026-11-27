@@ -95,14 +95,13 @@ export function announcement(ratio: number): string {
 }
 
 /**
- * The check's verdict on the criterion page it is shown on: 1.4.11 needs 3 : 1 for borders and
- * icons; everywhere else (1.4.3, and 1.4.1, which has no ratio of its own) it judges body text.
+ * The check's verdict on the criterion page it is shown on, named for that page's criterion:
+ * 1.4.11 needs 3 : 1 for borders and icons; everywhere else (1.4.3, and 1.4.1, which has no
+ * ratio of its own) it judges body text against 4.5 : 1.
  */
 export function pairVerdict({ fg, bg }: ColourPair, criterion: string): Verdict {
   const ratio = contrastRatio(fg, bg);
-  return criterion === '1.4.11'
-    ? { criterion, passes: passesThreshold(ratio, AA_UI) }
-    : { criterion: '1.4.3', passes: passesThreshold(ratio, AA_BODY) };
+  return { criterion, passes: passesThreshold(ratio, criterion === '1.4.11' ? AA_UI : AA_BODY) };
 }
 
 type Props = {

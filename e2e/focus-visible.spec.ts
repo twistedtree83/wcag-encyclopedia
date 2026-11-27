@@ -1,5 +1,6 @@
 import { test, expect, type Locator, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { open as openPage } from './support/open';
 
 /**
  * 2.4.7 (#44): the focus tracker under both live stages, and the flagship focus-ring lab.
@@ -15,11 +16,7 @@ import AxeBuilder from '@axe-core/playwright';
 const URL = '/criteria/2.4.7/';
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa', 'best-practice'];
 
-async function open(page: Page, url = URL) {
-  const response = await page.goto(url);
-  expect(response?.status(), `${url} was not built`).toBe(200);
-  await page.waitForFunction(() => document.documentElement.dataset.hydrated === 'true');
-}
+const open = (page: Page, url = URL) => openPage(page, url);
 
 const broken = (page: Page) => page.locator('figure.stage.bad');
 const fixed = (page: Page) => page.locator('figure.stage.good');

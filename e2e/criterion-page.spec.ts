@@ -1,5 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
 import { EXPECTED } from '../src/criteria/manifest';
+import { open as openPage } from './support/open';
 
 /**
  * The pre-rendered criterion page (ADR 0001), proven on 1.4.3, and the Swatch shell around it.
@@ -8,11 +9,7 @@ import { EXPECTED } from '../src/criteria/manifest';
 const PAGE = '/criteria/1.4.3/';
 const record = EXPECTED.find((c) => c.num === '1.4.3')!;
 
-async function open(page: Page) {
-  const response = await page.goto(PAGE);
-  expect(response?.status(), `${PAGE} was not built`).toBe(200);
-  await page.waitForFunction(() => document.documentElement.dataset.hydrated === 'true');
-}
+const open = (page: Page) => openPage(page, PAGE);
 
 test.describe('before any script runs', () => {
   test.use({ javaScriptEnabled: false });
@@ -160,27 +157,29 @@ test.describe('the shell', () => {
   });
 });
 
-test('loads only Figtree and Onest', async ({ page }) => {
+test('loads only Figtree and Onest, from the site itself', async ({ page }) => {
   await open(page);
-  const families = await page.evaluate(() =>
-    [...document.querySelectorAll<HTMLLinkElement>('link[rel="stylesheet"]')]
-      .filter((l) => l.href.includes('fonts.googleapis.com'))
-      .flatMap((l) => new URL(l.href).searchParams.getAll('family'))
-      .map((f) => f.split(':')[0]),
+  const external = await page.evaluate(() =>
+    [...document.querySelectorAll<HTMLLinkElement>('link[href]')]
+      .map((l) => new URL(l.href))
+      .filter((u) => u.origin !== location.origin)
+      .map((u) => u.href),
   );
-  expect(families.sort()).toEqual(['Figtree', 'Onest']);
+  expect(external).toEqual([]);
 
-  // And nothing in the page's own CSS names another web font.
+  // The page's own CSS names no other web font.
   const faces = await page.evaluate(() =>
-    [...document.styleSheets].flatMap((s) => {
-      try {
-        return [...s.cssRules]
-          .filter((r) => r instanceof CSSFontFaceRule)
-          .map((r) => (r as CSSFontFaceRule).style.getPropertyValue('font-family'));
-      } catch {
-        return []; // cross-origin (Google Fonts) sheets are covered by the check above
-      }
-    }),
+    [...document.styleSheets].flatMap((s) =>
+      [...s.cssRules]
+        .filter((r) => r instanceof CSSFontFaceRule)
+        .map((r) => (r as CSSFontFaceRule).style.getPropertyValue('font-family').replace(/['"]/g, '')),
+    ),
   );
-  expect(faces).toEqual([]);
+  expect([...new Set(faces)].sort()).toEqual(['Figtree', 'Onest']);
+
+  // And the faces the page shows above the fold have loaded.
+  for (const font of ['800 16px Figtree', '400 16px Onest']) {
+    const loaded = await page.evaluate(async (f) => (await document.fonts.load(f)).length, font);
+    expect(loaded, font).toBeGreaterThan(0);
+  }
 });

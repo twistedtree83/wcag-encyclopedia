@@ -1,4 +1,5 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect } from '@playwright/test';
+import { open } from './support/open';
 
 /**
  * The markup diff and the measured contrast badges, on criterion pages. These tests used to
@@ -9,12 +10,6 @@ import { test, expect, type Page } from '@playwright/test';
 /** A criterion with a markup diff, and the one with measured contrast badges. */
 const DIFF_PAGE = '/criteria/1.1.1/';
 const BADGE_PAGE = '/criteria/1.4.3/';
-
-async function open(page: Page, url: string) {
-  const response = await page.goto(url);
-  expect(response?.status(), `${url} was not built`).toBe(200);
-  await page.waitForFunction(() => document.documentElement.dataset.hydrated === 'true');
-}
 
 test('renders a markup diff whose changed lines are marked with glyphs, not colour alone', async ({
   page,

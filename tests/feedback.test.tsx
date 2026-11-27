@@ -39,15 +39,15 @@ describe('reporting a problem', () => {
     );
   });
 
-  // Renders every route, which can pass vitest's 5 s default on a loaded machine.
+  // Renders every route, which can pass vitest's 5 s default on a loaded machine. Placeholder
+  // addresses (TODO-…, example.com links) are caught on the built pages by e2e/placeholders.spec.ts.
   it(
-    'leaves no page pointing at GitHub, a source code section or a placeholder address',
+    'leaves no page pointing at GitHub or a source code section',
     () => {
       for (const route of ROUTES) {
         const page = render(route).html;
         expect(page, route.path).not.toMatch(/github/i);
         expect(page, route.path).not.toContain('source-code');
-        expect(page, route.path).not.toContain('TODO-feedback');
       }
     },
     30_000,

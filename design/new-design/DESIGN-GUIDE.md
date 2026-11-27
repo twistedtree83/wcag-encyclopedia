@@ -162,7 +162,7 @@ The tightest pair is control borders on cards in the dark theme, at 3.7:1. Don't
 | Headings, numbers, card titles, logo | **Figtree** | 400, 500, 600, 700, 800 | `--fh` |
 | Body, labels, controls | **Onest** | 400, 500, 600, 700 | `--fb` |
 
-Both come from Google Fonts. Figtree is a geometric sans with friendly rounded shapes and a strong heavy weight. Onest is a clear, open text face with generous spacing that reads well at small sizes.
+The build self-hosts both (latin subset, `font-display: swap`; `docs/CONVENTIONS.md`). Figtree is a geometric sans with friendly rounded shapes and a strong heavy weight. Onest is a clear, open text face with generous spacing that reads well at small sizes.
 
 The mockup also loads Gabarito, Golos Text, Bricolage Grotesque, Familjen Grotesk, Fraunces, Instrument Sans and Atkinson Hyperlegible so the tweak bar can switch between them. **The real build loads only Figtree and Onest.**
 
@@ -556,6 +556,7 @@ The page parts are listed in [8.14](#814-criterion-page-parts). Screenshots show
 - **Numbers carry their unit:** "4.5 : 1", "24px", "55 criteria".
 - **Never rely on position or colour in instructions.** Write "the Text colour field", not "the box on the left".
 - **Broken examples are described, not just shown.** Every failing exhibit has a text description of what is wrong.
+- **Name it the first time.** The first time a page uses a term or a number, say what it means there ("4.5 : 1, the contrast body text needs"), not on a later page. Every interactive part says what to do with it and what its result means.
 - Criterion names, numbers, plain explanations and fail and pass captions come from the corpus generated from `src/criteria/*.tsx`. Don't retype them into components.
 
 ---

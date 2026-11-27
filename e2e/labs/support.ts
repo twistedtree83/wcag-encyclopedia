@@ -1,5 +1,7 @@
 import { test, expect, type Locator, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { open } from '../support/open';
+export { open };
 
 /**
  * The shared lab bar (#41), in the built site. Every lab's `e2e/labs/<lab>.lab.spec.ts` passes
@@ -62,12 +64,6 @@ export const colourToFail = async (lab: Locator, page: Page) => {
   await typeHex(lab, page, 'Background hex code', '#FFFFFF');
 };
 export const COLOUR_SAID = '2.84 to 1. Fails for text and for controls.';
-
-export async function open(page: Page, url: string) {
-  const response = await page.goto(url);
-  expect(response?.status(), `${url} was not built`).toBe(200);
-  await page.waitForFunction(() => document.documentElement.dataset.hydrated === 'true');
-}
 
 const verdict = (lab: Locator) => lab.locator('.lab-verdict');
 const live = (lab: Locator) => lab.locator('[aria-live="polite"]');

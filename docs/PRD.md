@@ -109,7 +109,7 @@ The binding constraint is unchanged: **the site obeys every criterion it documen
 
 - **Only the defaults ship.** None of the guide's `data-*` style switches ship except `data-theme`. Karma is the only palette. The tweak bar and everything in guide §13 is left out.
 - **Tokens.** `src/theme/tokens.ts` is rewritten from the `:root` block of `swatch.css` for both themes, with token names verbatim. The old palette is deleted.
-- **Fonts.** Only Figtree (400–800) and Onest (400–700), from Google Fonts as now.
+- **Fonts.** Only Figtree (400–800) and Onest (400–700), self-hosted (`docs/CONVENTIONS.md`).
 - **Theme toggle.** A single button at the end of the header, labelled "Dark theme", with `aria-pressed`, styled as a secondary button and at least 44px. It reuses `useTheme`.
 
 ### Modules

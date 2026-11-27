@@ -112,6 +112,10 @@ right thing.
 noun in the diff (a type, module, prop or copy term) is defined in `CONTEXT.md` in the same
 commit.
 
+**Copy check** (design guide §11, "Name it the first time"): read every page or lab the diff
+changes as a first-time reader. Each term or number is explained where the page first uses it,
+and each interactive part says what to do with it and what its result means.
+
 ### 7. Commit
 On the graph's `branchName`. Message format:
 

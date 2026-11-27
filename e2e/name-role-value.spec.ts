@@ -1,4 +1,5 @@
 import { test, expect, type Locator, type Page } from '@playwright/test';
+import { open } from './support/open';
 
 /**
  * The 4.1.2 flagship lab (#42) in the built page: the announcement log follows the mock's markup
@@ -8,12 +9,6 @@ import { test, expect, type Locator, type Page } from '@playwright/test';
 
 const URL = '/criteria/4.1.2/';
 const SHARED = '?el=switch&name=aria-label&state=aria-checked&on=1';
-
-async function open(page: Page, url: string) {
-  const response = await page.goto(url);
-  expect(response?.status(), `${url} was not built`).toBe(200);
-  await page.waitForFunction(() => document.documentElement.dataset.hydrated === 'true');
-}
 
 const labOf = (page: Page) => page.locator('.lab-slot .nrv-lab');
 const log = (lab: Locator) => lab.locator('.alog li');

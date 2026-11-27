@@ -1,5 +1,6 @@
 import { test, expect, type Locator, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { open } from './support/open';
 
 /**
  * 3.2.4 and 3.2.6 on the mock site (#64), in the shape of `mock-site-live.spec.ts`. Each Broken
@@ -9,12 +10,6 @@ import AxeBuilder from '@axe-core/playwright';
  */
 
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa', 'best-practice'];
-
-async function open(page: Page, url: string) {
-  const response = await page.goto(url);
-  expect(response?.status(), `${url} was not built`).toBe(200);
-  await page.waitForFunction(() => document.documentElement.dataset.hydrated === 'true');
-}
 
 const broken = (page: Page) => page.locator('figure.stage.bad');
 const fixed = (page: Page) => page.locator('figure.stage.good');

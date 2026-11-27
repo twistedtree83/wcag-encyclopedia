@@ -1,6 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 import { EXPECTED } from '../src/criteria/manifest';
 import { PRINCIPLES } from '../src/criteria/structure';
+import { open as openPage } from './support/open';
 
 /**
  * The All criteria page (`/criteria/`): the page head with its principle chart, the filter
@@ -11,11 +12,7 @@ const PAGE = '/criteria/';
 const TOTAL = EXPECTED.length;
 const byPrinciple = (n: number) => EXPECTED.filter((c) => c.num.startsWith(`${n}.`)).length;
 
-async function open(page: Page, url = PAGE) {
-  const response = await page.goto(url);
-  expect(response?.status(), `${url} was not built`).toBe(200);
-  await page.waitForFunction(() => document.documentElement.dataset.hydrated === 'true');
-}
+const open = (page: Page, url = PAGE) => openPage(page, url);
 
 const cards = (page: Page) => page.locator('main ul.grid > li > a');
 const results = (page: Page) => page.locator('main .count');

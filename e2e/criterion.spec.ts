@@ -1,5 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
 import { EXPECTED } from '../src/criteria/manifest';
+import { open as openPage } from './support/open';
 
 /**
  * All 55 criterion pages (R-03): built, readable without JavaScript, hydrated without errors,
@@ -7,12 +8,7 @@ import { EXPECTED } from '../src/criteria/manifest';
  * site's `#<number>` links.
  */
 
-async function open(page: Page, num: string) {
-  const url = `/criteria/${num}/`;
-  const response = await page.goto(url);
-  expect(response?.status(), `${url} was not built`).toBe(200);
-  await page.waitForFunction(() => document.documentElement.dataset.hydrated === 'true');
-}
+const open = (page: Page, num: string) => openPage(page, `/criteria/${num}/`);
 
 test('the build writes a page for every criterion, its name in the static HTML', async ({
   request,
