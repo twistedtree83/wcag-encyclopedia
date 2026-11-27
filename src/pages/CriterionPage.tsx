@@ -13,7 +13,8 @@ import { MarkupDiff } from '../components/MarkupDiff';
 import { Pager } from '../components/Pager';
 import { LevelTag, Marker, NewTag } from '../components/Tags';
 import { neighbours, related } from '../site/criterionNav';
-import { PATHS } from '../site/routes';
+import { trailFor } from '../site/breadcrumbs';
+import { criterionPath } from '../site/routes';
 
 /**
  * A criterion page, in the PRD's order: breadcrumb, head and facts, Broken then fixed, the
@@ -37,16 +38,11 @@ export function CriterionPage({ record }: { record: CriterionRecord }) {
   });
   const also = related(record);
   const { prev, next } = neighbours(record.num);
+  const route = { path: criterionPath(record.num), page: 'criterion', num: record.num } as const;
 
   return (
     <>
-      <Breadcrumb
-        trail={[
-          { to: PATHS.home, label: 'Home' },
-          { to: PATHS.criteria, label: 'Criteria' },
-        ]}
-        current={`${record.num} ${record.name}`}
-      />
+      <Breadcrumb trail={trailFor(route, `${record.num} ${record.name}`)} />
 
       <section className="ch" aria-labelledby="criterion-title">
         <div>

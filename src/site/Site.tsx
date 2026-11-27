@@ -54,10 +54,31 @@ function Page({ route }: { route: Route }) {
   }
 }
 
-function recordFor(route: Route) {
+export function recordFor(route: Route) {
   const record = route.num ? criterion(route.num) : undefined;
   if (!record) throw new Error(`${route.path}: no criterion record for ${route.num}`);
   return record;
+}
+
+/**
+ * The page's own name: its last step in the breadcrumb trail and, on a criterion page, the
+ * article headline in its structured data.
+ */
+export function pageName(route: Route): string {
+  switch (route.page) {
+    case 'about':
+      return 'About';
+    case 'colour-check':
+      return 'Colour check';
+    case 'criteria':
+      return 'Criteria';
+    case 'home':
+      return 'Home';
+    case 'criterion': {
+      const record = recordFor(route);
+      return `${record.num} ${record.name}`;
+    }
+  }
 }
 
 /** The document title and description for a route. */
