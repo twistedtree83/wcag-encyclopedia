@@ -16,10 +16,10 @@ export default [
         'Press Play, then choose Automatic, never checked and play it again. Compare Heard now ' +
         'with Captions now, then choose None.',
       result:
-        'Only Accurate, checked passes 1.2.2. Unchecked automatic captions garble words like ' +
-        '“Friday” and leave out the alarm, and no captions leave out everything, so deaf and ' +
-        'hard of hearing viewers miss what the clip says. The verdict line under the lab says ' +
-        'which.',
+        'Only Accurate, checked passes 1.2.2. Unchecked automatic captions garble words (Friday ' +
+        'comes out as fry day) and leave out the alarm, and no captions leave out everything, so ' +
+        'deaf and hard of hearing viewers miss what the clip says. The verdict line under the lab ' +
+        'says which.',
     },
     Lab: CaptionsLab,
   },

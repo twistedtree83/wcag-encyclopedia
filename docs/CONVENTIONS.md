@@ -107,7 +107,7 @@ and the one polite region. To add a lab:
    `null`, so it is never announced. Don't add a live region of your own.
 4. Register it in `src/labs/<name>/lab.ts`: `export default { id, title, criteria, steps, Lab } satisfies
    LabEntry;`. `steps` is "How to use this lab" (goal, controls, what to try, what the result
-   means), which the shell shows above the lab on criterion pages; `tests/labSteps.test.tsx` holds every lab to it. with `flagshipFor: '<num>'` if it is that criterion's flagship, and
+   means), which the shell shows above the lab on criterion pages; `tests/labSteps.test.tsx` holds every lab to it. A step that puts a control in curly quotes (“Live captions”) must quote what the lab shows when it opens, as `tests/labStepNames.test.tsx` checks; the only other quotes are values the reader types (type “#999999”). with `flagshipFor: '<num>'` if it is that criterion's flagship, and
    `import './lab.css';` if it has styles. Then add its id to each record in `criteria` (the
    record's `labs` sets the order on the page). Every criterion has at least one lab and live
    fail and pass examples; the data-integrity test fails on any gap, and

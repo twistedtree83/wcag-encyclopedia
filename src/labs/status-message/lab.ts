@@ -9,8 +9,8 @@ export default {
   steps: {
     goal: 'Let a screen reader user hear that an item went into the basket, without moving focus.',
     controls:
-      'The Put the message in a status region, role="status" tick box makes the mock shop’s ' +
-      '“Added” message a status region or plain text. The Press Add to basket button adds an ' +
+      'The Put the message in a status region, role="status" tick box makes the message the ' +
+      'mock shop shows when an item is added a status region or plain text. The Press Add to basket button adds an ' +
       'item, and the log under “Screen reader announced” shows what was said.',
     tryThis:
       'The lab starts with the tick box clear. Press Add to basket and see that nothing is ' +
