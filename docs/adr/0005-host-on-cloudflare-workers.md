@@ -4,8 +4,9 @@ The site moves from GitHub Pages to Cloudflare Workers static assets at wcagency
 The domain is registered at Cloudflare, so DNS, HTTPS and hosting live in one place: attaching
 the custom domains in `wrangler.jsonc` creates their DNS records and certificates.
 
-Deploys still go through `.github/workflows/deploy.yml`: `npm run verify` first, then
-`wrangler deploy`. Cloudflare never builds the site itself, so a build whose accessibility scan
+Deploys still go through `.github/workflows/deploy.yml`: the verify gate first (the steps of
+`npm run verify`, with e2e in four shards, all of which must pass), then `wrangler deploy` of
+the very `dist/` the shards scanned. Cloudflare never builds the site itself, so a build whose accessibility scan
 fails cannot be published (the same rule the Pages workflow kept). The Worker
 (`worker/index.js`) only redirects `www` to the bare domain; every page is a static asset, and
 `auto-trailing-slash` serves `/criteria/1.4.3` and `/criteria/1.4.3/` the same page.

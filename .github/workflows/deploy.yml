@@ -17,24 +17,29 @@ permissions:
 jobs:
   # The gate runs here too, deliberately. A page whose central claim is that it obeys the
   # criteria it documents must not be publishable while its accessibility scan is failing —
-  # so the deploy depends on the same `npm run verify` that gates the branch, rather than
+  # so the deploy depends on the same gate that checks the branch (verify.yml: lint, types,
+  # unit tests and the build once, then every e2e shard, axe scan included), rather than
   # trusting that it passed somewhere else.
-  build:
+  verify:
+    uses: ./.github/workflows/verify.yml
+
+  deploy:
+    # `needs: verify` waits for every job in verify.yml, all four e2e shards included, and
+    # skips this job if any of them failed.
+    needs: verify
     runs-on: ubuntu-latest
     steps:
+      # wrangler.jsonc and worker/ come from the checkout; dist/ is the build the shards scanned.
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
 
-      - run: npm ci
-
-      - run: npx playwright install --with-deps chromium
-
-      - name: Verify (types, unit tests, build, axe scan)
-        run: npm run verify
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
 
       # Publish to Cloudflare Workers (wrangler.jsonc) only after the gate above has passed.
       # CLOUDFLARE_API_TOKEN is a repository secret: a token from the "Edit Cloudflare Workers"

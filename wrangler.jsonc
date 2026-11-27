@@ -1,5 +1,5 @@
 // Hosting on Cloudflare Workers: the pre-rendered site in dist/ is served as static assets.
-// Deployed by .github/workflows/deploy.yml after `npm run verify` passes, never on its own.
+// Deployed by .github/workflows/deploy.yml after the verify gate passes, never on its own.
 {
   "name": "wcag-encyclopedia",
   "account_id": "13714a328c90b297ce5c4cc077434839",

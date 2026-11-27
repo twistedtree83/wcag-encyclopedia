@@ -1,17 +1,25 @@
 name: verify
 
-# Pull requests and pushes to the `labs` integration branch run the gate here, so work merged
-# into labs between pull requests is checked too. Pushes to main are gated by the deploy
-# workflow, which runs the same `npm run verify` before publishing. Running it here too would
-# just do the work twice.
+# The gate, `npm run verify`, split so the slow part runs in parallel: lint, types, unit tests
+# and the build run once, then the Playwright suite (axe scan included) runs in four shards
+# against that one build. A run passes only when every job passes.
+#
+# Pull requests and pushes to the `labs` integration branch run it here. Pushes to main are
+# gated by the deploy workflow, which calls this same workflow before publishing; running it
+# here too would just do the work twice.
 on:
   pull_request:
   push:
     branches: [labs]
   workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
 
 jobs:
-  verify:
+  checks:
+    name: lint, types, unit tests, build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,5 +28,43 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run test
+      - run: npm run build
+      # The shards and the deploy job use this exact build, so what is scanned is what ships.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error
+          retention-days: 7
+
+  e2e:
+    name: e2e shard ${{ matrix.shard }}/4
+    needs: checks
+    runs-on: ubuntu-latest
+    strategy:
+      # Let every shard finish, so one run reports every failing test.
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
       - run: npx playwright install --with-deps chromium
-      - run: npm run verify
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - name: Playwright (axe scan included), shard ${{ matrix.shard }} of 4
+        run: npx playwright test --shard=${{ matrix.shard }}/4
+      # scripts/flaky.mjs reads this shard's test-results/results.json: its retries and its
+      # slowest tests. (CI never retries, so a flaky test fails its shard outright.)
+      - name: Flaky and slowest tests in this shard
+        if: ${{ !cancelled() }}
+        run: node scripts/flaky.mjs

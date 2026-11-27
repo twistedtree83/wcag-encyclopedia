@@ -229,6 +229,10 @@ one entry per line so parallel work merges cleanly, and check each step:
   (never on CI), and `test:a11y` ends by printing every test that passed only on retry and the
   15 slowest (`scripts/flaky.mjs`, reading `test-results/results.json`). Treat a flaky test as a
   bug to fix, not a pass.
+- CI (`.github/workflows/verify.yml`) runs lint, types, unit tests and the build once, uploads
+  `dist/`, then runs Playwright in four parallel shards (`--shard=i/4`) against that build, each
+  printing its own `scripts/flaky.mjs` summary. `deploy.yml` calls the same workflow and deploys
+  that `dist/` only when every shard has passed.
 - `npm run verify:changed` runs lint, types, unit tests and the build, then only the e2e spec
   files changed since `labs` (`playwright test --only-changed=labs`). A new lab's spec is its
   own file, so this runs just that lab's bar. The lab bar's tests report their location as
