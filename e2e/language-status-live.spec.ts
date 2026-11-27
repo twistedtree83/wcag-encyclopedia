@@ -1,5 +1,6 @@
 import { test, expect, type Locator, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { open } from './support/open';
 
 /**
  * Language and status messages (#51): the live examples and labs for 3.1.1, 3.1.2 and 4.1.3.
@@ -11,12 +12,6 @@ import AxeBuilder from '@axe-core/playwright';
 
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa', 'best-practice'];
 const DEFAULT = '(German voice, the reader’s default)';
-
-async function open(page: Page, url: string) {
-  const response = await page.goto(url);
-  expect(response?.status(), `${url} was not built`).toBe(200);
-  await page.waitForFunction(() => document.documentElement.dataset.hydrated === 'true');
-}
 
 const broken = (page: Page) => page.locator('figure.stage.bad');
 const fixed = (page: Page) => page.locator('figure.stage.good');

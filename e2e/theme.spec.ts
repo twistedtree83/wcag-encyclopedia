@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { open as openPage, whenReady } from './support/open';
 
 /**
  * The theme toggle, on the pre-rendered pages. One button, "Dark theme", whose pressed state
@@ -11,10 +12,7 @@ const PAGE = '/criteria/1.4.3/';
 const attr = (page: Page) => page.locator('html').getAttribute('data-theme');
 const toggle = (page: Page) => page.getByRole('button', { name: 'Dark theme' });
 
-async function open(page: Page) {
-  await page.goto(PAGE);
-  await page.waitForFunction(() => document.documentElement.dataset.hydrated === 'true');
-}
+const open = (page: Page) => openPage(page, PAGE);
 
 test('opens in the OS theme when nothing is stored', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'dark' });
@@ -63,7 +61,7 @@ test('an explicit dark choice survives a reload on a light OS', async ({ page })
   await page.reload();
   expect(await attr(page)).toBe('dark');
   expect(await page.evaluate((k) => localStorage.getItem(k), KEY)).toBe('dark');
-  await page.waitForFunction(() => document.documentElement.dataset.hydrated === 'true');
+  await whenReady(page);
   await expect(toggle(page)).toHaveAttribute('aria-pressed', 'true');
 });
 
@@ -103,7 +101,7 @@ test('is keyboard operable with a visible focus ring', async ({ page }) => {
 test('Home uses the same toggle', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'light' });
   await page.goto('/');
-  await page.waitForFunction(() => document.documentElement.dataset.hydrated === 'true');
+  await whenReady(page);
   const button = toggle(page);
   await expect(button).toHaveAttribute('aria-pressed', 'false');
   await button.click();

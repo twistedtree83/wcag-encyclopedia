@@ -1,5 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
 import { EXPECTED } from '../src/criteria/manifest';
+import { open as openPage } from './support/open';
 
 /**
  * The pre-rendered criterion page (ADR 0001), proven on 1.4.3, and the Swatch shell around it.
@@ -8,11 +9,7 @@ import { EXPECTED } from '../src/criteria/manifest';
 const PAGE = '/criteria/1.4.3/';
 const record = EXPECTED.find((c) => c.num === '1.4.3')!;
 
-async function open(page: Page) {
-  const response = await page.goto(PAGE);
-  expect(response?.status(), `${PAGE} was not built`).toBe(200);
-  await page.waitForFunction(() => document.documentElement.dataset.hydrated === 'true');
-}
+const open = (page: Page) => openPage(page, PAGE);
 
 test.describe('before any script runs', () => {
   test.use({ javaScriptEnabled: false });

@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { open as openPage } from './support/open';
 
 /**
  * The demo player, end to end, on the criterion pages that carry demos (R-03). Every property
@@ -19,12 +20,7 @@ const DEMO_PAGES = {
 } as const;
 
 /** Opens a criterion page and waits until it is hydrated, so the controls are live. */
-async function open(page: Page, num: string) {
-  const url = `/criteria/${num}/`;
-  const response = await page.goto(url);
-  expect(response?.status(), `${url} was not built`).toBe(200);
-  await page.waitForFunction(() => document.documentElement.dataset.hydrated === 'true');
-}
+const open = (page: Page, num: string) => openPage(page, `/criteria/${num}/`);
 
 test('plays, pauses, and names the action on its button', async ({ page }) => {
   await open(page, '1.4.10');

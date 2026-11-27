@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { open as openPage } from './support/open';
 
 /**
  * The colour check in the built site: on its own page (wide, with quick-start pairs and the
@@ -10,11 +11,7 @@ import { test, expect, type Page } from '@playwright/test';
 
 const PAGE = '/colour-check/';
 
-async function open(page: Page, url = PAGE) {
-  const response = await page.goto(url);
-  expect(response?.status(), `${url} was not built`).toBe(200);
-  await page.waitForFunction(() => document.documentElement.dataset.hydrated === 'true');
-}
+const open = (page: Page, url = PAGE) => openPage(page, url);
 
 const check = (page: Page) => page.locator('#cc');
 const textHex = (page: Page) => check(page).getByLabel('Text colour hex code');

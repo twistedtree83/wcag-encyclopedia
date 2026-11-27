@@ -1,5 +1,6 @@
 import { test, expect, type Locator, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { open } from './support/open';
 
 /**
  * The vision filter (#56) on 1.4.1, 1.4.11, 1.4.3 and 1.3.3's live examples and labs, in the
@@ -10,12 +11,6 @@ import AxeBuilder from '@axe-core/playwright';
 
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa', 'best-practice'];
 const PAGES = ['/criteria/1.4.1/', '/criteria/1.4.11/', '/criteria/1.4.3/', '/criteria/1.3.3/'];
-
-async function open(page: Page, url: string) {
-  const response = await page.goto(url);
-  expect(response?.status(), `${url} was not built`).toBe(200);
-  await page.waitForFunction(() => document.documentElement.dataset.hydrated === 'true');
-}
 
 const broken = (page: Page) => page.locator('figure.stage.bad');
 const fixed = (page: Page) => page.locator('figure.stage.good');

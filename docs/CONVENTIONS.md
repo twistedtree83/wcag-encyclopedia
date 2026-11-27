@@ -238,8 +238,11 @@ one entry per line so parallel work merges cleanly, and check each step:
   was cut (`git merge-base --is-ancestor <target> <branch>`), the merged tree is the tree that
   passed, so the gate is not re-run; confirm with `npm run build`. If the target has moved, run
   the full `npm run verify` on the merge.
-- e2e waits for hydration before interacting:
-  `page.waitForFunction(() => document.documentElement.dataset.hydrated === 'true')`.
+- Open pages with `open(page, url)` from `e2e/support/open.ts`: it checks the page was built
+  (200), waits for `<html data-hydrated="true">` and then for `document.fonts.ready`, so
+  controls are live and geometry is measured in the real fonts. After a reload or a navigation
+  the test caused, call `whenReady(page)`. `tests/e2eOpen.test.ts` fails if a spec waits for
+  hydration itself.
 - The suite covers about 1,500 tests across 59 pages. On a heavily loaded machine, tests fail on
   the 30s timeout rather than on assertions. Re-run those with
   `npx playwright test --last-failed --workers=1` before treating them as real. Assertion

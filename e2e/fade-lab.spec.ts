@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { open as openPage } from './support/open';
 
 /**
  * The fade-the-text lab (R-07) on the 1.4.3 criterion page: the reader is in control, the text
@@ -7,9 +8,7 @@ import { test, expect, type Page } from '@playwright/test';
  */
 
 async function open(page: Page) {
-  const response = await page.goto('/criteria/1.4.3/');
-  expect(response?.status()).toBe(200);
-  await page.waitForFunction(() => document.documentElement.dataset.hydrated === 'true');
+  await openPage(page, '/criteria/1.4.3/');
   return page.locator('.fade-lab');
 }
 

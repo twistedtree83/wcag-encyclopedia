@@ -1,5 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
 import { FEEDBACK_FORM_URL } from '../src/site/config';
+import { open as openPage } from './support/open';
 
 /**
  * The About page: what the site is, its accessibility statement, and where to report a problem.
@@ -8,11 +9,7 @@ import { FEEDBACK_FORM_URL } from '../src/site/config';
 
 const PAGE = '/about/';
 
-async function open(page: Page, url = PAGE) {
-  const response = await page.goto(url);
-  expect(response?.status(), `${url} was not built`).toBe(200);
-  await page.waitForFunction(() => document.documentElement.dataset.hydrated === 'true');
-}
+const open = (page: Page, url = PAGE) => openPage(page, url);
 
 test('the main nav reaches the About page and marks it current', async ({ page }) => {
   await open(page, '/criteria/1.4.3/');

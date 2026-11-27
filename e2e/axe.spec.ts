@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { ROUTES } from '../src/site/routes';
 import { MODES, SITE_TAGS, axeStates } from './labs/support';
+import { whenReady } from './support/open';
 
 /**
  * The axe scan.
@@ -31,7 +32,7 @@ const SITE_PAGES = ROUTES.map((r) => `/${r.path}`);
 async function openSitePage(page: import('@playwright/test').Page, url: string) {
   const response = await page.goto(url);
   expect(response?.status(), `${url} was not built`).toBe(200);
-  await page.waitForFunction(() => document.documentElement.dataset.hydrated === 'true');
+  await whenReady(page);
 }
 
 for (const url of SITE_PAGES) {

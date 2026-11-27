@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
+import { open as openPage, whenReady } from './support/open';
 
 /**
  * Home (R-08, design guide §9.1): eight sections in order, each part working where it was
@@ -16,11 +17,7 @@ const SECTIONS = [
   'This site meets the criteria it explains.',
 ];
 
-async function open(page: Page, url = '/') {
-  const response = await page.goto(url);
-  expect(response?.status(), `${url} was not built`).toBe(200);
-  await page.waitForFunction(() => document.documentElement.dataset.hydrated === 'true');
-}
+const open = (page: Page, url = '/') => openPage(page, url);
 
 const overflows = (page: Page) =>
   page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
@@ -98,7 +95,7 @@ test('each principle card is one link to All criteria filtered to that principle
   await expect(cards.locator('.shape')).toHaveCount(0);
   await cards.nth(1).click();
   await expect(page).toHaveURL(/\/criteria\/\?p=2$/);
-  await page.waitForFunction(() => document.documentElement.dataset.hydrated === 'true');
+  await whenReady(page);
   await expect(page.getByRole('button', { name: 'Operable' })).toHaveAttribute(
     'aria-pressed',
     'true',

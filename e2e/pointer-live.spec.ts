@@ -1,5 +1,6 @@
 import { test, expect, type Locator, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { open as openPage } from './support/open';
 
 /**
  * 2.5.1, 2.5.2, 2.5.4 and 2.5.7 (#58): the gesture pad under both live stages, driven through
@@ -15,12 +16,7 @@ import AxeBuilder from '@axe-core/playwright';
 
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa', 'best-practice'];
 
-async function open(page: Page, num: string) {
-  const url = `/criteria/${num}/`;
-  const response = await page.goto(url);
-  expect(response?.status(), `${url} was not built`).toBe(200);
-  await page.waitForFunction(() => document.documentElement.dataset.hydrated === 'true');
-}
+const open = (page: Page, num: string) => openPage(page, `/criteria/${num}/`);
 
 const broken = (page: Page) => page.locator('figure.stage.bad');
 const fixed = (page: Page) => page.locator('figure.stage.good');
