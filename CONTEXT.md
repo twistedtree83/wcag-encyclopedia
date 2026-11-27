@@ -185,6 +185,15 @@ told to credit (ADR 0006).
 
 **Crawl files** — `robots.txt` and `sitemap.xml`, written into `dist/` by the prerender step.
 
+**Breadcrumb trail** — a page's path from Home to itself, as **crumbs** (a route path and the
+name it is shown with), from `trailFor` in `src/site/breadcrumbs.ts`. The criterion page draws
+it and the structured data repeats it. Home has none.
+
+**Structured data** — the JSON-LD blocks in a page's head that tell search engines what the
+page is (`src/site/jsonLd.ts`): `WebSite` and `Organization` on Home, a `BreadcrumbList` on
+every other page, and a `TechArticle` about the criterion on each criterion page. The
+organisation is author and publisher; no person is named.
+
 **Token** — a CSS custom property in one of the two theme palettes. Token names and values come
 from the `:root` block of `design/mockups/swatch/swatch.css` verbatim, so the design and the
 build stay diffable.

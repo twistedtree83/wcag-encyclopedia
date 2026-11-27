@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { absoluteUrl, canonicalProblems, robotsTxt, sitemapProblems } from '../src/site/crawl';
+import { jsonLdProblems } from '../src/site/jsonLd';
 import { ROUTES } from '../src/site/routes';
 
 /**
@@ -17,6 +18,12 @@ test.describe('crawl files', () => {
   test('every built page has one canonical tag, its own absolute URL', () => {
     for (const route of ROUTES) {
       expect(canonicalProblems(read(join(route.path, 'index.html')), route.path), route.path || 'home').toEqual([]);
+    }
+  });
+
+  test('every built page carries the JSON-LD its kind needs, all parsing, all on SITE_ORIGIN', () => {
+    for (const route of ROUTES) {
+      expect(jsonLdProblems(read(join(route.path, 'index.html')), route), route.path || 'home').toEqual([]);
     }
   });
 

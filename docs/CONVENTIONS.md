@@ -11,7 +11,7 @@ this before changing the build, adding a page, or touching tokens. The vocabular
   `vite build --ssr src/entry-server.tsx --outDir dist-ssr`, then `node scripts/prerender.mjs`.
   It writes one `index.html` per route into `dist/` (59 pages).
 - `site.html` is the only HTML template. Its placeholders are `<!--@title-->`, `<!--@description-->`,
-  `<!--@canonical-->`, `<!--@tokens-->`, `<!--@legacy-redirect-->`, `<!--@fonts-->`, `<!--@app-->` and `<!--@analytics-->`.
+  `<!--@canonical-->`, `<!--@structured-data-->`, `<!--@tokens-->`, `<!--@legacy-redirect-->`, `<!--@fonts-->`, `<!--@app-->` and `<!--@analytics-->`.
   `render(route)` in `src/entry-server.tsx` returns `{ html, title, description, head, beacon }`.
   Only Home has a `head`: it holds the `#1.4.3` → `criteria/1.4.3/` redirect from
   `src/site/legacyRedirect.ts`. `beacon` is the Cloudflare Web Analytics script
@@ -37,6 +37,19 @@ this before changing the build, adding a page, or touching tokens. The vocabular
   An uncommitted new file counts as today. The CI build job checks out with `fetch-depth: 0`,
   because a shallow clone would date every page to the one commit it has. A new page kind adds
   its file to `PAGE_FILES` there. `tests/crawl.test.ts` and `e2e/crawl.spec.ts` check them.
+- **Structured data** (S-04). `structuredData(route, { published, modified })` in the SSR entry
+  returns the page's JSON-LD script elements, built by `src/site/jsonLd.ts`, and the prerender
+  step fills `<!--@structured-data-->` with them. `modified` is the sitemap `lastmod`;
+  `published` is the first commit to the same files, so a criterion page is dated from its
+  guideline file. The build fails if `jsonLdProblems` finds a block that doesn't parse, a
+  missing or extra block type for the page kind, a missing required property, or an address
+  not on `SITE_ORIGIN` or not the page's own route. The `BreadcrumbList` and the visible trail
+  both come from `trailFor` (`src/site/breadcrumbs.ts`), with the page's own name from
+  `pageName` in `src/site/Site.tsx`. A new page kind adds its blocks to `BLOCKS` and its block
+  types to `TYPES` (typed by `PageKind`), and a new block type (S-07's `BlogPosting`) adds its
+  required properties to `REQUIRED` and any deeper check to `CHECKS`. The WebSite's
+  `SearchAction` points into All criteria's `?q=`; if that parameter goes, the action goes too.
+  `tests/structuredData.test.ts` and `e2e/crawl.spec.ts` check them.
 - `src/entry-client.tsx` reads the route from `#root[data-route]`, never from
   `location.pathname`, then calls `hydrateRoot`.
 - **Hydration rule:** never read `localStorage`, `matchMedia`, `location.search` or the theme
