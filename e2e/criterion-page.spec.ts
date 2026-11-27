@@ -159,8 +159,9 @@ test.describe('the shell', () => {
 
 test('loads only Figtree and Onest, from the site itself', async ({ page }) => {
   await open(page);
+  // The canonical tag names production on purpose (ADR 0006); it is not a resource the page loads.
   const external = await page.evaluate(() =>
-    [...document.querySelectorAll<HTMLLinkElement>('link[href]')]
+    [...document.querySelectorAll<HTMLLinkElement>('link[href]:not([rel="canonical"])')]
       .map((l) => new URL(l.href))
       .filter((u) => u.origin !== location.origin)
       .map((u) => u.href),

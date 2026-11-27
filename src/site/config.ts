@@ -12,6 +12,13 @@
 export const FEEDBACK_FORM_URL: string | undefined = undefined;
 
 /**
+ * The production origin: bare domain, HTTPS, no trailing slash (ADR 0006). The only absolute
+ * address in the source. The canonical tag, robots.txt and sitemap.xml join it to a route's
+ * path (`src/site/crawl.ts`); every link between pages stays relative.
+ */
+export const SITE_ORIGIN = 'https://wcagencyclopedia.com';
+
+/**
  * The site's Cloudflare Web Analytics token (Cloudflare → Analytics & Logs → Web Analytics).
  * The beacon is cookieless, so the site shows no consent banner.
  *

@@ -11,7 +11,7 @@ this before changing the build, adding a page, or touching tokens. The vocabular
   `vite build --ssr src/entry-server.tsx --outDir dist-ssr`, then `node scripts/prerender.mjs`.
   It writes one `index.html` per route into `dist/` (59 pages).
 - `site.html` is the only HTML template. Its placeholders are `<!--@title-->`, `<!--@description-->`,
-  `<!--@tokens-->`, `<!--@legacy-redirect-->`, `<!--@fonts-->`, `<!--@app-->` and `<!--@analytics-->`.
+  `<!--@canonical-->`, `<!--@tokens-->`, `<!--@legacy-redirect-->`, `<!--@fonts-->`, `<!--@app-->` and `<!--@analytics-->`.
   `render(route)` in `src/entry-server.tsx` returns `{ html, title, description, head, beacon }`.
   Only Home has a `head`: it holds the `#1.4.3` → `criteria/1.4.3/` redirect from
   `src/site/legacyRedirect.ts`. `beacon` is the Cloudflare Web Analytics script
@@ -20,6 +20,17 @@ this before changing the build, adding a page, or touching tokens. The vocabular
   The beacon sets no cookie, so the site has no consent banner.
 - The prerender step rewrites `./assets/` to `../` repeated once per directory level, so the
   relative base works at any depth and under the GitHub Pages sub-path.
+- **Canonical tag and crawl files** (ADR 0006). The only absolute addresses the site writes are
+  built from `SITE_ORIGIN` in `src/site/config.ts` by `src/site/crawl.ts`, which the prerender
+  step imports through the SSR entry. It fills `<!--@canonical-->` on every page and fails the
+  build if `canonicalProblems` finds the tag missing, doubled, relative or naming another route.
+  It then writes `dist/robots.txt` (allow all, `Sitemap:` line) and `dist/sitemap.xml` (every
+  route in `ROUTES`, in order). Nothing is kept in `public/` and no crawl file is hand-written.
+  A page's `lastmod` is the UTC date of the last commit to the files `pageSources(route)` names:
+  the criterion's guideline record file (`src/criteria/g1-4.tsx`) or the fixed page's component.
+  An uncommitted new file counts as today. The CI build job checks out with `fetch-depth: 0`,
+  because a shallow clone would date every page to the one commit it has. A new page kind adds
+  its file to `PAGE_FILES` there. `tests/crawl.test.ts` and `e2e/crawl.spec.ts` check them.
 - `src/entry-client.tsx` reads the route from `#root[data-route]`, never from
   `location.pathname`, then calls `hydrateRoot`.
 - **Hydration rule:** never read `localStorage`, `matchMedia`, `location.search` or the theme
@@ -39,7 +50,9 @@ To add a page:
 1. Add a `PageKind` and an entry in `FIXED_ROUTES`.
 2. Add a case to both switches in `src/site/Site.tsx` (`Page` and `pageMeta`). Exhaustiveness
    checking flags any you miss.
-3. Add the page to `SECTION` in `src/site/Header.tsx`, which decides which nav item is current.
+3. Add the page to `SECTION` in `src/site/Header.tsx`, which decides which nav item is current,
+   and its component file to `PAGE_FILES` in `src/site/crawl.ts`, which dates it in the sitemap.
+   Types flag both if you miss them.
 4. Put the component in `src/pages/` and import it from the entry. `tests/retired.test.ts`
    fails on any module under `src/` that the entry points don't reach.
 5. Nothing else is needed for axe. `e2e/axe.spec.ts` scans every route in light and dark at
