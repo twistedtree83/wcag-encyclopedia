@@ -350,6 +350,8 @@ export const G2_5: readonly CriterionRecord[] = [
     level: 'A',
     since: '2.1',
     guideline: '2.5',
+    gist:
+      'Pinches, swipes and other path or multi-finger gestures need a single-pointer alternative.',
     plain:
       'Anything driven by a multi-finger or path-based gesture — pinch, two-finger rotate, ' +
       'swipe along a track — needs a single-pointer alternative, unless the path itself is the ' +
@@ -398,6 +400,8 @@ export const G2_5: readonly CriterionRecord[] = [
     level: 'A',
     since: '2.1',
     guideline: '2.5',
+    gist:
+      'Actions should fire when the pointer is released, so a reader can slide off a wrong target.',
     plain:
       'Actions should fire on release, not on press — so someone who lands on the wrong control ' +
       'can slide off it and nothing happens. Firing on down-press removes the chance to change ' +
@@ -498,6 +502,8 @@ export const G2_5: readonly CriterionRecord[] = [
     level: 'A',
     since: '2.1',
     guideline: '2.5',
+    gist:
+      'Anything done by shaking or tilting the device needs an ordinary control too, and a way to turn the motion off.',
     plain:
       'If moving the device does something — shake to undo, tilt to steer — there has to be a ' +
       'normal control that does it too, and a way to switch the motion trigger off. Someone ' +
@@ -599,6 +605,8 @@ export const G2_5: readonly CriterionRecord[] = [
     guideline: '2.5',
     demos: ['targets-2-5-8'],
     labs: ['target-size'],
+    gist:
+      'Targets need to be at least 24 by 24 CSS pixels, or spaced so a 24px circle on each overlaps none.',
     plain:
       'Targets need to be at least 24 by 24 CSS pixels, or spaced so that a 24px circle centred ' +
       'on each does not overlap its neighbours. New in WCAG 2.2. Inline links in a sentence are ' +

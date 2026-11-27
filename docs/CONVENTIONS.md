@@ -14,6 +14,12 @@ this before changing the build, adding a page, or touching tokens. The vocabular
   `<!--@tokens-->`, `<!--@legacy-redirect-->`, `<!--@fonts-->` and `<!--@app-->`. `render(route)` in
   `src/entry-server.tsx` returns `{ html, title, description, head }`. Only Home has a `head`:
   it holds the `#1.4.3` → `criteria/1.4.3/` redirect from `src/site/legacyRedirect.ts`.
+- Titles and descriptions come from `pageMeta` in `src/site/Site.tsx`. Fixed pages write theirs
+  by hand; criterion pages build theirs in `src/site/meta.ts` from the record: number, name and
+  level for the title, and the restatement's first sentence (or its `gist`) then "Fails when:"
+  and the fail caption for the description. `tests/headMeta.test.ts` holds every route to a
+  unique title of 30–65 characters and a unique description of 70–160, with the brand at most
+  once per title and first on Home.
 - The prerender step rewrites `./assets/` to `../` repeated once per directory level, so the
   relative base works at any depth and under the GitHub Pages sub-path.
 - `src/entry-client.tsx` reads the route from `#root[data-route]`, never from

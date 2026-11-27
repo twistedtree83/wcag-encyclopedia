@@ -8,6 +8,7 @@ import { CriterionPage } from '../pages/CriterionPage';
 import { HomePage } from '../pages/HomePage';
 import { Footer } from './Footer';
 import { Header } from './Header';
+import { criterionDescription, criterionTitle } from './meta';
 import { RouteProvider } from './RouteContext';
 import type { Route } from './routes';
 
@@ -64,7 +65,7 @@ export function pageMeta(route: Route): { title: string; description: string } {
   switch (route.page) {
     case 'about':
       return {
-        title: 'About: WCAG Encyclopedia',
+        title: 'About the site and its accessibility: WCAG Encyclopedia',
         description:
           'What the WCAG Encyclopedia is, its accessibility statement and how each claim is checked, and where to find the source code.',
       };
@@ -87,8 +88,8 @@ export function pageMeta(route: Route): { title: string; description: string } {
     case 'criterion': {
       const record = recordFor(route);
       return {
-        title: `${record.num} ${record.name}: WCAG Encyclopedia`,
-        description: `WCAG 2.2 success criterion ${record.num}, ${record.name}, in plain language, shown broken and then fixed.`,
+        title: criterionTitle(record),
+        description: criterionDescription(record),
       };
     }
   }
