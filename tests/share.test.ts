@@ -19,7 +19,10 @@ const meta = (html: string, key: string) =>
   [...html.matchAll(/<meta\b[^>]*>/gi)]
     .map((m) => m[0])
     .filter((tag) => tag.includes(`"${key}"`))
-    .map((tag) => /content="([^"]*)"/.exec(tag)?.[1]);
+    .map((tag) => /content="([^"]*)"/.exec(tag)?.[1])
+    .map((value) =>
+      value?.replaceAll('&quot;', '"').replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&amp;', '&'),
+    );
 
 describe('the share tags', () => {
   it('pass the Open Graph check on every route', () => {
@@ -32,8 +35,8 @@ describe('the share tags', () => {
     for (const r of ROUTES) {
       const html = shareTags(r);
       const { title, description } = pageMeta(r);
-      expect(meta(html, 'og:title')).toEqual([title.replaceAll('&', '&amp;')]);
-      expect(meta(html, 'og:description')).toEqual([description.replaceAll('&', '&amp;')]);
+      expect(meta(html, 'og:title')).toEqual([title]);
+      expect(meta(html, 'og:description')).toEqual([description]);
     }
   });
 

@@ -37,7 +37,7 @@ data-integrity test asserts the exact set.
 **Criterion record** — the typed data for one criterion. The unit of authoring. Shape:
 
 ```
-{ num, name, level, guideline, since, plain, fail, pass, procedure, questions, diff?, demo?, labs? }
+{ num, name, level, guideline, since, plain, gist?, fail, pass, procedure, questions, diff?, demo?, labs? }
 ```
 
 **Since** — the WCAG version that introduced a criterion: `2.0`, `2.1` or `2.2`. Six criteria in
@@ -45,6 +45,10 @@ the corpus are new in 2.2.
 
 **Restatement** (`plain`) — the criterion in plain English. Original prose, never W3C normative
 text copied across.
+
+**Gist** (`gist`) — the restatement cut to one short sentence, used only for the page's
+description in search results, and only on records whose restatement opens with a sentence too
+long to share that description with the fail caption. Original prose, like the restatement.
 
 **Test procedure** (`procedure`) — the ordered steps a reader follows to check their own
 interface against a criterion. On the page it is headed "How to test". Not the site's own tests.

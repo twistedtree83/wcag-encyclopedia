@@ -109,6 +109,8 @@ export const G3_1: readonly CriterionRecord[] = [
     since: '2.0',
     guideline: '3.1',
     labs: ['parts-language'],
+    gist:
+      'A passage in another language needs its own lang attribute, so screen readers switch voice.',
     plain:
       'Passages in another language need their own lang attribute, so a screen reader switches ' +
       'voice for them. Proper names and words that have been absorbed into the surrounding ' +
