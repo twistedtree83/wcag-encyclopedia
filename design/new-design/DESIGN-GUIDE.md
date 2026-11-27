@@ -162,7 +162,7 @@ The tightest pair is control borders on cards in the dark theme, at 3.7:1. Don't
 | Headings, numbers, card titles, logo | **Figtree** | 400, 500, 600, 700, 800 | `--fh` |
 | Body, labels, controls | **Onest** | 400, 500, 600, 700 | `--fb` |
 
-Both come from Google Fonts. Figtree is a geometric sans with friendly rounded shapes and a strong heavy weight. Onest is a clear, open text face with generous spacing that reads well at small sizes.
+The build self-hosts both (latin subset, `font-display: swap`; `docs/CONVENTIONS.md`). Figtree is a geometric sans with friendly rounded shapes and a strong heavy weight. Onest is a clear, open text face with generous spacing that reads well at small sizes.
 
 The mockup also loads Gabarito, Golos Text, Bricolage Grotesque, Familjen Grotesk, Fraunces, Instrument Sans and Atkinson Hyperlegible so the tweak bar can switch between them. **The real build loads only Figtree and Onest.**
 

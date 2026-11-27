@@ -7,6 +7,17 @@
  */
 // The shared stylesheets come first, so each lab's own lab.css (imported by its lab.ts, through
 // the registry) lands after them in the bundle, as its rules sat after the shared ones before.
+// Self-hosted fonts (docs/CONVENTIONS.md, "Tokens and CSS"): latin subset, only the weights
+// the design uses. Each @font-face sets font-display: swap.
+import '@fontsource/figtree/latin-400.css';
+import '@fontsource/figtree/latin-500.css';
+import '@fontsource/figtree/latin-600.css';
+import '@fontsource/figtree/latin-700.css';
+import '@fontsource/figtree/latin-800.css';
+import '@fontsource/onest/latin-400.css';
+import '@fontsource/onest/latin-500.css';
+import '@fontsource/onest/latin-600.css';
+import '@fontsource/onest/latin-700.css';
 import './styles/swatch.css';
 import './styles/examples.css';
 import { StrictMode } from 'react';

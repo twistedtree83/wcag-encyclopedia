@@ -17,6 +17,8 @@
     "labs:index": "UPDATE_LABS_INDEX=1 vitest run tests/labsIndex.test.ts"
   },
   "dependencies": {
+    "@fontsource/figtree": "^5.3.0",
+    "@fontsource/onest": "^5.3.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },

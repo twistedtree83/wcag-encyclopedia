@@ -12,7 +12,7 @@
  * Plain ESM JavaScript, so it runs on the CI's Node without a TypeScript step.
  */
 
-import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -20,7 +20,19 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = join(root, 'dist');
 
 const { render, ROUTES } = await import(pathToFileURL(join(root, 'dist-ssr/entry-server.js')).href);
-const template = await readFile(join(dist, 'site.html'), 'utf8');
+const raw = await readFile(join(dist, 'site.html'), 'utf8');
+
+// Preload the two self-hosted faces every page shows above the fold: body text (Onest 400) and
+// the h1 (Figtree 800). Vite hashes the file names, so find them in the built assets.
+const PRELOADED_FONTS = ['onest-latin-400-normal', 'figtree-latin-800-normal'];
+const assets = await readdir(join(dist, 'assets'));
+const preloads = PRELOADED_FONTS.map((face) => {
+  const file = assets.find((name) => name.startsWith(`${face}-`) && name.endsWith('.woff2'));
+  if (!file) throw new Error(`prerender: no ${face} woff2 in dist/assets`);
+  return `<link rel="preload" href="./assets/${file}" as="font" type="font/woff2" crossorigin />`;
+}).join('\n    ');
+if (!raw.includes('<!--@fonts-->')) throw new Error('prerender: site.html has no <!--@fonts-->');
+const template = raw.replace('<!--@fonts-->', () => preloads);
 
 for (const marker of ['<!--@legacy-redirect-->', '<!--@title-->', '<!--@description-->', '<!--@app-->', '<div id="root">']) {
   if (!template.includes(marker)) throw new Error(`prerender: site.html has no ${marker}`);
