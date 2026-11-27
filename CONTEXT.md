@@ -37,7 +37,7 @@ data-integrity test asserts the exact set.
 **Criterion record** — the typed data for one criterion. The unit of authoring. Shape:
 
 ```
-{ num, name, level, guideline, since, plain, fail, pass, diff?, demo?, labs? }
+{ num, name, level, guideline, since, plain, fail, pass, procedure, questions, diff?, demo?, labs? }
 ```
 
 **Since** — the WCAG version that introduced a criterion: `2.0`, `2.1` or `2.2`. Six criteria in
@@ -45,6 +45,12 @@ the corpus are new in 2.2.
 
 **Restatement** (`plain`) — the criterion in plain English. Original prose, never W3C normative
 text copied across.
+
+**Test procedure** (`procedure`) — the ordered steps a reader follows to check their own
+interface against a criterion. On the page it is headed "How to test". Not the site's own tests.
+
+**Common question** (`questions`) — a question people ask about a criterion, with a short
+answer. On the page they are headed "Common questions". Every criterion record has at least one.
 
 **Example** — a rendered piece of interface, not a description of one. Every criterion has a
 **fail example** and a **pass example**. On screen these are labelled "Broken" / "Fixed" on
@@ -162,6 +168,12 @@ examples, and any diff, demo or lab. The unit people link to.
 
 **Index card** — the short linked summary of a criterion (number, name, level, the "fails when"
 line) used in the index and in "Also in this guideline" lists. It leads to the criterion page.
+
+**Post** — a dated article in the blog on a subject no single criterion page covers: a topic
+that spans criteria, a change between WCAG versions, the law, or a way of testing. It links to
+every criterion page it discusses and never restates one; the criterion page stays the authority
+on its criterion. A post may show a criterion's existing examples and labs, but brings none of
+its own.
 
 **Token** — a CSS custom property in one of the two theme palettes. Token names and values come
 from the `:root` block of `design/mockups/swatch/swatch.css` verbatim, so the design and the

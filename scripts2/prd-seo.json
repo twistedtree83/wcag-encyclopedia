@@ -1,0 +1,263 @@
+{
+  "name": "WCAG Encyclopedia — search",
+  "repoUrl": "https://github.com/twistedtree83/wcag-encyclopedia",
+  "branchName": "seo",
+  "prdIssue": 68,
+  "verifyCommand": "npm run verify",
+  "bibles": [
+    "CONTEXT.md",
+    "docs/PRD-seo.md",
+    "docs/CONVENTIONS.md",
+    "docs/adr/0006-absolute-urls-only-for-crawlers.md",
+    "docs/adr/0007-posts-are-markdown-gated-by-a-writing-test.md"
+  ],
+  "tasks": [
+    {
+      "id": "S-01",
+      "issue": 69,
+      "title": "Site origin, canonical URLs, robots.txt and sitemap.xml",
+      "depends": [],
+      "importance": 1,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "S-02",
+      "issue": 70,
+      "title": "Unique titles and descriptions, and a head-metadata test",
+      "depends": [],
+      "importance": 2,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "S-03",
+      "issue": 71,
+      "title": "Open Graph, Twitter cards and generated share images",
+      "depends": [
+        "S-01"
+      ],
+      "importance": 3,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "S-04",
+      "issue": 72,
+      "title": "Structured data",
+      "depends": [
+        "S-01"
+      ],
+      "importance": 3,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "S-05",
+      "issue": 73,
+      "title": "A real 404 page",
+      "depends": [
+        "S-01"
+      ],
+      "importance": 4,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "S-06",
+      "issue": 74,
+      "title": "Cloudflare Web Analytics",
+      "depends": [],
+      "importance": 5,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "S-07",
+      "issue": 75,
+      "title": "Blog: posts, the blog index and the post page",
+      "depends": [
+        "S-01",
+        "S-02",
+        "S-04"
+      ],
+      "importance": 2,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "S-08",
+      "issue": 76,
+      "title": "Showing criterion examples and labs inside a post",
+      "depends": [
+        "S-07"
+      ],
+      "importance": 3,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "S-09",
+      "issue": 77,
+      "title": "Blog feed and Further reading on criterion pages",
+      "depends": [
+        "S-07"
+      ],
+      "importance": 3,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "S-10",
+      "issue": 78,
+      "title": "The writing standard and the writing test",
+      "depends": [
+        "S-07"
+      ],
+      "importance": 2,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "S-11",
+      "issue": 79,
+      "title": "Post: What's new in WCAG 2.2",
+      "depends": [
+        "S-08",
+        "S-09",
+        "S-10",
+        "S-03"
+      ],
+      "importance": 3,
+      "afk": false,
+      "passes": false
+    },
+    {
+      "id": "S-12",
+      "issue": 80,
+      "title": "Post: The European Accessibility Act and WCAG",
+      "depends": [
+        "S-08",
+        "S-09",
+        "S-10",
+        "S-03"
+      ],
+      "importance": 3,
+      "afk": false,
+      "passes": false
+    },
+    {
+      "id": "S-13",
+      "issue": 81,
+      "title": "Post: Accessible forms: every criterion a form touches",
+      "depends": [
+        "S-08",
+        "S-09",
+        "S-10",
+        "S-03"
+      ],
+      "importance": 3,
+      "afk": false,
+      "passes": false
+    },
+    {
+      "id": "S-14",
+      "issue": 82,
+      "title": "Post: Colour contrast beyond text",
+      "depends": [
+        "S-08",
+        "S-09",
+        "S-10",
+        "S-03"
+      ],
+      "importance": 3,
+      "afk": false,
+      "passes": false
+    },
+    {
+      "id": "S-15",
+      "issue": 83,
+      "title": "Post: Keyboard accessibility",
+      "depends": [
+        "S-08",
+        "S-09",
+        "S-10",
+        "S-03"
+      ],
+      "importance": 3,
+      "afk": false,
+      "passes": false
+    },
+    {
+      "id": "S-16",
+      "issue": 84,
+      "title": "Post: How to test a page in 15 minutes",
+      "depends": [
+        "S-08",
+        "S-09",
+        "S-10",
+        "S-03"
+      ],
+      "importance": 3,
+      "afk": false,
+      "passes": false
+    },
+    {
+      "id": "S-17",
+      "issue": 85,
+      "title": "Test procedures and common questions: record shape and sections",
+      "depends": [
+        "S-10"
+      ],
+      "importance": 2,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "S-18",
+      "issue": 86,
+      "title": "Test procedures and common questions: Perceivable",
+      "depends": [
+        "S-17"
+      ],
+      "importance": 3,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "S-19",
+      "issue": 87,
+      "title": "Test procedures and common questions: Operable",
+      "depends": [
+        "S-17"
+      ],
+      "importance": 3,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "S-20",
+      "issue": 88,
+      "title": "Test procedures and common questions: Understandable",
+      "depends": [
+        "S-17"
+      ],
+      "importance": 3,
+      "afk": true,
+      "passes": false
+    },
+    {
+      "id": "S-21",
+      "issue": 89,
+      "title": "Make test procedures and common questions required",
+      "depends": [
+        "S-18",
+        "S-19",
+        "S-20"
+      ],
+      "importance": 4,
+      "afk": true,
+      "passes": false
+    }
+  ]
+}
