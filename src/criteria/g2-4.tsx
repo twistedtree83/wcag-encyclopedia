@@ -337,6 +337,30 @@ export const G2_4: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'Open two or three pages of the site and note the blocks that repeat on each: the header, the main navigation, a search bar, a sidebar.',
+      'Load a page, click in the address bar and press Tab once. Check whether a skip link appears and becomes visible when it receives focus.',
+      'Press Enter on the skip link. Press Tab again and check that focus lands on the first item in the main content, not back in the header.',
+      'Where there is no skip link, open the accessibility inspector in your browser (the Accessibility pane in Chrome or Edge DevTools, or the Accessibility tab in Firefox) and check for a main landmark, or for a heading at the start of the main content.',
+      'Turn on a screen reader (NVDA on Windows, VoiceOver on a Mac) and jump by landmark or by heading. Check that one jump reaches the main content.',
+    ],
+    questions: [
+      {
+        question: 'Does 2.4.1 require a skip link?',
+        answer:
+          'No. A skip link is one way to pass. Landmarks such as a main element, or a heading at the start of each section, also let a person jump past the repeated blocks.',
+      },
+      {
+        question: 'Can a skip link stay hidden until it receives focus?',
+        answer:
+          'Yes, as long as it becomes visible when it does. 2.4.7 Focus Visible applies to it like any other link, so a sighted keyboard user has to be able to see it.',
+      },
+      {
+        question: 'Does a page with nothing repeated need a way to bypass blocks?',
+        answer:
+          'No. 2.4.1 is about blocks that repeat across a set of pages, such as the same header on every page. A single page with no repeated blocks has nothing to bypass.',
+      },
+    ],
   },
 
   {
@@ -383,6 +407,30 @@ export const G2_4: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'Open the page and read the title in the browser tab. Hover over the tab if it is cut off.',
+      'Check that the title says what the page is about or what it is for, such as the article headline or the step of a form, and not only the site name.',
+      'Open two other pages of the same site and compare their titles. Check that each one tells its page apart from the others.',
+      'In a single-page app, move to another view and check that the title in the tab changes with it.',
+      'Turn on a screen reader (NVDA on Windows, VoiceOver on a Mac) and load the page. Listen for the title it reads first, and check that it makes sense heard alone.',
+    ],
+    questions: [
+      {
+        question: 'Does the h1 count as the page title for 2.4.2?',
+        answer:
+          'No. 2.4.2 is about the title element, which appears in the browser tab, in bookmarks and in search results, and which a screen reader reads first. A page needs a descriptive h1 for other reasons, but the title element has to describe the page too.',
+      },
+      {
+        question: 'Must every page title be unique?',
+        answer:
+          'No, the criterion does not say so, but a title that tells a page apart from the others is what it is for. Ten tabs all called "Home" do not help anyone find the page they wanted.',
+      },
+      {
+        question: 'Does a single-page app have to change the title when the view changes?',
+        answer:
+          'Yes. Each view is a page as far as the person is concerned, so the title has to describe the view they are on. Update document.title each time the route changes.',
+      },
+    ],
   },
 
   {
@@ -437,6 +485,30 @@ export const G2_4: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'Click in the address bar and press Tab through the whole page. Note the order in which each control receives focus.',
+      'Compare that order with the order in which the page reads, top to bottom and in reading direction. Check that no jump changes what the content means or how it is used, such as a form field reached after its submit button.',
+      'Search the page source for tabindex values greater than 0. Check that any order they force still makes sense.',
+      'Open each dialog, menu and disclosure. Check that focus moves into it when it opens and goes back to the control that opened it when it closes.',
+      'Where content appears after an action, such as an error message or a new set of fields, check that the next Tab press reaches it, not the page footer.',
+    ],
+    questions: [
+      {
+        question: 'Must the focus order match the visual order exactly?',
+        answer:
+          'No. 2.4.3 asks that the order keeps the meaning and the operation of the page intact. Several orders can do that, and only one of them has to be provided.',
+      },
+      {
+        question: 'Does a positive tabindex fail 2.4.3?',
+        answer:
+          'Only when the order it creates loses meaning or stops the page working. In practice it usually does, because it pulls those elements ahead of everything else on the page. Change the source order instead.',
+      },
+      {
+        question: 'Where should focus go when a dialog closes?',
+        answer:
+          'Back to the control that opened it, or to the next sensible place if that control has gone. Focus that drops to the top of the page makes the person find their place again.',
+      },
+    ],
   },
 
   {
@@ -512,6 +584,30 @@ export const G2_4: readonly CriterionRecord[] = [
         'Hiding the context in aria-label is a second-best fix: it desynchronises what is seen ' +
         'from what is announced, and voice-control users say what they see.',
     },
+    procedure: [
+      'List every link on the page. A screen reader’s links list does this for you: Insert+F7 in NVDA, or the Links menu of the VoiceOver rotor on a Mac.',
+      'Read each link text on its own and note any that does not say where it goes, such as "Read more", "Click here" or "Details".',
+      'For each one noted, read the sentence, paragraph, list item or table cell that holds it, and the heading of its table column. Check that the purpose is clear from the link together with that context.',
+      'Open the accessibility inspector in your browser (the Accessibility pane in Chrome or Edge DevTools, or the Accessibility tab in Firefox) and check each image link and icon link. Check that its name says where it goes.',
+      'Check that links which go to different places do not share the same text in the same context.',
+    ],
+    questions: [
+      {
+        question: 'Does a "Read more" link fail 2.4.4?',
+        answer:
+          'Only when its context does not say what it is about. A "Read more" in the same paragraph or list item as the article title it belongs to passes, because the purpose comes from the two together.',
+      },
+      {
+        question: 'Can I fix vague link text with aria-label or hidden text?',
+        answer:
+          'Yes, both count. Keep the visible words at the start of the name, though, or a person using voice control cannot say what they see. That is 2.5.3 Label in Name.',
+      },
+      {
+        question: 'Is a link whose purpose nobody can guess allowed?',
+        answer:
+          'Only when it is unclear to everyone, by design. A game where you choose between "Door 1" and "Door 2" passes, because no reader is meant to know where each leads.',
+      },
+    ],
   },
 
   {
@@ -556,6 +652,30 @@ export const G2_4: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'Pick a page deep inside the site, not the home page, and list the ways it can be reached: the main navigation, a search box, a site map, a table of contents, links from related pages.',
+      'Check that there are at least two of these.',
+      'Follow each way in turn, such as searching for the page’s title or finding it in the site map. Check that each one really leads to the page.',
+      'Repeat for a few other pages, including one that sits several levels down.',
+      'For any page reachable only one way, check whether it is a step in a process or the result of one, such as the third step of a checkout or a payment confirmation. Those are exempt.',
+    ],
+    questions: [
+      {
+        question: 'Do a navigation menu and a search box count as two ways?',
+        answer:
+          'Yes, when the menu reaches the page and the search finds it. A search box alone is one way; pair it with a site map, a table of contents or links between related pages.',
+      },
+      {
+        question: 'Does a checkout step need two ways to reach it?',
+        answer:
+          'No. A page that is a step in a process, or that exists only as its result, is exempt. A payment confirmation or a page of search results is only reached by doing the thing before it.',
+      },
+      {
+        question: 'Does a site of three pages need a search box?',
+        answer:
+          'No. When every page is linked from the home page, those links can act as a site map. On a site that small, they may be enough with the navigation.',
+      },
+    ],
   },
 
   {
@@ -603,6 +723,29 @@ export const G2_4: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'List the headings on the page. A screen reader’s headings list does this for you: Insert+F7 in NVDA, or the Headings menu of the VoiceOver rotor on a Mac.',
+      'Read each heading on its own and check that it says what the section under it is about. "Section 2" or "More" says nothing.',
+      'List the labels of every form field and control, as they appear on screen. Check that each one says what to enter or what the control does.',
+      'Open the accessibility inspector in your browser (the Accessibility pane in Chrome or Edge DevTools, or the Accessibility tab in Firefox) and check the name of each control. Where it differs from the visible label, check that it is accurate too.',
+    ],
+    questions: [
+      {
+        question: 'Does 2.4.6 require a page to have headings?',
+        answer:
+          'No. 2.4.6 asks only that the headings and labels a page has are descriptive. Whether content needs headings at all is a matter for 1.3.1 Info and Relationships, and whether fields need labels is a matter for 3.3.2 Labels or Instructions.',
+      },
+      {
+        question: 'Do headings and labels have to be long to be descriptive?',
+        answer:
+          'No. One word can be enough if it tells the person what is there. "Email" is a descriptive label; "Enter the email address you would like us to use" is no clearer.',
+      },
+      {
+        question: 'Must every heading on a page be unique?',
+        answer:
+          'No, 2.4.6 does not say so. Repeating "Ingredients" and "Method" under each recipe is fine, because each heading still says what its own section holds.',
+      },
+    ],
   },
 
   {
@@ -675,6 +818,30 @@ export const G2_4: readonly CriterionRecord[] = [
       ],
       note: 'The CSS rule this page uses on every interactive element, verbatim.',
     },
+    procedure: [
+      'Click in the address bar and press Tab through the whole page. At each stop, check that you can see which element has focus without moving the mouse.',
+      'Note any element where focus seems to vanish: nothing changes on screen, or the only change is too faint to spot.',
+      'Repeat inside every menu, dialog, tab set and custom widget, using the arrow keys where the widget expects them.',
+      'Search the stylesheets for outline: none, outline: 0 and styles on :focus. Check that each one that removes the browser outline puts a visible style in its place.',
+      'Repeat the Tab pass in dark mode and with a Windows contrast theme turned on, where a focus style made only of a background colour or a shadow can disappear.',
+    ],
+    questions: [
+      {
+        question: 'Does the browser’s default focus outline pass 2.4.7?',
+        answer:
+          'Yes, in most cases, as long as nothing on the page removes it or hides it. Check it against your own colours, though: a default outline can be hard to see on some backgrounds.',
+      },
+      {
+        question: 'Does 2.4.7 set a minimum size or contrast for the focus indicator?',
+        answer:
+          'No. 2.4.7 asks only that the indicator is visible. 1.4.11 Non-text Contrast asks that it stands out from its background, and 2.4.13 Focus Appearance, at Level AAA, sets its size.',
+      },
+      {
+        question: 'Can I show the focus ring only to keyboard users with :focus-visible?',
+        answer:
+          'Yes. 2.4.7 asks for a visible indicator when the page is used from the keyboard, and :focus-visible gives exactly that while hiding the ring after a mouse click.',
+      },
+    ],
   },
 
   {
@@ -743,5 +910,28 @@ export const G2_4: readonly CriterionRecord[] = [
         'One declaration fixes anchor jumps, tab traversal, and programmatic scrolling all at ' +
         'once, because they all honour scroll padding.',
     },
+    procedure: [
+      'List everything the page keeps on screen while it scrolls: sticky headers and footers, cookie banners, chat buttons, toolbars.',
+      'Click in the address bar and press Tab through the whole page, then Shift+Tab back. At each stop, check that some part of the focused element is still in view and not covered.',
+      'Repeat at a narrow window width, around 320 pixels, and with the page zoomed to 200%, where sticky bars take up more of the screen.',
+      'Open any content that stays open as focus moves, such as a chat window or a non-modal dialog. Tab past it and check that it never covers the focused element completely, or that Escape closes it without moving focus.',
+    ],
+    questions: [
+      {
+        question: 'Does focus that is partly covered fail 2.4.11?',
+        answer:
+          'No. At Level AA, the focused element fails only when it is hidden entirely. Hiding none of it is what 2.4.12 Focus Not Obscured (Enhanced), at Level AAA, asks for.',
+      },
+      {
+        question: 'Does a cookie banner that covers the bottom of the page fail 2.4.11?',
+        answer:
+          'Only when it can hide a focused element completely. It passes if it is modal, so the person deals with it first, or if the page reserves space for it with scroll-padding so focused content scrolls clear of it.',
+      },
+      {
+        question: 'Does a drop-down menu that covers focused content fail 2.4.11?',
+        answer:
+          'No, when it closes as soon as focus moves away from it. Content that stays open, such as a chat window, fails if it can hide the focused element and the person cannot get it out of the way without moving focus.',
+      },
+    ],
   },
 ];
