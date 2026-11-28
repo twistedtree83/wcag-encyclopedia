@@ -5,6 +5,8 @@ import { render, ROUTES } from '../src/entry-server';
 import { CriterionPage } from '../src/pages/CriterionPage';
 import { RouteProvider } from '../src/site/RouteContext';
 import { criterionPath } from '../src/site/routes';
+import { POSTS } from '../src/blog/posts';
+import { postsAbout } from '../src/blog/post';
 
 /**
  * The criterion page as the build writes it: the static HTML a reader gets before any script
@@ -104,6 +106,7 @@ describe('the anatomy', () => {
         ...(record.diff ? ['What changed in the code'] : []),
         ...(record.demos?.length ? ['Watch it happen'] : []),
         ...(record.labs?.length ? ['Try it yourself'] : []),
+        ...(postsAbout(record.num, POSTS).length ? ['Further reading'] : []),
         record.guideline === '1.1' || record.guideline === '2.3'
           ? expect.stringMatching(/^More from /)
           : `Also in guideline ${record.guideline}`,

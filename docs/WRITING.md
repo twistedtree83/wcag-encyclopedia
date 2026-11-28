@@ -106,7 +106,7 @@ The test fails a post with no `## Sources` section, with no source on an allowed
 with any source off them. The allowed domains are `SOURCE_DOMAINS` in `tests/writing.ts`, and
 any subdomain of one:
 
-- **Standards**: W3C (WCAG, Understanding, Techniques, ARIA), WHATWG.
+- **Standards**: W3C (WCAG, Understanding, Techniques, ARIA), WHATWG, ETSI (EN 301 549).
 - **Law and regulators**: EU law and the Commission (`europa.eu`), UK legislation and
   guidance (`gov.uk`), the US Department of Justice, Access Board, Section 508, eCFR and
   Federal Register, and Canada's federal law and guidance.
