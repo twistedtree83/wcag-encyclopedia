@@ -104,6 +104,16 @@ export type Diff = {
   readonly note: string;
 };
 
+/**
+ * A common question (CONTEXT.md): one a reader would type into a search box, and a short
+ * answer that starts with the answer ("Yes, …", "No, …", "Only when …") before the reason.
+ * Plain text, held to docs/WRITING.md by the writing test.
+ */
+export type CommonQuestion = {
+  readonly question: string;
+  readonly answer: string;
+};
+
 export type CriterionRecord = {
   /** Dotted triple, e.g. '1.4.3'. Also the URL fragment and the React key. */
   readonly num: string;
@@ -128,6 +138,15 @@ export type CriterionRecord = {
   readonly fail: Example;
   readonly pass: Example;
   readonly diff?: Diff;
+  /**
+   * The test procedure (CONTEXT.md), headed "How to test": the steps a reader follows, in
+   * order, to check their own interface against this criterion. Each step is one action and
+   * what to look for, as plain text. Optional until S-21 makes it required (three steps at
+   * least).
+   */
+  readonly procedure?: readonly string[];
+  /** The common questions, headed "Common questions", in reading order. Optional until S-21. */
+  readonly questions?: readonly CommonQuestion[];
   /**
    * Ids of the demos illustrating this criterion, in the order they should be read. Usually
    * one; 2.4.7 carries two, because seeing the focus ring and its absence back to back is the

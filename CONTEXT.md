@@ -52,9 +52,12 @@ long to share that description with the fail caption. Original prose, like the r
 
 **Test procedure** (`procedure`) — the ordered steps a reader follows to check their own
 interface against a criterion. On the page it is headed "How to test". Not the site's own tests.
+A list of plain-text steps.
 
 **Common question** (`questions`) — a question people ask about a criterion, with a short
 answer. On the page they are headed "Common questions". Every criterion record has at least one.
+Each is a `CommonQuestion`, `{ question, answer }`, both plain text. Both fields are optional on
+the record until S-21 makes them required.
 
 **Example** — a rendered piece of interface, not a description of one. Every criterion has a
 **fail example** and a **pass example**. On screen these are labelled "Broken" / "Fixed" on

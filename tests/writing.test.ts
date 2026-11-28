@@ -160,6 +160,21 @@ describe('every test procedure and common question', () => {
     expect(recordProse(record)).toEqual(['Open the page.', 'Tab to the field.', 'Is it?', 'It is.']);
   });
 
+  it.each(['4.1.2', '4.1.3'])('reach the test procedure and common questions of %s', (num) => {
+    const record = CORPUS.find((r) => r.num === num)!;
+    expect(record.procedure?.length).toBeGreaterThanOrEqual(3);
+    expect(record.questions?.length).toBeGreaterThanOrEqual(1);
+    const rules = (r: object) => recordProse(r).flatMap((text) => proseProblems(text).map((p) => p.rule));
+    expect(rules(record)).toEqual([]);
+    const step = { ...record, procedure: [...record.procedure!, 'Check the toggle is seamless.'] };
+    expect(rules(step)).toEqual(['seamless']);
+    const [first, ...rest] = record.questions!;
+    const answer = { ...record, questions: [{ ...first!, answer: `${first!.answer} Delve into it.` }, ...rest] };
+    expect(rules(answer)).toEqual(['delve']);
+    const question = { ...record, questions: [{ ...first!, question: 'Can I leverage ARIA?' }, ...rest] };
+    expect(rules(question)).toEqual(['leverage']);
+  });
+
   it.each(CORPUS.map((r) => [r.num, r] as const))('%s meets docs/WRITING.md', (_, record) => {
     const problems = recordProse(record).flatMap((text) => proseProblems(text));
     expect(problems.map((p) => `${p.rule}: ${p.detail}`)).toEqual([]);

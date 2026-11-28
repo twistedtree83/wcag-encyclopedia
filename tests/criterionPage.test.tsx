@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { renderToString } from 'react-dom/server';
 import { CORPUS, criterion } from '../src/criteria/corpus';
 import { render, ROUTES } from '../src/entry-server';
+import type { CriterionRecord } from '../src/criteria/types';
 import { CriterionPage } from '../src/pages/CriterionPage';
 import { RouteProvider } from '../src/site/RouteContext';
 import { criterionPath } from '../src/site/routes';
@@ -33,6 +34,16 @@ const decode = (s: string) =>
     .replaceAll('&amp;', '&')
     .replaceAll('&lt;', '<')
     .replaceAll('&gt;', '>');
+
+/** A criterion page for a record that is not in the corpus as it stands (a fixture field added). */
+function renderPage(record: CriterionRecord) {
+  const route = { path: criterionPath(record.num), page: 'criterion' as const, num: record.num };
+  return renderToString(
+    <RouteProvider value={route}>
+      <CriterionPage record={record} />
+    </RouteProvider>,
+  );
+}
 
 function page(num: string) {
   const route = ROUTES.find((r) => r.num === num)!;
@@ -103,6 +114,8 @@ describe('the anatomy', () => {
         'Broken, then fixed',
         ...(record.diff ? ['What changed in the code'] : []),
         ...(record.demos?.length ? ['Watch it happen'] : []),
+        ...(record.procedure?.length ? ['How to test'] : []),
+        ...(record.questions?.length ? ['Common questions'] : []),
         ...(record.labs?.length ? ['Try it yourself'] : []),
         record.guideline === '1.1' || record.guideline === '2.3'
           ? expect.stringMatching(/^More from /)
@@ -111,6 +124,49 @@ describe('the anatomy', () => {
       expect(h2s(page(record.num))).toEqual(expected);
     });
   }
+
+  it('puts How to test and Common questions between the demos and the labs on 4.1.2 and 4.1.3', () => {
+    for (const num of ['4.1.2', '4.1.3']) {
+      expect(h2s(page(num))).toEqual([
+        'Broken, then fixed',
+        'What changed in the code',
+        'Watch it happen',
+        'How to test',
+        'Common questions',
+        'Try it yourself',
+        'Also in guideline 4.1',
+      ]);
+    }
+  });
+
+  it('shows the test procedure as an ordered list, one step per item', () => {
+    const record = {
+      ...criterion('2.4.11')!,
+      procedure: ['Open the page.', 'Press Tab until the footer link has focus.', 'Look at the link.'],
+    };
+    const html = decode(main(`<main>${renderPage(record)}</main>`));
+    const section = html.slice(html.indexOf('id="procedure-title"'));
+    const list = section.slice(section.indexOf('<ol'), section.indexOf('</ol>'));
+    expect([...list.matchAll(/<li>(.*?)<\/li>/g)].map((m) => m[1])).toEqual(record.procedure);
+  });
+
+  it('shows each common question as a heading, with its answer under it', () => {
+    const record = {
+      ...criterion('2.4.11')!,
+      questions: [
+        { question: 'Does a sticky header count?', answer: 'Yes, when it covers the focused control.' },
+        { question: 'Does a cookie banner count?', answer: 'Only while it is open.' },
+      ],
+    };
+    const html = decode(main(`<main>${renderPage(record)}</main>`));
+    const start = html.indexOf('id="questions-title"');
+    const section = html.slice(start, html.indexOf('</section>', start));
+    const pairs = [...section.matchAll(/<h3[^>]*>(.*?)<\/h3>\s*<p>(.*?)<\/p>/g)].map((m) => [m[1], m[2]]);
+    expect(pairs).toEqual([
+      ['Does a sticky header count?', 'Yes, when it covers the focused control.'],
+      ['Does a cookie banner count?', 'Only while it is open.'],
+    ]);
+  });
 
   it('mounts one player per demo, so 2.4.7 has two and 1.4.3 none', () => {
     const players = (num: string) => (page(num).match(/<figure class="demo"/g) ?? []).length;
@@ -122,13 +178,7 @@ describe('the anatomy', () => {
   });
 
   it('shows a lab under Try it yourself when the record has one', () => {
-    const record = { ...criterion('2.4.11')!, labs: ['fixture-lab'] };
-    const route = { path: criterionPath(record.num), page: 'criterion' as const, num: record.num };
-    const html = renderToString(
-      <RouteProvider value={route}>
-        <CriterionPage record={record} />
-      </RouteProvider>,
-    );
+    const html = renderPage({ ...criterion('2.4.11')!, labs: ['fixture-lab'] });
     expect(h2s(`<main>${html}</main>`)).toContain('Try it yourself');
     expect(html).toContain('Try it: a fixture lab');
     expect(html).toContain('Fixture lab body');
