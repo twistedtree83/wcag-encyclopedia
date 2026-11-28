@@ -5,7 +5,8 @@
 import { StrictMode } from 'react';
 import { renderToString } from 'react-dom/server';
 import { postFor } from './blog/bodies';
-import { postMeta } from './blog/posts';
+import { feedLink, feedXml } from './blog/feed';
+import { POSTS, postMeta } from './blog/posts';
 import { criterion } from './criteria/corpus';
 import { analyticsBeacon } from './site/analytics';
 import { CF_ANALYTICS_TOKEN } from './site/config';
@@ -15,9 +16,10 @@ import { legacyRedirectScript } from './site/legacyRedirect';
 import { absoluteUrl } from './site/crawl';
 import { shareCard, shareTags } from './site/share';
 import { Site, pageMeta, pageName, recordFor } from './site/Site';
-import { NOT_FOUND, ROUTES, type Route } from './site/routes';
+import { FEED_PATH, NOT_FOUND, ROUTES, type Route } from './site/routes';
 
-export { NOT_FOUND, ROUTES };
+export { FEED_PATH, NOT_FOUND, ROUTES };
+export { feedProblems } from './blog/feed';
 export { jsonLdProblems } from './site/jsonLd';
 export { canonicalProblems, canonicalTag, openGraphProblems, pageSources, robotsTxt, sitemapProblems, sitemapXml } from './site/crawl';
 export { CARD_FONTS, CARD_HEIGHT, CARD_WIDTH, cardContrastProblems, shareCard, toSatori } from './site/share';
@@ -25,7 +27,7 @@ export { CARD_FONTS, CARD_HEIGHT, CARD_WIDTH, cardContrastProblems, shareCard, t
 /**
  * A route rendered for the prerender step: the app markup, the title and description, and
  * `head`, extra markup for the page's `<head>` (the old `#number` redirect on Home, and
- * `noindex` on the 404 page),
+ * `noindex` on the 404 page, and the feed link on the blog index and post pages),
  * `beacon`, the analytics script for the end of `<body>` (empty while its token is unset), and
  * `share`, the Open Graph and Twitter tags that point at the page's share card (none on the
  * 404 page, which has no address of its own to share).
@@ -48,8 +50,16 @@ export function render(route: Route): Rendered {
       <Site route={route} post={route.page === 'post' ? postFor(route.slug) : undefined} />
     </StrictMode>,
   );
-  const head = route.page === 'home' ? legacyRedirectScript() : route.page === 'not-found' ? NOINDEX : '';
+  const head = route.page === 'home' ? legacyRedirectScript() : route.page === 'not-found' ? NOINDEX : route.page === 'blog' || route.page === 'post' ? feedLink(route) : '';
   return { html, head, beacon: analyticsBeacon(CF_ANALYTICS_TOKEN), share: route.page === 'not-found' ? '' : shareTags(route), ...pageMeta(route) };
+}
+
+/**
+ * The blog's Atom feed (S-09, `src/blog/feed.tsx`): every post in full, newest first.
+ * `fallback`, a W3C date, dates the feed while there are no posts.
+ */
+export function blogFeed(fallback: string): string {
+  return feedXml(POSTS.map((post) => postFor(post.slug)), fallback);
 }
 
 /**

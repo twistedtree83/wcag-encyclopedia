@@ -14,7 +14,8 @@ this before changing the build, adding a page, or touching tokens. The vocabular
   `<!--@canonical-->`, `<!--@structured-data-->`, `<!--@share-->`, `<!--@tokens-->`, `<!--@legacy-redirect-->`, `<!--@fonts-->`, `<!--@app-->` and `<!--@analytics-->`.
   `render(route)` in `src/entry-server.tsx` returns `{ html, title, description, head, beacon, share }`.
   Home's `head` holds the `#1.4.3` → `criteria/1.4.3/` redirect from
-  `src/site/legacyRedirect.ts`, and the 404 page's holds `noindex`; other pages have none. `beacon` is the Cloudflare Web Analytics script
+  `src/site/legacyRedirect.ts`, the 404 page's holds `noindex`, and the blog index's and each post's hold the feed link
+  (see "Blog posts"); other pages have none. `beacon` is the Cloudflare Web Analytics script
   (`src/site/analytics.ts`), written at the end of `<body>` outside `#root`. It is empty while
   `CF_ANALYTICS_TOKEN` in `src/site/config.ts` is unset, and the committed config leaves it unset.
   The beacon sets no cookie, so the site has no consent banner.
@@ -135,6 +136,17 @@ criteria: [1.4.3, 1.4.11]                                      # every criterion
   posts folder.
 - **Share card.** Each post has its own, `share/blog-<slug>.png` (`postCard` in
   `src/site/share.ts`), which is also its `BlogPosting` image; the blog index has the site card.
+- **Feed.** The prerender step writes `dist/blog/feed.xml` (`FEED_PATH`) with `feedXml` in
+  `src/blog/feed.tsx`, through `blogFeed` in `entry-server.tsx`, and fails the build on anything
+  `feedProblems` finds (RFC 4287's required elements, absolute entry URLs, RFC 3339 dates, well
+  formed). Each entry's `content` is the body drawn by `PostBody` with `link={absoluteUrl}`, so
+  its site links are absolute. The blog index and post pages carry
+  `<link rel="alternate" type="application/atom+xml">` in `render()`'s `head`, with a relative
+  href (`./feed.xml`, `../feed.xml`): only the feed's own contents are absolute. The feed is a
+  file, not a route, so it is not in the sitemap. With no posts it is dated by the blog index.
+- **Further reading.** `CriterionPage` takes `posts` (`POSTS` from `Site`) and lists
+  `postsAbout(num, posts)` (`src/blog/post.ts`): the newest three whose `criteria` include the
+  criterion, between the labs and "Also in". No posts about it, no section.
 - **Routes without Vite.** `src/blog/slugs.ts` lists the slugs with `import.meta.glob`, and falls
   back to reading the folder when the e2e specs import `ROUTES` without Vite. The two must agree.
 - **The fixture post**, `tests/fixtures/posts/fixture-contrast-thresholds.md`, exists only in tests

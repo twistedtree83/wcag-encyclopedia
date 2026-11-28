@@ -92,7 +92,7 @@ Graph: `scripts2/prd-labs.json` · Parent: #40 · Integration branch: `labs`
 - [x] **S-06** #74 — Cloudflare Web Analytics
 - [x] **S-07** #75 — Blog: posts, the blog index and the post page (S-01, S-02, S-04)
 - [ ] **S-08** #76 — Showing criterion examples and labs inside a post (S-07)
-- [ ] **S-09** #77 — Blog feed and Further reading on criterion pages (S-07)
+- [x] **S-09** #77 — Blog feed and Further reading on criterion pages (S-07)
 - [ ] **S-10** #78 — The writing standard and the writing test (S-07)
 - [ ] **S-11** #79 — Post: What's new in WCAG 2.2 (S-08, S-09, S-10, S-03)
 - [ ] **S-12** #80 — Post: The European Accessibility Act and WCAG (S-08, S-09, S-10, S-03)

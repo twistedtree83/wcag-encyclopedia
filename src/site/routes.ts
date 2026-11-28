@@ -42,6 +42,12 @@ export function postPath(slug: string): string {
   return `${PATHS.blog}${slug}/`;
 }
 
+/**
+ * The blog's Atom feed (S-09), a file rather than a page: not a route, so not in the sitemap.
+ * The prerender step writes it to `dist/blog/feed.xml`.
+ */
+export const FEED_PATH = `${PATHS.blog}feed.xml`;
+
 /** Every criterion in the manifest gets a page, in number order. */
 const PUBLISHED_CRITERIA: readonly string[] = EXPECTED.map((c) => c.num);
 

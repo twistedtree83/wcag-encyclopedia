@@ -32,7 +32,10 @@ describe('the home route', () => {
       expect(home().head).toContain('location.replace');
       expect(home().head).toContain('"1.4.3"');
       for (const route of ROUTES.filter((r) => r.page !== 'home')) {
-        expect(render(route).head, route.path).toBe('');
+        // The blog pages' head holds the feed link (S-09, tests/blogBuild.test.ts) and nothing else.
+        const head = render(route).head;
+        if (route.page === 'blog' || route.page === 'post') expect(head, route.path).not.toContain('location.replace');
+        else expect(head, route.path).toBe('');
       }
     },
     30_000,
