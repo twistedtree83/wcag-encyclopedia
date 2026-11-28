@@ -2,6 +2,7 @@ import { existsSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
+import { posts } from './src/blog/plugin';
 import { tokensCss } from './src/theme/css';
 
 /**
@@ -52,7 +53,8 @@ function notFoundPage(): Plugin {
 
 export default defineConfig({
   base: './',
-  plugins: [react(), injectTokens(), notFoundPage()],
+  // `posts` compiles src/blog/posts/*.md to data at build time (src/blog/plugin.ts).
+  plugins: [posts(), react(), injectTokens(), notFoundPage()],
   // Each page is its own HTML file (ADR 0001): a missing page must 404, not fall back to /.
   appType: 'mpa',
   build: {

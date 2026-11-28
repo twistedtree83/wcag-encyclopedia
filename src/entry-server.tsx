@@ -4,6 +4,9 @@
  */
 import { StrictMode } from 'react';
 import { renderToString } from 'react-dom/server';
+import { postFor } from './blog/bodies';
+import { postMeta } from './blog/posts';
+import { criterion } from './criteria/corpus';
 import { analyticsBeacon } from './site/analytics';
 import { CF_ANALYTICS_TOKEN } from './site/config';
 import { trailFor } from './site/breadcrumbs';
@@ -42,7 +45,7 @@ export const NOINDEX = '<meta name="robots" content="noindex" />';
 export function render(route: Route): Rendered {
   const html = renderToString(
     <StrictMode>
-      <Site route={route} />
+      <Site route={route} post={route.page === 'post' ? postFor(route.slug) : undefined} />
     </StrictMode>,
   );
   const head = route.page === 'home' ? legacyRedirectScript() : route.page === 'not-found' ? NOINDEX : '';
@@ -51,19 +54,29 @@ export function render(route: Route): Rendered {
 
 /**
  * A route's JSON-LD script elements for `<head>` (src/site/jsonLd.ts). `dates` are the first
- * and last commit to the page's source files, which only the prerender step can read.
+ * and last commit to the page's source files, which only the prerender step can read. A post is
+ * dated by its frontmatter instead, as its page shows it.
  */
 export function structuredData(route: Route, dates: { published: string; modified: string }): string {
   const name = pageName(route);
   const record = route.page === 'criterion' ? recordFor(route) : undefined;
+  const post = route.page === 'post' ? postMeta(route.slug) : undefined;
   return jsonLdScripts(
     jsonLdBlocks({
       route,
       trail: trailFor(route, name),
       headline: name,
       description: pageMeta(route).description,
-      ...dates,
-      ...(record ? { criterion: { num: record.num, name: record.name }, image: absoluteUrl(shareCard(route).file) } : {}),
+      ...(post ? { published: post.published, modified: post.updated ?? post.published } : dates),
+      ...(record ? { criterion: { num: record.num, name: record.name } } : {}),
+      ...(post ? { discusses: post.criteria.map((num) => ({ num, name: criterionName(num) })) } : {}),
+      ...(record || post ? { image: absoluteUrl(shareCard(route).file) } : {}),
     }),
   );
+}
+
+function criterionName(num: string): string {
+  const record = criterion(num);
+  if (!record) throw new Error(`no criterion record for ${num}`);
+  return record.name;
 }

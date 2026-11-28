@@ -10,15 +10,18 @@
  * GitHub Pages with no rewrites, so pages never link with absolute paths: use `rel`.
  */
 
+import { POST_SLUGS } from '../blog/slugs';
 import { EXPECTED } from '../criteria/manifest';
 
-export type PageKind = 'about' | 'colour-check' | 'criteria' | 'criterion' | 'home' | 'not-found';
+export type PageKind = 'about' | 'blog' | 'colour-check' | 'criteria' | 'criterion' | 'home' | 'not-found' | 'post';
 
 export type Route = {
   readonly path: string;
   readonly page: PageKind;
   /** The criterion number, on criterion pages. */
   readonly num?: string;
+  /** The post's slug, on post pages. */
+  readonly slug?: string;
 };
 
 /** Site paths the shell links to. Some are written by later tickets (see the ledger). */
@@ -27,7 +30,6 @@ export const PATHS = {
   criteria: 'criteria/',
   colourCheck: 'colour-check/',
   about: 'about/',
-  /** The blog index, written by S-07. */
   blog: 'blog/',
 } as const;
 
@@ -35,14 +37,20 @@ export function criterionPath(num: string): string {
   return `criteria/${num}/`;
 }
 
+/** A post's page: `blog/<slug>/`. The slug is the post's file name and never changes. */
+export function postPath(slug: string): string {
+  return `${PATHS.blog}${slug}/`;
+}
+
 /** Every criterion in the manifest gets a page, in number order. */
 const PUBLISHED_CRITERIA: readonly string[] = EXPECTED.map((c) => c.num);
 
-/** Pages that are not criterion pages (home, colour check, all criteria, about) go here. */
+/** Pages that are not criterion or post pages (home, colour check, all criteria, blog, about) go here. */
 const FIXED_ROUTES: readonly Route[] = [
   { path: PATHS.home, page: 'home' },
   { path: PATHS.criteria, page: 'criteria' },
   { path: PATHS.colourCheck, page: 'colour-check' },
+  { path: PATHS.blog, page: 'blog' },
   { path: PATHS.about, page: 'about' },
 ];
 
@@ -52,7 +60,10 @@ const CRITERION_ROUTES: readonly Route[] = PUBLISHED_CRITERIA.map((num) => ({
   num,
 }));
 
-export const ROUTES: readonly Route[] = [...FIXED_ROUTES, ...CRITERION_ROUTES];
+/** One page per post file in src/blog/posts/ (src/blog/slugs.ts): no list to edit. */
+const POST_ROUTES: readonly Route[] = POST_SLUGS.map((slug) => ({ path: postPath(slug), page: 'post', slug }));
+
+export const ROUTES: readonly Route[] = [...FIXED_ROUTES, ...CRITERION_ROUTES, ...POST_ROUTES];
 
 /**
  * The 404 page (S-05). Not a route: it is written once, to `dist/404.html`, and Cloudflare

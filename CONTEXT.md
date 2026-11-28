@@ -177,7 +177,13 @@ line) used in the index and in "Also in this guideline" lists. It leads to the c
 that spans criteria, a change between WCAG versions, the law, or a way of testing. It links to
 every criterion page it discusses and never restates one; the criterion page stays the authority
 on its criterion. A post may show a criterion's existing examples and labs, but brings none of
-its own.
+its own. It is one Markdown file, `src/blog/posts/<slug>.md`: its **frontmatter** (`title`,
+`description`, `published`, `updated?`, `criteria`) and its **post body**, which the build turns
+into a tree of plain nodes (`PostNode`, `src/blog/post.ts`). The **slug** is the file name and
+the post's address, `/blog/<slug>/`, and never changes once published.
+
+**Blog index** — `/blog/`, every post newest first with its date and description. "Blog" is in
+the header nav, and the index and the post pages sit under it.
 
 **Site origin** — `SITE_ORIGIN`, the production address `https://wcagencyclopedia.com`. Joined
 to a route's path, it gives the page's **canonical URL**, the one absolute address crawlers are

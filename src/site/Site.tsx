@@ -1,12 +1,16 @@
 import { useEffect } from 'react';
+import type { Post } from '../blog/post';
+import { POSTS, postMeta } from '../blog/posts';
 import { criterion } from '../criteria/corpus';
 import { EXPECTED_TOTAL } from '../criteria/manifest';
 import { AboutPage } from '../pages/AboutPage';
+import { BlogPage } from '../pages/BlogPage';
 import { ColourCheckPage } from '../pages/ColourCheckPage';
 import { CriteriaPage } from '../pages/CriteriaPage';
 import { CriterionPage } from '../pages/CriterionPage';
 import { HomePage } from '../pages/HomePage';
 import { NotFoundPage } from '../pages/NotFoundPage';
+import { PostPage } from '../pages/PostPage';
 import { Footer } from './Footer';
 import { Header } from './Header';
 import { criterionDescription, criterionTitle } from './meta';
@@ -16,9 +20,10 @@ import type { Route } from './routes';
 /**
  * One pre-rendered page: the Swatch shell (skip link, header, main, footer) around the page
  * the route names. Rendered to static HTML at build time and hydrated in the browser with
- * the same route, so both sides render the same tree.
+ * the same route, so both sides render the same tree. A post page also takes its `post`, which
+ * the prerender step and the client each load for that page alone.
  */
-export function Site({ route }: { route: Route }) {
+export function Site({ route, post }: { route: Route; post?: Post | undefined }) {
   // Effects only run in the browser, after hydration commits: from here the page is live.
   useEffect(() => {
     document.documentElement.setAttribute('data-hydrated', 'true');
@@ -32,7 +37,7 @@ export function Site({ route }: { route: Route }) {
       <div className="wrap">
         <Header />
         <main id="main">
-          <Page route={route} />
+          <Page route={route} post={post} />
         </main>
         <Footer />
       </div>
@@ -40,10 +45,15 @@ export function Site({ route }: { route: Route }) {
   );
 }
 
-function Page({ route }: { route: Route }) {
+function Page({ route, post }: { route: Route; post: Post | undefined }) {
   switch (route.page) {
     case 'about':
       return <AboutPage />;
+    case 'blog':
+      return <BlogPage posts={POSTS} />;
+    case 'post':
+      if (!post || post.slug !== route.slug) throw new Error(`${route.path}: rendered without its post`);
+      return <PostPage post={post} />;
     case 'colour-check':
       return <ColourCheckPage />;
     case 'criteria':
@@ -71,6 +81,10 @@ export function pageName(route: Route): string {
   switch (route.page) {
     case 'about':
       return 'About';
+    case 'blog':
+      return 'Blog';
+    case 'post':
+      return postMeta(route.slug).title;
     case 'colour-check':
       return 'Colour check';
     case 'criteria':
@@ -101,6 +115,16 @@ export function pageMeta(route: Route): { title: string; description: string } {
         description:
           'Check any text and background colour against the WCAG contrast thresholds, see the pair in a real layout, and get the closest colour that passes.',
       };
+    case 'blog':
+      return {
+        title: 'Blog on WCAG topics that span criteria: WCAG Encyclopedia',
+        description:
+          'Articles on what no single criterion page covers: subjects across several criteria, changes between WCAG versions, the law, and ways of testing.',
+      };
+    case 'post': {
+      const { title, description } = postMeta(route.slug);
+      return { title, description };
+    }
     case 'criteria':
       return {
         title: 'All criteria: WCAG Encyclopedia',

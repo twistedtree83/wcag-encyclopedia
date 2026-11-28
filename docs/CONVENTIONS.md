@@ -9,7 +9,7 @@ this before changing the build, adding a page, or touching tokens. The vocabular
 
 - `npm run build` runs three steps: the client build, then
   `vite build --ssr src/entry-server.tsx --outDir dist-ssr`, then `node scripts/prerender.mjs`.
-  It writes one `index.html` per route into `dist/` (59 pages).
+  It writes one `index.html` per route into `dist/` (60 pages, plus one per post).
 - `site.html` is the only HTML template. Its placeholders are `<!--@title-->`, `<!--@description-->`,
   `<!--@canonical-->`, `<!--@structured-data-->`, `<!--@share-->`, `<!--@tokens-->`, `<!--@legacy-redirect-->`, `<!--@fonts-->`, `<!--@app-->` and `<!--@analytics-->`.
   `render(route)` in `src/entry-server.tsx` returns `{ html, title, description, head, beacon, share }`.
@@ -99,6 +99,47 @@ To add a page:
 5. Nothing else is needed for axe. `e2e/axe.spec.ts` scans every route in light and dark at
    1280px and 320px. A page with URL-driven states passes its query URLs to `axeStates` there;
    a lab passes its own from its lab spec (see "Labs").
+
+## Blog posts
+
+A post (ADR 0007) is one Markdown file, `src/blog/posts/<slug>.md`. Adding a post is adding
+that file: no list is edited. Its frontmatter:
+
+```yaml
+---
+title: Two contrast thresholds, for text and for everything else   # the page title too: 30–65 characters
+description: …                                                 # 70–160 characters
+published: 2026-11-02
+updated: 2026-11-20                                            # optional, not before published
+criteria: [1.4.3, 1.4.11]                                      # every criterion the post discusses
+---
+```
+
+- **Build-time only.** The `posts` plugin (`src/blog/plugin.ts`, in `vite.config.ts`) parses each
+  file with `src/blog/parse.ts` (mdast-util-from-markdown and yaml, both devDependencies) and
+  emits plain data: `<slug>.md` is the whole post, `<slug>.md?meta` the frontmatter alone. The
+  blog index reads every `?meta` (`src/blog/posts.ts`); the prerender step reads every full post
+  (`src/blog/bodies.ts`); the browser loads only the post it is on (`entry-client.tsx`) and draws
+  the tree with `PostBody.tsx`. `e2e/blog.spec.ts` fails if parser code reaches `dist/assets`.
+- **Problems fail the build** (and the unit tests), each naming the post and line: a missing,
+  unknown or malformed frontmatter field, a criterion number not in the manifest, a criterion
+  link not in `criteria`, a `criteria` entry the body never links, an h1 in the body or a
+  skipped heading level (the body starts at `##`, under the page's h1), raw HTML, an image, or a
+  reference-style link. What a body may hold is the `NODES` table in `parse.ts`: a new node type
+  (S-08's directives) is one entry there and, if it draws something new, a branch in `PostBody`.
+- **Links.** Link a page of the site by its path from the root, ending in `/`:
+  `[Contrast (Minimum)](/criteria/1.4.3/)`. The page turns it into a relative link. Any other
+  link is written in full (`https://…`).
+- **Dates.** The page and the `BlogPosting` show the frontmatter dates; the sitemap `lastmod` is
+  the file's last commit, as for every page. The blog index is dated from its component and the
+  posts folder.
+- **Share card.** Each post has its own, `share/blog-<slug>.png` (`postCard` in
+  `src/site/share.ts`), which is also its `BlogPosting` image; the blog index has the site card.
+- **Routes without Vite.** `src/blog/slugs.ts` lists the slugs with `import.meta.glob`, and falls
+  back to reading the folder when the e2e specs import `ROUTES` without Vite. The two must agree.
+- **The fixture post**, `tests/fixtures/posts/fixture-contrast-thresholds.md`, exists only in tests
+  (`tests/fixturePost.ts`). `tests/blogBuild.test.ts` mocks the post modules with it to test a
+  post through `render`, `ROUTES` and the JSON-LD check.
 
 ## Tokens and CSS
 
@@ -305,7 +346,7 @@ one entry per line so parallel work merges cleanly, and check each step:
   controls are live and geometry is measured in the real fonts. After a reload or a navigation
   the test caused, call `whenReady(page)`. `tests/e2eOpen.test.ts` fails if a spec waits for
   hydration itself.
-- The suite covers about 1,500 tests across 59 pages. On a heavily loaded machine, tests fail on
+- The suite covers about 1,500 tests across 60 pages. On a heavily loaded machine, tests fail on
   the 30s timeout rather than on assertions. Re-run those with
   `npx playwright test --last-failed --workers=1` before treating them as real. Assertion
   failures are always real.

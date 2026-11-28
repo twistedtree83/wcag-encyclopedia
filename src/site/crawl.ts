@@ -155,18 +155,21 @@ export function sitemapProblems(xml: string): string[] {
   return problems;
 }
 
-const PAGE_FILES: Record<Exclude<Route['page'], 'criterion'>, string> = {
+const PAGE_FILES: Record<Exclude<Route['page'], 'criterion' | 'post'>, string> = {
   home: 'src/pages/HomePage.tsx',
   criteria: 'src/pages/CriteriaPage.tsx',
   'colour-check': 'src/pages/ColourCheckPage.tsx',
   about: 'src/pages/AboutPage.tsx',
+  // The index changes when a post is added or edited, so it is dated from the posts too.
+  blog: 'src/pages/BlogPage.tsx',
   'not-found': 'src/pages/NotFoundPage.tsx',
 };
 
 /**
  * The repository files a page's content comes from, whose last commit date is its sitemap
  * `lastmod`: the criterion record's guideline file for a criterion page (`1.4.3` →
- * `src/criteria/g1-4.tsx`), and the page component for a fixed page. The shared shell is left
+ * `src/criteria/g1-4.tsx`), the post's Markdown file for a post page, and the page component
+ * for a fixed page (with the posts folder, for the blog index). The shared shell is left
  * out, so a header change doesn't mark every page as changed.
  */
 export function pageSources(route: Route): string[] {
@@ -174,5 +177,7 @@ export function pageSources(route: Route): string[] {
     const [principle, guideline] = (route.num ?? '').split('.');
     return [`src/criteria/g${principle}-${guideline}.tsx`];
   }
+  if (route.page === 'post') return [`src/blog/posts/${route.slug}.md`];
+  if (route.page === 'blog') return [PAGE_FILES.blog, 'src/blog/posts'];
   return [PAGE_FILES[route.page]];
 }

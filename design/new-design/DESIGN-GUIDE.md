@@ -280,7 +280,7 @@ Each component lists its tokens and behaviour. All screenshots are in `screensho
 ![Header](screenshots/components/header-nav-dark.png)
 
 - Logo: three accent dots (sky, sun, rose) plus "WCAG Encyclopedia" in Figtree 700 at 20px.
-- Nav links: Home, Criteria, Colour check, About. 17px Onest 500, 10px × 16px padding, 44px or more tall.
+- Nav links: Home, Criteria, Colour check, Blog, About. 17px Onest 500, 10px × 16px padding, 44px or more tall.
 - Current page: `aria-current="page"`, shown as an ink pill (`--nav-on-bg` / `--nav-on-fg`). Two alternatives are available: an underline in the sun colour, and plain bold underlined text.
 - On phones the links wrap under the logo.
 - Every page starts with a "Skip to content" link, styled like a primary button when focused.
