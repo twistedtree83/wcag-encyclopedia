@@ -72,7 +72,7 @@ test.describe('the shell', () => {
     await expect(header.getByRole('link', { name: 'WCAG Encyclopedia' })).toBeVisible();
 
     const nav = header.getByRole('navigation', { name: 'Main' });
-    await expect(nav.getByRole('link')).toHaveText(['Home', 'Criteria', 'Colour check', 'About']);
+    await expect(nav.getByRole('link')).toHaveText(['Home', 'Criteria', 'Colour check', 'Blog', 'About']);
     await expect(nav.getByRole('link', { name: 'Criteria' })).toHaveAttribute(
       'aria-current',
       'page',

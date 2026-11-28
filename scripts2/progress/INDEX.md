@@ -90,7 +90,7 @@ Graph: `scripts2/prd-labs.json` · Parent: #40 · Integration branch: `labs`
 - [x] **S-04** #72 — Structured data (S-01)
 - [x] **S-05** #73 — A real 404 page (S-01)
 - [x] **S-06** #74 — Cloudflare Web Analytics
-- [ ] **S-07** #75 — Blog: posts, the blog index and the post page (S-01, S-02, S-04)
+- [x] **S-07** #75 — Blog: posts, the blog index and the post page (S-01, S-02, S-04)
 - [ ] **S-08** #76 — Showing criterion examples and labs inside a post (S-07)
 - [ ] **S-09** #77 — Blog feed and Further reading on criterion pages (S-07)
 - [ ] **S-10** #78 — The writing standard and the writing test (S-07)

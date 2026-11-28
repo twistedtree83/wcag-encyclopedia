@@ -6,6 +6,8 @@
  *   home                         WebSite (with a SearchAction into All criteria) and Organization
  *   every page below home        BreadcrumbList, the same trail the page shows (breadcrumbs.ts)
  *   criterion pages              TechArticle, by and from the organisation, its share card the image
+ *   post pages                   BlogPosting, by and from the organisation, about its criteria,
+ *                                its share card the image
  *
  * A new page kind adds its blocks to `BLOCKS` and the types it must carry to `TYPES` (both
  * typed by PageKind, so the compiler flags a missing entry); a new block type adds its
@@ -17,7 +19,7 @@
 import { SITE_ORIGIN } from './config';
 import { absoluteUrl } from './crawl';
 import type { Crumb } from './breadcrumbs';
-import { PATHS, type PageKind, type Route } from './routes';
+import { PATHS, criterionPath, type PageKind, type Route } from './routes';
 
 export const SITE_NAME = 'WCAG Encyclopedia';
 
@@ -36,6 +38,8 @@ export type PageFacts = {
   readonly modified: string;
   /** The criterion a criterion page is about. */
   readonly criterion?: { readonly num: string; readonly name: string };
+  /** The criteria a post discusses, from its frontmatter. */
+  readonly discusses?: readonly { readonly num: string; readonly name: string }[];
   /** The absolute address of the page's share card (src/site/share.ts), the article's image. */
   readonly image?: string;
 };
@@ -96,12 +100,37 @@ function techArticle(page: PageFacts): JsonLdBlock {
   });
 }
 
+/** A post: dated as its page shows it (its frontmatter), and about each criterion it discusses. */
+function blogPosting(page: PageFacts): JsonLdBlock {
+  const url = absoluteUrl(page.route.path);
+  return block('BlogPosting', {
+    headline: page.headline,
+    description: page.description,
+    url,
+    mainEntityOfPage: url,
+    inLanguage: 'en',
+    datePublished: page.published,
+    dateModified: page.modified,
+    author: organization(),
+    publisher: organization(),
+    ...(page.image ? { image: page.image } : {}),
+    about: (page.discusses ?? []).map(({ num, name }) => ({
+      '@type': 'DefinedTerm',
+      name: `${num} ${name}`,
+      termCode: num,
+      url: absoluteUrl(criterionPath(num)),
+    })),
+  });
+}
+
 const BLOCKS: Record<PageKind, (page: PageFacts) => JsonLdBlock[]> = {
   home: () => [website(), block('Organization', { name: SITE_NAME, url: absoluteUrl(PATHS.home) })],
   criteria: (page) => [breadcrumbList(page.trail)],
   'colour-check': (page) => [breadcrumbList(page.trail)],
   about: (page) => [breadcrumbList(page.trail)],
   criterion: (page) => [breadcrumbList(page.trail), techArticle(page)],
+  blog: (page) => [breadcrumbList(page.trail)],
+  post: (page) => [breadcrumbList(page.trail), blogPosting(page)],
   // The 404 page is noindex, so it describes nothing to search engines.
   'not-found': () => [],
 };
@@ -127,6 +156,8 @@ const TYPES: Record<PageKind, readonly string[]> = {
   'colour-check': ['BreadcrumbList'],
   about: ['BreadcrumbList'],
   criterion: ['BreadcrumbList', 'TechArticle'],
+  blog: ['BreadcrumbList'],
+  post: ['BlogPosting', 'BreadcrumbList'],
   'not-found': [],
 };
 
@@ -136,6 +167,7 @@ const REQUIRED: Record<string, readonly string[]> = {
   Organization: ['name', 'url'],
   BreadcrumbList: ['itemListElement'],
   TechArticle: ['headline', 'url', 'datePublished', 'dateModified', 'author', 'publisher', 'about'],
+  BlogPosting: ['headline', 'url', 'datePublished', 'dateModified', 'author', 'publisher', 'about'],
 };
 
 type Check = (b: Record<string, any>, route: Route) => string[];
@@ -145,6 +177,16 @@ const own = (route: Route, url: unknown, what: string) =>
 
 const isOrg = (value: any) => value?.['@type'] === 'Organization' && value.name === SITE_NAME && value.url === absoluteUrl(PATHS.home);
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
+
+/** What every article block must be: on its own page, dated, by and from the organisation. */
+function article(type: string, b: Record<string, any>, route: Route): string[] {
+  const problems = [...own(route, b.url, `${type} url`), ...own(route, b.mainEntityOfPage, `${type} mainEntityOfPage`)];
+  for (const key of ['datePublished', 'dateModified']) if (!DATE.test(String(b[key]))) problems.push(`${type} ${key} "${b[key]}" is not a date`);
+  if (String(b.datePublished) > String(b.dateModified)) problems.push(`${type} datePublished is after dateModified`);
+  if (!isOrg(b.author)) problems.push(`${type} author is not the organisation`);
+  if (!isOrg(b.publisher)) problems.push(`${type} publisher is not the organisation`);
+  return problems;
+}
 
 /** Deeper checks per block type, beyond the required properties. */
 const CHECKS: Record<string, Check> = {
@@ -160,13 +202,18 @@ const CHECKS: Record<string, Check> = {
     return [...problems, ...own(route, items.at(-1)?.item, 'BreadcrumbList last item')];
   },
   TechArticle: (b, route) => {
-    const problems = [...own(route, b.url, 'TechArticle url'), ...own(route, b.mainEntityOfPage, 'TechArticle mainEntityOfPage')];
-    for (const key of ['datePublished', 'dateModified']) if (!DATE.test(String(b[key]))) problems.push(`TechArticle ${key} "${b[key]}" is not a date`);
-    if (String(b.datePublished) > String(b.dateModified)) problems.push('TechArticle datePublished is after dateModified');
-    if (!isOrg(b.author)) problems.push('TechArticle author is not the organisation');
-    if (!isOrg(b.publisher)) problems.push('TechArticle publisher is not the organisation');
+    const problems = article('TechArticle', b, route);
     if (!b.about?.name || b.about.termCode !== route.num || !String(b.about.name).startsWith(`${route.num} `))
       problems.push(`TechArticle about does not name criterion ${route.num}`);
+    return problems;
+  },
+  BlogPosting: (b, route) => {
+    const problems = article('BlogPosting', b, route);
+    const about: any[] = Array.isArray(b.about) ? b.about : [];
+    about.forEach((term, i) => {
+      if (term?.['@type'] !== 'DefinedTerm' || !term.termCode || term.url !== absoluteUrl(criterionPath(String(term.termCode))))
+        problems.push(`BlogPosting about item ${i + 1} is not a criterion with its page`);
+    });
     return problems;
   },
 };

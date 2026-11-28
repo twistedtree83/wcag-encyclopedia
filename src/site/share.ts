@@ -2,9 +2,9 @@
  * What a page shows when its link is shared (S-03): the Open Graph and Twitter tags in its
  * `<head>`, and the **share card** they point at, a 1200×630 PNG drawn at build time.
  *
- * Each criterion page has its own card (number, name, level and principle marker); the fixed
- * pages share one site card. This module only describes a card, as a tree of boxes and text in
- * the design's type and tokens. `scripts/prerender.mjs` draws it with satori and resvg, which
+ * Each criterion page has its own card (number, name, level and principle marker), each post
+ * its own (title, date and the criteria it discusses); the fixed pages share one site card.
+ * This module only describes a card, as a tree of boxes and text in the design's type and tokens. `scripts/prerender.mjs` draws it with satori and resvg, which
  * are build dependencies only: nothing here reaches the client bundle (the client entry never
  * imports this module).
  *
@@ -13,6 +13,8 @@
  * and `openGraphProblems` in `crawl.ts` checks every built page.
  */
 
+import { longDate } from '../blog/post';
+import { postMeta } from '../blog/posts';
 import { contrastRatio, formatRatio, requiredRatio, type TextKind } from '../color/contrast';
 import { EXPECTED, EXPECTED_TOTAL } from '../criteria/manifest';
 import { principleFor } from '../criteria/structure';
@@ -138,6 +140,32 @@ function criterionCard(num: string): ShareCard {
   };
 }
 
+/** Long post titles step down so the title fits in three lines. */
+function titleSize(title: string): number {
+  if (title.length <= 34) return 76;
+  if (title.length <= 50) return 64;
+  return 56;
+}
+
+function postCard(slug: string | undefined): ShareCard {
+  const post = postMeta(slug);
+  const middle = box(
+    { flexDirection: 'column' },
+    box({ fontSize: 30, color: C['ink-2'] }, 'Blog'),
+    box({ ...HEADING, fontSize: titleSize(post.title), lineHeight: 1.08, marginTop: 20, maxWidth: 1040 }, post.title),
+  );
+  const foot = box(
+    { alignItems: 'center', justifyContent: 'space-between', width: '100%', fontSize: 28, color: C['ink-2'] },
+    box({}, longDate(post.published)),
+    box({}, post.criteria.join(', ')),
+  );
+  return {
+    file: `share/blog-${post.slug}.png`,
+    alt: `Share card: ${post.title}, a post on the ${SITE_NAME} blog about ${post.criteria.join(', ')}`,
+    tree: frame(middle, foot),
+  };
+}
+
 const SITE_CARD: ShareCard = {
   file: 'share/site.png',
   alt: `Share card: ${SITE_NAME}. Every WCAG criterion, shown: all ${EXPECTED_TOTAL} Level A and AA criteria of WCAG 2.2, under its four principles`,
@@ -163,9 +191,11 @@ const SITE_CARD: ShareCard = {
   ),
 };
 
-/** The card a route's link shows: its criterion's card, or the site card for a fixed page. */
+/** The card a route's link shows: its criterion's or post's card, or the site card for a fixed page. */
 export function shareCard(route: Route): ShareCard {
-  return route.page === 'criterion' && route.num ? criterionCard(route.num) : SITE_CARD;
+  if (route.page === 'criterion' && route.num) return criterionCard(route.num);
+  if (route.page === 'post') return postCard(route.slug);
+  return SITE_CARD;
 }
 
 const escape = (text: string) =>
@@ -176,7 +206,7 @@ export function shareTags(route: Route): string {
   const { title, description } = pageMeta(route);
   const card = shareCard(route);
   const tags: [string, string, string][] = [
-    ['property', 'og:type', route.page === 'criterion' ? 'article' : 'website'],
+    ['property', 'og:type', route.page === 'criterion' || route.page === 'post' ? 'article' : 'website'],
     ['property', 'og:site_name', SITE_NAME],
     ['property', 'og:title', title],
     ['property', 'og:description', description],

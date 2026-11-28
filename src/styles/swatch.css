@@ -3449,6 +3449,97 @@ footer.foot p {
   padding-left: 20px;
 }
 
+/* --- Blog: the index and the post page (S-07) ------------------------------------------- */
+
+.posts {
+  display: grid;
+  gap: 0;
+  max-width: 64ch;
+  margin: 48px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.posts li {
+  padding: 28px 0;
+  border-top: var(--bwid) solid var(--line-2);
+}
+.posts h2 {
+  font-size: calc(var(--h3) * 1.2 * var(--ts));
+  font-weight: var(--hw2);
+  line-height: 1.25;
+}
+.posts h2 a {
+  text-underline-offset: 4px;
+}
+.posts p {
+  margin: 8px 0 0;
+}
+.posts__date {
+  color: var(--ink-2);
+  font-size: var(--small);
+}
+.post h1 {
+  max-width: 22ch;
+}
+.post__dates {
+  margin: 24px 0 0;
+  color: var(--ink-2);
+  font-size: var(--small);
+}
+.post__body {
+  margin-top: 40px;
+}
+.post__body h2 {
+  margin: 48px 0 16px;
+  font-size: calc(var(--h3) * 1.5 * var(--ts));
+  font-weight: var(--hw);
+  letter-spacing: var(--hls);
+  line-height: 1.15;
+}
+.post__body h3,
+.post__body h4 {
+  margin: 32px 0 12px;
+  font-size: calc(var(--h3) * var(--ts));
+  font-weight: var(--hw2);
+  line-height: 1.25;
+}
+.post__body a {
+  text-underline-offset: 3px;
+}
+.post__body ul,
+.post__body ol {
+  margin: 0 0 16px;
+  padding-left: 1.4em;
+}
+.post__body li {
+  margin: 0 0 6px;
+}
+.post__body blockquote {
+  margin: 0 0 16px;
+  padding: 0 0 0 20px;
+  border-left: 3px solid var(--line-2);
+  color: var(--ink-2);
+}
+.post__body code {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.92em;
+}
+/* Code blocks wrap rather than scroll, so there is no scrolling region to reach by keyboard. */
+.post__body pre {
+  margin: 0 0 16px;
+  padding: 14px 16px;
+  border-radius: 6px;
+  background: var(--card-bg);
+  font-size: var(--small);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.post__body hr {
+  margin: 32px 0;
+  border: 0;
+  border-top: var(--bwid) solid var(--line-2);
+}
+
 /* --- Breakpoints ------------------------------------------------------------------------ */
 
 @media (max-width: 1100px) {

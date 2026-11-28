@@ -13,6 +13,7 @@ export type Crumb = { readonly path: string; readonly name: string };
 
 const HOME: Crumb = { path: PATHS.home, name: 'Home' };
 const CRITERIA: Crumb = { path: PATHS.criteria, name: 'Criteria' };
+const BLOG: Crumb = { path: PATHS.blog, name: 'Blog' };
 
 /** `name` is the page's own step: "1.4.3 Contrast (Minimum)", "About". */
 export function trailFor(route: Route, name: string): readonly Crumb[] {
@@ -23,7 +24,10 @@ export function trailFor(route: Route, name: string): readonly Crumb[] {
       return [];
     case 'criterion':
       return [HOME, CRITERIA, own];
+    case 'post':
+      return [HOME, BLOG, own];
     case 'about':
+    case 'blog':
     case 'colour-check':
     case 'criteria':
       return [HOME, own];
