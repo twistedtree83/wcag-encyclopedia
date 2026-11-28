@@ -118,6 +118,23 @@ describe('every authored criterion record', () => {
     expect(typeof record.pass.render).toBe('function');
   });
 
+  // S-21: a test procedure of three distinct steps at least, and one common question at least.
+  // Steps and questions are React keys on the page, so each is unique in its record.
+  it.each(CORPUS.map((c) => [c.num, c] as const))(
+    '%s has a test procedure of at least 3 steps and at least 1 common question',
+    (_num, record) => {
+      const steps = record.procedure;
+      const questions = record.questions.map((q) => q.question);
+      expect(steps.length).toBeGreaterThanOrEqual(3);
+      expect(questions.length).toBeGreaterThanOrEqual(1);
+      expect(new Set(steps).size).toBe(steps.length);
+      expect(new Set(questions).size).toBe(questions.length);
+      for (const text of [...steps, ...record.questions.flatMap((q) => [q.question, q.answer])]) {
+        expect(text.trim()).not.toBe('');
+      }
+    },
+  );
+
   it.each(CORPUS.map((c) => [c.num, c] as const))(
     '%s matches the manifest on level and guideline',
     (num, record) => {
