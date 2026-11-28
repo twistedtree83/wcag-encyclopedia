@@ -222,6 +222,31 @@ export const G2_2: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'List every time limit the page sets: a session that signs the person out, a form that expires, a quiz with a clock, a message that disappears after a few seconds, a page that redirects on its own.',
+      'For each one, start the activity and wait without touching anything. Time how long it takes to expire, with a stopwatch or the clock in the corner of the screen.',
+      'Check that the person gets at least one of these before the limit is reached: a setting that turns it off, a setting that makes it at least ten times longer, or a warning with at least 20 seconds to extend it with one simple action such as pressing a button.',
+      'Where the warning is the way to pass, extend the limit again and again. Check that it can be extended at least ten times.',
+      'Check that the warning can be reached with the keyboard and is announced by a screen reader (NVDA on Windows, VoiceOver on a Mac), so the person knows it is there.',
+      'For any limit that cannot be changed, check that it is one of the exceptions: part of a live event such as an auction, a limit that extending would make pointless, or a limit longer than 20 hours.',
+    ],
+    questions: [
+      {
+        question: 'Does a session timeout for security fail 2.2.1?',
+        answer:
+          'Only when the person has no way to keep the session going. Warn them before it ends and let them extend it with one action, or let them choose a longer session when they sign in.',
+      },
+      {
+        question: 'Is a ticket hold of ten minutes allowed?',
+        answer:
+          'Yes, when extending it would defeat its purpose. Holding seats for one person indefinitely would keep them from everyone else, so that limit is essential and is exempt.',
+      },
+      {
+        question: 'Does 2.2.1 cover a carousel that moves on its own?',
+        answer:
+          'Only in part. A carousel that advances on a timer sets a time limit on reading each slide, but the usual fix, a control that pauses or stops it, is what 2.2.2 Pause, Stop, Hide asks for. Meet 2.2.2 and the carousel usually meets 2.2.1 too.',
+      },
+    ],
   },
 
   {
@@ -292,5 +317,29 @@ export const G2_2: readonly CriterionRecord[] = [
         'The reader’s stated preference decides whether it starts; the button decides whether ' +
         'it continues. Neither alone is sufficient.',
     },
+    procedure: [
+      'Load the page and watch it for 10 seconds without touching anything. Note everything that moves, blinks, scrolls or updates on its own: carousels, tickers, animated backgrounds, videos without sound, live scores, feeds.',
+      'For each item that starts by itself, sits next to other content and runs for more than five seconds, look for a control that pauses, stops or hides it.',
+      'Reach that control with the keyboard alone and use it. Check that the movement stops and stays stopped, and does not start again when focus leaves.',
+      'For content that updates on its own, such as a news feed or a share price, check that the person can pause the updates, stop them, hide them, or choose how often they arrive.',
+      'Turn on Reduce motion in the operating system settings and reload. Check what still moves, and whether a control is still needed for it.',
+    ],
+    questions: [
+      {
+        question: 'Does an animation that lasts four seconds need a pause button?',
+        answer:
+          'No. Movement that stops by itself within five seconds is outside 2.2.2. Blinking that stops within five seconds passes too.',
+      },
+      {
+        question: 'Does a loading spinner fail 2.2.2?',
+        answer:
+          'No, when it is the only thing on screen and the person cannot do anything until loading ends. A spinner that keeps turning beside content the person is trying to read needs a way to stop or hide it.',
+      },
+      {
+        question: 'Does a carousel that pauses while it has focus pass 2.2.2?',
+        answer:
+          'No. Pausing on focus or hover stops the movement only while the person stays on the carousel, and it starts again as soon as they move on to read something else. Give it a pause or stop button that keeps it still.',
+      },
+    ],
   },
 ];
