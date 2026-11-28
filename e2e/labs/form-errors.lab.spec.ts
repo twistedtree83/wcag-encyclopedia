@@ -4,6 +4,7 @@ import { labCases, radio } from './support';
 labCases([
   {
     name: 'the form errors lab on 3.3.1',
+    id: 'form-errors',
     url: '/criteria/3.3.1/',
     lab: '.lab-slot .flab',
     passing: '3.3.1 passes',

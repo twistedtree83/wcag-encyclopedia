@@ -4,6 +4,7 @@ import { labCases, radio } from './support';
 labCases([
   {
     name: 'the on-input lab on 3.2.2',
+    id: 'on-input',
     url: '/criteria/3.2.2/',
     lab: '.lab-slot .olab',
     passing: '3.2.2 passes',

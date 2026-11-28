@@ -1,11 +1,13 @@
 import { test, expect, type Locator, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { open } from '../support/open';
+import { POST_EMBEDS } from '../support/posts';
 export { open };
 
 /**
  * The shared lab bar (#41), in the built site. Every lab's `e2e/labs/<lab>.lab.spec.ts` passes
- * its cases to `labCases`, one case per place the lab is shown, and each case gets:
+ * its cases to `labCases`, one case per place the lab is shown (a criterion page's case also runs
+ * on every post that embeds the lab for that criterion, see `inPosts`), and each case gets:
  *
  *   - both verdicts are reachable with the keyboard alone
  *   - axe passes in the failing state as well as the starting one
@@ -24,6 +26,8 @@ export type Drive = (lab: Locator, page: Page) => Promise<void>;
 
 export type LabCase = {
   name: string;
+  /** The lab's id in the registry (src/labs/INDEX.md), so its embeds in posts get the case too. */
+  id: string;
   url: string;
   /** A CSS selector for the lab's root element on that page. */
   lab: string;
@@ -90,9 +94,25 @@ const snapshot = (lab: Locator) =>
     return { text: copy.textContent, values };
   });
 
+/**
+ * A criterion page's case again on each post that embeds the lab for that criterion (S-08,
+ * `::lab{id num}`): the same drive, verdicts and scans, on the post page. The selector is held
+ * to that lab's slot, since a post may show several labs.
+ */
+function inPosts(c: LabCase): LabCase[] {
+  const num = /^\/criteria\/([\d.]+)\/$/.exec(c.url)?.[1];
+  if (!num) return [];
+  return POST_EMBEDS.filter((e) => e.tag === 'lab' && e.lab === c.id && e.num === num).map((e) => ({
+    ...c,
+    name: `${c.name}, embedded in post ${e.slug}`,
+    url: e.url,
+    lab: c.lab.replace(/^\.lab-slot\b/, `.lab-slot[data-lab="${c.id}"]`),
+  }));
+}
+
 /** The shared lab bar for each case: one `describe` per case, named by it. */
 export function labCases(cases: readonly LabCase[]) {
-  for (const c of cases) {
+  for (const c of [...cases, ...cases.flatMap(inPosts)]) {
     const { start, end, drive } = plan(c);
     test.describe(c.name, () => {
       test('has one verdict, a Reset button and one polite region', async ({ page }) => {

@@ -4,6 +4,7 @@ import { labCases, radio } from './support';
 labCases([
   {
     name: 'the page title lab on 2.4.2',
+    id: 'page-title',
     url: '/criteria/2.4.2/',
     lab: '.lab-slot .title-lab',
     passing: '2.4.2 passes',

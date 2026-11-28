@@ -4,6 +4,7 @@ import { labCases } from './support';
 labCases([
   {
     name: 'the status message lab on 4.1.3',
+    id: 'status-message',
     url: '/criteria/4.1.3/',
     lab: '.lab-slot .status-lab',
     passing: '4.1.3 passes',

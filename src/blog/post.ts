@@ -19,7 +19,9 @@ export type PostMeta = {
 /**
  * One node of a post body: text, or an element. A link to a page of the site carries `to`, a
  * site path (`criteria/1.4.3/`) the page turns into a relative href; any other link carries
- * `href` as written.
+ * `href` as written. An embed (S-08) shows something the site already has, by reference: an
+ * `example` is the fail and pass examples of criterion `num`, a `lab` is lab `lab` judging
+ * criterion `num`. Neither has children: a post can't add to what it embeds.
  */
 export type PostNode = string | PostElement;
 
@@ -30,6 +32,10 @@ export type PostElement = {
   readonly href?: string;
   /** An ordered list's first number, when it is not 1. */
   readonly start?: number;
+  /** An embed's criterion number, e.g. "1.4.3". */
+  readonly num?: string;
+  /** A lab embed's lab id, as in src/labs/INDEX.md. */
+  readonly lab?: string;
 };
 
 export type PostTag =
@@ -49,7 +55,9 @@ export type PostTag =
   | 'strong'
   | 'a'
   | 'br'
-  | 'hr';
+  | 'hr'
+  | 'example'
+  | 'lab';
 
 export type Post = PostMeta & { readonly body: readonly PostNode[] };
 

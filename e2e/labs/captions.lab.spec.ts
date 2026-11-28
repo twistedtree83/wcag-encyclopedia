@@ -4,6 +4,7 @@ import { labCases, radio } from './support';
 labCases([
   {
     name: 'the captions lab on 1.2.2',
+    id: 'captions',
     url: '/criteria/1.2.2/',
     lab: '.lab-slot .captions-lab',
     passing: '1.2.2 passes',
@@ -16,6 +17,7 @@ labCases([
   },
   {
     name: 'the live captions lab on 1.2.4',
+    id: 'live-captions',
     url: '/criteria/1.2.4/',
     lab: '.lab-slot .captions-lab',
     passing: '1.2.4 passes',

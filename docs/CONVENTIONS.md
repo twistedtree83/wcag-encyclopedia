@@ -126,7 +126,27 @@ criteria: [1.4.3, 1.4.11]                                      # every criterion
   link not in `criteria`, a `criteria` entry the body never links, an h1 in the body or a
   skipped heading level (the body starts at `##`, under the page's h1), raw HTML, an image, or a
   reference-style link. What a body may hold is the `NODES` table in `parse.ts`: a new node type
-  (S-08's directives) is one entry there and, if it draws something new, a branch in `PostBody`.
+  is one entry there and, if it draws something new, a branch in `PostBody`.
+- **Embeds** (S-08, CONTEXT.md "Embed"). One line each, under a heading (never before the first
+  `##`), with exactly these attributes:
+
+  ```md
+  ::example{num="1.4.3"}
+  ::lab{id="fade-text" num="1.4.3"}
+  ```
+
+  `id` is a lab id from `src/labs/INDEX.md`; `num` must be one of the post's `criteria`, and the
+  embed counts as linking it (it links the criterion page). The parser fails on an unknown
+  criterion, a missing or extra attribute, a label (`::example[…]`), any other `::name`, a
+  container (`:::`), the same example or lab twice, or an embed before the first heading.
+  Inline directives are not switched on, so `Note:this` stays text. The lab id and that the lab
+  judges `num` are checked when `PostBody` renders (the registry needs Vite), so the prerender
+  fails the build. Embeds draw `ExamplePair` (`src/components/ExamplePair.tsx`) and `LabSlot`
+  (`src/labs/shared/LabSlot.tsx`), the components the criterion page uses; the lab's title is
+  an h3 and its steps an h4. The post body's CSS stops at `.embed`, which runs full width.
+- **Embedded labs in e2e.** Every `labCases` case carries the lab's `id`; a criterion-page case
+  runs again on each post that embeds that lab for that criterion (`e2e/support/posts.ts` reads
+  the embeds with `parsePost`). `e2e/blog.spec.ts` fails if an embedded lab has no such case.
 - **Links.** Link a page of the site by its path from the root, ending in `/`:
   `[Contrast (Minimum)](/criteria/1.4.3/)`. The page turns it into a relative link. Any other
   link is written in full (`https://…`).

@@ -4,6 +4,7 @@ import { labCases, radio } from './support';
 labCases([
   {
     name: 'the error prevention lab on 3.3.4',
+    id: 'error-prevention',
     url: '/criteria/3.3.4/',
     lab: '.lab-slot .plab',
     passing: '3.3.4 passes',

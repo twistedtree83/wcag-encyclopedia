@@ -182,6 +182,12 @@ its own. It is one Markdown file, `src/blog/posts/<slug>.md`: its **frontmatter*
 into a tree of plain nodes (`PostNode`, `src/blog/post.ts`). The **slug** is the file name and
 the post's address, `/blog/<slug>/`, and never changes once published.
 
+**Embed** — a line in a post body that shows something the site already has, exactly as its
+criterion page shows it, with a link to that page: `::example{num="1.4.3"}` is that criterion's
+fail and pass examples, `::lab{id="fade-text" num="1.4.3"}` is that lab with its verdict naming
+that criterion. An embed points, it never adds: it takes no other attribute and no label, and
+there is no embed for an example or lab of the post's own.
+
 **Blog index** — `/blog/`, every post newest first with its date and description. "Blog" is in
 the header nav, and the index and the post pages sit under it.
 

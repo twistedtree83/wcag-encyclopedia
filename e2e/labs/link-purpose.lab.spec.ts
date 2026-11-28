@@ -4,6 +4,7 @@ import { labCases, radio } from './support';
 labCases([
   {
     name: 'the link purpose lab on 2.4.4',
+    id: 'link-purpose',
     url: '/criteria/2.4.4/',
     lab: '.lab-slot .link-lab',
     passing: '2.4.4 passes',

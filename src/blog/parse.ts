@@ -7,11 +7,18 @@
  * finished tree as data. `e2e/blog.spec.ts` checks no parser code is in `dist/assets`.
  *
  * What a post body may hold is the `NODES` table: one converter per Markdown node type. A node
- * type with no entry fails the build, so a post can't slip in raw HTML or an image. A later
- * node type (a directive, S-08) is one entry there.
+ * type with no entry fails the build, so a post can't slip in raw HTML or an image.
+ *
+ * Embeds (S-08) are leaf directives, one line each: `::example{num="1.4.3"}` shows that
+ * criterion's fail and pass examples, `::lab{id="fade-text" num="1.4.3"}` shows that lab judging
+ * that criterion. They only point at what the site already has: no attribute or label can add
+ * content, and a container directive (`:::`), which would hold the post's own, fails. Inline
+ * directives are not switched on, so a colon in running text stays text.
  */
 
 import { fromMarkdown } from 'mdast-util-from-markdown';
+import { directive } from 'micromark-extension-directive';
+import { directiveFromMarkdown, type LeafDirective } from 'mdast-util-directive';
 import type { Heading, Link, Nodes, Parent } from 'mdast';
 import { parse as parseYaml } from 'yaml';
 import { EXPECTED } from '../criteria/manifest';
@@ -36,6 +43,8 @@ type Walk = {
   readonly offset: number;
   readonly problems: string[];
   readonly linked: Set<string>;
+  /** Each embed so far, as `::example 1.4.3` or `::lab fade-text`, so none is embedded twice. */
+  readonly embedded: Set<string>;
   /** The level of the heading before, 1 being the page's own h1. */
   level: number;
 };
@@ -101,6 +110,9 @@ const NODES: { [T in Nodes['type']]?: Convert<Extract<Nodes, { type: T }>> } = {
   imageReference: unsupported('an image'),
   linkReference: unsupported('a reference-style link (write the address in the link)'),
   definition: unsupported('a link definition (write the address in the link)'),
+  leafDirective: (node, walk) => embed(node, walk),
+  containerDirective: (node, walk) =>
+    fail(walk, node, `:::${node.name} is a block of the post's own content, which a post can't hold: embed an existing example with ::example or a lab with ::lab`),
 };
 
 function convert(node: Nodes, walk: Walk): PostNode[] {
@@ -138,6 +150,41 @@ function link(node: Link, walk: Walk): PostNode[] {
       fail(walk, node, `links criterion ${num}, which its criteria [${walk.post.criteria.join(', ')}] do not list`);
   }
   return [el('a', inner, { to: url.slice(1) })];
+}
+
+/** Each embed and what it takes: the attribute and what it means, in order. */
+const EMBEDS = {
+  example: { num: "the criterion's number" },
+  lab: { id: "the lab's id, as in src/labs/INDEX.md", num: 'the criterion its verdict judges' },
+} as const satisfies Record<string, Record<string, string>>;
+
+/**
+ * An embed of an existing example pair or lab. Its criterion must be one of the post's
+ * `criteria`, and counts as linked, since the embed links its page. It must come under a
+ * heading: the lab's title is an h3, and some examples hold one.
+ */
+function embed(node: LeafDirective, walk: Walk): PostNode[] {
+  const name = node.name;
+  if (!(name in EMBEDS)) return fail(walk, node, `::${name} is no embed a post can use (${Object.keys(EMBEDS).map((k) => `::${k}`).join(', ')})`);
+  const takes: Record<string, string> = EMBEDS[name as keyof typeof EMBEDS];
+  const attrs = node.attributes ?? {};
+  const before = walk.problems.length;
+  if (node.children.length) fail(walk, node, `::${name} has a label [${plain(node)}], which it does not take`);
+  for (const key of Object.keys(attrs)) if (!(key in takes)) fail(walk, node, `::${name} has ${key}, which it does not take`);
+  for (const [key, what] of Object.entries(takes)) if (!attrs[key]) fail(walk, node, `::${name} takes ${key}="…", ${what}`);
+  if (walk.problems.length > before) return [];
+
+  const num = attrs.num!;
+  const lab = attrs.id;
+  const label = lab ? `::${name} ${lab} ${num}` : `::${name} ${num}`;
+  if (!CRITERIA.has(num)) return fail(walk, node, `${label} is not a WCAG 2.2 A or AA criterion`);
+  walk.linked.add(num);
+  if (!walk.post.criteria.includes(num)) fail(walk, node, `${label} is a criterion its criteria [${walk.post.criteria.join(', ')}] do not list`);
+  if (walk.level < 2) fail(walk, node, `${label} comes before the first heading: put it under an h2`);
+  const key = lab ? `::lab ${lab}` : `::example ${num}`;
+  if (walk.embedded.has(key)) fail(walk, node, `${key} is embedded twice: a page shows each example and lab once`);
+  walk.embedded.add(key);
+  return [lab ? el('lab', [], { lab, num }) : el('example', [], { num })];
 }
 
 /** The frontmatter block and the body after it, with the body's first line in the file. */
@@ -200,8 +247,11 @@ export function parsePost(source: string, slug: string): Post {
       problems.push(`frontmatter does not parse: ${(e as Error).message.split('\n')[0]}`);
     }
     const head = meta(slug, front, problems);
-    const walk: Walk = { post: head, offset: parts.offset, problems, linked: new Set(), level: 1 };
-    const body = children(fromMarkdown(parts.body), walk);
+    const walk: Walk = { post: head, offset: parts.offset, problems, linked: new Set(), embedded: new Set(), level: 1 };
+    // Leaf and container directives only (see the top of the file): no inline `:name`.
+    const { flow } = directive();
+    const tree = fromMarkdown(parts.body, { extensions: [{ flow }], mdastExtensions: [directiveFromMarkdown()] });
+    const body = children(tree, walk);
     for (const num of head.criteria) if (!walk.linked.has(num)) problems.push(`lists criterion ${num} but never links its page, /criteria/${num}/`);
     post = { ...head, body };
   }

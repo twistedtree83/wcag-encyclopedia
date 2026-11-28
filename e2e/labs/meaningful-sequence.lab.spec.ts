@@ -4,6 +4,7 @@ import { labCases, radio } from './support';
 labCases([
   {
     name: 'the reorder-the-steps lab on 1.3.2',
+    id: 'meaningful-sequence',
     url: '/criteria/1.3.2/',
     lab: '.lab-slot .seq-lab',
     passing: '1.3.2 passes',

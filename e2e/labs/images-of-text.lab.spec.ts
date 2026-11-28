@@ -4,6 +4,7 @@ import { labCases, radio } from './support';
 labCases([
   {
     name: 'the images of text lab on 1.4.5',
+    id: 'images-of-text',
     url: '/criteria/1.4.5/',
     lab: '.lab-slot .itext-lab',
     passing: '1.4.5 passes',

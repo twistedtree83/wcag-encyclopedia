@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { ROUTES } from '../src/site/routes';
 import { open, whenReady } from './support/open';
+import { POST_EMBEDS } from './support/posts';
 
 /**
  * The blog (S-07): the index and each post page as built. The axe scan, the sitemap and the
@@ -14,6 +15,7 @@ import { open, whenReady } from './support/open';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const ASSETS = join(ROOT, 'dist/assets');
+const LAB_SPECS = join(ROOT, 'e2e/labs');
 
 /**
  * Text that is in the build-time parser and nowhere in the site's own browser code: a Markdown
@@ -62,6 +64,38 @@ test.describe('the blog', () => {
     await whenReady(page);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Across the criteria');
   });
+
+  // Embeds (S-08). Each embedded lab also gets its criterion page's whole lab case on the post
+  // (labCases in e2e/labs/support.ts); this holds every embedded lab to having one.
+  for (const embed of POST_EMBEDS) {
+    const what = embed.tag === 'lab' ? `the ${embed.lab} lab on ${embed.num}` : `the ${embed.num} examples`;
+    if (embed.tag === 'lab') {
+      test(`${embed.url} embeds ${what}, which has a lab case on its criterion page`, () => {
+        const cases = readdirSync(LAB_SPECS)
+          .filter((f) => f.endsWith('.lab.spec.ts'))
+          .flatMap((f) => readFileSync(join(LAB_SPECS, f), 'utf8').split(/^\s*name: /m));
+        const has = cases.some((c) => c.includes(`id: '${embed.lab}',`) && c.includes(`url: '/criteria/${embed.num}/',`));
+        expect(has, `no labCases case with id '${embed.lab}' on /criteria/${embed.num}/`).toBe(true);
+      });
+    }
+
+    test(`${embed.url} shows ${what}, linked to its criterion page`, async ({ page }) => {
+      await open(page, embed.url);
+      const box = page.locator(`.embed--${embed.tag}`).filter({ has: page.locator(`a[href="../../criteria/${embed.num}/"]`) });
+      await expect(box).toHaveCount(1);
+      if (embed.tag === 'example') {
+        await expect(box.locator('figure.stage.bad')).toHaveCount(1);
+        await expect(box.locator('figure.stage.good')).toHaveCount(1);
+      } else {
+        await expect(box.locator(`.lab-slot[data-lab="${embed.lab}"] .lab-verdict`)).toHaveText(new RegExp(`^${embed.num.replace(/\./g, '\\.')} (passes|fails)$`));
+      }
+      const [response] = await Promise.all([
+        page.waitForResponse((r) => new URL(r.url()).pathname === `/criteria/${embed.num}/`),
+        box.locator(`a[href="../../criteria/${embed.num}/"]`).click(),
+      ]);
+      expect(response.status()).toBe(200);
+    });
+  }
 
   for (const route of ROUTES.filter((r) => r.page === 'post')) {
     test(`${route.path} hydrates with its title, dates and Blog as the current section`, async ({ page }) => {

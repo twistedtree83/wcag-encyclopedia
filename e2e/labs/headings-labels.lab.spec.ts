@@ -4,6 +4,7 @@ import { labCases, radio } from './support';
 labCases([
   {
     name: 'the headings and labels lab on 2.4.6',
+    id: 'headings-labels',
     url: '/criteria/2.4.6/',
     lab: '.lab-slot .headings-lab',
     passing: '2.4.6 passes',

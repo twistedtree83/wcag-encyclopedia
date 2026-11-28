@@ -4,6 +4,7 @@ import { labCases, radio } from './support';
 labCases([
   {
     name: 'the move-the-help-link lab on 3.2.6',
+    id: 'consistent-help',
     url: '/criteria/3.2.6/',
     lab: '.lab-slot .help-lab',
     passing: '3.2.6 passes',

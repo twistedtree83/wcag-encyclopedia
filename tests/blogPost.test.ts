@@ -100,6 +100,27 @@ describe('a post file', () => {
     });
   });
 
+  it('turns ::example and ::lab into embeds of an existing example pair and lab', () => {
+    const { body } = parsePost(
+      withBody(`${LINKS}## Shown\n\n::example{num="1.4.11"}\n\n::lab{id="fade-text" num="1.4.3"}\n`),
+      FIXTURE_SLUG,
+    );
+    expect(body.slice(-2)).toEqual([
+      { tag: 'example', num: '1.4.11', children: [] },
+      { tag: 'lab', lab: 'fade-text', num: '1.4.3', children: [] },
+    ]);
+  });
+
+  it('counts an embed as linking its criterion, since the embed links its page', () => {
+    const post = parsePost(withBody('## Shown\n\n::example{num="1.4.11"}\n\n::lab{id="fade-text" num="1.4.3"}\n'), FIXTURE_SLUG);
+    expect(post.criteria).toEqual(['1.4.3', '1.4.11']);
+  });
+
+  it('leaves a colon in running text alone: there are no inline directives', () => {
+    const { body } = parsePost(withBody(`${LINKS}Note:this stays text, as does 10:30.\n`), FIXTURE_SLUG);
+    expect(body.at(-1)).toEqual({ tag: 'p', children: ['Note:this stays text, as does 10:30.'] });
+  });
+
   it('gives a JSON-safe body, so the build can hand it to the browser', () => {
     const post = parsePost(FIXTURE, FIXTURE_SLUG);
     expect(JSON.parse(JSON.stringify(post))).toEqual(post);
@@ -152,6 +173,38 @@ describe('a post the build refuses', () => {
   it('holds raw HTML or an image, which a post cannot define', () => {
     expect(problemOf(withBody(`${LINKS}<div>hi</div>\n`))).toMatch(/raw HTML/);
     expect(problemOf(withBody(`${LINKS}![a chart](chart.png)\n`))).toMatch(/image/);
+  });
+
+  it('embeds a criterion that is not in its `criteria`, or does not exist', () => {
+    expect(problemOf(withBody(`${LINKS}## Focus\n\n::example{num="2.4.7"}\n`))).toMatch(
+      /line \d+: ::example 2\.4\.7 is a criterion its criteria \[1\.4\.3, 1\.4\.11\] do not list/,
+    );
+    expect(problemOf(withBody(`${LINKS}## Parsing\n\n::example{num="4.1.1"}\n`))).toMatch(/::example 4\.1\.1 is not a WCAG 2\.2 A or AA criterion/);
+    expect(problemOf(withBody(`${LINKS}## Lab\n\n::lab{id="fade-text" num="4.1.1"}\n`))).toMatch(/::lab fade-text 4\.1\.1 is not a WCAG 2\.2 A or AA criterion/);
+  });
+
+  it('writes an embed without the attributes it takes, or with others', () => {
+    expect(problemOf(withBody(`${LINKS}## A\n\n::example\n`))).toMatch(/::example takes num="…", the criterion's number/);
+    expect(problemOf(withBody(`${LINKS}## A\n\n::lab{num="1.4.3"}\n`))).toMatch(/::lab takes id="…", the lab's id/);
+    expect(problemOf(withBody(`${LINKS}## A\n\n::lab{id="fade-text"}\n`))).toMatch(/::lab takes num="…", the criterion its verdict judges/);
+    expect(problemOf(withBody(`${LINKS}## A\n\n::example{num="1.4.3" caption="Mine"}\n`))).toMatch(/::example has caption, which it does not take/);
+    expect(problemOf(withBody(`${LINKS}## A\n\n::example[My own]{num="1.4.3"}\n`))).toMatch(/::example has a label \[My own\], which it does not take/);
+  });
+
+  it('defines its own example or lab: there is no directive for it', () => {
+    expect(problemOf(withBody(`${LINKS}## A\n\n::demo{num="1.4.3"}\n`))).toMatch(/::demo is no embed a post can use \(::example, ::lab\)/);
+    expect(problemOf(withBody(`${LINKS}## A\n\n:::example{num="1.4.3"}\nA broken button\n:::\n`))).toMatch(
+      /:::example is a block of the post's own content, which a post can't hold: embed an existing example with ::example/,
+    );
+  });
+
+  it('embeds the same example or lab twice', () => {
+    expect(problemOf(withBody(`${LINKS}## A\n\n::example{num="1.4.3"}\n\n::example{num="1.4.3"}\n`))).toMatch(/::example 1\.4\.3 is embedded twice/);
+    expect(problemOf(withBody(`${LINKS}## A\n\n::lab{id="fade-text" num="1.4.3"}\n\n::lab{id="fade-text" num="1.4.3"}\n`))).toMatch(/::lab fade-text is embedded twice/);
+  });
+
+  it('embeds before its first heading, where the embed would skip a heading level', () => {
+    expect(problemOf(withBody(`${LINKS}::example{num="1.4.3"}\n`))).toMatch(/::example 1\.4\.3 comes before the first heading: put it under an h2/);
   });
 
   it('says which post and line is wrong', () => {

@@ -4,6 +4,7 @@ import { labCases, radio } from './support';
 labCases([
   {
     name: 'the tag-the-fields lab on 1.3.5',
+    id: 'input-purpose',
     url: '/criteria/1.3.5/',
     lab: '.lab-slot .ip-lab',
     passing: '1.3.5 passes',

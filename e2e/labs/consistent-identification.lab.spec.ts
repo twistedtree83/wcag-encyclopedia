@@ -4,6 +4,7 @@ import { labCases, radio } from './support';
 labCases([
   {
     name: 'the name-the-search-button lab on 3.2.4',
+    id: 'consistent-identification',
     url: '/criteria/3.2.4/',
     lab: '.lab-slot .id-lab',
     passing: '3.2.4 passes',
