@@ -216,6 +216,30 @@ export const G1_2: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'List every prerecorded audio-only file (a podcast, a recorded talk with no picture) and every prerecorded video with no sound track (a silent animation, a screen recording with no narration).',
+      'For each audio-only file, find its transcript. It should be on the same page, or linked from right beside the player.',
+      'Play the audio while you read the transcript. Check it holds everything that is said, names who says it, and notes sounds that matter, such as laughter or a door slamming.',
+      'For each video-only file, find either a text description or an audio track. Watch the video and check the alternative tells you everything the picture shows that you need: who is there, what they do, and any text on screen.',
+      'If a file has no alternative because it is itself an alternative to text on the page, check it is labelled as one, for example "Video version of the steps above".',
+    ],
+    questions: [
+      {
+        question: 'Does a podcast need a transcript to pass 1.2.1?',
+        answer:
+          'Yes. A prerecorded audio file needs a text alternative with the same information, and for a podcast that is a transcript that names each speaker and notes the sounds that matter.',
+      },
+      {
+        question: 'Does a silent video need captions?',
+        answer:
+          'No. Captions carry sound, and a silent video has none. It needs a text description of what the picture shows, or an audio track that describes it.',
+      },
+      {
+        question: 'Does 1.2.1 cover live audio, such as a radio stream?',
+        answer:
+          'No. 1.2.1 covers only prerecorded media. Live audio with no picture falls under 1.2.9 Audio-only (Live), which is Level AAA.',
+      },
+    ],
   },
 
   {
@@ -256,6 +280,30 @@ export const G1_2: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'List every prerecorded video with a sound track on the page, including ones embedded from YouTube or Vimeo.',
+      'Play each video and turn captions on with the CC button. If there is no way to turn them on and none are drawn into the picture, the video fails.',
+      'Turn the sound off and watch the whole video with captions. Check every line of speech is there and correct, and that you can tell who is speaking.',
+      'Check the captions include the sounds that matter, such as [phone rings] or [music stops], and not only speech.',
+      'Check each caption appears while its words are spoken and stays on screen long enough to read.',
+    ],
+    questions: [
+      {
+        question: 'Do burned-in captions pass 1.2.2?',
+        answer:
+          'Yes. Open captions, drawn into the picture so they cannot be turned off, count as captions. Closed captions, which people turn on and off, count too.',
+      },
+      {
+        question: 'Is a transcript enough instead of captions?',
+        answer:
+          'No. For a video with sound, 1.2.2 asks for captions shown in time with the picture. A transcript helps, but it is what 1.2.1 Audio-only and Video-only (Prerecorded) asks for audio with no picture.',
+      },
+      {
+        question: 'Do captions need to describe sounds as well as speech?',
+        answer:
+          'Yes. Captions name who is speaking and include sound effects that carry meaning, because a person who cannot hear the sound track misses them otherwise.',
+      },
+    ],
   },
 
   {
@@ -304,6 +352,30 @@ export const G1_2: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'List every prerecorded video with sound on the page.',
+      'Watch each video once, then play it again with the screen covered. Note everything you missed: actions, scene changes, text on screen, who is in the room.',
+      'If the sound track already tells you all of it, the video needs nothing more. Otherwise look for an audio-described version, often offered as a separate video or a second audio track.',
+      'If there is no audio description, look for a text alternative on the page or linked beside the player. Check it gives the dialogue in order and describes what happens on screen as well.',
+      'Play the described version, or read the text alternative, and check it covers every item on your list.',
+    ],
+    questions: [
+      {
+        question: 'Does every video need audio description to pass 1.2.3?',
+        answer:
+          'No. If the sound track already says everything the picture shows, such as a talk where the speaker reads each slide aloud, there is nothing left to describe.',
+      },
+      {
+        question: 'Is a transcript of the dialogue enough for 1.2.3?',
+        answer:
+          'No. The text alternative has to describe what happens on screen too: the actions, the setting and any text shown, in order with the dialogue.',
+      },
+      {
+        question: 'Does a text alternative still pass at Level AA?',
+        answer:
+          'No. At Level A, 1.2.3 accepts either audio description or a text alternative. 1.2.5 Audio Description (Prerecorded), Level AA, asks for audio description, so a text alternative alone stops at Level A.',
+      },
+    ],
   },
 
   {
@@ -342,6 +414,30 @@ export const G1_2: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'List every live video stream with sound on the site, such as a webinar, a broadcast event or a live news feed.',
+      'Join a live session and turn captions on. Check captions appear for all of the speech, not only parts of it.',
+      'Watch with the sound off for a few minutes. Check you can follow what is said and tell who is saying it.',
+      'Check the captions keep up with the speech and do not fall further behind as the session goes on.',
+      'Ask how the captions are made before the next event. A real-time captioner, such as a CART service, has to be booked in advance.',
+    ],
+    questions: [
+      {
+        question: 'Do video calls in a web app need live captions under 1.2.4?',
+        answer:
+          'No. 1.2.4 is aimed at broadcasts. W3C says it is not meant to cover two-way calls between people made through a web app.',
+      },
+      {
+        question: 'Does a live radio stream need captions under 1.2.4?',
+        answer:
+          'No. 1.2.4 covers live audio that comes with video. Live audio with no picture falls under 1.2.9 Audio-only (Live), which is Level AAA.',
+      },
+      {
+        question: 'Do live captions need to name the speakers?',
+        answer:
+          'Yes. Live captions carry the same information as prerecorded ones: who is speaking, and the sounds that matter, such as applause.',
+      },
+    ],
   },
 
   {
@@ -395,5 +491,29 @@ export const G1_2: readonly CriterionRecord[] = [
         'Captions and descriptions are different track kinds carrying different information. ' +
         'Shipping one does not satisfy the criterion that asks for the other.',
     },
+    procedure: [
+      'List every prerecorded video with sound on the page.',
+      'Play each one with the screen covered and note what the sound track leaves out: actions, scene changes, text on screen, people who appear without speaking.',
+      'Look for audio description: a described version of the video, a second audio track, or a control on the player that turns description on.',
+      'Play the described version and check each item on your list is described in the pauses between speech.',
+      'Check the description does not talk over dialogue or sounds that matter. Where a pause is too short, the player can pause the video while the description plays.',
+    ],
+    questions: [
+      {
+        question: 'Does a text transcript pass 1.2.5?',
+        answer:
+          'No. 1.2.5 asks for audio description. A text alternative meets 1.2.3 Audio Description or Media Alternative (Prerecorded) at Level A, but not this criterion. W3C lists one case where text is enough: a video of a person talking, where the picture adds nothing the words do not.',
+      },
+      {
+        question: 'Does a video need audio description if the narration covers everything?',
+        answer:
+          'No. When the sound track already gives all the important visual information, the video meets 1.2.5 as it is.',
+      },
+      {
+        question: 'Is extended audio description required at Level AA?',
+        answer:
+          'No. Pausing the video to fit description in is one way to meet 1.2.5, but only 1.2.7 Extended Audio Description (Prerecorded), Level AAA, asks for it when the pauses are too short.',
+      },
+    ],
   },
 ];

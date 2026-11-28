@@ -67,7 +67,14 @@ describe('Further reading on a criterion page', () => {
   });
 
   it('comes after the labs and before the related criteria', () => {
-    expect(h2s(page('1.4.3', posts))).toEqual(['Broken, then fixed', 'Try it yourself', 'Further reading', 'Also in guideline 1.4']);
+    expect(h2s(page('1.4.3', posts))).toEqual([
+      'Broken, then fixed',
+      'How to test',
+      'Common questions',
+      'Try it yourself',
+      'Further reading',
+      'Also in guideline 1.4',
+    ]);
   });
 
   it('lists fewer than three when fewer discuss it', () => {

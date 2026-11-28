@@ -1,7 +1,7 @@
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, it, expect } from 'vitest';
-import { CORPUS } from '../src/criteria/corpus';
+import { CORPUS, criteriaInPrinciple } from '../src/criteria/corpus';
 import { RULES, postProblems, proseProblems, recordProse, WORDS } from './writing';
 
 /**
@@ -174,6 +174,19 @@ describe('every test procedure and common question', () => {
     const question = { ...record, questions: [{ ...first!, question: 'Can I leverage ARIA?' }, ...rest] };
     expect(rules(question)).toEqual(['leverage']);
   });
+
+  // S-18: every Perceivable criterion carries both, at the minimum S-21 will require of all.
+  it.each(criteriaInPrinciple(1).map((r) => [r.num, r] as const))(
+    '%s (principle 1, Perceivable) has at least 3 distinct steps and 1 question',
+    (_, record) => {
+      const steps = record.procedure ?? [];
+      const questions = (record.questions ?? []).map((q) => q.question);
+      expect(steps.length).toBeGreaterThanOrEqual(3);
+      expect(questions.length).toBeGreaterThanOrEqual(1);
+      expect(new Set(steps).size).toBe(steps.length);
+      expect(new Set(questions).size).toBe(questions.length);
+    },
+  );
 
   it.each(CORPUS.map((r) => [r.num, r] as const))('%s meets docs/WRITING.md', (_, record) => {
     const problems = recordProse(record).flatMap((text) => proseProblems(text));
