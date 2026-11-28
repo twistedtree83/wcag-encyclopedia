@@ -59,7 +59,7 @@ function Page({ route, post }: { route: Route; post: Post | undefined }) {
     case 'criteria':
       return <CriteriaPage />;
     case 'criterion':
-      return <CriterionPage record={recordFor(route)} />;
+      return <CriterionPage record={recordFor(route)} posts={POSTS} />;
     case 'home':
       return <HomePage />;
     case 'not-found':

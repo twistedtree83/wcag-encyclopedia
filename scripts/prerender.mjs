@@ -12,7 +12,8 @@
  * and its Open Graph and Twitter tags (src/site/share.ts), checked by `openGraphProblems`. Then it
  * draws the share cards into `dist/share/`. The 404 page is written once more, to `dist/404.html`,
  * with root-absolute asset links and no canonical tag, JSON-LD or share tags.
- * Then it writes the crawl files, `dist/robots.txt` and `dist/sitemap.xml` (src/site/crawl.ts),
+ * Then it writes the blog's Atom feed, `dist/blog/feed.xml` (src/blog/feed.tsx), checked by
+ * `feedProblems`. Then it writes the crawl files, `dist/robots.txt` and `dist/sitemap.xml` (src/site/crawl.ts),
  * with each page's `lastmod` the last commit date of the files it is built from, and removes
  * the template.
  *
@@ -32,6 +33,9 @@ const {
   ROUTES,
   NOT_FOUND,
   NOINDEX,
+  FEED_PATH,
+  blogFeed,
+  feedProblems,
   canonicalTag,
   canonicalProblems,
   openGraphProblems,
@@ -168,6 +172,12 @@ function firstCommitDate(files) {
   return new Date(all.split('\n')[0] || Date.now()).toISOString().slice(0, 10);
 }
 
+// The blog feed (S-09): every post in full. With no posts yet it is dated by the blog index.
+const feed = blogFeed(lastmods.get('blog/'));
+const badFeed = feedProblems(feed);
+if (badFeed.length) throw new Error(`prerender: ${FEED_PATH}: ${badFeed.join('; ')}`);
+await writeFile(join(dist, FEED_PATH), feed);
+
 const sitemap = sitemapXml(ROUTES.map((route) => ({ path: route.path, lastmod: lastmods.get(route.path) })));
 const invalid = sitemapProblems(sitemap);
 if (invalid.length) throw new Error(`prerender: sitemap.xml: ${invalid.join('; ')}`);
@@ -175,4 +185,4 @@ await writeFile(join(dist, 'sitemap.xml'), sitemap);
 await writeFile(join(dist, 'robots.txt'), robotsTxt());
 
 await rm(join(dist, 'site.html'));
-console.log(`prerender: wrote ${written} page${written === 1 ? '' : 's'}, ${cards.size} share cards, 404.html, robots.txt and sitemap.xml`);
+console.log(`prerender: wrote ${written} page${written === 1 ? '' : 's'}, ${cards.size} share cards, 404.html, ${FEED_PATH}, robots.txt and sitemap.xml`);

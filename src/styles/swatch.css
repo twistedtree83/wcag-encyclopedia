@@ -3463,13 +3463,19 @@ footer.foot p {
   padding: 28px 0;
   border-top: var(--bwid) solid var(--line-2);
 }
-.posts h2 {
+/* Post titles are h2 on the blog index and h3 under a criterion page's "Further reading" (S-09). */
+.posts h2,
+.posts h3 {
   font-size: calc(var(--h3) * 1.2 * var(--ts));
   font-weight: var(--hw2);
   line-height: 1.25;
 }
-.posts h2 a {
+.posts h2 a,
+.posts h3 a {
   text-underline-offset: 4px;
+}
+.posts--reading {
+  margin-top: 8px;
 }
 .posts p {
   margin: 8px 0 0;

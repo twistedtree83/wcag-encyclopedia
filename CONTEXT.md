@@ -190,6 +190,13 @@ the verify gate; the owner's review of the pull request checks the rest (ADR 000
 **Blog index** — `/blog/`, every post newest first with its date and description. "Blog" is in
 the header nav, and the index and the post pages sit under it.
 
+**Blog feed** — `/blog/feed.xml`, an Atom 1.0 feed of every post in full, newest first, with
+absolute addresses (ADR 0006). The blog index and each post page link it from their head.
+
+**Further reading** — the section of a criterion page listing up to three posts whose
+`criteria` include that criterion, newest first. Built from the posts' frontmatter, and absent
+when no post discusses the criterion.
+
 **Site origin** — `SITE_ORIGIN`, the production address `https://wcagencyclopedia.com`. Joined
 to a route's path, it gives the page's **canonical URL**, the one absolute address crawlers are
 told to credit (ADR 0006).
