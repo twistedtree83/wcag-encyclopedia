@@ -25,8 +25,8 @@ export function PostPage({ post }: { post: Post }) {
             </>
           ) : null}
         </p>
-        <div className="prose post__body">
-          <PostBody nodes={post.body} />
+        <div className="post__body">
+          <PostBody slug={post.slug} nodes={post.body} />
         </div>
       </article>
     </>

@@ -39,8 +39,44 @@ describe('the post page', () => {
 
   it('passes the outline test: the body headings start at h2 under the h1, in order', () => {
     const html = postPage();
-    expect(outline(html).map((h) => h.level)).toEqual([1, 2, 3, 2]);
+    // The embedded lab brings its title (h3), its steps (h4) and its own h4, as on its criterion page.
+    expect(outline(html).map((h) => h.level)).toEqual([1, 2, 3, 3, 4, 4, 2]);
     expect(outlineProblems(html)).toEqual([]);
+  });
+
+  it('shows an embedded example pair exactly as its criterion page does, linked to that page', () => {
+    const html = main(postPage());
+    const pair = (page: string) => page.match(/<div class="ex">[\s\S]*?<\/figure><\/div>/)![0];
+    const criterionPage = renderToStaticMarkup(<Site route={routeFor('criteria/1.4.11/')!} />);
+    const embed = html.match(/<div class="embed embed--example">[\s\S]*?<\/figure><\/div>/)![0];
+    expect(pair(embed)).toBe(pair(criterionPage));
+    expect(embed).toContain('<a href="../../criteria/1.4.11/">1.4.11 Non-text Contrast</a>');
+    expect(text(embed)).toMatch(/^Broken, then fixed, from 1\.4\.11 Non-text Contrast: the same interface twice/);
+  });
+
+  it('shows an embedded lab exactly as its criterion page does, judging the criterion named', () => {
+    const html = main(postPage());
+    const slot = (page: string) => page.match(/<div class="lab-slot" data-lab="fade-text">[\s\S]*?<p class="sr" aria-live="polite"><\/p><\/div><\/div>/)![0];
+    const criterionPage = main(renderToStaticMarkup(<Site route={routeFor('criteria/1.4.3/')!} />));
+    // The same markup but for the ids React's useId gives, which depend on the place in the page.
+    const ids = (markup: string) => markup.replace(/_R_[a-z0-9]+_/g, '_R_');
+    expect(ids(slot(html))).toBe(ids(slot(criterionPage)));
+    expect(slot(html)).toContain('1.4.3 passes');
+    const embed = html.slice(html.indexOf('<div class="embed embed--lab">'));
+    expect(embed.startsWith(`<div class="embed embed--lab">${slot(html)}<p class="embed__from">A lab from <a href="../../criteria/1.4.3/">1.4.3 Contrast (Minimum)</a>`)).toBe(true);
+  });
+
+  it('fails the build on a lab id no lab answers to, or a criterion the lab does not judge', () => {
+    const withLab = (lab: string, num: string) => {
+      const post = fixturePost();
+      return { ...post, body: post.body.map((n) => (typeof n !== 'string' && n.tag === 'lab' ? { ...n, lab, num } : n)) };
+    };
+    expect(() => renderToStaticMarkup(<Site route={FIXTURE_ROUTE} post={withLab('contrast', '1.4.3')} />)).toThrow(
+      /post fixture-contrast-thresholds: ::lab contrast is no lab \(the ids are in src\/labs\/INDEX\.md\)/,
+    );
+    expect(() => renderToStaticMarkup(<Site route={FIXTURE_ROUTE} post={withLab('fade-text', '1.4.11')} />)).toThrow(
+      /post fixture-contrast-thresholds: ::lab fade-text does not judge 1\.4\.11: it is on 1\.4\.3/,
+    );
   });
 
   it('shows the published and the updated date', () => {

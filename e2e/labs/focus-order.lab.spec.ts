@@ -4,6 +4,7 @@ import { labCases, axeStates, radio } from './support';
 labCases([
   {
     name: 'the focus order lab on 2.4.3',
+    id: 'focus-order',
     url: '/criteria/2.4.3/',
     lab: '.lab-slot .fo-lab',
     passing: '2.4.3 passes',

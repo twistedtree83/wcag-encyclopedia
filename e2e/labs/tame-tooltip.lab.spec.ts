@@ -4,6 +4,7 @@ import { labCases } from './support';
 labCases([
   {
     name: 'the tame-the-tooltip lab on 1.4.13',
+    id: 'tame-tooltip',
     url: '/criteria/1.4.13/',
     lab: '.lab-slot .tip-lab',
     passing: '1.4.13 passes',

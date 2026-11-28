@@ -4,6 +4,7 @@ import { labCases, axeStates, radio } from './support';
 labCases([
   {
     name: 'the text spacing lab on 1.4.12',
+    id: 'text-spacing',
     url: '/criteria/1.4.12/',
     lab: '.lab-slot .spacing-lab',
     passing: '1.4.12 passes',
@@ -16,6 +17,7 @@ labCases([
   },
   {
     name: 'the resize text lab on 1.4.4',
+    id: 'resize-text',
     url: '/criteria/1.4.4/',
     lab: '.lab-slot .resize-lab',
     passing: '1.4.4 passes',

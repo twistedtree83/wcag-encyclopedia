@@ -187,11 +187,17 @@ and length every post, test procedure and common question is written to. The **w
 (`tests/writing.test.ts`, its rules in `tests/writing.ts`) checks the parts a machine can, in
 the verify gate; the owner's review of the pull request checks the rest (ADR 0007).
 
+**Embed** — a line in a post body that shows something the site already has, exactly as its
+criterion page shows it, with a link to that page: `::example{num="1.4.3"}` is that criterion's
+fail and pass examples, `::lab{id="fade-text" num="1.4.3"}` is that lab with its verdict naming
+that criterion. An embed points, it never adds: it takes no other attribute and no label, and
+there is no embed for an example or lab of the post's own.
+
 **Blog index** — `/blog/`, every post newest first with its date and description. "Blog" is in
 the header nav, and the index and the post pages sit under it.
 
 **Blog feed** — `/blog/feed.xml`, an Atom 1.0 feed of every post in full, newest first, with
-absolute addresses (ADR 0006). The blog index and each post page link it from their head.
+absolute addresses (ADR 0006). An embed in it is only a link to its place on the criterion page. The blog index and each post page link it from their head.
 
 **Further reading** — the section of a criterion page listing up to three posts whose
 `criteria` include that criterion, newest first. Built from the posts' frontmatter, and absent

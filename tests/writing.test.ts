@@ -102,6 +102,16 @@ describe('a post', () => {
     expect(rulesOf(source)).toContain('criterion-link');
   });
 
+  it('counts an embed as a criterion link, as the parser does, and adds no prose for it', () => {
+    const embedOnly = post()
+      .replace('[1.4.11 Non-text Contrast](/criteria/1.4.11/) holds', 'A control is held')
+      .replace('## Measuring a border\n\n', '## Measuring a border\n\n::example{num="1.4.11"}\n\n');
+    expect(embedOnly).not.toContain('(/criteria/');
+    expect(rulesOf(embedOnly)).toEqual([]);
+    const withLab = post().replace('## Measuring a border\n\n', '## Measuring a border\n\n::lab{id="non-text-contrast" num="1.4.11"}\n\n');
+    expect(rulesOf(withLab)).toEqual([]);
+  });
+
   it('fails when a criterion link does not name the criterion', () => {
     expect(rulesOf(post().replace('[1.4.11 Non-text Contrast]', '[the border rule]'))).toContain('criterion-name');
   });

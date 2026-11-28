@@ -4,6 +4,7 @@ import { labCases, axeStates } from './support';
 labCases([
   {
     name: 'the target size lab on 2.5.8',
+    id: 'target-size',
     url: '/criteria/2.5.8/',
     lab: '.lab-slot .ts-lab',
     passing: '2.5.8 passes',

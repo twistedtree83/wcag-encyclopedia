@@ -4,6 +4,7 @@ import { labCases, axeStates, radio } from './support';
 labCases([
   {
     name: 'the session timeout lab on 2.2.1',
+    id: 'session-timeout',
     url: '/criteria/2.2.1/',
     lab: '.lab-slot .sess-lab',
     passing: '2.2.1 passes',

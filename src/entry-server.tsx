@@ -19,7 +19,7 @@ import { Site, pageMeta, pageName, recordFor } from './site/Site';
 import { FEED_PATH, NOT_FOUND, ROUTES, type Route } from './site/routes';
 
 export { FEED_PATH, NOT_FOUND, ROUTES };
-export { feedProblems } from './blog/feed';
+export { feedProblems } from './blog/feedCheck';
 export { jsonLdProblems } from './site/jsonLd';
 export { canonicalProblems, canonicalTag, openGraphProblems, pageSources, robotsTxt, sitemapProblems, sitemapXml } from './site/crawl';
 export { CARD_FONTS, CARD_HEIGHT, CARD_WIDTH, cardContrastProblems, shareCard, toSatori } from './site/share';

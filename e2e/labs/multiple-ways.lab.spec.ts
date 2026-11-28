@@ -4,6 +4,7 @@ import { labCases } from './support';
 labCases([
   {
     name: 'the find-the-buried-page lab on 2.4.5',
+    id: 'multiple-ways',
     url: '/criteria/2.4.5/',
     lab: '.lab-slot .ways-lab',
     passing: '2.4.5 passes',

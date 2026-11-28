@@ -4,6 +4,7 @@ import { labCases, radio } from './support';
 labCases([
   {
     name: 'the redundant entry lab on 3.3.7',
+    id: 'redundant-entry',
     url: '/criteria/3.3.7/',
     lab: '.lab-slot .re-lab',
     passing: '3.3.7 passes',

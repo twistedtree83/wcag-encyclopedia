@@ -4,6 +4,7 @@ import { labCases, axeStates, radio } from './support';
 labCases([
   {
     name: 'the reflow lab on 1.4.10',
+    id: 'reflow',
     url: '/criteria/1.4.10/',
     lab: '.lab-slot .reflow-lab',
     passing: '1.4.10 passes',

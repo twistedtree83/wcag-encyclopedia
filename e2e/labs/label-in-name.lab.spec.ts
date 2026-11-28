@@ -4,6 +4,7 @@ import { labCases } from './support';
 labCases([
   {
     name: 'the say-what-you-see lab on 2.5.3',
+    id: 'label-in-name',
     url: '/criteria/2.5.3/',
     lab: '.lab-slot .lin-lab',
     passing: '2.5.3 passes',

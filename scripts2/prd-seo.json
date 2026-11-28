@@ -94,7 +94,7 @@
       ],
       "importance": 3,
       "afk": true,
-      "passes": false
+      "passes": true
     },
     {
       "id": "S-09",

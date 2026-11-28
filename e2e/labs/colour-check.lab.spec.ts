@@ -4,6 +4,7 @@ import { labCases, axeStates, typeHex, colourToFail, COLOUR_SAID } from './suppo
 labCases([
   {
     name: 'the colour check on 1.4.3',
+    id: 'colour-check',
     url: '/criteria/1.4.3/',
     lab: '.lab-slot form.chk',
     passing: '1.4.3 passes',
@@ -13,6 +14,7 @@ labCases([
   },
   {
     name: 'the colour check on 1.4.11',
+    id: 'colour-check',
     url: '/criteria/1.4.11/',
     lab: '.lab-slot form.chk',
     passing: '1.4.11 passes',
@@ -25,6 +27,7 @@ labCases([
   },
   {
     name: 'the colour check on 1.4.1',
+    id: 'colour-check',
     url: '/criteria/1.4.1/',
     lab: '.lab-slot form.chk',
     passing: '1.4.1 passes',
@@ -34,6 +37,7 @@ labCases([
   },
   {
     name: 'the wide colour check',
+    id: 'colour-check',
     url: '/colour-check/',
     lab: '#cc',
     passing: '1.4.3 passes',
@@ -43,6 +47,7 @@ labCases([
   },
   {
     name: 'the hero colour check on Home',
+    id: 'colour-check',
     url: '/',
     lab: '#hc',
     passing: '1.4.3 passes',

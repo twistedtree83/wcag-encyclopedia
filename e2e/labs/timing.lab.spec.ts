@@ -4,6 +4,7 @@ import { labCases, radio } from './support';
 labCases([
   {
     name: 'the carousel lab on 2.2.2',
+    id: 'stop-carousel',
     url: '/criteria/2.2.2/',
     lab: '.lab-slot .carousel-lab',
     passing: '2.2.2 passes',
@@ -17,6 +18,7 @@ labCases([
   },
   {
     name: 'the autoplay lab on 1.4.2',
+    id: 'audio-control',
     url: '/criteria/1.4.2/',
     lab: '.lab-slot .audio-lab',
     passing: '1.4.2 passes',
@@ -30,6 +32,7 @@ labCases([
   },
   {
     name: 'the flash rate lab on 2.3.1',
+    id: 'flash-rate',
     url: '/criteria/2.3.1/',
     lab: '.lab-slot .flash-lab',
     passing: '2.3.1 passes',

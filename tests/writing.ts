@@ -281,6 +281,16 @@ const links = (nodes: readonly PostNode[]): { text: string; to: string | undefin
     typeof n === 'string' ? [] : n.tag === 'a' ? [{ text: textOf(n), to: n.to, href: n.href }] : links(n.children ?? []),
   );
 
+/**
+ * The criteria the body's embeds (`::example`, `::lab`, S-08) show. An embed links its criterion
+ * page, named by number and name, so it counts as a criterion link here as the parser counts it.
+ * It adds no prose: its text is the criterion page's, not the post's.
+ */
+const embedded = (nodes: readonly PostNode[]): string[] =>
+  nodes.flatMap((n) =>
+    typeof n === 'string' ? [] : n.tag === 'example' || n.tag === 'lab' ? [n.num ?? ''] : embedded(n.children ?? []),
+  );
+
 const NAMES = new Map(EXPECTED.map((c) => [c.num, c.name]));
 
 const allowedSource = (href: string | undefined) => {
@@ -330,7 +340,7 @@ export function postProblems(source: string, slug: string): Problem[] {
     const num = /^criteria\/([\d.]+)\/$/.exec(l.to ?? '')?.[1];
     return num ? [{ ...l, num }] : [];
   });
-  if (!criterionLinks.length) add('criterion-link', 'links no criterion page');
+  if (!criterionLinks.length && !embedded(post.body).length) add('criterion-link', 'links no criterion page');
   for (const l of criterionLinks)
     if (!l.text.includes(l.num) && !l.text.includes(NAMES.get(l.num) ?? '\0'))
       add(

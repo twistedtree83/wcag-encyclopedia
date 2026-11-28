@@ -1,14 +1,12 @@
-import { useEffect, useState } from 'react';
 import { longDate, postsAbout, type PostMeta } from '../blog/post';
-import type { CriterionRecord, Example } from '../criteria/types';
-import { LiveStage } from '../live/LiveStage';
+import type { CriterionRecord } from '../criteria/types';
 import { principleFor } from '../criteria/structure';
 import { demoById } from '../demo/registry';
 import { labById } from '../labs/registry';
-import { LabStepsProvider } from '../labs/shared/LabShell';
+import { LabSlot } from '../labs/shared/LabSlot';
 import { Breadcrumb } from '../components/Breadcrumb';
 import { Facts } from '../components/Facts';
-import { FailIcon, PassIcon } from '../components/Icons';
+import { ExamplePair } from '../components/ExamplePair';
 import { IndexCard } from '../components/IndexCard';
 import { MarkupDiff } from '../components/MarkupDiff';
 import { Pager } from '../components/Pager';
@@ -73,7 +71,7 @@ export function CriterionPage({ record, posts = [] }: { record: CriterionRecord;
             </p>
           </div>
         </div>
-        <Examples fail={record.fail} pass={record.pass} />
+        <ExamplePair fail={record.fail} pass={record.pass} />
       </section>
 
       {record.diff ? (
@@ -122,13 +120,8 @@ export function CriterionPage({ record, posts = [] }: { record: CriterionRecord;
               </p>
             </div>
           </div>
-          {labs.map(({ id, title, steps, Lab }) => (
-            <div className="lab-slot" key={id}>
-              <h3>{title}</h3>
-              <LabStepsProvider steps={steps}>
-                <Lab criterion={record.num} />
-              </LabStepsProvider>
-            </div>
+          {labs.map((lab) => (
+            <LabSlot key={lab.id} lab={lab} criterion={record.num} />
           ))}
         </section>
       ) : null}
@@ -177,42 +170,5 @@ export function CriterionPage({ record, posts = [] }: { record: CriterionRecord;
 
       <Pager {...(prev ? { prev } : {})} {...(next ? { next } : {})} />
     </>
-  );
-}
-
-/**
- * Broken then Fixed, side by side. A record whose examples have live versions pre-renders the
- * static ones, then swaps the live ones in after hydration (#43); the rest never change.
- */
-function Examples({ fail, pass }: { fail: Example; pass: Example }) {
-  const [hydrated, setHydrated] = useState(false);
-  useEffect(() => setHydrated(true), []);
-  const live = hydrated && !!fail.live && !!pass.live;
-  return (
-    <div className={live ? 'ex ex--live' : 'ex'}>
-      <Stage kind="bad" example={fail} live={live} />
-      <Stage kind="good" example={pass} live={live} />
-    </div>
-  );
-}
-
-function Stage({ kind, example, live }: { kind: 'bad' | 'good'; example: Example; live: boolean }) {
-  const broken = kind === 'bad';
-  return (
-    <figure className={`stage ${kind}`}>
-      <figcaption>
-        <span className="lbl">
-          {broken ? <FailIcon /> : <PassIcon />}
-          {broken ? 'Broken' : 'Fixed'}
-        </span>
-        <span className="sr">: </span>
-        <q>{example.caption}</q>
-      </figcaption>
-      {live && example.live ? (
-        <LiveStage kind={kind} live={example.live} />
-      ) : (
-        <div className="stage__example">{example.render()}</div>
-      )}
-    </figure>
   );
 }

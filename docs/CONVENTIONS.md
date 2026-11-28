@@ -127,7 +127,28 @@ criteria: [1.4.3, 1.4.11]                                      # every criterion
   link not in `criteria`, a `criteria` entry the body never links, an h1 in the body or a
   skipped heading level (the body starts at `##`, under the page's h1), raw HTML, an image, or a
   reference-style link. What a body may hold is the `NODES` table in `parse.ts`: a new node type
-  (S-08's directives) is one entry there and, if it draws something new, a branch in `PostBody`.
+  is one entry there and, if it draws something new, a branch in `PostBody`.
+- **Embeds** (S-08, CONTEXT.md "Embed"). One line each, under a heading (never before the first
+  `##`), with exactly these attributes:
+
+  ```md
+  ::example{num="1.4.3"}
+  ::lab{id="fade-text" num="1.4.3"}
+  ```
+
+  `id` is a lab id from `src/labs/INDEX.md`; `num` must be one of the post's `criteria`, and the
+  embed counts as linking it (it links the criterion page), in the parser and in the writing
+  test's `criterion-link` rule alike. The parser fails on an unknown
+  criterion, a missing or extra attribute, a label (`::example[…]`), any other `::name`, a
+  container (`:::`), the same example or lab twice, or an embed before the first heading.
+  Inline directives are not switched on, so `Note:this` stays text. The lab id and that the lab
+  judges `num` are checked when `PostBody` renders (the registry needs Vite), so the prerender
+  fails the build. Embeds draw `ExamplePair` (`src/components/ExamplePair.tsx`) and `LabSlot`
+  (`src/labs/shared/LabSlot.tsx`), the components the criterion page uses; the lab's title is
+  an h3 and its steps an h4. The post body's CSS stops at `.embed`, which runs full width.
+- **Embedded labs in e2e.** Every `labCases` case carries the lab's `id`; a criterion-page case
+  runs again on each post that embeds that lab for that criterion (`e2e/support/posts.ts` reads
+  the embeds with `parsePost`). `e2e/blog.spec.ts` fails if an embedded lab has no such case.
 - **Links.** Link a page of the site by its path from the root, ending in `/`:
   `[Contrast (Minimum)](/criteria/1.4.3/)`. The page turns it into a relative link. Any other
   link is written in full (`https://…`).
@@ -139,8 +160,11 @@ criteria: [1.4.3, 1.4.11]                                      # every criterion
 - **Feed.** The prerender step writes `dist/blog/feed.xml` (`FEED_PATH`) with `feedXml` in
   `src/blog/feed.tsx`, through `blogFeed` in `entry-server.tsx`, and fails the build on anything
   `feedProblems` finds (RFC 4287's required elements, absolute entry URLs, RFC 3339 dates, well
-  formed). Each entry's `content` is the body drawn by `PostBody` with `link={absoluteUrl}`, so
-  its site links are absolute. The blog index and post pages carry
+  formed). `feedProblems` is in `src/blog/feedCheck.ts`, apart from the feed, so the e2e specs
+  can import it without `PostBody` and the lab registry, which need Vite. Each entry's `content` is the body drawn by `PostBody` with `link={absoluteUrl}`, so
+  its site links are absolute. An embed there is one paragraph with one link, to
+  `criteria/<num>/#examples-title` or `#lab-title`: a feed reader runs no lab, so the entry holds
+  no lab or example markup. The blog index and post pages carry
   `<link rel="alternate" type="application/atom+xml">` in `render()`'s `head`, with a relative
   href (`./feed.xml`, `../feed.xml`): only the feed's own contents are absolute. The feed is a
   file, not a route, so it is not in the sitemap. With no posts it is dated by the blog index.

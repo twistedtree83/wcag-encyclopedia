@@ -4,6 +4,7 @@ import { labCases, axeStates, radio } from './support';
 labCases([
   {
     name: 'the name, role and value lab on 4.1.2',
+    id: 'name-role-value',
     url: '/criteria/4.1.2/',
     lab: '.lab-slot .nrv-lab',
     passing: '4.1.2 passes',

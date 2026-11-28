@@ -4,6 +4,7 @@ import { labCases, radio } from './support';
 labCases([
   {
     name: 'the dictation lab on 2.1.4',
+    id: 'character-shortcuts',
     url: '/criteria/2.1.4/',
     lab: '.lab-slot .sc-lab',
     passing: '2.1.4 passes',

@@ -14,6 +14,8 @@ ask for different amounts of it.
 
 Body text needs **4.5:1** against its background. A field border or an icon needs *3:1*.
 
+::example{num="1.4.11"}
+
 ### Where the line falls
 
 - A border the reader must see to find the field
@@ -27,6 +29,8 @@ Body text needs **4.5:1** against its background. A field border or an icon need
 ```css
 .field { border-color: #767676; }
 ```
+
+::lab{id="fade-text" num="1.4.3"}
 
 ## Sources
 

@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { feedProblems, feedXml } from '../src/blog/feed';
+import { feedXml } from '../src/blog/feed';
+import { feedProblems } from '../src/blog/feedCheck';
 import type { Post } from '../src/blog/post';
 import { fixturePost } from './fixturePost';
 
@@ -59,6 +60,18 @@ describe('the blog feed', () => {
     expect(html).toContain('<h2>Two thresholds, one formula</h2>');
     expect(html).toContain('<a href="https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html">');
     expect(html).toContain('<code>.field { border-color: #767676; }</code>');
+  });
+
+  it('gives each embed as one absolute link to its place on the criterion page, with no lab or example in it', () => {
+    const [entry] = entries(feedXml([fixturePost()], '2026-11-01'));
+    const content = /<content type="html">([\s\S]*?)<\/content>/.exec(entry!)![1]!;
+    const html = content.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&quot;', '"').replaceAll('&amp;', '&');
+    expect(html).toContain(
+      `<p><a href="${ORIGIN}/criteria/1.4.11/#examples-title">Broken, then fixed: the fail and pass examples for 1.4.11 Non-text Contrast</a></p>`,
+    );
+    expect(html).toContain(`<p><a href="${ORIGIN}/criteria/1.4.3/#lab-title">Try it: fade the text, a lab on 1.4.3 Contrast (Minimum)</a></p>`);
+    for (const markup of ['class="embed', 'lab-slot', 'lab-verdict', '<figure', '<button', '<input', 'aria-live']) expect(html).not.toContain(markup);
+    expect(feedProblems(feedXml([fixturePost()], '2026-11-01'))).toEqual([]);
   });
 
   it('escapes post text, so a title with markup characters stays well formed', () => {

@@ -4,6 +4,7 @@ import { labCases, axeStates } from './support';
 labCases([
   {
     name: 'the structure lab on 1.3.1',
+    id: 'structure',
     url: '/criteria/1.3.1/',
     lab: '.lab-slot .st-lab',
     passing: '1.3.1 passes',

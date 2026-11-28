@@ -4,6 +4,7 @@ import { labCases } from './support';
 labCases([
   {
     name: 'the sticky banner lab on 2.4.11',
+    id: 'sticky-banner',
     url: '/criteria/2.4.11/',
     lab: '.lab-slot .nob-lab',
     passing: '2.4.11 passes',

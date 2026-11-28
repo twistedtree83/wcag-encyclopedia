@@ -4,6 +4,7 @@ import { labCases, axeStates } from './support';
 labCases([
   {
     name: 'the focus ring lab on 2.4.7',
+    id: 'focus-ring',
     url: '/criteria/2.4.7/',
     lab: '.lab-slot .ring-lab',
     passing: '2.4.7 passes',

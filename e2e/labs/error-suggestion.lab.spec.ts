@@ -4,6 +4,7 @@ import { labCases, radio } from './support';
 labCases([
   {
     name: 'the error suggestion lab on 3.3.3',
+    id: 'error-suggestion',
     url: '/criteria/3.3.3/',
     lab: '.lab-slot .eslab',
     passing: '3.3.3 passes',
