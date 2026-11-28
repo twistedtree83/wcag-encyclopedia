@@ -48,8 +48,8 @@ heading at 20px regular is not large, so it needs 4.5:1 like the body copy.
 
 Three things are caught by 1.4.3 more often than they should be:
 
-- **Placeholder text.** The default placeholder grey in many design kits is near `#a9a9a9`, which
-  measures 2.35:1 on white. W3C's guidance says placeholder text is covered if you use it.
+- **Placeholder text.** Placeholders are often set in a pale grey. `#a9a9a9`
+  measures 2.35:1 on white, about half what body text needs. W3C's guidance says placeholder text is covered if you use it.
 - **Text on images.** The ratio has to hold against the part of the image behind the letters,
   so a headline over a photograph of sky and trees can pass on the left and fail on the right.
   Add a solid or semi-opaque panel behind it and measure against that.
