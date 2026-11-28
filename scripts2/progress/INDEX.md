@@ -97,7 +97,7 @@ Graph: `scripts2/prd-labs.json` · Parent: #40 · Integration branch: `labs`
 - [ ] **S-11** #79 — Post: What's new in WCAG 2.2 (S-08, S-09, S-10, S-03)
 - [ ] **S-12** #80 — Post: The European Accessibility Act and WCAG (S-08, S-09, S-10, S-03)
 - [ ] **S-13** #81 — Post: Accessible forms: every criterion a form touches (S-08, S-09, S-10, S-03)
-- [ ] **S-14** #82 — Post: Colour contrast beyond text (S-08, S-09, S-10, S-03)
+- [x] **S-14** #82 — Post: Colour contrast beyond text (S-08, S-09, S-10, S-03)
 - [ ] **S-15** #83 — Post: Keyboard accessibility (S-08, S-09, S-10, S-03)
 - [ ] **S-16** #84 — Post: How to test a page in 15 minutes (S-08, S-09, S-10, S-03)
 - [x] **S-17** #85 — Test procedures and common questions: record shape and sections (S-10)
