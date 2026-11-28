@@ -200,7 +200,7 @@
       ],
       "importance": 3,
       "afk": false,
-      "passes": false
+      "passes": true
     },
     {
       "id": "S-17",
