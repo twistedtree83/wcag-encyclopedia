@@ -1,5 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { renderToString } from 'react-dom/server';
+import { postsAbout } from '../src/blog/post';
+import { POSTS } from '../src/blog/posts';
 import { CORPUS, criterion } from '../src/criteria/corpus';
 import { render, ROUTES } from '../src/entry-server';
 import type { CriterionRecord } from '../src/criteria/types';
@@ -117,6 +119,7 @@ describe('the anatomy', () => {
         ...(record.procedure?.length ? ['How to test'] : []),
         ...(record.questions?.length ? ['Common questions'] : []),
         ...(record.labs?.length ? ['Try it yourself'] : []),
+        ...(postsAbout(record.num, POSTS).length ? ['Further reading'] : []),
         record.guideline === '1.1' || record.guideline === '2.3'
           ? expect.stringMatching(/^More from /)
           : `Also in guideline ${record.guideline}`,

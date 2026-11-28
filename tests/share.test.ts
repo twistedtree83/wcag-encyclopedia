@@ -92,9 +92,10 @@ describe('the Open Graph check', () => {
 });
 
 describe('the share cards', () => {
-  it('are one site card and one card per criterion', () => {
+  it('are one site card, one card per criterion and one per post', () => {
     const files = new Set(ROUTES.map((r) => shareCard(r).file));
-    expect(files.size).toBe(1 + ROUTES.filter((r) => r.page === 'criterion').length);
+    const own = ROUTES.filter((r) => r.page === 'criterion' || r.page === 'post').length;
+    expect(files.size).toBe(1 + own);
     expect(shareCard(route('')).file).toBe('share/site.png');
     expect(shareCard(route('criteria/2.4.11/')).file).toBe('share/2.4.11.png');
   });
