@@ -94,7 +94,7 @@ Graph: `scripts2/prd-labs.json` · Parent: #40 · Integration branch: `labs`
 - [x] **S-08** #76 — Showing criterion examples and labs inside a post (S-07)
 - [x] **S-09** #77 — Blog feed and Further reading on criterion pages (S-07)
 - [x] **S-10** #78 — The writing standard and the writing test (S-07)
-- [ ] **S-11** #79 — Post: What's new in WCAG 2.2 (S-08, S-09, S-10, S-03)
+- [x] **S-11** #79 — Post: What's new in WCAG 2.2 (S-08, S-09, S-10, S-03)
 - [ ] **S-12** #80 — Post: The European Accessibility Act and WCAG (S-08, S-09, S-10, S-03)
 - [ ] **S-13** #81 — Post: Accessible forms: every criterion a form touches (S-08, S-09, S-10, S-03)
 - [ ] **S-14** #82 — Post: Colour contrast beyond text (S-08, S-09, S-10, S-03)
