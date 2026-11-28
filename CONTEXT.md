@@ -198,6 +198,10 @@ page is (`src/site/jsonLd.ts`): `WebSite` and `Organization` on Home, a `Breadcr
 every other page, and a `TechArticle` about the criterion on each criterion page. The
 organisation is author and publisher; no person is named.
 
+**404 page** — "Page not found", `NOT_FOUND` in `src/site/routes.ts`: written once to
+`dist/404.html` and served with status 404 for any path that matches no built file. Not a
+route, so it is in neither the sitemap nor the per-route checks, and it is `noindex`.
+
 **Token** — a CSS custom property in one of the two theme palettes. Token names and values come
 from the `:root` block of `design/mockups/swatch/swatch.css` verbatim, so the design and the
 build stay diffable.

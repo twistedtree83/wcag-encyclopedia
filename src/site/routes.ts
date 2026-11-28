@@ -12,7 +12,7 @@
 
 import { EXPECTED } from '../criteria/manifest';
 
-export type PageKind = 'about' | 'colour-check' | 'criteria' | 'criterion' | 'home';
+export type PageKind = 'about' | 'colour-check' | 'criteria' | 'criterion' | 'home' | 'not-found';
 
 export type Route = {
   readonly path: string;
@@ -27,6 +27,8 @@ export const PATHS = {
   criteria: 'criteria/',
   colourCheck: 'colour-check/',
   about: 'about/',
+  /** The blog index, written by S-07. */
+  blog: 'blog/',
 } as const;
 
 export function criterionPath(num: string): string {
@@ -52,8 +54,26 @@ const CRITERION_ROUTES: readonly Route[] = PUBLISHED_CRITERIA.map((num) => ({
 
 export const ROUTES: readonly Route[] = [...FIXED_ROUTES, ...CRITERION_ROUTES];
 
+/**
+ * The 404 page (S-05). Not a route: it is written once, to `dist/404.html`, and Cloudflare
+ * serves it with status 404 for any path that matches no asset (`not_found_handling` in
+ * wrangler.jsonc). So it is in neither the sitemap nor the per-route checks. Its `path` is
+ * the file it is written to, and its `data-route`.
+ */
+export const NOT_FOUND: Route = { path: '404.html', page: 'not-found' };
+
+/** The route a page was rendered for, from its `data-route`: one in ROUTES, or the 404 page. */
 export function routeFor(path: string): Route | undefined {
+  if (path === NOT_FOUND.path) return NOT_FOUND;
   return ROUTES.find((r) => r.path === path);
+}
+
+/**
+ * The href for a link from a page to a site path. Pages link relatively (`rel`), except the
+ * 404 page: it is served at whatever address was asked for, so it links from the root.
+ */
+export function linkFrom(from: Route, to: string): string {
+  return from.page === 'not-found' ? `/${to}` : rel(from.path, to);
 }
 
 /**

@@ -1,7 +1,7 @@
 /**
  * A page's breadcrumb trail: Home first, the page itself last. The criterion page draws it
  * (`components/Breadcrumb.tsx`) and the structured data writes it as a `BreadcrumbList`
- * (`jsonLd.ts`), so the two cannot disagree. Home has no trail.
+ * (`jsonLd.ts`), so the two cannot disagree. Home and the 404 page have no trail.
  *
  * Pure data, no JSX, so the e2e specs can import it.
  */
@@ -19,6 +19,7 @@ export function trailFor(route: Route, name: string): readonly Crumb[] {
   const own = { path: route.path, name };
   switch (route.page) {
     case 'home':
+    case 'not-found':
       return [];
     case 'criterion':
       return [HOME, CRITERIA, own];

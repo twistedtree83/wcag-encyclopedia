@@ -160,6 +160,7 @@ const PAGE_FILES: Record<Exclude<Route['page'], 'criterion'>, string> = {
   criteria: 'src/pages/CriteriaPage.tsx',
   'colour-check': 'src/pages/ColourCheckPage.tsx',
   about: 'src/pages/AboutPage.tsx',
+  'not-found': 'src/pages/NotFoundPage.tsx',
 };
 
 /**

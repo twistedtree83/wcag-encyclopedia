@@ -10,7 +10,8 @@
  * and writes `dist/<path>index.html`. Each page gets its canonical tag, checked against ADR 0006,
  * and its JSON-LD (src/site/jsonLd.ts), dated from the git history and checked the same way,
  * and its Open Graph and Twitter tags (src/site/share.ts), checked by `openGraphProblems`. Then it
- * draws the share cards into `dist/share/`.
+ * draws the share cards into `dist/share/`. The 404 page is written once more, to `dist/404.html`,
+ * with root-absolute asset links and no canonical tag, JSON-LD or share tags.
  * Then it writes the crawl files, `dist/robots.txt` and `dist/sitemap.xml` (src/site/crawl.ts),
  * with each page's `lastmod` the last commit date of the files it is built from, and removes
  * the template.
@@ -29,6 +30,8 @@ const dist = join(root, 'dist');
 const {
   render,
   ROUTES,
+  NOT_FOUND,
+  NOINDEX,
   canonicalTag,
   canonicalProblems,
   openGraphProblems,
@@ -66,24 +69,17 @@ for (const marker of ['<!--@legacy-redirect-->', '<!--@canonical-->', '<!--@stru
 const escape = (text) =>
   text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
 
-let written = 0;
-/** Each page's last-changed date: its sitemap `lastmod` and its JSON-LD `dateModified`. */
-const lastmods = new Map();
-for (const route of ROUTES) {
+/**
+ * One page's HTML. `prefix` is how its asset links start; `canonical` and `jsonLd` are its
+ * canonical tag and JSON-LD (both empty for the 404 page, which is not indexed).
+ */
+function pageHtml(route, prefix, { canonical, jsonLd }) {
   const { html, title, description, head, beacon, share } = render(route);
   if (!html.includes('<main')) throw new Error(`prerender: ${route.path} rendered no <main>`);
-
-  const sources = pageSources(route);
-  const modified = lastCommitDate(sources);
-  lastmods.set(route.path, modified);
-  const jsonLd = structuredData(route, { published: firstCommitDate(sources), modified });
-
-  const depth = route.path.split('/').filter(Boolean).length;
-  const prefix = depth ? '../'.repeat(depth) : './';
-  const page = template
+  return template
     .replaceAll('"./assets/', `"${prefix}assets/`)
     .replace('<!--@legacy-redirect-->', () => head)
-    .replace('<!--@canonical-->', () => canonicalTag(route.path))
+    .replace('<!--@canonical-->', () => canonical)
     .replace('<!--@structured-data-->', () => jsonLd)
     .replace('<!--@share-->', () => share)
     .replace('<!--@title-->', escape(title))
@@ -91,6 +87,19 @@ for (const route of ROUTES) {
     .replace('<div id="root">', `<div id="root" data-route="${escape(route.path)}">`)
     .replace('<!--@app-->', () => html)
     .replace('<!--@analytics-->', () => beacon);
+}
+
+let written = 0;
+/** Each page's last-changed date: its sitemap `lastmod` and its JSON-LD `dateModified`. */
+const lastmods = new Map();
+for (const route of ROUTES) {
+  const sources = pageSources(route);
+  const modified = lastCommitDate(sources);
+  lastmods.set(route.path, modified);
+  const jsonLd = structuredData(route, { published: firstCommitDate(sources), modified });
+
+  const depth = route.path.split('/').filter(Boolean).length;
+  const page = pageHtml(route, depth ? '../'.repeat(depth) : './', { canonical: canonicalTag(route.path), jsonLd });
 
   const wrong = [...canonicalProblems(page, route.path), ...openGraphProblems(page, route.path)];
   if (wrong.length) throw new Error(`prerender: ${route.path || 'home'}: ${wrong.join('; ')}`);
@@ -102,6 +111,16 @@ for (const route of ROUTES) {
   await writeFile(out, page);
   written++;
 }
+
+// The 404 page (S-05): Cloudflare serves dist/404.html for any path that matches no asset, at
+// that path's depth, so its asset links start at the root. Not a route, so not in the sitemap.
+// It has no address of its own, so no canonical tag, JSON-LD or share tags.
+const notFound = pageHtml(NOT_FOUND, '/', { canonical: '', jsonLd: '' });
+if (!notFound.includes(NOINDEX)) throw new Error('prerender: 404.html is not noindex');
+if (/rel="canonical"/.test(notFound)) throw new Error('prerender: 404.html has a canonical tag');
+if (/application\/ld\+json|property="og:|name="twitter:/.test(notFound)) throw new Error('prerender: 404.html has JSON-LD or share tags');
+if (/(href|src)="\.\.?\//.test(notFound)) throw new Error('prerender: 404.html has a relative link, which breaks below the root');
+await writeFile(join(dist, NOT_FOUND.path), notFound);
 
 /**
  * The share cards (src/site/share.ts): one PNG per criterion page and one site card, drawn
@@ -156,4 +175,4 @@ await writeFile(join(dist, 'sitemap.xml'), sitemap);
 await writeFile(join(dist, 'robots.txt'), robotsTxt());
 
 await rm(join(dist, 'site.html'));
-console.log(`prerender: wrote ${written} page${written === 1 ? '' : 's'}, ${cards.size} share cards, robots.txt and sitemap.xml`);
+console.log(`prerender: wrote ${written} page${written === 1 ? '' : 's'}, ${cards.size} share cards, 404.html, robots.txt and sitemap.xml`);

@@ -6,6 +6,7 @@ import { ColourCheckPage } from '../pages/ColourCheckPage';
 import { CriteriaPage } from '../pages/CriteriaPage';
 import { CriterionPage } from '../pages/CriterionPage';
 import { HomePage } from '../pages/HomePage';
+import { NotFoundPage } from '../pages/NotFoundPage';
 import { Footer } from './Footer';
 import { Header } from './Header';
 import { criterionDescription, criterionTitle } from './meta';
@@ -51,6 +52,8 @@ function Page({ route }: { route: Route }) {
       return <CriterionPage record={recordFor(route)} />;
     case 'home':
       return <HomePage />;
+    case 'not-found':
+      return <NotFoundPage />;
   }
 }
 
@@ -74,6 +77,8 @@ export function pageName(route: Route): string {
       return 'Criteria';
     case 'home':
       return 'Home';
+    case 'not-found':
+      return 'Page not found';
     case 'criterion': {
       const record = recordFor(route);
       return `${record.num} ${record.name}`;
@@ -105,6 +110,12 @@ export function pageMeta(route: Route): { title: string; description: string } {
       return {
         title: 'WCAG Encyclopedia: every criterion, shown broken then fixed',
         description: `All ${EXPECTED_TOTAL} Level A and AA success criteria of WCAG 2.2, explained in plain language, shown broken then fixed, and grouped under WCAG's four principles.`,
+      };
+    case 'not-found':
+      return {
+        title: 'Page not found: WCAG Encyclopedia',
+        description:
+          'There is no page at this address. Browse all the WCAG 2.2 success criteria, go to the home page, or read the blog.',
       };
     case 'criterion': {
       const record = recordFor(route);

@@ -3,13 +3,14 @@ import { ThemeToggle } from './ThemeToggle';
 import { useRoute } from './RouteContext';
 import { PATHS, type PageKind } from './routes';
 
-/** Which nav item each page sits under. */
-const SECTION: Record<PageKind, string> = {
+/** Which nav item each page sits under. The 404 page sits under none. */
+const SECTION: Record<PageKind, string | undefined> = {
   about: PATHS.about,
   'colour-check': PATHS.colourCheck,
   criteria: PATHS.criteria,
   criterion: PATHS.criteria,
   home: PATHS.home,
+  'not-found': undefined,
 };
 
 const LINKS = [

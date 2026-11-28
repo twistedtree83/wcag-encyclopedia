@@ -13,8 +13,8 @@ this before changing the build, adding a page, or touching tokens. The vocabular
 - `site.html` is the only HTML template. Its placeholders are `<!--@title-->`, `<!--@description-->`,
   `<!--@canonical-->`, `<!--@structured-data-->`, `<!--@share-->`, `<!--@tokens-->`, `<!--@legacy-redirect-->`, `<!--@fonts-->`, `<!--@app-->` and `<!--@analytics-->`.
   `render(route)` in `src/entry-server.tsx` returns `{ html, title, description, head, beacon, share }`.
-  Only Home has a `head`: it holds the `#1.4.3` → `criteria/1.4.3/` redirect from
-  `src/site/legacyRedirect.ts`. `beacon` is the Cloudflare Web Analytics script
+  Home's `head` holds the `#1.4.3` → `criteria/1.4.3/` redirect from
+  `src/site/legacyRedirect.ts`, and the 404 page's holds `noindex`; other pages have none. `beacon` is the Cloudflare Web Analytics script
   (`src/site/analytics.ts`), written at the end of `<body>` outside `#root`. It is empty while
   `CF_ANALYTICS_TOKEN` in `src/site/config.ts` is unset, and the committed config leaves it unset.
   The beacon sets no cookie, so the site has no consent banner.
@@ -62,6 +62,15 @@ this before changing the build, adding a page, or touching tokens. The vocabular
   pointing off `SITE_ORIGIN`. satori sizes boxes content-box, and every `div` is a flex box.
   The client entry never imports `share.ts`; `e2e/share.spec.ts` fails if satori, resvg or the
   tags reach `dist/assets/`. A new page kind gets the site card unless `shareCard` says otherwise.
+- **The 404 page** (`NOT_FOUND` in `src/site/routes.ts`, `src/pages/NotFoundPage.tsx`) is not
+  in `ROUTES`. The prerender step writes it once to `dist/404.html`, with `noindex` (in `head`),
+  no canonical tag, JSON-LD or share tags (it has no address of its own: `render` returns an
+  empty `share`, and its `BLOCKS`/`TYPES` entries are empty), and asset links from the root (`/assets/`). Cloudflare serves it with
+  status 404 for any path that matches no asset (`not_found_handling: "404-page"` in
+  `wrangler.jsonc`), at that path's depth, so `href` links from it are root-absolute
+  (`linkFrom`). `vite preview` does the same through the `notFoundPage` plugin in
+  `vite.config.ts`, so a missing page in e2e is the 404 page with status 404, not an empty body.
+  Its checks, axe included, are in `e2e/not-found.spec.ts`, not the per-route loops.
 - `src/entry-client.tsx` reads the route from `#root[data-route]`, never from
   `location.pathname`, then calls `hydrateRoot`.
 - **Hydration rule:** never read `localStorage`, `matchMedia`, `location.search` or the theme
@@ -69,8 +78,9 @@ this before changing the build, adding a page, or touching tokens. The vocabular
   React 19 doesn't repair mismatched attributes such as `aria-pressed`. Pages with state in the
   URL pre-render their default state and apply `?…` after mount, writing back with
   `history.replaceState`.
-- `vite.config.ts` uses `appType: 'mpa'`, so a missing page returns 404 in `vite preview`. A URL
-  without its trailing slash also 404s, so every link ends in `/`.
+- `vite.config.ts` uses `appType: 'mpa'`, so a missing page returns 404 (the 404 page) in
+  `vite preview`. A URL without its trailing slash also 404s there (Cloudflare redirects it
+  instead), so every link ends in `/`.
 
 ## Routes and adding a page
 

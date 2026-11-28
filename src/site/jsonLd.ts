@@ -102,6 +102,8 @@ const BLOCKS: Record<PageKind, (page: PageFacts) => JsonLdBlock[]> = {
   'colour-check': (page) => [breadcrumbList(page.trail)],
   about: (page) => [breadcrumbList(page.trail)],
   criterion: (page) => [breadcrumbList(page.trail), techArticle(page)],
+  // The 404 page is noindex, so it describes nothing to search engines.
+  'not-found': () => [],
 };
 
 export function jsonLdBlocks(page: PageFacts): JsonLdBlock[] {
@@ -125,6 +127,7 @@ const TYPES: Record<PageKind, readonly string[]> = {
   'colour-check': ['BreadcrumbList'],
   about: ['BreadcrumbList'],
   criterion: ['BreadcrumbList', 'TechArticle'],
+  'not-found': [],
 };
 
 /** The properties each block type must have, non-empty. */

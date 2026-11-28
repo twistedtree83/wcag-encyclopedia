@@ -12,18 +12,20 @@ import { legacyRedirectScript } from './site/legacyRedirect';
 import { absoluteUrl } from './site/crawl';
 import { shareCard, shareTags } from './site/share';
 import { Site, pageMeta, pageName, recordFor } from './site/Site';
-import { ROUTES, type Route } from './site/routes';
+import { NOT_FOUND, ROUTES, type Route } from './site/routes';
 
-export { ROUTES };
+export { NOT_FOUND, ROUTES };
 export { jsonLdProblems } from './site/jsonLd';
 export { canonicalProblems, canonicalTag, openGraphProblems, pageSources, robotsTxt, sitemapProblems, sitemapXml } from './site/crawl';
 export { CARD_FONTS, CARD_HEIGHT, CARD_WIDTH, cardContrastProblems, shareCard, toSatori } from './site/share';
 
 /**
  * A route rendered for the prerender step: the app markup, the title and description, and
- * `head`, extra markup for the page's `<head>` (the old `#number` redirect, on Home only), and
+ * `head`, extra markup for the page's `<head>` (the old `#number` redirect on Home, and
+ * `noindex` on the 404 page),
  * `beacon`, the analytics script for the end of `<body>` (empty while its token is unset), and
- * `share`, the Open Graph and Twitter tags that point at the page's share card.
+ * `share`, the Open Graph and Twitter tags that point at the page's share card (none on the
+ * 404 page, which has no address of its own to share).
  */
 export type Rendered = {
   html: string;
@@ -34,14 +36,17 @@ export type Rendered = {
   share: string;
 };
 
+/** Keeps the 404 page out of search results; no other page carries it. */
+export const NOINDEX = '<meta name="robots" content="noindex" />';
+
 export function render(route: Route): Rendered {
   const html = renderToString(
     <StrictMode>
       <Site route={route} />
     </StrictMode>,
   );
-  const head = route.page === 'home' ? legacyRedirectScript() : '';
-  return { html, head, beacon: analyticsBeacon(CF_ANALYTICS_TOKEN), share: shareTags(route), ...pageMeta(route) };
+  const head = route.page === 'home' ? legacyRedirectScript() : route.page === 'not-found' ? NOINDEX : '';
+  return { html, head, beacon: analyticsBeacon(CF_ANALYTICS_TOKEN), share: route.page === 'not-found' ? '' : shareTags(route), ...pageMeta(route) };
 }
 
 /**

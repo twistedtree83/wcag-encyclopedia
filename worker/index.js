@@ -1,6 +1,7 @@
 /**
  * The site's Worker on Cloudflare. Static pages come from dist/ (the assets binding); the only
- * code is the redirect from www to the bare domain, so every page has one address.
+ * code is the redirect from www to the bare domain, so every page has one address. A path that
+ * matches no asset gets dist/404.html with status 404 (`not_found_handling` in wrangler.jsonc).
  */
 export default {
   async fetch(request, env) {
