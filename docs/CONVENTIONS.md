@@ -179,6 +179,10 @@ criteria: [1.4.3, 1.4.11]                                      # every criterion
 - `labs?: readonly string[]` names entries in `src/labs/registry.ts`. Omit the field rather than
   leaving it empty. 1.4.3 carries `['colour-check', 'fade-text']`. A lab renders its own h3 under
   the page's single "Try it yourself" h2, never an h2 of its own.
+- `procedure?: readonly string[]` and `questions?: readonly { question, answer }[]` are plain
+  text, rendered as "How to test" (an `ol`) and "Common questions" (an h3 per question) after
+  the demos and before the labs. `tests/writing.test.ts` holds every string to
+  `docs/WRITING.md`; each question and step must be unique in its record (it is the React key).
 - Contrast maths lives in `src/color/contrast.ts`. Ratios are truncated, never rounded:
   `formatScore`, `passesThreshold`. Threshold lists live in `src/labs/shared/thresholds.ts`. Don't
   re-implement either in a lab.

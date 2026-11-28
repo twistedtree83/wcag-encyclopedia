@@ -18,8 +18,8 @@ import { criterionPath } from '../site/routes';
 
 /**
  * A criterion page, in the PRD's order: breadcrumb, head and facts, Broken then fixed, the
- * diff, the demos, the labs, "Also in", and the pager. The diff, demo and lab sections appear
- * only when the record has one. Everything except the demos' and labs' controls is readable
+ * diff, the demos, How to test, Common questions, the labs, "Also in", and the pager. The diff,
+ * demo, procedure, question and lab sections appear only when the record has one. Everything except the demos' and labs' controls is readable
  * in the static HTML, before any script runs.
  */
 export function CriterionPage({ record }: { record: CriterionRecord }) {
@@ -100,6 +100,40 @@ export function CriterionPage({ record }: { record: CriterionRecord }) {
           <div className="demos">
             {demos.map((demo) => (
               <demo.Player key={demo.id} />
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      {record.procedure?.length ? (
+        <section className="band" aria-labelledby="procedure-title">
+          <div className="bh">
+            <div>
+              <h2 id="procedure-title">How to test</h2>
+              <p>Check your own interface against {record.num}, one step at a time.</p>
+            </div>
+          </div>
+          <ol className="procedure">
+            {record.procedure.map((step) => (
+              <li key={step}>{step}</li>
+            ))}
+          </ol>
+        </section>
+      ) : null}
+
+      {record.questions?.length ? (
+        <section className="band" aria-labelledby="questions-title">
+          <div className="bh">
+            <div>
+              <h2 id="questions-title">Common questions</h2>
+            </div>
+          </div>
+          <div className="questions">
+            {record.questions.map(({ question, answer }) => (
+              <div className="questions__item" key={question}>
+                <h3>{question}</h3>
+                <p>{answer}</p>
+              </div>
             ))}
           </div>
         </section>
