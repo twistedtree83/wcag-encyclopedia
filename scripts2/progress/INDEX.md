@@ -103,5 +103,5 @@ Graph: `scripts2/prd-labs.json` · Parent: #40 · Integration branch: `labs`
 - [x] **S-17** #85 — Test procedures and common questions: record shape and sections (S-10)
 - [x] **S-18** #86 — Test procedures and common questions: Perceivable (S-17)
 - [x] **S-19** #87 — Test procedures and common questions: Operable (S-17)
-- [ ] **S-20** #88 — Test procedures and common questions: Understandable (S-17)
+- [x] **S-20** #88 — Test procedures and common questions: Understandable (S-17)
 - [ ] **S-21** #89 — Make test procedures and common questions required (S-18, S-19, S-20)

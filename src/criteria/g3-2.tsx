@@ -255,6 +255,30 @@ export const G3_2: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'Put the mouse aside, reload the page and press Tab to move through every link, button, form field and other control in turn.',
+      'Watch what happens as each one receives focus. Nothing may submit a form, load another page, or open a new window or dialog.',
+      'Check that focus stays where Tab put it. A script that sends focus somewhere else as soon as a control receives it fails 3.2.1.',
+      'Note anything that appears on focus, such as a tooltip or a menu that expands. That is allowed, as long as focus, the page and the window stay the same.',
+      'Repeat the check inside every dialog, menu and later form step that opens when you activate something.',
+    ],
+    questions: [
+      {
+        question: 'Is a menu that opens on focus a failure of 3.2.1?',
+        answer:
+          'No. A menu that expands when it receives focus changes the content, not the context. It fails only if it also moves focus or takes the reader to another page.',
+      },
+      {
+        question: 'Does 3.2.1 apply to mouse hover?',
+        answer:
+          'No. Hovering does not move focus, so 3.2.1 is about keyboard focus. Content that appears on hover is covered by 1.4.13 Content on Hover or Focus.',
+      },
+      {
+        question: 'Does opening a dialog when a field gets focus fail 3.2.1?',
+        answer:
+          'Yes. A dialog that opens on focus and pulls focus into it is a change of context, and a keyboard user sets it off just by tabbing past.',
+      },
+    ],
   },
 
   {
@@ -300,6 +324,30 @@ export const G3_2: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'List every form control that changes a setting: select menus, radio buttons, checkboxes, switches and text fields.',
+      'Change each one with the keyboard: the arrow keys in a select menu or a radio group, Space on a checkbox, typing in a text field.',
+      'After each change, watch for a change of context: a form that submits, another page that loads, a new window that opens, or focus that jumps to another field.',
+      'For each change of context you find, look before the control for text that warns about it, such as "Choosing a country reloads the page". A warning that appears only after the change does not count.',
+      'Change a value in each form without activating its submit button. Check that the form is not sent, unless text before the control says it will be.',
+    ],
+    questions: [
+      {
+        question: 'Can a select menu submit the form when an option is chosen?',
+        answer:
+          'No, unless the page says so before the reader uses it. Without a warning, a keyboard user who arrows through the options is sent away on the first one. A separate Go button avoids the problem.',
+      },
+      {
+        question: 'Is showing more fields when a radio button is chosen a failure?',
+        answer:
+          'No. Revealing fields changes the content while the form and focus stay where they are, so it is not a change of context.',
+      },
+      {
+        question: 'Does moving focus to the next field automatically fail 3.2.2?',
+        answer:
+          'Only when the reader was not told first. Moving focus is a change of context, so a phone number field that jumps ahead after three digits needs an instruction before it that says so.',
+      },
+    ],
   },
 
   {
@@ -344,6 +392,30 @@ export const G3_2: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'Pick three or more pages of the site that share navigation, such as the home page, a section page and a page deep inside that section.',
+      'On each page, write down the order of the links in the main navigation, the header and any other menu that repeats.',
+      'Compare the lists. Links that appear on more than one page have to come in the same order relative to each other; extra links on some pages are allowed.',
+      'Press Tab through the navigation on each page and note the order focus takes, so you check the source order as well as the visual order.',
+      'Compare the pages at the same window width. A menu that collapses into a button on a narrow screen has to list its links in the same order on every page at that width.',
+    ],
+    questions: [
+      {
+        question: 'Can some pages have extra navigation links?',
+        answer:
+          'Yes. Links can be added or removed on some pages, as long as the links that repeat stay in the same order relative to each other.',
+      },
+      {
+        question: 'Does 3.2.3 apply to a single page?',
+        answer:
+          'No. It compares a set of pages that share navigation, such as the pages of one site. A page with no other pages around it has nothing to be consistent with.',
+      },
+      {
+        question: 'Can users reorder the navigation themselves?',
+        answer:
+          'Yes. A change the user asks for, such as pinning favourite links to the top, is allowed. 3.2.3 is about changes the site makes on its own.',
+      },
+    ],
   },
 
   {
@@ -390,6 +462,30 @@ export const G3_2: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'List the functions that appear on more than one page, such as search, sign in, the basket, print and share.',
+      'Visit several pages and note the visible label or icon each function has on each page.',
+      'Open the accessibility inspector in your browser (in Chrome, Edge or Firefox DevTools), select each one and note the name a screen reader would announce for it.',
+      'Compare your notes. One function needs the same label, icon and name everywhere; Search on one page and Find on another fails.',
+      'Check icons the other way round too. An icon used for two different functions, such as a tick for approved and for completed, needs a different text alternative for each.',
+    ],
+    questions: [
+      {
+        question: 'Do the labels have to be identical for 3.2.4?',
+        answer:
+          'No. They have to be consistent. A link that reads "Go to page 4" on one page and "Go to page 5" on the next is the same function named the same way.',
+      },
+      {
+        question: 'Does 3.2.4 apply to icons?',
+        answer:
+          'Yes. An icon that does the same thing on every page needs the same text alternative everywhere. A save icon named Save on one page and Store on another fails.',
+      },
+      {
+        question: 'Does 3.2.4 apply to two copies of one control on the same page?',
+        answer:
+          'Yes. The W3C guidance treats a search button in the header and another in the footer like copies on separate pages, so give both the same name.',
+      },
+    ],
   },
 
   {
@@ -439,5 +535,28 @@ export const G3_2: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'List the help the site offers: contact details such as a phone number or email address, a contact form, a help page, and a chat widget or chatbot.',
+      'Open three or more pages that offer the same help, all at the same window width.',
+      'On each page, note where each help item comes relative to the rest of the page: in the header after the search box, say, or in the footer before the copyright line.',
+      'Read each page from top to bottom with a screen reader (NVDA on Windows, VoiceOver on a Mac) and check that each help item comes at the same point in that order on every page.',
+    ],
+    questions: [
+      {
+        question: 'Does 3.2.6 require a site to offer help?',
+        answer:
+          'No. It applies only when help is offered on more than one page. Then it has to appear in the same order relative to the rest of the page on each of them.',
+      },
+      {
+        question: 'Does help have to be in exactly the same place on screen?',
+        answer:
+          'No. 3.2.6 compares the order of the content, not its position in pixels, so help can move as the layout changes, as long as it keeps its place in that order.',
+      },
+      {
+        question: 'Does a chatbot count as help under 3.2.6?',
+        answer:
+          'Yes. A fully automated contact such as a chatbot is one of the kinds of help it covers, along with contact details, a way to reach a person, and self-help such as a help page.',
+      },
+    ],
   },
 ];

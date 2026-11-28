@@ -500,6 +500,30 @@ export const G3_3: readonly CriterionRecord[] = [
         'aria-invalid states that something is wrong; aria-describedby says what. Neither is ' +
         'sufficient on its own.',
     },
+    procedure: [
+      'Find every form on the page and submit each one with every field left empty.',
+      'Check that each required field you left empty is named in a text message, and that the message says what is missing.',
+      'Fill each field with a value in the wrong format, such as letters in a phone number or a past date where a future one is needed, and submit again.',
+      'Check that each error is described in text and names its field. A red border or an icon on its own does not count.',
+      'Turn on a screen reader (NVDA on Windows, VoiceOver on a Mac), submit the form with errors again and check that you can reach and hear each message.',
+    ],
+    questions: [
+      {
+        question: 'Is a red border enough to show an error?',
+        answer:
+          'No. Colour and icons can add to the message, but the error has to be described in text that says which field is wrong.',
+      },
+      {
+        question: 'Does a required field left empty count as an error under 3.3.1?',
+        answer:
+          'Yes. Leaving out information the form needs is an input error, so the message has to name the field and say that it is required.',
+      },
+      {
+        question: 'Does the error message have to sit next to the field?',
+        answer:
+          'No. A message by the field, a summary at the top of the form or an alert all pass, as long as it names the field and describes the problem in text.',
+      },
+    ],
   },
 
   {
@@ -554,6 +578,29 @@ export const G3_3: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'List every text field, checkbox, radio group and select menu on the page.',
+      'Check that each one has a visible label or instruction that is still there while you type. A placeholder that disappears does not count on its own.',
+      'Look for fields that only accept certain input, such as a date format, a minimum password length or a required answer. Check that what they accept is stated before the field, not only in an error after you get it wrong.',
+      'Check that each group of radio buttons or checkboxes has a label for the group, such as a question above the options, as well as a label for each option.',
+    ],
+    questions: [
+      {
+        question: 'Is a placeholder a label for 3.3.2?',
+        answer:
+          'No, not on its own. Placeholder text disappears as soon as the reader types, which is when they need it. Use a visible label, and a placeholder only as an extra hint.',
+      },
+      {
+        question: 'Is aria-label enough to pass 3.3.2?',
+        answer:
+          'No. aria-label gives a screen reader a name, but 3.3.2 is about labels everyone can see. A field can pass 4.1.2 Name, Role, Value and still fail 3.3.2.',
+      },
+      {
+        question: 'Does every field need instructions under 3.3.2?',
+        answer:
+          'No. A clear label is enough for most fields. Add instructions only where a field expects a format or a limit a reader could not guess, since too many get in the way as much as too few.',
+      },
+    ],
   },
 
   {
@@ -601,6 +648,30 @@ export const G3_3: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'Submit each form with an invalid value in each field, such as 31/02/2025 in a date field or an email address with no @.',
+      'Read each error message. Where the form knows what a valid value looks like, check that the message says how to fix it, such as "Enter the date as DD/MM/YYYY".',
+      'Try a value close to one the form accepts, such as a misspelt month or a country that is not on its list. Check that the message suggests an accepted value or lists them.',
+      'Turn on a screen reader (NVDA on Windows, VoiceOver on a Mac) and check that you can reach each suggestion in text, not only see it.',
+      'For any error that gives no suggestion, check that one would weaken security or defeat the purpose of the form, such as a wrong password or a wrong answer in a test.',
+    ],
+    questions: [
+      {
+        question: 'Does 3.3.3 require the form to fix the error itself?',
+        answer:
+          'No. It asks the form to suggest a correction when it knows one. The reader decides whether to use it.',
+      },
+      {
+        question: 'Is "Invalid input" enough for 3.3.3?',
+        answer:
+          'No. That message names a problem but not the fix. When the form knows the format or the values it accepts, the message has to say what they are.',
+      },
+      {
+        question: 'Does 3.3.3 apply to answers in a test?',
+        answer:
+          'No, not when a suggestion would give the answer away. A correction that would defeat the purpose of the content, or weaken its security, is not required.',
+      },
+    ],
   },
 
   {
@@ -651,6 +722,30 @@ export const G3_3: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'List every step that creates a legal commitment or a payment, changes or deletes data the user controls, or sends test answers: a checkout, a signed agreement, closing an account, deleting a file, submitting an exam.',
+      'Go through each one with test data and stop before the final submit.',
+      'Check that at least one of these holds: you can undo the submission afterwards, the form checks your input and lets you correct it, or a review step lets you check and confirm it before it is final.',
+      'For a review step, check that it shows what you entered and gives a way back to change it, not only a button that confirms.',
+      'For a deletion, check that there is a confirmation step or a way to get back what was deleted, such as a bin you can restore from.',
+    ],
+    questions: [
+      {
+        question: 'Does 3.3.4 apply to every form?',
+        answer:
+          'No. It covers forms that create a legal commitment or a financial transaction, change or delete data the user controls, or submit answers to a test. A newsletter sign-up is usually outside it.',
+      },
+      {
+        question: 'Is a confirmation checkbox enough for 3.3.4?',
+        answer:
+          'Yes. A checkbox such as "I have checked my order" next to the submit button is one of the W3C’s sufficient techniques. It gives the reader a step to take before the action is final.',
+      },
+      {
+        question: 'Does 3.3.4 need an undo, a check and a confirmation step?',
+        answer:
+          'No. One is enough: the submission can be undone, the input is checked and can be corrected, or the reader confirms it before it is final.',
+      },
+    ],
   },
 
   {
@@ -701,6 +796,30 @@ export const G3_3: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'Go through each process on the site that takes more than one step, such as a checkout, a sign-up or an application form, from start to finish.',
+      'Note every piece of information you enter, and look for any later step that asks for it again.',
+      'Where a later step asks again, check that the answer is already filled in, or that you can select it, such as with a "Same as delivery address" checkbox or a list of addresses you entered.',
+      'Open a private window, so the browser has no saved form data, and go through the process again. Check that the site still fills in or offers the answer itself.',
+      'For each repeat request left, check whether an exception applies: confirming a new password, re-entering details that are no longer valid, or a step where remembering is the point, such as a memory game.',
+    ],
+    questions: [
+      {
+        question: 'Does browser autofill meet 3.3.7?',
+        answer:
+          'No. The site has to offer the information itself. Autofill depends on the browser and its settings, so it does not count here, although it does count towards 3.3.8 Accessible Authentication (Minimum).',
+      },
+      {
+        question: 'Does 3.3.7 require remembering details between visits?',
+        answer:
+          'No. It covers one process in one session. A site does not have to store what someone entered last week.',
+      },
+      {
+        question: 'Is asking to confirm a new password a failure of 3.3.7?',
+        answer:
+          'No. Typing a new password twice to confirm it is allowed for security, when the password is hidden as it is typed.',
+      },
+    ],
   },
 
   {
@@ -765,5 +884,29 @@ export const G3_3: readonly CriterionRecord[] = [
         'Deleting this line is a net security gain too — blocking paste pushes people towards ' +
         'passwords short enough to type from memory.',
     },
+    procedure: [
+      'Find every way to sign in, including any extra step such as a one-time code, a security question or a CAPTCHA, and any request to sign in again before a sensitive action.',
+      'Paste a password from the clipboard into the password field. Check that the paste works and that a password manager can fill the field.',
+      'If the site sends a one-time code, check that you can paste it or that it fills in by itself, rather than having to type it from another screen.',
+      'For each puzzle or CAPTCHA, check that there is another way through with no puzzle, or that the test only asks you to recognise objects or pick content you gave the site yourself.',
+      'Open your browser’s DevTools and inspect the sign-in fields. Check that they have labels and autocomplete="username" and autocomplete="current-password", so password managers recognise them.',
+    ],
+    questions: [
+      {
+        question: 'Does blocking paste in a password field fail 3.3.8?',
+        answer:
+          'Yes, unless there is another way to sign in. Blocking paste makes people type the password from memory or copy it out character by character, which is the kind of memory test 3.3.8 is there to remove.',
+      },
+      {
+        question: 'Are one-time codes sent by text message allowed under 3.3.8?',
+        answer:
+          'Only when the code can be pasted or fills in by itself. A code the reader has to copy by hand from their phone into the form fails.',
+      },
+      {
+        question: 'Is an image CAPTCHA allowed under 3.3.8?',
+        answer:
+          'Only when it asks the reader to recognise objects, such as picking the photos with cars in, or to pick content they gave the site, or when there is another way through. 3.3.9 Accessible Authentication (Enhanced) allows neither of the first two.',
+      },
+    ],
   },
 ];
