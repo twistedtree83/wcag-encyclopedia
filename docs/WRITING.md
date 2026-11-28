@@ -78,7 +78,8 @@ WCAG versions, the law, or a way of testing. It never restates a criterion page;
 Every post carries:
 
 - **The criteria it discusses**, each linked to its page _(tested)_, and listed in `criteria`
-  in the frontmatter (the build fails on a mismatch either way).
+  in the frontmatter (the build fails on a mismatch either way). The list also puts the post,
+  with its `description`, under "Further reading" on each of those criterion pages.
 - **A concrete example**: a criterion's own example or lab shown in the post, or a worked case
   with real values (a colour pair and its ratio, a field and its label). Review.
 - **Sources**, in a section headed `## Sources` _(tested)_. See below.

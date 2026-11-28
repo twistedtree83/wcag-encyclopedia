@@ -65,3 +65,14 @@ export function longDate(date: string): string {
 export function newestFirst<P extends PostMeta>(posts: readonly P[]): P[] {
   return [...posts].sort((a, b) => b.published.localeCompare(a.published) || a.slug.localeCompare(b.slug));
 }
+
+/** How many posts a criterion page lists under "Further reading". */
+export const FURTHER_READING = 3;
+
+/**
+ * A criterion page's "Further reading" (S-09): the newest posts whose `criteria` include `num`,
+ * at most `FURTHER_READING` of them. Read from the posts' frontmatter, so no list is kept.
+ */
+export function postsAbout<P extends PostMeta>(num: string, posts: readonly P[]): P[] {
+  return newestFirst(posts.filter((post) => post.criteria.includes(num))).slice(0, FURTHER_READING);
+}

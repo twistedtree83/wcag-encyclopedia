@@ -17,7 +17,7 @@ vi.mock('../src/blog/bodies', async () => {
   return { postFor: () => fixturePost() };
 });
 
-const { render, ROUTES, structuredData, pageSources } = await import('../src/entry-server');
+const { render, ROUTES, structuredData, pageSources, blogFeed, feedProblems } = await import('../src/entry-server');
 const { jsonLdProblems } = await import('../src/site/jsonLd');
 
 const ORIGIN = 'https://wcagencyclopedia.com';
@@ -90,6 +90,22 @@ describe('a post in the build', () => {
     expect(shareTags(POST)).toContain('<meta property="og:type" content="article" />');
     expect(shareTags(POST)).toContain(`<meta property="og:image" content="${ORIGIN}/share/blog-fixture-contrast-thresholds.png" />`);
     expect(render(POST).share).toBe(shareTags(POST));
+  });
+
+  it('links the feed from the head of every blog page, and of no other page', () => {
+    const link = (href: string) => `<link rel="alternate" type="application/atom+xml" title="WCAG Encyclopedia blog" href="${href}" />`;
+    expect(render(POST).head).toBe(link('../feed.xml'));
+    expect(render(ROUTES.find((r) => r.page === 'blog')!).head).toBe(link('./feed.xml'));
+    for (const route of ROUTES.filter((r) => r.page !== 'blog' && r.page !== 'post')) {
+      expect(render(route).head, route.path || 'home').not.toContain('application/atom+xml');
+    }
+  });
+
+  it('writes the post, in full, into the feed', () => {
+    const xml = blogFeed('2026-11-01');
+    expect(xml).toContain(`<id>${ORIGIN}/blog/fixture-contrast-thresholds/</id>`);
+    expect(xml).toContain('Two thresholds, one formula');
+    expect(feedProblems(xml)).toEqual([]);
   });
 
   it('gives the blog index the site card and a breadcrumb only', async () => {

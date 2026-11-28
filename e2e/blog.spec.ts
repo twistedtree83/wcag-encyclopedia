@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { feedProblems } from '../src/blog/feed';
 import { ROUTES } from '../src/site/routes';
 import { open, whenReady } from './support/open';
 
@@ -14,6 +15,7 @@ import { open, whenReady } from './support/open';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const ASSETS = join(ROOT, 'dist/assets');
+const POSTS = join(ROOT, 'src/blog/posts');
 
 /**
  * Text that is in the build-time parser and nowhere in the site's own browser code: a Markdown
@@ -61,6 +63,37 @@ test.describe('the blog', () => {
     expect(response.status()).toBe(200);
     await whenReady(page);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Across the criteria');
+  });
+
+  test('the feed is linked from the index head and served as well-formed Atom', async ({ page, request }) => {
+    await open(page, '/blog/');
+    const href = await page.locator('head link[rel="alternate"][type="application/atom+xml"]').getAttribute('href');
+    expect(href).toBe('./feed.xml');
+    const url = new URL(href!, page.url()).href;
+    const response = await request.get(url);
+    expect(response.status()).toBe(200);
+    expect(response.headers()['content-type']).toMatch(/xml/);
+    const xml = await response.text();
+    expect(feedProblems(xml)).toEqual([]);
+    // The browser's own XML parser: a feed that is not well formed gives a parsererror document.
+    const parsed = await page.evaluate((text) => {
+      const doc = new DOMParser().parseFromString(text, 'application/xml');
+      const root = doc.documentElement;
+      return { error: doc.getElementsByTagName('parsererror').length, root: root.localName, ns: root.namespaceURI, entries: doc.getElementsByTagNameNS('http://www.w3.org/2005/Atom', 'entry').length };
+    }, xml);
+    expect(parsed).toEqual({ error: 0, root: 'feed', ns: 'http://www.w3.org/2005/Atom', entries: ROUTES.filter((r) => r.page === 'post').length });
+  });
+
+  test('a criterion page shows "Further reading" only when a post discusses it', () => {
+    const discussed = new Set(
+      readdirSync(POSTS)
+        .filter((f) => f.endsWith('.md'))
+        .flatMap((f) => /^criteria:\s*\[([^\]]*)\]/m.exec(readFileSync(join(POSTS, f), 'utf8'))?.[1]?.split(',').map((n) => n.trim()) ?? []),
+    );
+    for (const route of ROUTES.filter((r) => r.page === 'criterion')) {
+      const html = readFileSync(join(ROOT, 'dist', route.path, 'index.html'), 'utf8');
+      expect(html.includes('id="reading-title"'), route.path).toBe(discussed.has(route.num!));
+    }
   });
 
   for (const route of ROUTES.filter((r) => r.page === 'post')) {

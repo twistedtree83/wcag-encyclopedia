@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { longDate, postsAbout, type PostMeta } from '../blog/post';
 import type { CriterionRecord, Example } from '../criteria/types';
 import { LiveStage } from '../live/LiveStage';
 import { principleFor } from '../criteria/structure';
@@ -14,15 +15,19 @@ import { Pager } from '../components/Pager';
 import { LevelTag, Marker, NewTag } from '../components/Tags';
 import { neighbours, related } from '../site/criterionNav';
 import { trailFor } from '../site/breadcrumbs';
-import { criterionPath } from '../site/routes';
+import { useRoute } from '../site/RouteContext';
+import { criterionPath, postPath } from '../site/routes';
 
 /**
  * A criterion page, in the PRD's order: breadcrumb, head and facts, Broken then fixed, the
- * diff, the demos, How to test, Common questions, the labs, "Also in", and the pager. The diff,
- * demo, procedure, question and lab sections appear only when the record has one. Everything except the demos' and labs' controls is readable
- * in the static HTML, before any script runs.
+ * diff, the demos, How to test, Common questions, the labs, "Further reading", "Also in", and
+ * the pager. The diff, demo, procedure, question and lab sections appear only when the record
+ * has one, and "Further reading" only when a post in `posts` (`POSTS`, every post's
+ * frontmatter) discusses the criterion. Everything except the demos' and labs' controls is
+ * readable in the static HTML, before any script runs.
  */
-export function CriterionPage({ record }: { record: CriterionRecord }) {
+export function CriterionPage({ record, posts = [] }: { record: CriterionRecord; posts?: readonly PostMeta[] }) {
+  const { href } = useRoute();
   const principle = principleFor(record.guideline);
   if (!principle) throw new Error(`${record.num}: no principle for guideline ${record.guideline}`);
 
@@ -36,6 +41,7 @@ export function CriterionPage({ record }: { record: CriterionRecord }) {
     if (!lab) throw new Error(`${record.num}: no lab ${id}`);
     return lab;
   });
+  const reading = postsAbout(record.num, posts);
   const also = related(record);
   const { prev, next } = neighbours(record.num);
   const route = { path: criterionPath(record.num), page: 'criterion', num: record.num } as const;
@@ -159,6 +165,30 @@ export function CriterionPage({ record }: { record: CriterionRecord }) {
               </LabStepsProvider>
             </div>
           ))}
+        </section>
+      ) : null}
+
+      {reading.length > 0 ? (
+        <section className="band" aria-labelledby="reading-title">
+          <div className="bh">
+            <div>
+              <h2 id="reading-title">Further reading</h2>
+              <p>Posts from the blog that discuss this criterion alongside others, newest first.</p>
+            </div>
+          </div>
+          <ul className="posts posts--reading">
+            {reading.map((post) => (
+              <li key={post.slug}>
+                <h3>
+                  <a href={href(postPath(post.slug))}>{post.title}</a>
+                </h3>
+                <p className="posts__date">
+                  <time dateTime={post.published}>{longDate(post.published)}</time>
+                </p>
+                <p>{post.description}</p>
+              </li>
+            ))}
+          </ul>
         </section>
       ) : null}
 
