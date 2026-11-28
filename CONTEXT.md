@@ -37,7 +37,7 @@ data-integrity test asserts the exact set.
 **Criterion record** — the typed data for one criterion. The unit of authoring. Shape:
 
 ```
-{ num, name, level, guideline, since, plain, fail, pass, procedure, questions, diff?, demo?, labs? }
+{ num, name, level, guideline, since, plain, gist?, fail, pass, procedure, questions, diff?, demo?, labs? }
 ```
 
 **Since** — the WCAG version that introduced a criterion: `2.0`, `2.1` or `2.2`. Six criteria in
@@ -46,11 +46,17 @@ the corpus are new in 2.2.
 **Restatement** (`plain`) — the criterion in plain English. Original prose, never W3C normative
 text copied across.
 
+**Gist** (`gist`) — the restatement cut to one short sentence, used only for the page's
+description in search results, and only on records whose restatement opens with a sentence too
+long to share that description with the fail caption. Original prose, like the restatement.
+
 **Test procedure** (`procedure`) — the ordered steps a reader follows to check their own
 interface against a criterion. On the page it is headed "How to test". Not the site's own tests.
+A list of plain-text steps. Every criterion record has one, of three steps at least.
 
 **Common question** (`questions`) — a question people ask about a criterion, with a short
 answer. On the page they are headed "Common questions". Every criterion record has at least one.
+Each is a `CommonQuestion`, `{ question, answer }`, both plain text and both required.
 
 **Example** — a rendered piece of interface, not a description of one. Every criterion has a
 **fail example** and a **pass example**. On screen these are labelled "Broken" / "Fixed" on
@@ -173,7 +179,54 @@ line) used in the index and in "Also in this guideline" lists. It leads to the c
 that spans criteria, a change between WCAG versions, the law, or a way of testing. It links to
 every criterion page it discusses and never restates one; the criterion page stays the authority
 on its criterion. A post may show a criterion's existing examples and labs, but brings none of
-its own.
+its own. It is one Markdown file, `src/blog/posts/<slug>.md`: its **frontmatter** (`title`,
+`description`, `published`, `updated?`, `criteria`) and its **post body**, which the build turns
+into a tree of plain nodes (`PostNode`, `src/blog/post.ts`). The **slug** is the file name and
+the post's address, `/blog/<slug>/`, and never changes once published.
+
+**Writing standard** — `docs/WRITING.md`, the voice, banned constructions, substance, sources
+and length every post, test procedure and common question is written to. The **writing test**
+(`tests/writing.test.ts`, its rules in `tests/writing.ts`) checks the parts a machine can, in
+the verify gate; the owner's review of the pull request checks the rest (ADR 0007).
+
+**Embed** — a line in a post body that shows something the site already has, exactly as its
+criterion page shows it, with a link to that page: `::example{num="1.4.3"}` is that criterion's
+fail and pass examples, `::lab{id="fade-text" num="1.4.3"}` is that lab with its verdict naming
+that criterion. An embed points, it never adds: it takes no other attribute and no label, and
+there is no embed for an example or lab of the post's own.
+
+**Blog index** — `/blog/`, every post newest first with its date and description. "Blog" is in
+the header nav, and the index and the post pages sit under it.
+
+**Blog feed** — `/blog/feed.xml`, an Atom 1.0 feed of every post in full, newest first, with
+absolute addresses (ADR 0006). An embed in it is only a link to its place on the criterion page. The blog index and each post page link it from their head.
+
+**Further reading** — the section of a criterion page listing up to three posts whose
+`criteria` include that criterion, newest first. Built from the posts' frontmatter, and absent
+when no post discusses the criterion.
+
+**Site origin** — `SITE_ORIGIN`, the production address `https://wcagencyclopedia.com`. Joined
+to a route's path, it gives the page's **canonical URL**, the one absolute address crawlers are
+told to credit (ADR 0006).
+
+**Share card** — the 1200×630 image a page's link shows when shared, named by its `og:image`
+tag: one per criterion page (number, name, level and principle marker) and one site card for
+the fixed pages. Drawn at build time into `dist/share/`.
+
+**Crawl files** — `robots.txt` and `sitemap.xml`, written into `dist/` by the prerender step.
+
+**Breadcrumb trail** — a page's path from Home to itself, as **crumbs** (a route path and the
+name it is shown with), from `trailFor` in `src/site/breadcrumbs.ts`. The criterion page draws
+it and the structured data repeats it. Home has none.
+
+**Structured data** — the JSON-LD blocks in a page's head that tell search engines what the
+page is (`src/site/jsonLd.ts`): `WebSite` and `Organization` on Home, a `BreadcrumbList` on
+every other page, and a `TechArticle` about the criterion on each criterion page. The
+organisation is author and publisher; no person is named.
+
+**404 page** — "Page not found", `NOT_FOUND` in `src/site/routes.ts`: written once to
+`dist/404.html` and served with status 404 for any path that matches no built file. Not a
+route, so it is in neither the sitemap nor the per-route checks, and it is `noindex`.
 
 **Token** — a CSS custom property in one of the two theme palettes. Token names and values come
 from the `:root` block of `design/mockups/swatch/swatch.css` verbatim, so the design and the

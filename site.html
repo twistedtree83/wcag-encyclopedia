@@ -11,6 +11,12 @@
     <!--@legacy-redirect-->
     <title><!--@title--></title>
     <meta name="description" content="<!--@description-->" />
+    <!-- The page's absolute production URL (ADR 0006), filled by scripts/prerender.mjs. -->
+    <!--@canonical-->
+    <!-- The page's JSON-LD (src/site/jsonLd.ts), filled and checked by scripts/prerender.mjs. -->
+    <!--@structured-data-->
+    <!-- Open Graph and Twitter tags for the page's share card (src/site/share.ts). -->
+    <!--@share-->
     <!-- Preloads for the self-hosted body and heading fonts, filled by scripts/prerender.mjs. -->
     <!--@fonts-->
     <!--@tokens-->
@@ -39,5 +45,7 @@
   <body>
     <div id="root"><!--@app--></div>
     <script type="module" src="/src/entry-client.tsx"></script>
+    <!-- The Cloudflare Web Analytics beacon, only when CF_ANALYTICS_TOKEN is set (src/site/analytics.ts). -->
+    <!--@analytics-->
   </body>
 </html>

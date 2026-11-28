@@ -4,6 +4,7 @@ import { labCases, radio } from './support';
 labCases([
   {
     name: 'the focus trap lab on 2.1.2',
+    id: 'keyboard-trap',
     url: '/criteria/2.1.2/',
     lab: '.lab-slot .trap-lab',
     passing: '2.1.2 passes',

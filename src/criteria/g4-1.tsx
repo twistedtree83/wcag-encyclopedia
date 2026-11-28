@@ -82,6 +82,8 @@ export const G4_1: readonly CriterionRecord[] = [
     guideline: '4.1',
     demos: ['name-4-1-2'],
     labs: ['name-role-value'],
+    gist:
+      'Every control must expose its name, its role and its current state, and update them as they change.',
     plain:
       'Every control has to expose three things programmatically: what it is called, what kind ' +
       'of thing it is, and what state it is in — and it has to update as that state changes. ' +
@@ -147,6 +149,30 @@ export const G4_1: readonly CriterionRecord[] = [
         'The state changes are the part hand-rolled components forget. A native control cannot ' +
         'fall out of sync with itself.',
     },
+    procedure: [
+      'List every control on the page that is not a native HTML control: anything built from div or span elements that acts as a button, toggle, tab, menu or slider.',
+      'Open the accessibility inspector in your browser (the Accessibility pane in Chrome or Edge DevTools, or the Accessibility tab in Firefox) and select each control. Check that it has a name, and that the name says what the control does.',
+      'Read the role the inspector shows for each control. It has to say what the control is, such as button, checkbox, switch, tab or slider. A role of generic, group or none means the control exposes no role.',
+      'Operate each control with the keyboard while the inspector is open. Check that its state changes with it: a toggle turns checked, a menu button turns expanded, a slider reports its new value.',
+      'Turn on a screen reader (NVDA on Windows, VoiceOver on a Mac) and move to each control. Listen for its name, its role and its state, then change it and listen for the new state.',
+    ],
+    questions: [
+      {
+        question: 'Do native HTML controls pass 4.1.2 on their own?',
+        answer:
+          'Yes, once they have a name. A native button, link, checkbox or select exposes its role and state and keeps them up to date by itself. Most failures are custom controls, or native ones whose role ARIA has overridden.',
+      },
+      {
+        question: 'Is aria-label enough to pass 4.1.2?',
+        answer:
+          'No. aria-label gives a control a name, but it still needs a role, and a state if it has one. A div with aria-label and a click handler is still announced as nothing a person can operate.',
+      },
+      {
+        question: 'Does 4.1.2 check that the name matches the visible label?',
+        answer:
+          'No. 4.1.2 asks only that the control has a name. 2.5.3 Label in Name asks that the name contains the words of the visible label, so a person using voice control can say what they see.',
+      },
+    ],
   },
 
   {
@@ -157,6 +183,8 @@ export const G4_1: readonly CriterionRecord[] = [
     guideline: '4.1',
     demos: ['live-4-1-3'],
     labs: ['status-message'],
+    gist:
+      'Important changes that don’t move focus, such as a result count or a saved message, must be announced.',
     plain:
       'When something important changes without moving focus — a result count, a saved ' +
       'confirmation, an error appearing — it has to be announced. Moving focus to it would be a ' +
@@ -210,5 +238,29 @@ export const G4_1: readonly CriterionRecord[] = [
         'Announce sparingly. A live region that fires on every keystroke is as unusable as one ' +
         'that never fires at all — which is why this page’s scroll position indicator is not one.',
     },
+    procedure: [
+      'List every message that appears without focus moving to it: a result count after filtering, a confirmation that something was saved or added, a progress update, an error summary shown after a form is sent.',
+      'Open the accessibility inspector in your browser (in Chrome, Edge or Firefox DevTools) and select the element that holds each message. Check that it, or a container around it, has role="status", role="alert", role="log" or an aria-live attribute.',
+      'Reload the page and check, before you trigger the message, that its container is already there. A live region added to the page together with its text is often not announced.',
+      'Turn on a screen reader (NVDA on Windows, VoiceOver on a Mac), trigger each message and listen. It has to be read out while focus stays where you left it.',
+      'Check which messages interrupt. Routine updates belong in role="status", which waits until the screen reader finishes speaking; only errors and warnings that cannot wait belong in role="alert".',
+    ],
+    questions: [
+      {
+        question: 'Does 4.1.3 apply when focus moves to the message?',
+        answer:
+          'No. A message that takes focus is read out when it gets focus, so 4.1.3 covers only messages that appear while focus stays somewhere else.',
+      },
+      {
+        question: 'Does a loading spinner need to be announced?',
+        answer:
+          'Yes, when it tells people something they need to know, such as that their search is still running. Put a text alternative such as "Loading results" in a status region, so a screen reader says it without moving focus.',
+      },
+      {
+        question: 'Should status messages use aria-live="assertive"?',
+        answer:
+          'Only for a message that cannot wait, such as an error or a session about to time out. An assertive region interrupts whatever the screen reader is saying, so a routine update belongs in role="status", which is polite.',
+      },
+    ],
   },
 ];

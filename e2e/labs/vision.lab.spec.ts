@@ -4,6 +4,7 @@ import { labCases, radio } from './support';
 labCases([
   {
     name: 'the take-the-colour-away lab on 1.4.1',
+    id: 'use-of-colour',
     url: '/criteria/1.4.1/',
     lab: '.lab-slot .vis-lab',
     passing: '1.4.1 passes',
@@ -21,6 +22,7 @@ labCases([
   },
   {
     name: 'the fade-the-edges lab on 1.4.11',
+    id: 'non-text-contrast',
     url: '/criteria/1.4.11/',
     lab: '.lab-slot .vis-lab',
     passing: '1.4.11 passes',
@@ -33,6 +35,7 @@ labCases([
   },
   {
     name: 'the rewrite-the-instruction lab on 1.3.3',
+    id: 'sensory-instruction',
     url: '/criteria/1.3.3/',
     lab: '.lab-slot .vis-lab',
     passing: '1.3.3 passes',

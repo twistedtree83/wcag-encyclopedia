@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { feedLink } from '../src/blog/feed';
 import { render, ROUTES } from '../src/entry-server';
 import { routeFor } from '../src/site/routes';
 
@@ -32,7 +33,9 @@ describe('the home route', () => {
       expect(home().head).toContain('location.replace');
       expect(home().head).toContain('"1.4.3"');
       for (const route of ROUTES.filter((r) => r.page !== 'home')) {
-        expect(render(route).head, route.path).toBe('');
+        // The blog pages' head holds the feed link (S-09) and nothing else.
+        const blog = route.page === 'blog' || route.page === 'post';
+        expect(render(route).head, route.path).toBe(blog ? feedLink(route) : '');
       }
     },
     30_000,

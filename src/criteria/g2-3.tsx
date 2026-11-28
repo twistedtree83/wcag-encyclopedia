@@ -56,6 +56,7 @@ export const G2_3: readonly CriterionRecord[] = [
     since: '2.0',
     guideline: '2.3',
     labs: ['flash-rate'],
+    gist: 'No large, bright area may flash more than three times in one second.',
     plain:
       'Nothing may flash more than three times per second, unless the flashing area is very ' +
       'small or the flash is low-contrast. Red flashes are held to a stricter limit, because ' +
@@ -116,5 +117,29 @@ export const G2_3: readonly CriterionRecord[] = [
         'If a flash is unavoidable, the safe envelope is under three per second, in a small ' +
         'area, and never saturated red.',
     },
+    procedure: [
+      'List everything on the page that can flash: videos, animated images, adverts, games, and effects in the interface such as a flashing alert.',
+      'Play each one and count the flashes in any one second. Three or fewer in every second passes, whatever their size and colour.',
+      'Where anything flashes more than three times in a second, measure the area that flashes at once. On a 1024 by 768 screen, a combined area smaller than 341 by 256 pixels is below the threshold, for red flashes as well as general ones.',
+      'Count any flashing to or from a saturated red as red flashes, separately from the rest. A change too faint to count as a general flash can still count as a red one.',
+      'Run video and animation that is still in doubt through a flash analyser such as PEAT, the free Photosensitive Epilepsy Analysis Tool from the Trace Center, and fix every segment it fails.',
+    ],
+    questions: [
+      {
+        question: 'Does a warning before a flashing video pass 2.3.1?',
+        answer:
+          'No. A seizure can start before the person has time to read a warning or stop the video. The flashing itself has to stay within the limits.',
+      },
+      {
+        question: 'Can a small area flash faster than three times a second?',
+        answer:
+          'Yes, when the area is small enough. Flashing that covers less than about a quarter of the central field of vision, roughly 341 by 256 pixels on a 1024 by 768 screen, is below the threshold, and that holds for red flashes too.',
+      },
+      {
+        question: 'Does 2.3.1 apply to video I embed from another site?',
+        answer:
+          'Yes. Flashing content on your page counts whoever made it. Check an embedded video for flashes before you publish it.',
+      },
+    ],
   },
 ];

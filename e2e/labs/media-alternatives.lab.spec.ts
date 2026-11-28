@@ -4,6 +4,7 @@ import { labCases, radio } from './support';
 labCases([
   {
     name: 'the media-only lab on 1.2.1',
+    id: 'media-only',
     url: '/criteria/1.2.1/',
     lab: '.lab-slot .media-only-lab',
     passing: '1.2.1 passes',
@@ -16,6 +17,7 @@ labCases([
   },
   {
     name: 'the media alternative lab on 1.2.3',
+    id: 'media-alternative',
     url: '/criteria/1.2.3/',
     lab: '.lab-slot .media-alt-lab',
     passing: '1.2.3 passes',
@@ -28,6 +30,7 @@ labCases([
   },
   {
     name: 'the description lab on 1.2.5',
+    id: 'description',
     url: '/criteria/1.2.5/',
     lab: '.lab-slot .media-alt-lab',
     passing: '1.2.5 passes',

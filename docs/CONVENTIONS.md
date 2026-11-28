@@ -9,13 +9,69 @@ this before changing the build, adding a page, or touching tokens. The vocabular
 
 - `npm run build` runs three steps: the client build, then
   `vite build --ssr src/entry-server.tsx --outDir dist-ssr`, then `node scripts/prerender.mjs`.
-  It writes one `index.html` per route into `dist/` (59 pages).
+  It writes one `index.html` per route into `dist/` (60 pages, plus one per post).
 - `site.html` is the only HTML template. Its placeholders are `<!--@title-->`, `<!--@description-->`,
-  `<!--@tokens-->`, `<!--@legacy-redirect-->`, `<!--@fonts-->` and `<!--@app-->`. `render(route)` in
-  `src/entry-server.tsx` returns `{ html, title, description, head }`. Only Home has a `head`:
-  it holds the `#1.4.3` → `criteria/1.4.3/` redirect from `src/site/legacyRedirect.ts`.
+  `<!--@canonical-->`, `<!--@structured-data-->`, `<!--@share-->`, `<!--@tokens-->`, `<!--@legacy-redirect-->`, `<!--@fonts-->`, `<!--@app-->` and `<!--@analytics-->`.
+  `render(route)` in `src/entry-server.tsx` returns `{ html, title, description, head, beacon, share }`.
+  Home's `head` holds the `#1.4.3` → `criteria/1.4.3/` redirect from
+  `src/site/legacyRedirect.ts`, the 404 page's holds `noindex`, and the blog index's and each post's hold the feed link
+  (see "Blog posts"); other pages have none. `beacon` is the Cloudflare Web Analytics script
+  (`src/site/analytics.ts`), written at the end of `<body>` outside `#root`. It is empty while
+  `CF_ANALYTICS_TOKEN` in `src/site/config.ts` is unset, and the committed config leaves it unset.
+  The beacon sets no cookie, so the site has no consent banner.
+- Titles and descriptions come from `pageMeta` in `src/site/Site.tsx`. Fixed pages write theirs
+  by hand; criterion pages build theirs in `src/site/meta.ts` from the record: number, name and
+  level for the title, and the restatement's first sentence (or its `gist`) then "Fails when:"
+  and the fail caption for the description. `tests/headMeta.test.ts` holds every route to a
+  unique title of 30–65 characters and a unique description of 70–160, with the brand at most
+  once per title and first on Home.
 - The prerender step rewrites `./assets/` to `../` repeated once per directory level, so the
   relative base works at any depth and under the GitHub Pages sub-path.
+- **Canonical tag and crawl files** (ADR 0006). The only absolute addresses the site writes are
+  built from `SITE_ORIGIN` in `src/site/config.ts` by `src/site/crawl.ts`, which the prerender
+  step imports through the SSR entry. It fills `<!--@canonical-->` on every page and fails the
+  build if `canonicalProblems` finds the tag missing, doubled, relative or naming another route.
+  It then writes `dist/robots.txt` (allow all, `Sitemap:` line) and `dist/sitemap.xml` (every
+  route in `ROUTES`, in order). Nothing is kept in `public/` and no crawl file is hand-written.
+  A page's `lastmod` is the UTC date of the last commit to the files `pageSources(route)` names:
+  the criterion's guideline record file (`src/criteria/g1-4.tsx`) or the fixed page's component.
+  An uncommitted new file counts as today. The CI build job checks out with `fetch-depth: 0`,
+  because a shallow clone would date every page to the one commit it has. A new page kind adds
+  its file to `PAGE_FILES` there. `tests/crawl.test.ts` and `e2e/crawl.spec.ts` check them.
+- **Structured data** (S-04). `structuredData(route, { published, modified })` in the SSR entry
+  returns the page's JSON-LD script elements, built by `src/site/jsonLd.ts`, and the prerender
+  step fills `<!--@structured-data-->` with them. `modified` is the sitemap `lastmod`;
+  `published` is the first commit to the same files, so a criterion page is dated from its
+  guideline file. The build fails if `jsonLdProblems` finds a block that doesn't parse, a
+  missing or extra block type for the page kind, a missing required property, or an address
+  not on `SITE_ORIGIN` or not the page's own route. The `BreadcrumbList` and the visible trail
+  both come from `trailFor` (`src/site/breadcrumbs.ts`), with the page's own name from
+  `pageName` in `src/site/Site.tsx`. A new page kind adds its blocks to `BLOCKS` and its block
+  types to `TYPES` (typed by `PageKind`), and a new block type (S-07's `BlogPosting`) adds its
+  required properties to `REQUIRED` and any deeper check to `CHECKS`. The WebSite's
+  `SearchAction` points into All criteria's `?q=`; if that parameter goes, the action goes too.
+  A criterion page's `TechArticle` carries its share card (S-03) as `image`.
+  `tests/structuredData.test.ts` and `e2e/crawl.spec.ts` check them.
+- **Share tags and share cards** (S-03). `share` is the page's Open Graph and Twitter tags from
+  `shareTags(route)` in `src/site/share.ts`, with the title and description from `pageMeta`.
+  `og:image` points at the page's share card, a 1200×630 PNG in `dist/share/`: `<num>.png` for
+  a criterion page, `site.png` for every fixed page. `share.ts` describes each card as a tree
+  of boxes in the dark theme's tokens; `scripts/prerender.mjs` draws it with satori and resvg
+  (dev dependencies, imported only there) using the `.woff` files of `@fontsource` (satori
+  reads no woff2), and fails the build if `cardContrastProblems` finds text under 4.5:1 or a
+  marker under 3:1, or `openGraphProblems` (`crawl.ts`) finds a tag missing, doubled, empty or
+  pointing off `SITE_ORIGIN`. satori sizes boxes content-box, and every `div` is a flex box.
+  The client entry never imports `share.ts`; `e2e/share.spec.ts` fails if satori, resvg or the
+  tags reach `dist/assets/`. A new page kind gets the site card unless `shareCard` says otherwise.
+- **The 404 page** (`NOT_FOUND` in `src/site/routes.ts`, `src/pages/NotFoundPage.tsx`) is not
+  in `ROUTES`. The prerender step writes it once to `dist/404.html`, with `noindex` (in `head`),
+  no canonical tag, JSON-LD or share tags (it has no address of its own: `render` returns an
+  empty `share`, and its `BLOCKS`/`TYPES` entries are empty), and asset links from the root (`/assets/`). Cloudflare serves it with
+  status 404 for any path that matches no asset (`not_found_handling: "404-page"` in
+  `wrangler.jsonc`), at that path's depth, so `href` links from it are root-absolute
+  (`linkFrom`). `vite preview` does the same through the `notFoundPage` plugin in
+  `vite.config.ts`, so a missing page in e2e is the 404 page with status 404, not an empty body.
+  Its checks, axe included, are in `e2e/not-found.spec.ts`, not the per-route loops.
 - `src/entry-client.tsx` reads the route from `#root[data-route]`, never from
   `location.pathname`, then calls `hydrateRoot`.
 - **Hydration rule:** never read `localStorage`, `matchMedia`, `location.search` or the theme
@@ -23,8 +79,9 @@ this before changing the build, adding a page, or touching tokens. The vocabular
   React 19 doesn't repair mismatched attributes such as `aria-pressed`. Pages with state in the
   URL pre-render their default state and apply `?…` after mount, writing back with
   `history.replaceState`.
-- `vite.config.ts` uses `appType: 'mpa'`, so a missing page returns 404 in `vite preview`. A URL
-  without its trailing slash also 404s, so every link ends in `/`.
+- `vite.config.ts` uses `appType: 'mpa'`, so a missing page returns 404 (the 404 page) in
+  `vite preview`. A URL without its trailing slash also 404s there (Cloudflare redirects it
+  instead), so every link ends in `/`.
 
 ## Routes and adding a page
 
@@ -35,12 +92,95 @@ To add a page:
 1. Add a `PageKind` and an entry in `FIXED_ROUTES`.
 2. Add a case to both switches in `src/site/Site.tsx` (`Page` and `pageMeta`). Exhaustiveness
    checking flags any you miss.
-3. Add the page to `SECTION` in `src/site/Header.tsx`, which decides which nav item is current.
+3. Add the page to `SECTION` in `src/site/Header.tsx`, which decides which nav item is current,
+   and its component file to `PAGE_FILES` in `src/site/crawl.ts`, which dates it in the sitemap.
+   Types flag both if you miss them.
 4. Put the component in `src/pages/` and import it from the entry. `tests/retired.test.ts`
    fails on any module under `src/` that the entry points don't reach.
 5. Nothing else is needed for axe. `e2e/axe.spec.ts` scans every route in light and dark at
    1280px and 320px. A page with URL-driven states passes its query URLs to `axeStates` there;
    a lab passes its own from its lab spec (see "Labs").
+
+## Blog posts
+
+A post (ADR 0007) is one Markdown file, `src/blog/posts/<slug>.md`. Adding a post is adding
+that file: no list is edited. Its frontmatter:
+
+```yaml
+---
+title: Two contrast thresholds, for text and for everything else   # the page title too: 30–65 characters
+description: …                                                 # 70–160 characters
+published: 2026-11-02
+updated: 2026-11-20                                            # optional, not before published
+criteria: [1.4.3, 1.4.11]                                      # every criterion the post discusses
+---
+```
+
+- **Build-time only.** The `posts` plugin (`src/blog/plugin.ts`, in `vite.config.ts`) parses each
+  file with `src/blog/parse.ts` (mdast-util-from-markdown and yaml, both devDependencies) and
+  emits plain data: `<slug>.md` is the whole post, `<slug>.md?meta` the frontmatter alone. The
+  blog index reads every `?meta` (`src/blog/posts.ts`); the prerender step reads every full post
+  (`src/blog/bodies.ts`); the browser loads only the post it is on (`entry-client.tsx`) and draws
+  the tree with `PostBody.tsx`. `e2e/blog.spec.ts` fails if parser code reaches `dist/assets`.
+- **Problems fail the build** (and the unit tests), each naming the post and line: a missing,
+  unknown or malformed frontmatter field, a criterion number not in the manifest, a criterion
+  link not in `criteria`, a `criteria` entry the body never links, an h1 in the body or a
+  skipped heading level (the body starts at `##`, under the page's h1), raw HTML, an image, or a
+  reference-style link. What a body may hold is the `NODES` table in `parse.ts`: a new node type
+  is one entry there and, if it draws something new, a branch in `PostBody`.
+- **Embeds** (S-08, CONTEXT.md "Embed"). One line each, under a heading (never before the first
+  `##`), with exactly these attributes:
+
+  ```md
+  ::example{num="1.4.3"}
+  ::lab{id="fade-text" num="1.4.3"}
+  ```
+
+  `id` is a lab id from `src/labs/INDEX.md`; `num` must be one of the post's `criteria`, and the
+  embed counts as linking it (it links the criterion page), in the parser and in the writing
+  test's `criterion-link` rule alike. The parser fails on an unknown
+  criterion, a missing or extra attribute, a label (`::example[…]`), any other `::name`, a
+  container (`:::`), the same example or lab twice, or an embed before the first heading.
+  Inline directives are not switched on, so `Note:this` stays text. The lab id and that the lab
+  judges `num` are checked when `PostBody` renders (the registry needs Vite), so the prerender
+  fails the build. Embeds draw `ExamplePair` (`src/components/ExamplePair.tsx`) and `LabSlot`
+  (`src/labs/shared/LabSlot.tsx`), the components the criterion page uses; the lab's title is
+  an h3 and its steps an h4. The post body's CSS stops at `.embed`, which runs full width.
+- **Embedded labs in e2e.** Every `labCases` case carries the lab's `id`; a criterion-page case
+  runs again on each post that embeds that lab for that criterion (`e2e/support/posts.ts` reads
+  the embeds with `parsePost`). `e2e/blog.spec.ts` fails if an embedded lab has no such case.
+- **Links.** Link a page of the site by its path from the root, ending in `/`:
+  `[Contrast (Minimum)](/criteria/1.4.3/)`. The page turns it into a relative link. Any other
+  link is written in full (`https://…`).
+- **Dates.** The page and the `BlogPosting` show the frontmatter dates; the sitemap `lastmod` is
+  the file's last commit, as for every page. The blog index is dated from its component and the
+  posts folder.
+- **Share card.** Each post has its own, `share/blog-<slug>.png` (`postCard` in
+  `src/site/share.ts`), which is also its `BlogPosting` image; the blog index has the site card.
+- **Feed.** The prerender step writes `dist/blog/feed.xml` (`FEED_PATH`) with `feedXml` in
+  `src/blog/feed.tsx`, through `blogFeed` in `entry-server.tsx`, and fails the build on anything
+  `feedProblems` finds (RFC 4287's required elements, absolute entry URLs, RFC 3339 dates, well
+  formed). `feedProblems` is in `src/blog/feedCheck.ts`, apart from the feed, so the e2e specs
+  can import it without `PostBody` and the lab registry, which need Vite. Each entry's `content` is the body drawn by `PostBody` with `link={absoluteUrl}`, so
+  its site links are absolute. An embed there is one paragraph with one link, to
+  `criteria/<num>/#examples-title` or `#lab-title`: a feed reader runs no lab, so the entry holds
+  no lab or example markup. The blog index and post pages carry
+  `<link rel="alternate" type="application/atom+xml">` in `render()`'s `head`, with a relative
+  href (`./feed.xml`, `../feed.xml`): only the feed's own contents are absolute. The feed is a
+  file, not a route, so it is not in the sitemap. With no posts it is dated by the blog index.
+- **Further reading.** `CriterionPage` takes `posts` (`POSTS` from `Site`) and lists
+  `postsAbout(num, posts)` (`src/blog/post.ts`): the newest three whose `criteria` include the
+  criterion, between the labs and "Also in". No posts about it, no section.
+- **Routes without Vite.** `src/blog/slugs.ts` lists the slugs with `import.meta.glob`, and falls
+  back to reading the folder when the e2e specs import `ROUTES` without Vite. The two must agree.
+- **The writing test.** Every post is also drafted to `docs/WRITING.md` and checked by
+  `tests/writing.test.ts` (rules as data in `tests/writing.ts`): banned phrases and patterns,
+  criterion links that name their criterion, a `## Sources` section on allowed domains, and
+  900–2,500 words. It reads `src/blog/posts/` from disk, so the fixture post is never held to
+  it. The same prose rules run over each record's `procedure` and `questions` (S-17).
+- **The fixture post**, `tests/fixtures/posts/fixture-contrast-thresholds.md`, exists only in tests
+  (`tests/fixturePost.ts`). `tests/blogBuild.test.ts` mocks the post modules with it to test a
+  post through `render`, `ROUTES` and the JSON-LD check.
 
 ## Tokens and CSS
 
@@ -75,6 +215,12 @@ To add a page:
 - `labs?: readonly string[]` names entries in `src/labs/registry.ts`. Omit the field rather than
   leaving it empty. 1.4.3 carries `['colour-check', 'fade-text']`. A lab renders its own h3 under
   the page's single "Try it yourself" h2, never an h2 of its own.
+- `procedure: readonly string[]` and `questions: readonly { question, answer }[]` are required
+  plain text, rendered on every criterion page as "How to test" (an `ol`) and "Common
+  questions" (an h3 per question) after the demos and before the labs. The data-integrity test
+  (`tests/criteria.test.ts`) fails a record with fewer than three steps or no question, or
+  with a step or question repeated in the record (each is the React key).
+  `tests/writing.test.ts` holds every string to `docs/WRITING.md`.
 - Contrast maths lives in `src/color/contrast.ts`. Ratios are truncated, never rounded:
   `formatScore`, `passesThreshold`. Threshold lists live in `src/labs/shared/thresholds.ts`. Don't
   re-implement either in a lab.
@@ -247,7 +393,7 @@ one entry per line so parallel work merges cleanly, and check each step:
   controls are live and geometry is measured in the real fonts. After a reload or a navigation
   the test caused, call `whenReady(page)`. `tests/e2eOpen.test.ts` fails if a spec waits for
   hydration itself.
-- The suite covers about 1,500 tests across 59 pages. On a heavily loaded machine, tests fail on
+- The suite covers about 1,500 tests across 60 pages. On a heavily loaded machine, tests fail on
   the 30s timeout rather than on assertions. Re-run those with
   `npx playwright test --last-failed --workers=1` before treating them as real. Assertion
   failures are always real.

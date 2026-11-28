@@ -4,6 +4,7 @@ import { labCases, radio } from './support';
 labCases([
   {
     name: 'the what-focus-does lab on 3.2.1',
+    id: 'on-focus',
     url: '/criteria/3.2.1/',
     lab: '.lab-slot .focus-lab',
     passing: '3.2.1 passes',

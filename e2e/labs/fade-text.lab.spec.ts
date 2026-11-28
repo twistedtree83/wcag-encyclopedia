@@ -4,6 +4,7 @@ import { labCases } from './support';
 labCases([
   {
     name: 'fade-the-text on 1.4.3',
+    id: 'fade-text',
     url: '/criteria/1.4.3/',
     lab: '.lab-slot .fade-lab',
     passing: '1.4.3 passes',
@@ -16,6 +17,7 @@ labCases([
   },
   {
     name: 'fade-the-text on Home',
+    id: 'fade-text',
     url: '/',
     lab: '#lab .fade-lab',
     passing: '1.4.3 passes',

@@ -215,6 +215,31 @@ export const G1_3: readonly CriterionRecord[] = [
         'The CSS does not need to change. Restyle the real elements to look how the fake ones ' +
         'looked, and nothing is lost visually while everything is gained structurally.',
     },
+    procedure: [
+      'Open the page with styles turned off (in Firefox, View > Page Style > No Style). Check headings, lists, tables and form fields still read as what they are.',
+      'List the headings with the accessibility inspector or a free extension such as WAVE or HeadingsMap. Check every piece of text that looks like a heading is marked up as one, and nothing else is.',
+      'Inspect each list and check it uses ul, ol or dl elements, not lines of text with dashes or line breaks.',
+      'Inspect each data table. Check it is built from table elements, not a grid of div elements, and that its header cells are th elements.',
+      'Select each form field in the accessibility inspector and check its name comes from its visible label. Check each group of radio buttons or checkboxes sits in a fieldset with a legend, or in a group with a name.',
+      'Look for meaning carried only by styling, such as bold for required fields or a shaded row for the selected item, and check the same information is in the markup or the text.',
+    ],
+    questions: [
+      {
+        question: 'Does skipping a heading level fail 1.3.1?',
+        answer:
+          'No. 1.3.1 asks that headings are marked up as headings. W3C’s guidance does not make skipping a level, such as h2 to h4, a failure, though an outline in order is easier to move through.',
+      },
+      {
+        question: 'Does text that looks like a heading have to be a heading element?',
+        answer:
+          'Yes. If bold or large text works as a heading on screen, a screen reader user needs it marked up as one, with h1 to h6 or role="heading". Styling alone is a listed failure of 1.3.1.',
+      },
+      {
+        question: 'Do layout tables fail 1.3.1?',
+        answer:
+          'Only when they claim structure they do not have, such as th elements for cells that are not headers. A layout table of plain cells does not fail 1.3.1, though CSS layout is the better choice.',
+      },
+    ],
   },
 
   {
@@ -274,6 +299,30 @@ export const G1_3: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'Read the page and note where order carries meaning: the steps of a set of instructions, a question and its answer, a price and what it is for.',
+      'Turn styles off (in Firefox, View > Page Style > No Style) and read the page from top to bottom. Check each sequence you noted still reads in an order that makes sense.',
+      'Inspect the CSS for content moved on screen: the order property in flexbox, grid placement, absolute positioning or floats. Check each moved item still makes sense where it sits in the source.',
+      'Turn on a screen reader (NVDA on Windows, VoiceOver on a Mac) and let it read the page through. Check it never reads an item out of place, such as a label after its field or step 3 before step 2.',
+      'Look for layout made with spaces or tabs, such as columns lined up with space characters. With styles off, text arranged that way reads as one jumbled line.',
+    ],
+    questions: [
+      {
+        question: 'Does 1.3.2 need the source order to match the visual order?',
+        answer:
+          'Only where the order changes the meaning. A sidebar can come before or after the main content in the source, but the steps of a recipe have to come in the order they are done.',
+      },
+      {
+        question: 'Does CSS reordering with flexbox fail 1.3.2?',
+        answer:
+          'Only when it changes the meaning. Moving a picture beside its text is fine. Moving the second paragraph of an argument above the first is not, because a screen reader reads the source order.',
+      },
+      {
+        question: 'Is 1.3.2 the same as focus order?',
+        answer:
+          'No. 1.3.2 covers the order in which all content is read. 2.4.3 Focus Order covers the order in which keyboard focus moves between controls.',
+      },
+    ],
   },
 
   {
@@ -327,6 +376,30 @@ export const G1_3: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'Find every instruction on the page: form help, error messages, onboarding hints, tutorial text.',
+      'Mark each instruction that relies on how something looks, where it sits or how it sounds: "the round button", "the menu on the left", "the large box", "when you hear the beep".',
+      'For each one, check it also names the thing by text a person can find without seeing or hearing it, such as the button label "Next".',
+      'Turn on a screen reader (NVDA on Windows, VoiceOver on a Mac), follow each instruction without looking at the screen, and check you can find what it points to.',
+      'Check that words such as "above" or "below" point to content just before or after in reading order, so the reference still works in a screen reader.',
+    ],
+    questions: [
+      {
+        question: 'Can instructions say "select the round arrow"?',
+        answer:
+          'Only when they also give the control’s label, such as "select Next, the round arrow". Shape and position help people who can see them, but cannot be the only way to find the control.',
+      },
+      {
+        question: 'Can I write "see the links below"?',
+        answer:
+          'Yes, when the links come right after the sentence in reading order. "Below" then matches what a screen reader reaches next, so the reference does not depend on seeing the layout.',
+      },
+      {
+        question: 'Does 1.3.3 cover instructions that rely on colour?',
+        answer:
+          'No. Colour is covered by 1.4.1 Use of Color. 1.3.3 covers shape, size, position, orientation and sound.',
+      },
+    ],
   },
 
   {
@@ -336,6 +409,7 @@ export const G1_3: readonly CriterionRecord[] = [
     since: '2.1',
     guideline: '1.3',
     labs: ['orientation'],
+    gist: 'Do not lock the screen to portrait or landscape unless that orientation is essential.',
     plain:
       'Do not lock the screen to portrait or landscape unless the orientation is essential — a ' +
       'piano keyboard, a cheque scanner. Someone whose wheelchair mount holds their phone ' +
@@ -379,6 +453,30 @@ export const G1_3: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'Open the page on a phone or tablet with rotation lock off, or use the device toolbar in Chrome or Firefox DevTools, which has a rotate button.',
+      'Load the page in portrait, then rotate to landscape. Check the content turns with the screen and nothing asks you to rotate back.',
+      'Load the page in landscape, then rotate to portrait, and check the same.',
+      'In each orientation, use the page: open the menus, fill in a form field, play a video. Check everything works.',
+      'Search the CSS and scripts for orientation locks, such as screen.orientation.lock() or a media query that hides the content in one orientation, and check each has a reason that is essential.',
+    ],
+    questions: [
+      {
+        question: 'Does a "please rotate your device" message fail 1.3.4?',
+        answer:
+          'Yes. W3C lists it as a failure. A person whose tablet is fixed to a wheelchair may not be able to rotate it.',
+      },
+      {
+        question: 'Do I have to design a separate layout for each orientation?',
+        answer:
+          'No. 1.3.4 asks only that the content is not locked to one orientation. The layout can change with the screen, as long as it shows and works either way.',
+      },
+      {
+        question: 'When is locking the orientation allowed?',
+        answer:
+          'Only when one orientation is essential, such as a piano keyboard app, a banking app that photographs a cheque, or slides made for a projector.',
+      },
+    ],
   },
 
   {
@@ -388,6 +486,7 @@ export const G1_3: readonly CriterionRecord[] = [
     since: '2.1',
     guideline: '1.3',
     labs: ['input-purpose'],
+    gist: 'Fields asking for the user’s own details must say in the markup what each one is for.',
     plain:
       'Fields collecting the user’s own information — name, email, address, phone — need to ' +
       'say which is which in the markup, via autocomplete. That is what lets a browser fill ' +
@@ -451,5 +550,28 @@ export const G1_3: readonly CriterionRecord[] = [
         'The input type matters too: type="email" gets the right keyboard on a phone and the ' +
         'right validation everywhere.',
     },
+    procedure: [
+      'List every form field that asks for information about the person filling it in: name, email, phone, address, date of birth, card details, username.',
+      'Inspect each field and read its autocomplete attribute. Check it is there and has the value that matches the field, such as autocomplete="email" or autocomplete="postal-code".',
+      'Check each value against the list of input purposes in WCAG, which uses the HTML autofill names. A misspelt or made-up value does nothing, and fails.',
+      'Fill the form in with your browser’s autofill. Check each field gets the right information.',
+    ],
+    questions: [
+      {
+        question: 'Does 1.3.5 apply to fields about someone else?',
+        answer:
+          'No. It covers fields that ask about the person using the form. A field for a friend’s email address in a referral form does not need to identify its purpose.',
+      },
+      {
+        question: 'Does every form field need an autocomplete attribute?',
+        answer:
+          'No. Only fields whose purpose is on the WCAG list of input purposes. A search box or a comment field has no matching purpose, so it needs none.',
+      },
+      {
+        question: 'Is a visible label enough to pass 1.3.5?',
+        answer:
+          'No. A label tells people what the field is for. 1.3.5 asks that software can tell too, through the autocomplete attribute, so a browser can fill the field in for people who find typing hard.',
+      },
+    ],
   },
 ];

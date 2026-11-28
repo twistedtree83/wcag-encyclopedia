@@ -81,3 +81,27 @@ Graph: `scripts2/prd-labs.json` · Parent: #40 · Integration branch: `labs`
 - [x] **L-22** #62 — Timing, audio and flashing: 2.2.2, 1.4.2 and 2.3.1 (L-21)
 - [x] **L-26** #66 — Media alternatives: 1.2.1, 1.2.3 and 1.2.5 (L-25)
 - [x] **L-27** #67 — Close out coverage: every criterion has a lab (L-04..L-26)
+
+## Search (SEO)
+
+- [x] **S-01** #69 — Site origin, canonical URLs, robots.txt and sitemap.xml
+- [x] **S-02** #70 — Unique titles and descriptions, and a head-metadata test
+- [x] **S-03** #71 — Open Graph, Twitter cards and generated share images (S-01)
+- [x] **S-04** #72 — Structured data (S-01)
+- [x] **S-05** #73 — A real 404 page (S-01)
+- [x] **S-06** #74 — Cloudflare Web Analytics
+- [x] **S-07** #75 — Blog: posts, the blog index and the post page (S-01, S-02, S-04)
+- [x] **S-08** #76 — Showing criterion examples and labs inside a post (S-07)
+- [x] **S-09** #77 — Blog feed and Further reading on criterion pages (S-07)
+- [x] **S-10** #78 — The writing standard and the writing test (S-07)
+- [ ] **S-11** #79 — Post: What's new in WCAG 2.2 (S-08, S-09, S-10, S-03)
+- [ ] **S-12** #80 — Post: The European Accessibility Act and WCAG (S-08, S-09, S-10, S-03)
+- [ ] **S-13** #81 — Post: Accessible forms: every criterion a form touches (S-08, S-09, S-10, S-03)
+- [ ] **S-14** #82 — Post: Colour contrast beyond text (S-08, S-09, S-10, S-03)
+- [ ] **S-15** #83 — Post: Keyboard accessibility (S-08, S-09, S-10, S-03)
+- [ ] **S-16** #84 — Post: How to test a page in 15 minutes (S-08, S-09, S-10, S-03)
+- [x] **S-17** #85 — Test procedures and common questions: record shape and sections (S-10)
+- [x] **S-18** #86 — Test procedures and common questions: Perceivable (S-17)
+- [x] **S-19** #87 — Test procedures and common questions: Operable (S-17)
+- [x] **S-20** #88 — Test procedures and common questions: Understandable (S-17)
+- [x] **S-21** #89 — Make test procedures and common questions required (S-18, S-19, S-20)

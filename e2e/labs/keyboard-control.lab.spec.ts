@@ -4,6 +4,7 @@ import { labCases, radio } from './support';
 labCases([
   {
     name: 'the reach-the-button lab on 2.1.1',
+    id: 'keyboard-control',
     url: '/criteria/2.1.1/',
     lab: '.lab-slot .kb-lab',
     passing: '2.1.1 passes',

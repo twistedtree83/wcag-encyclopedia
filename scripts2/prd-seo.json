@@ -19,7 +19,7 @@
       "depends": [],
       "importance": 1,
       "afk": true,
-      "passes": false
+      "passes": true
     },
     {
       "id": "S-02",
@@ -28,7 +28,7 @@
       "depends": [],
       "importance": 2,
       "afk": true,
-      "passes": false
+      "passes": true
     },
     {
       "id": "S-03",
@@ -39,7 +39,7 @@
       ],
       "importance": 3,
       "afk": true,
-      "passes": false
+      "passes": true
     },
     {
       "id": "S-04",
@@ -50,7 +50,7 @@
       ],
       "importance": 3,
       "afk": true,
-      "passes": false
+      "passes": true
     },
     {
       "id": "S-05",
@@ -61,7 +61,7 @@
       ],
       "importance": 4,
       "afk": true,
-      "passes": false
+      "passes": true
     },
     {
       "id": "S-06",
@@ -70,7 +70,7 @@
       "depends": [],
       "importance": 5,
       "afk": true,
-      "passes": false
+      "passes": true
     },
     {
       "id": "S-07",
@@ -83,7 +83,7 @@
       ],
       "importance": 2,
       "afk": true,
-      "passes": false
+      "passes": true
     },
     {
       "id": "S-08",
@@ -94,7 +94,7 @@
       ],
       "importance": 3,
       "afk": true,
-      "passes": false
+      "passes": true
     },
     {
       "id": "S-09",
@@ -105,7 +105,7 @@
       ],
       "importance": 3,
       "afk": true,
-      "passes": false
+      "passes": true
     },
     {
       "id": "S-10",
@@ -116,7 +116,7 @@
       ],
       "importance": 2,
       "afk": true,
-      "passes": false
+      "passes": true
     },
     {
       "id": "S-11",
@@ -211,7 +211,7 @@
       ],
       "importance": 2,
       "afk": true,
-      "passes": false
+      "passes": true
     },
     {
       "id": "S-18",
@@ -222,7 +222,7 @@
       ],
       "importance": 3,
       "afk": true,
-      "passes": false
+      "passes": true
     },
     {
       "id": "S-19",
@@ -233,7 +233,7 @@
       ],
       "importance": 3,
       "afk": true,
-      "passes": false
+      "passes": true
     },
     {
       "id": "S-20",
@@ -244,7 +244,7 @@
       ],
       "importance": 3,
       "afk": true,
-      "passes": false
+      "passes": true
     },
     {
       "id": "S-21",
@@ -257,7 +257,7 @@
       ],
       "importance": 4,
       "afk": true,
-      "passes": false
+      "passes": true
     }
   ]
 }

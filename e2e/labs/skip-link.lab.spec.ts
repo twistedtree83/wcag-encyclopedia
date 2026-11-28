@@ -4,6 +4,7 @@ import { labCases } from './support';
 labCases([
   {
     name: 'the skip link lab on 2.4.1',
+    id: 'skip-link',
     url: '/criteria/2.4.1/',
     lab: '.lab-slot .bp-lab',
     passing: '2.4.1 passes',

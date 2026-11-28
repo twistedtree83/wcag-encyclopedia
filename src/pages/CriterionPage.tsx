@@ -1,27 +1,31 @@
-import { useEffect, useState } from 'react';
-import type { CriterionRecord, Example } from '../criteria/types';
-import { LiveStage } from '../live/LiveStage';
+import { longDate, postsAbout, type PostMeta } from '../blog/post';
+import type { CriterionRecord } from '../criteria/types';
 import { principleFor } from '../criteria/structure';
 import { demoById } from '../demo/registry';
 import { labById } from '../labs/registry';
-import { LabStepsProvider } from '../labs/shared/LabShell';
+import { LabSlot } from '../labs/shared/LabSlot';
 import { Breadcrumb } from '../components/Breadcrumb';
 import { Facts } from '../components/Facts';
-import { FailIcon, PassIcon } from '../components/Icons';
+import { ExamplePair } from '../components/ExamplePair';
 import { IndexCard } from '../components/IndexCard';
 import { MarkupDiff } from '../components/MarkupDiff';
 import { Pager } from '../components/Pager';
 import { LevelTag, Marker, NewTag } from '../components/Tags';
 import { neighbours, related } from '../site/criterionNav';
-import { PATHS } from '../site/routes';
+import { trailFor } from '../site/breadcrumbs';
+import { useRoute } from '../site/RouteContext';
+import { criterionPath, postPath } from '../site/routes';
 
 /**
  * A criterion page, in the PRD's order: breadcrumb, head and facts, Broken then fixed, the
- * diff, the demos, the labs, "Also in", and the pager. The diff, demo and lab sections appear
- * only when the record has one. Everything except the demos' and labs' controls is readable
- * in the static HTML, before any script runs.
+ * diff, the demos, How to test, Common questions, the labs, "Further reading", "Also in", and
+ * the pager. The diff, demo and lab sections appear only when the record has one, and
+ * "Further reading" only when a post in `posts` (`POSTS`, every post's frontmatter) discusses
+ * the criterion. Everything except the demos' and labs' controls is readable in the static
+ * HTML, before any script runs.
  */
-export function CriterionPage({ record }: { record: CriterionRecord }) {
+export function CriterionPage({ record, posts = [] }: { record: CriterionRecord; posts?: readonly PostMeta[] }) {
+  const { href } = useRoute();
   const principle = principleFor(record.guideline);
   if (!principle) throw new Error(`${record.num}: no principle for guideline ${record.guideline}`);
 
@@ -35,18 +39,14 @@ export function CriterionPage({ record }: { record: CriterionRecord }) {
     if (!lab) throw new Error(`${record.num}: no lab ${id}`);
     return lab;
   });
+  const reading = postsAbout(record.num, posts);
   const also = related(record);
   const { prev, next } = neighbours(record.num);
+  const route = { path: criterionPath(record.num), page: 'criterion', num: record.num } as const;
 
   return (
     <>
-      <Breadcrumb
-        trail={[
-          { to: PATHS.home, label: 'Home' },
-          { to: PATHS.criteria, label: 'Criteria' },
-        ]}
-        current={`${record.num} ${record.name}`}
-      />
+      <Breadcrumb trail={trailFor(route, `${record.num} ${record.name}`)} />
 
       <section className="ch" aria-labelledby="criterion-title">
         <div>
@@ -72,7 +72,7 @@ export function CriterionPage({ record }: { record: CriterionRecord }) {
             </p>
           </div>
         </div>
-        <Examples fail={record.fail} pass={record.pass} />
+        <ExamplePair fail={record.fail} pass={record.pass} />
       </section>
 
       {record.diff ? (
@@ -109,6 +109,36 @@ export function CriterionPage({ record }: { record: CriterionRecord }) {
         </section>
       ) : null}
 
+      <section className="band" aria-labelledby="procedure-title">
+        <div className="bh">
+          <div>
+            <h2 id="procedure-title">How to test</h2>
+            <p>Check your own interface against {record.num}, one step at a time.</p>
+          </div>
+        </div>
+        <ol className="procedure">
+          {record.procedure.map((step) => (
+            <li key={step}>{step}</li>
+          ))}
+        </ol>
+      </section>
+
+      <section className="band" aria-labelledby="questions-title">
+        <div className="bh">
+          <div>
+            <h2 id="questions-title">Common questions</h2>
+          </div>
+        </div>
+        <div className="questions">
+          {record.questions.map(({ question, answer }) => (
+            <div className="questions__item" key={question}>
+              <h3>{question}</h3>
+              <p>{answer}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {labs.length > 0 ? (
         <section className="band" aria-labelledby="lab-title">
           <div className="bh">
@@ -121,14 +151,33 @@ export function CriterionPage({ record }: { record: CriterionRecord }) {
               </p>
             </div>
           </div>
-          {labs.map(({ id, title, steps, Lab }) => (
-            <div className="lab-slot" key={id}>
-              <h3>{title}</h3>
-              <LabStepsProvider steps={steps}>
-                <Lab criterion={record.num} />
-              </LabStepsProvider>
-            </div>
+          {labs.map((lab) => (
+            <LabSlot key={lab.id} lab={lab} criterion={record.num} />
           ))}
+        </section>
+      ) : null}
+
+      {reading.length > 0 ? (
+        <section className="band" aria-labelledby="reading-title">
+          <div className="bh">
+            <div>
+              <h2 id="reading-title">Further reading</h2>
+              <p>Posts from the blog that discuss this criterion alongside others, newest first.</p>
+            </div>
+          </div>
+          <ul className="posts posts--reading">
+            {reading.map((post) => (
+              <li key={post.slug}>
+                <h3>
+                  <a href={href(postPath(post.slug))}>{post.title}</a>
+                </h3>
+                <p className="posts__date">
+                  <time dateTime={post.published}>{longDate(post.published)}</time>
+                </p>
+                <p>{post.description}</p>
+              </li>
+            ))}
+          </ul>
         </section>
       ) : null}
 
@@ -152,42 +201,5 @@ export function CriterionPage({ record }: { record: CriterionRecord }) {
 
       <Pager {...(prev ? { prev } : {})} {...(next ? { next } : {})} />
     </>
-  );
-}
-
-/**
- * Broken then Fixed, side by side. A record whose examples have live versions pre-renders the
- * static ones, then swaps the live ones in after hydration (#43); the rest never change.
- */
-function Examples({ fail, pass }: { fail: Example; pass: Example }) {
-  const [hydrated, setHydrated] = useState(false);
-  useEffect(() => setHydrated(true), []);
-  const live = hydrated && !!fail.live && !!pass.live;
-  return (
-    <div className={live ? 'ex ex--live' : 'ex'}>
-      <Stage kind="bad" example={fail} live={live} />
-      <Stage kind="good" example={pass} live={live} />
-    </div>
-  );
-}
-
-function Stage({ kind, example, live }: { kind: 'bad' | 'good'; example: Example; live: boolean }) {
-  const broken = kind === 'bad';
-  return (
-    <figure className={`stage ${kind}`}>
-      <figcaption>
-        <span className="lbl">
-          {broken ? <FailIcon /> : <PassIcon />}
-          {broken ? 'Broken' : 'Fixed'}
-        </span>
-        <span className="sr">: </span>
-        <q>{example.caption}</q>
-      </figcaption>
-      {live && example.live ? (
-        <LiveStage kind={kind} live={example.live} />
-      ) : (
-        <div className="stage__example">{example.render()}</div>
-      )}
-    </figure>
   );
 }

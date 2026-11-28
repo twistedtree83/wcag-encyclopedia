@@ -3449,6 +3449,162 @@ footer.foot p {
   padding-left: 20px;
 }
 
+/* --- Blog: the index and the post page (S-07) ------------------------------------------- */
+
+.posts {
+  display: grid;
+  gap: 0;
+  max-width: 64ch;
+  margin: 48px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.posts li {
+  padding: 28px 0;
+  border-top: var(--bwid) solid var(--line-2);
+}
+/* Post titles are h2 on the blog index and h3 under a criterion page's "Further reading" (S-09). */
+.posts h2,
+.posts h3 {
+  font-size: calc(var(--h3) * 1.2 * var(--ts));
+  font-weight: var(--hw2);
+  line-height: 1.25;
+}
+.posts h2 a,
+.posts h3 a {
+  text-underline-offset: 4px;
+}
+.posts--reading {
+  margin-top: 8px;
+}
+.posts p {
+  margin: 8px 0 0;
+}
+.posts__date {
+  color: var(--ink-2);
+  font-size: var(--small);
+}
+.post h1 {
+  max-width: 22ch;
+}
+.post__dates {
+  margin: 24px 0 0;
+  color: var(--ink-2);
+  font-size: var(--small);
+}
+/*
+ * The body's own text runs at reading width. An embed (S-08: `::example`, `::lab`) takes the
+ * full width and keeps the look of its criterion page: no rule here reaches inside it.
+ */
+.post__body {
+  margin-top: 40px;
+}
+.post__body > :not(.embed) {
+  max-width: 64ch;
+}
+.post__body p:not(.embed *) {
+  margin: 0 0 16px;
+}
+.post__body h2:not(.embed *) {
+  margin: 48px 0 16px;
+  font-size: calc(var(--h3) * 1.5 * var(--ts));
+  font-weight: var(--hw);
+  letter-spacing: var(--hls);
+  line-height: 1.15;
+}
+.post__body h3:not(.embed *),
+.post__body h4:not(.embed *) {
+  margin: 32px 0 12px;
+  font-size: calc(var(--h3) * var(--ts));
+  font-weight: var(--hw2);
+  line-height: 1.25;
+}
+.post__body a:not(.embed *) {
+  text-underline-offset: 3px;
+}
+.post__body ul:not(.embed *),
+.post__body ol:not(.embed *) {
+  margin: 0 0 16px;
+  padding-left: 1.4em;
+}
+.post__body li:not(.embed *) {
+  margin: 0 0 6px;
+}
+.post__body blockquote:not(.embed *) {
+  margin: 0 0 16px;
+  padding: 0 0 0 20px;
+  border-left: 3px solid var(--line-2);
+  color: var(--ink-2);
+}
+.post__body code:not(.embed *) {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.92em;
+}
+/* Code blocks wrap rather than scroll, so there is no scrolling region to reach by keyboard. */
+.post__body pre:not(.embed *) {
+  margin: 0 0 16px;
+  padding: 14px 16px;
+  border-radius: 6px;
+  background: var(--card-bg);
+  font-size: var(--small);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.post__body hr:not(.embed *) {
+  margin: 32px 0;
+  border: 0;
+  border-top: var(--bwid) solid var(--line-2);
+}
+
+.post__body .embed {
+  margin: 32px 0;
+}
+.embed__lead,
+.embed__from {
+  max-width: 64ch;
+  margin: 0 0 18px;
+  color: var(--ink-2);
+}
+.embed__from {
+  margin: 18px 0 0;
+}
+
+/* --- Criterion page: how to test and common questions (S-17) ---------------------------- */
+
+.procedure {
+  max-width: 64ch;
+  margin: 0;
+  padding-left: 1.4em;
+}
+.procedure li {
+  margin: 0 0 12px;
+  padding-left: 0.3em;
+}
+.procedure li:last-child {
+  margin: 0;
+}
+.questions {
+  display: grid;
+  max-width: 64ch;
+}
+.questions__item {
+  padding: 24px 0;
+  border-top: var(--bwid) solid var(--line-2);
+}
+.questions__item:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+.questions h3 {
+  margin: 0 0 8px;
+  font-size: calc(var(--h3) * var(--ts));
+  font-weight: var(--hw2);
+  line-height: 1.25;
+}
+.questions p {
+  margin: 0;
+}
+
 /* --- Breakpoints ------------------------------------------------------------------------ */
 
 @media (max-width: 1100px) {

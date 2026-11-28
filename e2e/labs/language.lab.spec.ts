@@ -4,6 +4,7 @@ import { labCases, radio } from './support';
 labCases([
   {
     name: 'the page language lab on 3.1.1',
+    id: 'page-language',
     url: '/criteria/3.1.1/',
     lab: '.lab-slot .lang-lab',
     passing: '3.1.1 passes',
@@ -17,6 +18,7 @@ labCases([
   },
   {
     name: 'the language of parts lab on 3.1.2',
+    id: 'parts-language',
     url: '/criteria/3.1.2/',
     lab: '.lab-slot .lang-lab',
     passing: '3.1.2 passes',

@@ -4,6 +4,7 @@ import { labCases, axeStates, radio } from './support';
 labCases([
   {
     name: 'the alt text lab on 1.1.1',
+    id: 'alt-text',
     url: '/criteria/1.1.1/',
     lab: '.lab-slot .alt-lab',
     passing: '1.1.1 passes',

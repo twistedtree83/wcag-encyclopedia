@@ -357,6 +357,30 @@ export const G1_4: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'Find everything on the page that uses colour to say something: links in text, required or invalid form fields, chart lines and segments, status labels, selected tabs, calendar days.',
+      'Turn the page grey with the Rendering panel in Chrome or Edge DevTools (Emulate vision deficiencies, then Achromatopsia) and look at each item again.',
+      'Check each one still says the same thing without colour, through an icon, a text label, an underline, a pattern or a change of shape.',
+      'For links inside a paragraph with no underline, measure the link colour against the text colour around it with the DevTools colour picker or the free Colour Contrast Analyser. At 3:1 or more, the link still needs an underline or another cue on hover and focus; below 3:1, it needs one all the time.',
+      'Read any instruction that names a colour, such as "fields in red are required", and check the same information is given another way.',
+    ],
+    questions: [
+      {
+        question: 'Do links in body text have to be underlined to pass 1.4.1?',
+        answer:
+          'No. An underline is the simplest other cue, but W3C also accepts links that differ from the text around them by colour, when the link colour has a contrast ratio of at least 3:1 with that text and the link gains an underline or another cue on hover and focus.',
+      },
+      {
+        question: 'Can I use red to show an error?',
+        answer:
+          'Yes, as long as red is not the only sign. Add an icon or a message in text, so a person who cannot tell red from other colours still finds the error.',
+      },
+      {
+        question: 'Does a chart pass 1.4.1 if each line has its own colour?',
+        answer:
+          'Only when something else tells the lines apart as well, such as a label at the end of each line, a different marker shape or a dashed pattern.',
+      },
+    ],
   },
 
   {
@@ -366,6 +390,7 @@ export const G1_4: readonly CriterionRecord[] = [
     since: '2.1',
     guideline: '1.4',
     labs: ['colour-check', 'non-text-contrast'],
+    gist: 'Field edges, checkboxes and focus rings need 3:1 contrast.',
     plain:
       'The parts of a control that tell you it is a control — the input’s edge, the checkbox ' +
       'box, the focus ring, the chart key — need 3:1 against whatever sits behind them.',
@@ -433,6 +458,31 @@ export const G1_4: readonly CriterionRecord[] = [
         'Lines are marked - and + as well as tinted, so the diff reads without colour. One ' +
         'declaration fixes every control that shares the class.',
     },
+    procedure: [
+      'List each control whose edge people need to see to find it: text inputs, checkboxes, radio buttons, switches, and buttons with only an icon.',
+      'Measure each edge against the background next to it with the DevTools colour picker or the free Colour Contrast Analyser. It needs at least 3:1.',
+      'Check each state that shows by appearance alone: the tick in a checked box, the knob of a switch, the marker under the selected tab. Each needs 3:1 against what is next to it.',
+      'Tab through the page and measure the focus indicator of each control against the background around it. It needs 3:1 too.',
+      'Find the graphics people need to understand the content, such as icons with no text, chart lines and pie segments, and measure each against its background. Leave out parts whose information is also given in text, such as a pie segment with its value printed on it.',
+      'Leave out disabled controls, and controls left in the browser’s default style.',
+    ],
+    questions: [
+      {
+        question: 'Does a button with text need a visible border to pass 1.4.11?',
+        answer:
+          'No. When the text shows that it is a button, no edge is needed. A border helps some people, but 1.4.11 does not ask for one.',
+      },
+      {
+        question: 'Does the focus indicator need 3:1 contrast?',
+        answer:
+          'Yes. A focus indicator is a visual state of the control, and W3C says it needs 3:1 against the background next to it.',
+      },
+      {
+        question: 'Do disabled controls need 3:1 contrast?',
+        answer:
+          'No. Controls people cannot use are exempt, and so are controls whose look the browser sets and the author has not changed.',
+      },
+    ],
   },
   {
     num: '1.4.10',
@@ -442,11 +492,12 @@ export const G1_4: readonly CriterionRecord[] = [
     guideline: '1.4',
     demos: ['reflow-1-4-10'],
     labs: ['reflow'],
+    gist: 'At 320 CSS pixels wide, a page scrolls one way only.',
     plain:
       'At 320 CSS pixels wide, content must not require scrolling in two directions. Same ' +
       'content, one column, no horizontal scrollbar.',
     fail: {
-      caption: 'Fixed-width columns: zoomed to 320px wide, the page scrolls sideways as well as down.',
+      caption: 'Fixed-width columns make the page scroll sideways as well as down at 320px wide.',
       live: { Example: FixedCatalogue, ...REFLOW_LIVE },
       render: () => (
         <div className="mini">
@@ -498,6 +549,30 @@ export const G1_4: readonly CriterionRecord[] = [
         'A fixed track cannot reflow. Letting each track shrink to the width available, and ' +
         'letting auto-fit decide the count, is what turns three columns into one.',
     },
+    procedure: [
+      'Set the browser window to 1280px wide and zoom to 400%, or set the device toolbar in DevTools to 320px wide. Both give a viewport 320 CSS pixels wide.',
+      'Scroll through the page. Check you only need to scroll up and down, never sideways, to read the text.',
+      'Check nothing has been lost. Navigation can move into a menu button, but every link, control and piece of content must still be there and work.',
+      'Note anything that still scrolls sideways and check it needs two dimensions to make sense, such as a data table, a map, a diagram or a video. The text around it must still reflow.',
+      'For content that scrolls sideways by design, such as text set in vertical lines, set the viewport to 256 CSS pixels tall and check you only need to scroll in one direction.',
+    ],
+    questions: [
+      {
+        question: 'Can a data table scroll sideways and still pass 1.4.10?',
+        answer:
+          'Yes. A data table needs two dimensions to make sense, so it is exempt, ideally inside its own scrolling container. The headings and text around the table still have to reflow.',
+      },
+      {
+        question: 'Can I hide content behind a menu at 320px?',
+        answer:
+          'Yes, as long as people can still reach it. Moving the navigation into a menu button is not a loss of content.',
+      },
+      {
+        question: 'Is 1.4.10 the same as 1.4.4 Resize Text?',
+        answer:
+          'No. 1.4.4 asks that text can grow to 200% without loss. 1.4.10 asks that, at 400% zoom on a 1280px window, people can read the page by scrolling in one direction only.',
+      },
+    ],
   },
   {
     num: '1.4.2',
@@ -506,6 +581,8 @@ export const G1_4: readonly CriterionRecord[] = [
     since: '2.0',
     guideline: '1.4',
     labs: ['audio-control'],
+    gist:
+      'Sound that plays on its own for more than three seconds needs a control on the page to stop it.',
     plain:
       'If sound plays automatically for more than three seconds, there has to be a way to stop ' +
       'it — a control on the page, not just the operating system volume. Screen reader users ' +
@@ -540,6 +617,30 @@ export const G1_4: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'Load each page with the sound on and wait. Note any audio that starts without you pressing anything, including background music and videos that play by themselves.',
+      'Time each one. Audio that stops by itself within 3 seconds passes.',
+      'For audio that runs longer, look for a control that pauses or stops it, or one that turns its volume down separately from your computer’s volume.',
+      'Check the control is near the top of the page and you reach it early with the Tab key, so a screen reader user can find it while the audio plays over their screen reader.',
+      'Use the control and check the audio stops or goes quiet.',
+    ],
+    questions: [
+      {
+        question: 'Is the computer’s own volume control enough for 1.4.2?',
+        answer:
+          'No. Turning the system volume down silences the screen reader too. The page needs its own way to pause, stop or quieten the audio.',
+      },
+      {
+        question: 'Does 1.4.2 apply to a video the user starts?',
+        answer:
+          'No. It covers audio that plays by itself. Audio started by pressing a clearly labelled play button is the user’s choice.',
+      },
+      {
+        question: 'Does a short notification sound fail 1.4.2?',
+        answer:
+          'No, when it lasts 3 seconds or less. Only audio that plays by itself for longer needs a control.',
+      },
+    ],
   },
 
   {
@@ -592,6 +693,35 @@ export const G1_4: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'List every text colour on the page against the background behind it, including links, buttons, placeholder text, error messages and text on images.',
+      'Measure each pair with the colour picker in Chrome or Edge DevTools, which shows the contrast ratio, or with the free Colour Contrast Analyser.',
+      'Check body text reaches at least 4.5:1. Large text, at least 24px, or about 18.5px when bold, needs at least 3:1.',
+      'Check the states too: hover, focus, visited and selected. A link that turns paler on hover has to meet the ratio in that state as well.',
+      'For text over a photo or a gradient, measure against the part of the background closest in colour to the text.',
+    ],
+    questions: [
+      {
+        question: 'Does disabled text need to meet 1.4.3?',
+        answer:
+          'No. Text in a control people cannot use, such as a disabled button, is exempt.',
+      },
+      {
+        question: 'Does placeholder text need to meet 1.4.3?',
+        answer:
+          'Yes. Placeholder text is text, so it needs 4.5:1 against the field background, like any other text of its size.',
+      },
+      {
+        question: 'Does a ratio of 4.49:1 round up to pass?',
+        answer:
+          'No. W3C says the ratio is not rounded, so anything below 4.5:1 fails for normal text, however close.',
+      },
+      {
+        question: 'Does the text in a logo need to meet 1.4.3?',
+        answer:
+          'No. Text that is part of a logo or brand name is exempt. Text you made pale by choice, and not because the brand requires it, is not.',
+      },
+    ],
   },
 
   {
@@ -652,6 +782,30 @@ export const G1_4: readonly CriterionRecord[] = [
       ],
       note: 'Each box was locked at the size its text had as designed. Take the lock off and the box grows with its text: almost every resize failure is a fixed size or clipped overflow.',
     },
+    procedure: [
+      'Set the browser window to about 1280px wide and zoom in (Ctrl and + on Windows, Cmd and + on a Mac) until the zoom level shows 200%.',
+      'Read the whole page at 200%. Check no text is cut off, hidden behind other content or overlapping it.',
+      'Use each control at 200%: open the menus, fill in the form fields, open any dialog. Check you can still reach and use everything, and that the text in form fields grew too.',
+      'Check the steps on the way, such as 150%, for anything that breaks only at that size.',
+      'In Firefox, try View > Zoom > Zoom Text Only at 200%. Text-only zoom is not required, but it shows up boxes with a fixed height that clip their text.',
+    ],
+    questions: [
+      {
+        question: 'Is browser zoom enough to pass 1.4.4?',
+        answer:
+          'Yes, when the page works at 200% with it. Text has to resize to 200% by one way browsers support, and full-page zoom is one. You do not need a text size control of your own.',
+      },
+      {
+        question: 'Does horizontal scrolling at 200% fail 1.4.4?',
+        answer:
+          'No, not by itself. 1.4.4 fails when text or controls are lost. 1.4.10 Reflow is the criterion that limits scrolling in two directions, at 320 CSS pixels wide.',
+      },
+      {
+        question: 'Do captions and images of text have to resize?',
+        answer:
+          'No. Both are exempt from 1.4.4, though real text is still the better choice, because images of text blur when they are enlarged.',
+      },
+    ],
   },
 
   {
@@ -694,6 +848,30 @@ export const G1_4: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'Find every image on the page that shows text: banners, buttons drawn as images, headings set in a special font, quotes, screenshots.',
+      'Try to select the text with the mouse, or find it with the browser’s find in page (Ctrl+F or Cmd+F). Text you cannot select or find is probably an image.',
+      'Zoom to 400% and look at the edges of the letters. Text in a bitmap image blurs or shows pixels; real text stays sharp.',
+      'For each image of text, ask whether HTML and CSS could show the same thing. Most could, with a web font and styling.',
+      'Treat as exempt only logos, text whose exact look is the point (such as a font sample or a scanned letter), and images people can restyle themselves, choosing the font, size and colours.',
+    ],
+    questions: [
+      {
+        question: 'Does alt text make an image of text pass 1.4.5?',
+        answer:
+          'No. Alt text meets 1.1.1 Non-text Content, but 1.4.5 asks for real text wherever real text can give the same look.',
+      },
+      {
+        question: 'Is a logo an image of text?',
+        answer:
+          'Yes, but it is exempt. Text that is part of a logo or brand name counts as essential, so it can stay an image.',
+      },
+      {
+        question: 'Is a screenshot of code an image of text?',
+        answer:
+          'Yes. If the point is the code, show it as text in a pre element, which people can resize, restyle and copy.',
+      },
+    ],
   },
 
   {
@@ -703,6 +881,7 @@ export const G1_4: readonly CriterionRecord[] = [
     since: '2.1',
     guideline: '1.4',
     labs: ['text-spacing'],
+    gist: 'Text must survive a reader loosening its line, paragraph, letter and word spacing.',
     plain:
       'A reader must be able to increase line height to 1.5×, paragraph spacing to 2×, letter ' +
       'spacing to 0.12em, and word spacing to 0.16em without losing content. People with ' +
@@ -738,6 +917,30 @@ export const G1_4: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'Get a free way to override text spacing, such as a text spacing bookmarklet or a user style in the Stylus extension, set to line height 1.5 times the font size, paragraph spacing 2 times, letter spacing 0.12 times and word spacing 0.16 times.',
+      'Apply the spacing to the page and read it through. Check no text is cut off, hidden by other content or overlapping it.',
+      'Look closely at boxes with a fixed size: buttons, tabs, cards, badges, navigation bars and form fields. These are where text usually spills out or gets clipped.',
+      'Open the menus, tooltips and dialogs with the spacing applied, and check their text too.',
+      'Check each control still works and its label can still be read in full.',
+    ],
+    questions: [
+      {
+        question: 'Does my site have to use the 1.4.12 spacing values?',
+        answer:
+          'No. 1.4.12 asks that nothing breaks when a person applies them. Your own design can use any spacing.',
+      },
+      {
+        question: 'Does 1.4.12 apply to captions burned into a video?',
+        answer:
+          'No. Text drawn into an image or a video frame cannot take new spacing. Captions sent as a separate text track can, so they are a different case.',
+      },
+      {
+        question: 'Does 1.4.12 apply to a script that does not use one of these properties?',
+        answer:
+          'No, not for that property. A page in Japanese, which does not put spaces between words, is tested without word spacing.',
+      },
+    ],
   },
 
   {
@@ -746,6 +949,7 @@ export const G1_4: readonly CriterionRecord[] = [
     level: 'AA',
     since: '2.1',
     guideline: '1.4',
+    gist: 'A tooltip shown on hover or focus must stay put until the reader dismisses it.',
     plain:
       'Anything that appears on hover or focus — a tooltip, a popover, a dropdown — has to be ' +
       'dismissable without moving the pointer, stay visible while the pointer travels into it, ' +
@@ -795,5 +999,29 @@ export const G1_4: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'Find everything that appears when you hover over or focus something: tooltips, preview cards, submenus, hints beside form fields.',
+      'Hover over each trigger, then press Escape without moving the mouse. Check the extra content closes. Do the same after moving focus to the trigger with the Tab key.',
+      'Hover over each trigger and move the pointer slowly onto the content that appeared. Check it stays open while the pointer is on it.',
+      'Show each one and wait without moving. Check it stays until you move the pointer or focus away, close it, or it stops being relevant, and does not vanish on a timer.',
+      'Leave out tooltips the browser draws from a title attribute: the browser controls them, so they are exempt.',
+    ],
+    questions: [
+      {
+        question: 'Do title attribute tooltips have to meet 1.4.13?',
+        answer:
+          'No. The browser draws them and the author cannot change how they look, so they are exempt.',
+      },
+      {
+        question: 'Does the extra content have to close with Escape?',
+        answer:
+          'No, not with that key in particular. People need a way to close it without moving the pointer or focus, and Escape is the usual one.',
+      },
+      {
+        question: 'Does an error message shown on focus have to be dismissible?',
+        answer:
+          'No. Content that reports an input error, or that covers nothing else, is exempt from the dismissible part. It still has to stay open while the pointer is over it and until focus leaves the trigger.',
+      },
+    ],
   },
 ];

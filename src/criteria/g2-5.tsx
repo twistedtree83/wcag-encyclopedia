@@ -350,6 +350,8 @@ export const G2_5: readonly CriterionRecord[] = [
     level: 'A',
     since: '2.1',
     guideline: '2.5',
+    gist:
+      'Pinches, swipes and other path or multi-finger gestures need a single-pointer alternative.',
     plain:
       'Anything driven by a multi-finger or path-based gesture — pinch, two-finger rotate, ' +
       'swipe along a track — needs a single-pointer alternative, unless the path itself is the ' +
@@ -390,6 +392,29 @@ export const G2_5: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'List every function the page operates with a gesture: a swipe through a carousel, a pinch to zoom a map, a two-finger rotate, a shape traced on a pattern lock.',
+      'Leave out the gestures the browser or the operating system provides, such as pinch to zoom the whole page. Only gestures the page itself handles count.',
+      'For each gesture, look for a way to do the same thing with single taps or clicks: next and previous buttons, zoom in and zoom out buttons, a menu option.',
+      'Use that alternative with one finger on a phone, or with a mouse click on a computer. Check that it does everything the gesture does.',
+    ],
+    questions: [
+      {
+        question: 'Does a keyboard alternative satisfy 2.5.1?',
+        answer:
+          'No. A person with a head pointer or one finger may have no keyboard to hand. The gesture needs an alternative they can work with single taps or clicks, such as a button.',
+      },
+      {
+        question: 'Is dragging a path-based gesture?',
+        answer:
+          'No, when only the start and the end of the movement matter, as in drag and drop. That is a dragging movement, which 2.5.7 Dragging Movements covers. A gesture is path-based when the route the pointer takes is part of the input, such as a swipe in one direction or a traced shape.',
+      },
+      {
+        question: 'Does the browser’s pinch to zoom count for 2.5.1?',
+        answer:
+          'No. 2.5.1 covers gestures the page provides, not ones built into the browser or the operating system. A map that handles its own pinch gesture is covered, and needs zoom buttons too.',
+      },
+    ],
   },
 
   {
@@ -398,6 +423,8 @@ export const G2_5: readonly CriterionRecord[] = [
     level: 'A',
     since: '2.1',
     guideline: '2.5',
+    gist:
+      'Actions should fire when the pointer is released, so a reader can slide off a wrong target.',
     plain:
       'Actions should fire on release, not on press — so someone who lands on the wrong control ' +
       'can slide off it and nothing happens. Firing on down-press removes the chance to change ' +
@@ -436,6 +463,30 @@ export const G2_5: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'Press down on each button, link and control with the mouse, and hold the button down. Check that nothing happens yet.',
+      'Still holding it down, move the pointer off the control and let go. Check that the action does not happen.',
+      'Search the scripts for mousedown, pointerdown and touchstart handlers. For each one that runs an action, check that the action can be undone, or that releasing reverses it, as a press-and-hold button that shows something only while held does.',
+      'Drag any item that can be dragged and drop it outside every drop target. Check that it goes back to where it started.',
+      'For any action left that does run on the press, check that the press is essential, as it is for an on-screen piano key.',
+    ],
+    questions: [
+      {
+        question: 'Does a click handler pass 2.5.2?',
+        answer:
+          'Yes. The click event fires when the pointer is released over the same element it was pressed on, so moving off before letting go cancels it. Most failures come from handlers on mousedown, pointerdown or touchstart.',
+      },
+      {
+        question: 'Does drag and drop pass 2.5.2?',
+        answer:
+          'Yes, when the person can cancel the drop. Dropping the item outside a target, or back where it started, should leave everything as it was; an undo step after the drop works too.',
+      },
+      {
+        question: 'Can an on-screen keyboard act on the press?',
+        answer:
+          'Yes. A control that stands in for a physical key, such as a keyboard or a piano key, is expected to act on the press, so that is essential and is exempt.',
+      },
+    ],
   },
 
   {
@@ -490,6 +541,30 @@ export const G2_5: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'List every control on the page that shows text on screen: buttons, links, and form fields with a label beside them.',
+      'Open the accessibility inspector in your browser (the Accessibility pane in Chrome or Edge DevTools, or the Accessibility tab in Firefox) and read the name of each one.',
+      'Check that the name contains the visible text, in the same order. Differences of capital letters and punctuation do not matter.',
+      'Where the name adds words, check that the visible text comes first: a button showing "Send" named "Send message" is better than one named "Message: send".',
+      'Turn on speech recognition (Voice Control on a Mac, Voice access on Windows 11) and say "Click" followed by the visible text of each control. Check that it activates the right one.',
+    ],
+    questions: [
+      {
+        question: 'Must the accessible name match the visible label exactly?',
+        answer:
+          'No. The name has to contain the visible text, and it can add to it. Putting the visible words at the start of the name is the safe choice, because that is what voice control users will say.',
+      },
+      {
+        question: 'Does 2.5.3 apply to an icon button with no visible text?',
+        answer:
+          'No. 2.5.3 applies only where there is visible text to match. An icon button still needs a name that says what it does, which 4.1.2 Name, Role, Value covers.',
+      },
+      {
+        question: 'Does a close button shown as "X" need the name "X"?',
+        answer:
+          'No. A symbol is not treated as a text label, so name the button for what it does, such as "Close".',
+      },
+    ],
   },
 
   {
@@ -498,6 +573,8 @@ export const G2_5: readonly CriterionRecord[] = [
     level: 'A',
     since: '2.1',
     guideline: '2.5',
+    gist:
+      'Anything done by shaking or tilting the device needs an ordinary control too, and a way to turn the motion off.',
     plain:
       'If moving the device does something — shake to undo, tilt to steer — there has to be a ' +
       'normal control that does it too, and a way to switch the motion trigger off. Someone ' +
@@ -539,6 +616,31 @@ export const G2_5: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'List every function the page runs from device motion or from gestures picked up by a camera: shake to undo, tilt to scroll, wave to go to the next page.',
+      'Open the page on a phone or tablet and try each movement, to confirm which functions respond.',
+      'For each one, find a button or another control on screen that does the same thing. Check that it works without moving the device.',
+      'Look for a setting that turns off the response to motion, and turn it off.',
+      'Shake and tilt the device again. Check that nothing happens.',
+      'For any function left without both, check that the motion is essential to it, as counting steps is for a pedometer.',
+    ],
+    questions: [
+      {
+        question: 'Does shake to undo fail 2.5.4?',
+        answer:
+          'Only when it is the only way to undo or cannot be turned off. Give an undo button on screen, and a setting that stops shaking from doing anything.',
+      },
+      {
+        question: 'Does 2.5.4 cover gestures picked up by a camera?',
+        answer:
+          'Yes, when a gesture of the hand, face or eyes is the input. Pointing the camera at a QR code or a document is not a gesture, so it is outside 2.5.4.',
+      },
+      {
+        question: 'Does a game controlled by tilting the device fail 2.5.4?',
+        answer:
+          'Only when tilting is not essential to the game. Where the game exists to be steered by tilting, the motion is essential and is exempt. Where it is one way to move among others, it needs an on-screen control and a way to turn it off.',
+      },
+    ],
   },
 
   {
@@ -589,6 +691,29 @@ export const G2_5: readonly CriterionRecord[] = [
         </>
       ),
     },
+    procedure: [
+      'List every function the page operates by dragging: sliders, sortable lists, kanban cards, map panning, file drop zones, image croppers.',
+      'Leave out dragging the browser provides, such as its own scrollbars and touch scrolling. Content that builds its own scrolling is not left out.',
+      'For each drag, look for a way to do the same thing with single taps or clicks: up and down buttons on a list item, a click on a slider track, a menu that moves a card, arrow buttons on a map.',
+      'Use that alternative with a mouse, clicking without holding the button down. Check that it reaches every result the drag can reach.',
+    ],
+    questions: [
+      {
+        question: 'Does a keyboard alternative satisfy 2.5.7?',
+        answer:
+          'No. Someone using a pointer who cannot hold and move it needs an alternative they can work by tapping or clicking. A sortable list that works with the arrow keys still needs buttons that move an item.',
+      },
+      {
+        question: 'Does a range slider pass 2.5.7?',
+        answer:
+          'Yes, when clicking or tapping any point on the track moves the thumb there. Buttons beside the slider that step the value up and down work too.',
+      },
+      {
+        question: 'Does dragging the browser’s scrollbar count for 2.5.7?',
+        answer:
+          'No. Scrollbars and touch scrolling that the browser provides are out of scope. A page that turns off native scrolling and drags its own content is in scope again.',
+      },
+    ],
   },
 
   {
@@ -599,6 +724,8 @@ export const G2_5: readonly CriterionRecord[] = [
     guideline: '2.5',
     demos: ['targets-2-5-8'],
     labs: ['target-size'],
+    gist:
+      'Targets need to be at least 24 by 24 CSS pixels, or spaced so a 24px circle on each overlaps none.',
     plain:
       'Targets need to be at least 24 by 24 CSS pixels, or spaced so that a 24px circle centred ' +
       'on each does not overlap its neighbours. New in WCAG 2.2. Inline links in a sentence are ' +
@@ -652,5 +779,29 @@ export const G2_5: readonly CriterionRecord[] = [
         '24px is the floor, not the goal. Platform guidance asks for 44–48px, which is what ' +
         'this page uses for its own controls.',
     },
+    procedure: [
+      'List every target on the page that a pointer can activate: buttons, links outside sentences, icons, checkboxes, the close button of a dialog.',
+      'Open your browser’s developer tools (Chrome, Edge or Firefox) and inspect each small target. Read its width and height in CSS pixels from the box model.',
+      'Check that each target is at least 24 by 24 CSS pixels.',
+      'For each smaller one, draw an imaginary circle 24 pixels across centred on it. Check that the circle does not touch another target, or the circle of another small target. A row of 20-pixel icons needs a gap of at least 4 pixels between them.',
+      'For any target that still fails, check the exceptions: a link inside a sentence, a control the browser draws and the page has not restyled, another control on the page that does the same thing and is big enough, or a size that is essential, such as pins on a map.',
+    ],
+    questions: [
+      {
+        question: 'Do links inside a paragraph have to be 24 by 24 pixels?',
+        answer:
+          'No. Targets inside a sentence, or held to the line height of the text around them, are exempt. Making them taller would change how the text reads.',
+      },
+      {
+        question: 'Does a 16-pixel icon button fail 2.5.8?',
+        answer:
+          'Only when it is too close to another target. It passes if a circle 24 pixels across, centred on it, touches no other target and no other small target’s circle.',
+      },
+      {
+        question: 'Is 24 pixels the size to design for?',
+        answer:
+          'No, it is the minimum. 2.5.5 Target Size (Enhanced), at Level AAA, asks for 44 by 44 CSS pixels, and that is the better aim for the controls people use most.',
+      },
+    ],
   },
 ];

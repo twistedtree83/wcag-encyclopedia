@@ -4,6 +4,7 @@ import { labCases, radio } from './support';
 labCases([
   {
     name: 'the orientation lab on 1.3.4',
+    id: 'orientation',
     url: '/criteria/1.3.4/',
     lab: '.lab-slot .orient-lab',
     passing: '1.3.4 passes',

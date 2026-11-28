@@ -4,6 +4,7 @@ import { labCases, radio } from './support';
 labCases([
   {
     name: 'the shuffle-the-menu lab on 3.2.3',
+    id: 'consistent-navigation',
     url: '/criteria/3.2.3/',
     lab: '.lab-slot .nav-lab',
     passing: '3.2.3 passes',

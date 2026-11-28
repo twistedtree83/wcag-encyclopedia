@@ -29,6 +29,8 @@ const record = (
   plain: more.plain ?? 'x',
   fail: { render: () => null, caption: more.failCaption ?? 'c' },
   pass: { render: () => null, caption: 'pass caption only' },
+  procedure: [],
+  questions: [],
 });
 
 const CRITERIA = [

@@ -4,6 +4,7 @@ import { labCases, radio } from './support';
 labCases([
   {
     name: 'the map-buttons lab on 2.5.1',
+    id: 'pointer-gestures',
     url: '/criteria/2.5.1/',
     lab: '.lab-slot .pg-lab',
     passing: '2.5.1 passes',
@@ -17,6 +18,7 @@ labCases([
   },
   {
     name: 'the slide-off lab on 2.5.2',
+    id: 'pointer-cancellation',
     url: '/criteria/2.5.2/',
     lab: '.lab-slot .pc-lab',
     passing: '2.5.2 passes',
@@ -30,6 +32,7 @@ labCases([
   },
   {
     name: 'the shake-to-undo lab on 2.5.4',
+    id: 'motion-actuation',
     url: '/criteria/2.5.4/',
     lab: '.lab-slot .ma-lab',
     passing: '2.5.4 passes',
@@ -45,6 +48,7 @@ labCases([
   },
   {
     name: 'the reorder lab on 2.5.7',
+    id: 'dragging-movements',
     url: '/criteria/2.5.7/',
     lab: '.lab-slot .dm-lab',
     passing: '2.5.7 passes',

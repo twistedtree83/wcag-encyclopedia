@@ -4,6 +4,7 @@ import { labCases, radio } from './support';
 labCases([
   {
     name: 'the accessible authentication lab on 3.3.8',
+    id: 'accessible-auth',
     url: '/criteria/3.3.8/',
     lab: '.lab-slot .auth-lab',
     passing: '3.3.8 passes',
