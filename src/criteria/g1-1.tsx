@@ -137,5 +137,35 @@ export const G1_1: readonly CriterionRecord[] = [
         'An empty alt is a decision; a missing alt attribute is not. Without one, many screen ' +
         'readers fall back to reading the filename aloud.',
     },
+    procedure: [
+      'List every piece of non-text content on the page: photos, icons, SVG graphics, charts, image buttons, images of text, and CSS background images that carry information.',
+      'Open the accessibility inspector in your browser (the Accessibility pane in Chrome or Edge DevTools, or the Accessibility tab in Firefox) and select each one. Read the name it shows: for an img element, that is its alt text.',
+      'Ask of each name whether it gives the same information, or does the same job, as the image. A product photo needs what matters about the product; an icon button needs what the button does, not what the icon looks like.',
+      'Check each decorative image is hidden from assistive technology: alt="" on an img, aria-hidden="true" on an inline SVG, or the image set as a CSS background. An img with no alt attribute at all fails, because a screen reader may read out its file name.',
+      'Find each chart, diagram or map and check a longer description sits next to it or is linked from it, such as the data as a table or a paragraph that says what the chart shows.',
+      'Turn on a screen reader (NVDA on Windows, VoiceOver on a Mac) and move through the page. Each meaningful image should be read out with its alternative, and no decorative one should be read at all.',
+    ],
+    questions: [
+      {
+        question: 'Do decorative images need alt text to pass 1.1.1?',
+        answer:
+          'No. They need to be hidden from assistive technology instead, and alt="" does that for an img. Leaving the alt attribute off is not the same: a screen reader may then read out the file name.',
+      },
+      {
+        question: 'Does an icon button pass 1.1.1 if the icon is clear?',
+        answer:
+          'No. The button needs a text name that says what it does, such as "Search" for a magnifying glass: alt on an image button, or aria-label on a button that holds an SVG.',
+      },
+      {
+        question: 'Is a short alt enough for a chart?',
+        answer:
+          'Only when the chart makes one point that a sentence can carry. Otherwise give a short alternative that names the chart, and a longer description next to it, such as the data as a table or a summary of the trend.',
+      },
+      {
+        question: 'Does a CAPTCHA fail 1.1.1?',
+        answer:
+          'Only when it has no text saying what it is for, or no other version for a different sense. A visual puzzle can stay if text names it as a test that you are human and an audio version sits beside it.',
+      },
+    ],
   },
 ];

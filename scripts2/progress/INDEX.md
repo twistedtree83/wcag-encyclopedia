@@ -101,7 +101,7 @@ Graph: `scripts2/prd-labs.json` · Parent: #40 · Integration branch: `labs`
 - [ ] **S-15** #83 — Post: Keyboard accessibility (S-08, S-09, S-10, S-03)
 - [ ] **S-16** #84 — Post: How to test a page in 15 minutes (S-08, S-09, S-10, S-03)
 - [x] **S-17** #85 — Test procedures and common questions: record shape and sections (S-10)
-- [ ] **S-18** #86 — Test procedures and common questions: Perceivable (S-17)
+- [x] **S-18** #86 — Test procedures and common questions: Perceivable (S-17)
 - [x] **S-19** #87 — Test procedures and common questions: Operable (S-17)
 - [ ] **S-20** #88 — Test procedures and common questions: Understandable (S-17)
 - [ ] **S-21** #89 — Make test procedures and common questions required (S-18, S-19, S-20)
