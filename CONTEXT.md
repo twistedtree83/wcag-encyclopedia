@@ -182,6 +182,11 @@ its own. It is one Markdown file, `src/blog/posts/<slug>.md`: its **frontmatter*
 into a tree of plain nodes (`PostNode`, `src/blog/post.ts`). The **slug** is the file name and
 the post's address, `/blog/<slug>/`, and never changes once published.
 
+**Writing standard** — `docs/WRITING.md`, the voice, banned constructions, substance, sources
+and length every post, test procedure and common question is written to. The **writing test**
+(`tests/writing.test.ts`, its rules in `tests/writing.ts`) checks the parts a machine can, in
+the verify gate; the owner's review of the pull request checks the rest (ADR 0007).
+
 **Blog index** — `/blog/`, every post newest first with its date and description. "Blog" is in
 the header nav, and the index and the post pages sit under it.
 

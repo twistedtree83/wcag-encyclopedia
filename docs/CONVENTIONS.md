@@ -137,6 +137,11 @@ criteria: [1.4.3, 1.4.11]                                      # every criterion
   `src/site/share.ts`), which is also its `BlogPosting` image; the blog index has the site card.
 - **Routes without Vite.** `src/blog/slugs.ts` lists the slugs with `import.meta.glob`, and falls
   back to reading the folder when the e2e specs import `ROUTES` without Vite. The two must agree.
+- **The writing test.** Every post is also drafted to `docs/WRITING.md` and checked by
+  `tests/writing.test.ts` (rules as data in `tests/writing.ts`): banned phrases and patterns,
+  criterion links that name their criterion, a `## Sources` section on allowed domains, and
+  900–2,500 words. It reads `src/blog/posts/` from disk, so the fixture post is never held to
+  it. The same prose rules run over each record's `procedure` and `questions` (S-17).
 - **The fixture post**, `tests/fixtures/posts/fixture-contrast-thresholds.md`, exists only in tests
   (`tests/fixturePost.ts`). `tests/blogBuild.test.ts` mocks the post modules with it to test a
   post through `render`, `ROUTES` and the JSON-LD check.
