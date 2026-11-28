@@ -141,12 +141,15 @@ export type CriterionRecord = {
   /**
    * The test procedure (CONTEXT.md), headed "How to test": the steps a reader follows, in
    * order, to check their own interface against this criterion. Each step is one action and
-   * what to look for, as plain text. Optional until S-21 makes it required (three steps at
-   * least).
+   * what to look for, as plain text. Three steps at least, each unique in the record
+   * (`tests/criteria.test.ts`).
    */
-  readonly procedure?: readonly string[];
-  /** The common questions, headed "Common questions", in reading order. Optional until S-21. */
-  readonly questions?: readonly CommonQuestion[];
+  readonly procedure: readonly string[];
+  /**
+   * The common questions, headed "Common questions", in reading order. One at least, each
+   * question unique in the record.
+   */
+  readonly questions: readonly CommonQuestion[];
   /**
    * Ids of the demos illustrating this criterion, in the order they should be read. Usually
    * one; 2.4.7 carries two, because seeing the focus ring and its absence back to back is the

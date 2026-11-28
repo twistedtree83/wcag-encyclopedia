@@ -56,8 +56,8 @@ A list of plain-text steps.
 
 **Common question** (`questions`) — a question people ask about a criterion, with a short
 answer. On the page they are headed "Common questions". Every criterion record has at least one.
-Each is a `CommonQuestion`, `{ question, answer }`, both plain text. Both fields are optional on
-the record until S-21 makes them required.
+Each is a `CommonQuestion`, `{ question, answer }`, both plain text. Both fields are required on
+the record: three steps at least, and one question at least.
 
 **Example** — a rendered piece of interface, not a description of one. Every criterion has a
 **fail example** and a **pass example**. On screen these are labelled "Broken" / "Fixed" on

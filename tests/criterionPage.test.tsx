@@ -114,8 +114,8 @@ describe('the anatomy', () => {
         'Broken, then fixed',
         ...(record.diff ? ['What changed in the code'] : []),
         ...(record.demos?.length ? ['Watch it happen'] : []),
-        ...(record.procedure?.length ? ['How to test'] : []),
-        ...(record.questions?.length ? ['Common questions'] : []),
+        'How to test',
+        'Common questions',
         ...(record.labs?.length ? ['Try it yourself'] : []),
         record.guideline === '1.1' || record.guideline === '2.3'
           ? expect.stringMatching(/^More from /)
