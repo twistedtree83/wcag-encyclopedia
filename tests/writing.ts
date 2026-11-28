@@ -36,6 +36,7 @@ export const SOURCE_DOMAINS = [
   // Standards
   'w3.org',
   'whatwg.org',
+  'etsi.org',
   // Law and regulators
   'europa.eu',
   'gov.uk',
